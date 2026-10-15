@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donations - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        overflow-y: auto;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-box {
+        background: linear-gradient(135deg, #1a2f3a, #0f2027);
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 20px;
+        padding: 35px;
+        max-width: 550px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+      }
+      .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      .modal-box h2 {
+        color: #1abc9c;
+        margin-bottom: 25px;
+        font-size: 22px;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 12px;
+        color: white;
+        opacity: 0.85;
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 11px 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        outline: none;
+      }
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: #1abc9c;
+      }
+      .form-group select option {
+        background: #203a43;
+      }
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        font-size: 13px;
+        margin: 15px 0;
+      }
+      .checkbox-row input {
+        width: auto;
+        accent-color: #1abc9c;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+      }
+      .btn-modal {
+        flex: 1;
+        padding: 13px;
+        border-radius: 10px;
+        border: none;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .btn-cancel {
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+      }
+      .btn-save-modal {
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Admin Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul>
+          <li>
+            <a href="admin.html"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Members</div>
+        <ul>
+          <li>
+            <a href="admin-members.html"
+              ><span class="nav-icon">👥</span><span>All Members</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-applications.html"
+              ><span class="nav-icon">📝</span><span>Applications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-waitlist.html"
+              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-cabinet.html"
+              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-districts.html"
+              ><span class="nav-icon">🗺️</span><span>Districts</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Content</div>
+        <ul>
+          <li>
+            <a href="admin-activities.html"
+              ><span class="nav-icon">🎯</span><span>Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-news.html"
+              ><span class="nav-icon">📰</span><span>News</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-gallery.html"
+              ><span class="nav-icon">🖼️</span><span>Gallery</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Finance</div>
+        <ul>
+          <li>
+            <a href="admin-finance.html"
+              ><span class="nav-icon">💰</span><span>Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-expenses.html"
+              ><span class="nav-icon">💸</span><span>Expenses</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-donations.html" class="active"
+              ><span class="nav-icon">🎁</span><span>Donations</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-sponsorships.html"
+              ><span class="nav-icon">🤝</span><span>Sponsorships</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">System</div>
+        <ul>
+          <li>
+            <a href="admin-notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-email.html"
+              ><span class="nav-icon">📧</span><span>Email</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-reports.html"
+              ><span class="nav-icon">📈</span><span>Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a
+          href="index.html"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 14px;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            margin-bottom: 8px;
+          "
+          ><span>🌐</span><span>Back to Website</span></a
+        >
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Donations Management</h2>
+          <p>Track incoming donations</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar admin-avatar" id="topAvatar">A</div>
+            <div class="user-info">
+              <span class="user-name">Admin</span
+              ><span class="user-uid">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div
+          class="page-header-block"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+          "
+        >
+          <div class="page-header-info">
+            <h1 style="color: white">🎁 Donations Management</h1>
+            <p style="color: white; opacity: 0.75">All donations</p>
+          </div>
+          <button
+            id="addDonationBtn"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 12px 24px;
+              background: linear-gradient(135deg, #fbbf24, #f59e0b);
+              color: #1a1a1a;
+              border: none;
+              border-radius: 12px;
+              font-family: Poppins;
+              font-size: 14px;
+              font-weight: 600;
+              cursor: pointer;
+            "
+          >
+            <span>＋</span> Record Donation
+          </button>
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+          "
+        >
+          <div
+            class="glass-card"
+            style="
+              padding: 22px;
+              background: rgba(255, 255, 255, 0.08);
+              border-radius: 16px;
+              border-left: 4px solid #fbbf24;
+            "
+          >
+            <p
+              style="
+                font-size: 11px;
+                color: white;
+                opacity: 0.7;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+              "
+            >
+              Total Donations
+            </p>
+            <h3
+              id="totalDonations"
+              style="color: #fbbf24; font-size: 22px; font-weight: 700"
+            >
+              Rs. 0
+            </h3>
+          </div>
+          <div
+            class="glass-card"
+            style="
+              padding: 22px;
+              background: rgba(255, 255, 255, 0.08);
+              border-radius: 16px;
+              border-left: 4px solid #3b82f6;
+            "
+          >
+            <p
+              style="
+                font-size: 11px;
+                color: white;
+                opacity: 0.7;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+              "
+            >
+              Total Donors
+            </p>
+            <h3
+              id="totalDonors"
+              style="color: #93c5fd; font-size: 22px; font-weight: 700"
+            >
+              0
+            </h3>
+          </div>
+          <div
+            class="glass-card"
+            style="
+              padding: 22px;
+              background: rgba(255, 255, 255, 0.08);
+              border-radius: 16px;
+              border-left: 4px solid #1abc9c;
+            "
+          >
+            <p
+              style="
+                font-size: 11px;
+                color: white;
+                opacity: 0.7;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+              "
+            >
+              This Month
+            </p>
+            <h3
+              id="thisMonthDon"
+              style="color: #1abc9c; font-size: 22px; font-weight: 700"
+            >
+              Rs. 0
+            </h3>
+          </div>
+        </div>
+
+        <div
+          class="glass-card"
+          style="padding: 0; overflow: hidden; border-radius: 16px"
+        >
+          <div style="overflow-x: auto">
+            <table
+              id="donationsTable"
+              style="width: 100%; border-collapse: collapse; min-width: 900px"
+            >
+              <thead>
+                <tr>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 18px 15px;
+                      font-size: 12px;
+                      color: #1abc9c;
+                    "
+                  >
+                    Receipt #
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 18px 15px;
+                      font-size: 12px;
+                      color: #1abc9c;
+                    "
+                  >
+                    Donor
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 18px 15px;
+                      font-size: 12px;
+                      color: #1abc9c;
+                    "
+                  >
+                    Amount
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 18px 15px;
+                      font-size: 12px;
+                      color: #1abc9c;
+                    "
+                  >
+                    Method
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 18px 15px;
+                      font-size: 12px;
+                      color: #1abc9c;
+                    "
+                  >
+                    Purpose
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 18px 15px;
+                      font-size: 12px;
+                      color: #1abc9c;
+                    "
+                  >
+                    Date
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 18px 15px;
+                      font-size: 12px;
+                      color: #1abc9c;
+                    "
+                  >
+                    Type
+                  </th>
+                  <th
+                    style="
+                      text-align: right;
+                      padding: 18px 15px;
+                      font-size: 12px;
+                      color: #1abc9c;
+                    "
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="donationsBody">
+                <tr>
+                  <td
+                    colspan="8"
+                    style="
+                      text-align: center;
+                      padding: 40px;
+                      color: white;
+                      opacity: 0.7;
+                    "
+                  >
+                    Loading...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            style="
+              padding: 18px 22px;
+              background: rgba(255, 255, 255, 0.03);
+              border-top: 1px solid rgba(255, 255, 255, 0.08);
+              font-size: 13px;
+              color: white;
+              opacity: 0.8;
+            "
+          >
+            Showing
+            <strong id="showingCount" style="color: #1abc9c">0</strong> records
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ADD DONATION MODAL -->
+    <div class="modal-overlay" id="donationModal">
+      <div class="modal-box">
+        <button
+          class="modal-close"
+          onclick="
+            document.getElementById('donationModal').classList.remove('active')
+          "
+        >
+          ✕
+        </button>
+        <h2>🎁 Record Donation</h2>
+        <form id="donationForm">
+          <div class="checkbox-row">
+            <input type="checkbox" id="dnAnonymous" /><label
+              for="dnAnonymous"
+              style="margin: 0; cursor: pointer"
+              >Anonymous Donation</label
+            >
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Donor Name *</label
+              ><input type="text" id="dnName" required />
+            </div>
+            <div class="form-group">
+              <label>Donor Email</label><input type="email" id="dnEmail" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone</label><input type="tel" id="dnPhone" />
+            </div>
+            <div class="form-group">
+              <label>Amount (Rs.) *</label
+              ><input type="number" id="dnAmount" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Method *</label>
+              <select id="dnMethod" required>
+                <option>JazzCash</option>
+                <option>EasyPaisa</option>
+                <option>Bank</option>
+                <option>Cash</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Purpose</label>
+              <select id="dnPurpose">
+                <option>General Fund</option>
+                <option>Education Fund</option>
+                <option>Sports Activities</option>
+                <option>Community Service</option>
+                <option>Zakat</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn-modal btn-cancel"
+              onclick="
+                document
+                  .getElementById('donationModal')
+                  .classList.remove('active')
+              "
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn-modal btn-save-modal">
+              💾 Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allDonations = [];
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        const {
+          data: { session },
+        } = await supabaseClient.auth.getSession();
+        if (!session) {
+          window.location.href = "admin-login.html";
+          return;
+        }
+        const { data: admin } = await supabaseClient
+          .from("members")
+          .select("name, role")
+          .eq("email", session.user.email)
+          .single();
+        if (admin) {
+          document.getElementById("topAvatar").textContent = (admin.name || "A")
+            .charAt(0)
+            .toUpperCase();
+          document
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = admin.name));
+          document
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = admin.role));
+        }
+
+        await loadDonations();
+        document
+          .getElementById("addDonationBtn")
+          .addEventListener("click", () =>
+            document.getElementById("donationModal").classList.add("active"),
+          );
+
+        document
+          .getElementById("donationForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const anonymous = document.getElementById("dnAnonymous").checked;
+            const receiptNo = "DON-" + Date.now().toString().slice(-6);
+            const { error } = await supabaseClient.from("donations").insert([
+              {
+                receipt_no: receiptNo,
+                donor_name:
+                  document.getElementById("dnName").value.trim() ||
+                  (anonymous ? "Anonymous" : null),
+                donor_email:
+                  document.getElementById("dnEmail").value.trim() || null,
+                donor_phone:
+                  document.getElementById("dnPhone").value.trim() || null,
+                amount: document.getElementById("dnAmount").value,
+                method: document.getElementById("dnMethod").value,
+                purpose: document.getElementById("dnPurpose").value,
+                is_anonymous: anonymous,
+                donation_date: new Date().toISOString().split("T")[0],
+              },
+            ]);
+            if (error) {
+              alert("❌ " + error.message);
+              return;
+            }
+            alert("✅ Donation recorded!");
+            document.getElementById("donationModal").classList.remove("active");
+            this.reset();
+            await loadDonations();
+          });
+      });
+
+      async function loadDonations() {
+        const { data } = await supabaseClient
+          .from("donations")
+          .select("*")
+          .order("donation_date", { ascending: false });
+        allDonations = data || [];
+        const tbody = document.getElementById("donationsBody");
+
+        if (allDonations.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="8" style="text-align:center;padding:40px;color:white;opacity:0.7;">No donations yet</td></tr>';
+          document.getElementById("showingCount").textContent = "0";
+        } else {
+          tbody.innerHTML = allDonations
+            .map((d) => {
+              const mc = (d.method || "").toLowerCase();
+              const anon = d.is_anonymous;
+              const name = anon ? "Anonymous Donor" : d.donor_name || "Unknown";
+              return `
+                    <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+                        <td style="padding:15px;"><span style="background:rgba(59,130,246,0.15);color:#93c5fd;padding:4px 10px;border-radius:8px;font-size:11px;font-family:monospace;">#${d.receipt_no}</span></td>
+                        <td style="padding:15px;">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <div style="width:40px;height:40px;border-radius:50%;background:${anon ? "rgba(107,114,128,0.5)" : "linear-gradient(135deg,#fbbf24,#f59e0b)"};display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">${anon ? "?" : (d.donor_name || "D").charAt(0).toUpperCase()}</div>
+                                <div><h4 style="color:white;font-size:14px;margin-bottom:3px;">${name}</h4><p style="color:white;font-size:11px;opacity:0.65;">${anon ? "Hidden" : d.donor_email || "-"}</p></div>
+                            </div>
+                        </td>
+                        <td style="padding:15px;color:#1abc9c;font-weight:700;">Rs. ${d.amount}</td>
+                        <td style="padding:15px;"><span style="padding:5px 12px;border-radius:8px;font-size:11px;background:rgba(59,130,246,0.12);color:#93c5fd;">${d.method}</span></td>
+                        <td style="padding:15px;color:white;">${d.purpose || "General"}</td>
+                        <td style="padding:15px;color:white;">${d.donation_date ? new Date(d.donation_date).toLocaleDateString("en-PK", { day: "numeric", month: "short", year: "numeric" }) : "-"}</td>
+                        <td style="padding:15px;"><span style="padding:4px 12px;border-radius:20px;font-size:11px;background:${anon ? "rgba(107,114,128,0.15)" : "rgba(26,188,156,0.15)"};color:${anon ? "#d1d5db" : "#1abc9c"};">${anon ? "Anonymous" : "Named"}</span></td>
+                        <td style="padding:15px;text-align:right;"><button onclick="deleteDonation(${d.id})" style="width:34px;height:34px;border-radius:8px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:white;cursor:pointer;">🗑️</button></td>
+                    </tr>`;
+            })
+            .join("");
+          document.getElementById("showingCount").textContent =
+            allDonations.length;
+        }
+
+        const total = allDonations.reduce(
+          (s, d) => s + Number(d.amount || 0),
+          0,
+        );
+        const donors = new Set(
+          allDonations.map((d) => d.donor_email || d.donor_name),
+        ).size;
+        const now = new Date();
+        const thisMonth = allDonations
+          .filter((d) => {
+            const dd = new Date(d.donation_date);
+            return (
+              dd.getMonth() === now.getMonth() &&
+              dd.getFullYear() === now.getFullYear()
+            );
+          })
+          .reduce((s, d) => s + Number(d.amount || 0), 0);
+        document.getElementById("totalDonations").textContent =
+          "Rs. " + total.toLocaleString();
+        document.getElementById("totalDonors").textContent = donors;
+        document.getElementById("thisMonthDon").textContent =
+          "Rs. " + thisMonth.toLocaleString();
+      }
+
+      window.deleteDonation = async function (id) {
+        if (!confirm("Delete this donation?")) return;
+        const { error } = await supabaseClient
+          .from("donations")
+          .delete()
+          .eq("id", id);
+        if (error) {
+          alert("❌ " + error.message);
+          return;
+        }
+        alert("🗑️ Deleted");
+        await loadDonations();
+      };
+    </script>
+  </body>
+</html>

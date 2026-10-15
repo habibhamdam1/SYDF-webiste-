@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Districts - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        overflow-y: auto;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-box {
+        background: linear-gradient(135deg, #1a2f3a, #0f2027);
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 20px;
+        padding: 35px;
+        max-width: 550px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+      }
+      .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      .modal-box h2 {
+        color: #1abc9c;
+        margin-bottom: 25px;
+        font-size: 22px;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 12px;
+        color: white;
+        opacity: 0.85;
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 11px 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        outline: none;
+      }
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: #1abc9c;
+      }
+      .form-group select option {
+        background: #203a43;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+      }
+      .btn-modal {
+        flex: 1;
+        padding: 13px;
+        border-radius: 10px;
+        border: none;
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .btn-cancel {
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+      }
+      .btn-save-modal {
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+      }
+      .district-card {
+        padding: 22px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+      }
+      .district-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #1abc9c, #16a085);
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Admin Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul>
+          <li>
+            <a href="admin.html"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Members</div>
+        <ul>
+          <li>
+            <a href="admin-members.html"
+              ><span class="nav-icon">👥</span><span>All Members</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-applications.html"
+              ><span class="nav-icon">📝</span><span>Applications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-waitlist.html"
+              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-cabinet.html"
+              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-districts.html" class="active"
+              ><span class="nav-icon">🗺️</span><span>Districts</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Content</div>
+        <ul>
+          <li>
+            <a href="admin-activities.html"
+              ><span class="nav-icon">🎯</span><span>Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-news.html"
+              ><span class="nav-icon">📰</span><span>News</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-gallery.html"
+              ><span class="nav-icon">🖼️</span><span>Gallery</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Finance</div>
+        <ul>
+          <li>
+            <a href="admin-finance.html"
+              ><span class="nav-icon">💰</span><span>Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-expenses.html"
+              ><span class="nav-icon">💸</span><span>Expenses</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-donations.html"
+              ><span class="nav-icon">🎁</span><span>Donations</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-sponsorships.html"
+              ><span class="nav-icon">🤝</span><span>Sponsorships</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">System</div>
+        <ul>
+          <li>
+            <a href="admin-notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-email.html"
+              ><span class="nav-icon">📧</span><span>Email</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-reports.html"
+              ><span class="nav-icon">📈</span><span>Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a
+          href="index.html"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 14px;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            margin-bottom: 8px;
+          "
+          ><span>🌐</span><span>Back to Website</span></a
+        >
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Districts & Tehsils</h2>
+          <p>Manage regions</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar admin-avatar" id="topAvatar">A</div>
+            <div class="user-info">
+              <span class="user-name">Admin</span
+              ><span class="user-uid">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div
+          class="page-header-block"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+          "
+        >
+          <div class="page-header-info">
+            <h1 style="color: white">🗺️ Districts & Tehsils</h1>
+            <p style="color: white; opacity: 0.75">
+              Total <strong id="totalDistricts">0</strong> districts •
+              <strong id="totalTehsils">0</strong> tehsils
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button
+              id="addDistrictBtn"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 12px 22px;
+                background: linear-gradient(135deg, #1abc9c, #16a085);
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-family: Poppins;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+              "
+            >
+              <span>＋</span> Add District
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="districtsGrid"
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 18px;
+          "
+        >
+          <p
+            style="
+              color: white;
+              opacity: 0.7;
+              padding: 40px;
+              text-align: center;
+              grid-column: 1/-1;
+            "
+          >
+            Loading...
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- ADD DISTRICT MODAL -->
+    <div class="modal-overlay" id="districtModal">
+      <div class="modal-box">
+        <button
+          class="modal-close"
+          onclick="
+            document.getElementById('districtModal').classList.remove('active')
+          "
+        >
+          ✕
+        </button>
+        <h2>🗺️ Add District</h2>
+        <form id="districtForm">
+          <div class="form-group">
+            <label>District Name *</label
+            ><input type="text" id="dstName" required />
+          </div>
+          <div class="form-group">
+            <label>Division</label>
+            <select id="dstDivision">
+              <option>Malakand</option>
+              <option>Peshawar</option>
+              <option>Mardan</option>
+              <option>Hazara</option>
+              <option>Kohat</option>
+            </select>
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn-modal btn-cancel"
+              onclick="
+                document
+                  .getElementById('districtModal')
+                  .classList.remove('active')
+              "
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn-modal btn-save-modal">
+              💾 Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ADD TEHSIL MODAL -->
+    <div class="modal-overlay" id="tehsilModal">
+      <div class="modal-box">
+        <button
+          class="modal-close"
+          onclick="
+            document.getElementById('tehsilModal').classList.remove('active')
+          "
+        >
+          ✕
+        </button>
+        <h2>📍 Add Tehsil</h2>
+        <form id="tehsilForm">
+          <input type="hidden" id="thDistrictId" />
+          <div class="form-group">
+            <label>District</label
+            ><input type="text" id="thDistrictName" disabled />
+          </div>
+          <div class="form-group">
+            <label>Tehsil Name *</label
+            ><input type="text" id="thName" required />
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn-modal btn-cancel"
+              onclick="
+                document
+                  .getElementById('tehsilModal')
+                  .classList.remove('active')
+              "
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn-modal btn-save-modal">
+              💾 Save
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ASSIGN COORDINATOR MODAL -->
+    <div class="modal-overlay" id="coordModal">
+      <div class="modal-box">
+        <button
+          class="modal-close"
+          onclick="
+            document.getElementById('coordModal').classList.remove('active')
+          "
+        >
+          ✕
+        </button>
+        <h2>👤 Assign Coordinator</h2>
+        <form id="coordForm">
+          <input type="hidden" id="coDistrictId" />
+          <div class="form-group">
+            <label>District</label
+            ><input type="text" id="coDistrictName" disabled />
+          </div>
+          <div class="form-group">
+            <label>Select Coordinator *</label>
+            <select
+              id="coMember"
+              required
+              style="
+                width: 100%;
+                padding: 11px 14px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 10px;
+                color: white;
+                font-family: Poppins;
+                font-size: 13px;
+              "
+            >
+              <option value="">Select Member</option>
+            </select>
+          </div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn-modal btn-cancel"
+              onclick="
+                document.getElementById('coordModal').classList.remove('active')
+              "
+            >
+              Cancel
+            </button>
+            <button type="submit" class="btn-modal btn-save-modal">
+              💾 Assign
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allDistricts = [];
+      let allTehsils = [];
+      let allMembers = [];
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        const {
+          data: { session },
+        } = await supabaseClient.auth.getSession();
+        if (!session) {
+          window.location.href = "admin-login.html";
+          return;
+        }
+        const { data: admin } = await supabaseClient
+          .from("members")
+          .select("name, role")
+          .eq("email", session.user.email)
+          .single();
+        if (admin) {
+          document.getElementById("topAvatar").textContent = (admin.name || "A")
+            .charAt(0)
+            .toUpperCase();
+          document
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = admin.name));
+          document
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = admin.role));
+        }
+
+        const { data: m } = await supabaseClient
+          .from("members")
+          .select("name, email, uid")
+          .eq("status", "Active");
+        allMembers = m || [];
+        document.getElementById("coMember").innerHTML =
+          '<option value="">Select Member</option>' +
+          allMembers
+            .map(
+              (x) =>
+                `<option value="${x.email}" data-name="${x.name}">${x.name} (${x.uid})</option>`,
+            )
+            .join("");
+
+        await loadDistricts();
+
+        document
+          .getElementById("addDistrictBtn")
+          .addEventListener("click", () =>
+            document.getElementById("districtModal").classList.add("active"),
+          );
+
+        document
+          .getElementById("districtForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const { error } = await supabaseClient.from("districts").insert([
+              {
+                name: document.getElementById("dstName").value.trim(),
+                division: document.getElementById("dstDivision").value,
+              },
+            ]);
+            if (error) {
+              alert("❌ " + error.message);
+              return;
+            }
+            alert("✅ District added!");
+            document.getElementById("districtModal").classList.remove("active");
+            this.reset();
+            await loadDistricts();
+          });
+
+        document
+          .getElementById("tehsilForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const { error } = await supabaseClient.from("tehsils").insert([
+              {
+                district_id: document.getElementById("thDistrictId").value,
+                name: document.getElementById("thName").value.trim(),
+              },
+            ]);
+            if (error) {
+              alert("❌ " + error.message);
+              return;
+            }
+            alert("✅ Tehsil added!");
+            document.getElementById("tehsilModal").classList.remove("active");
+            this.reset();
+            await loadDistricts();
+          });
+
+        document
+          .getElementById("coordForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const email = document.getElementById("coMember").value;
+            const member = allMembers.find((x) => x.email === email);
+            const { error } = await supabaseClient
+              .from("districts")
+              .update({
+                coordinator_email: email,
+                coordinator_name: member ? member.name : null,
+              })
+              .eq("id", document.getElementById("coDistrictId").value);
+            if (error) {
+              alert("❌ " + error.message);
+              return;
+            }
+            alert("✅ Coordinator assigned!");
+            document.getElementById("coordModal").classList.remove("active");
+            await loadDistricts();
+          });
+      });
+
+      async function loadDistricts() {
+        const [d, t] = await Promise.all([
+          supabaseClient.from("districts").select("*").order("name"),
+          supabaseClient.from("tehsils").select("*").order("name"),
+        ]);
+        allDistricts = d.data || [];
+        allTehsils = t.data || [];
+
+        document.getElementById("totalDistricts").textContent =
+          allDistricts.length;
+        document.getElementById("totalTehsils").textContent = allTehsils.length;
+
+        const grid = document.getElementById("districtsGrid");
+        if (allDistricts.length === 0) {
+          grid.innerHTML =
+            '<p style="color:white;opacity:0.7;padding:40px;text-align:center;grid-column:1/-1;">No districts yet</p>';
+          return;
+        }
+
+        grid.innerHTML = allDistricts
+          .map((d) => {
+            const distTehsils = allTehsils.filter(
+              (t) => t.district_id === d.id,
+            );
+            return `
+                <div class="district-card" style="position:relative;overflow:hidden;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+                        <div>
+                            <h3 style="color:white;font-size:18px;font-weight:700;margin-bottom:4px;">${d.name}</h3>
+                            <p style="color:white;font-size:12px;opacity:0.7;">${d.division} Division</p>
+                        </div>
+                        <button onclick="deleteDistrict(${d.id})" style="width:34px;height:34px;border-radius:8px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:white;cursor:pointer;">🗑️</button>
+                    </div>
+
+                    <div style="margin-bottom:14px;">
+                        <p style="color:#1abc9c;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Coordinator</p>
+                        ${d.coordinator_name ? `<div style="padding:10px;background:rgba(26,188,156,0.08);border:1px solid rgba(26,188,156,0.2);border-radius:10px;color:white;font-size:13px;">👤 ${d.coordinator_name}</div>` : `<div style="padding:10px;text-align:center;background:rgba(245,158,11,0.08);border:1px dashed rgba(245,158,11,0.4);border-radius:10px;color:#fbbf24;font-size:12px;">⚠️ Not Assigned</div>`}
+                    </div>
+
+                    <div style="margin-bottom:14px;">
+                        <p style="color:#1abc9c;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Tehsils (${distTehsils.length})</p>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                            ${distTehsils.length > 0 ? distTehsils.map((t) => `<span style="padding:4px 10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;font-size:11px;color:white;">${t.name}</span>`).join("") : '<span style="color:white;font-size:12px;opacity:0.6;">No tehsils yet</span>'}
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:6px;">
+                        <button onclick="openCoordinator(${d.id}, '${(d.name || "").replace(/'/g, "\\'")}')" style="flex:1;padding:8px;background:rgba(59,130,246,0.15);color:#93c5fd;border:1px solid rgba(59,130,246,0.3);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">👤 Assign</button>
+                        <button onclick="openTehsil(${d.id}, '${(d.name || "").replace(/'/g, "\\'")}')" style="flex:1;padding:8px;background:rgba(26,188,156,0.15);color:#1abc9c;border:1px solid rgba(26,188,156,0.3);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">＋ Tehsil</button>
+                    </div>
+                </div>`;
+          })
+          .join("");
+      }
+
+      window.openTehsil = function (id, name) {
+        document.getElementById("thDistrictId").value = id;
+        document.getElementById("thDistrictName").value = name;
+        document.getElementById("tehsilModal").classList.add("active");
+      };
+
+      window.openCoordinator = function (id, name) {
+        document.getElementById("coDistrictId").value = id;
+        document.getElementById("coDistrictName").value = name;
+        document.getElementById("coordModal").classList.add("active");
+      };
+
+      window.deleteDistrict = async function (id) {
+        if (
+          !confirm(
+            "Delete this district? All its tehsils will also be deleted.",
+          )
+        )
+          return;
+        const { error } = await supabaseClient
+          .from("districts")
+          .delete()
+          .eq("id", id);
+        if (error) {
+          alert("❌ " + error.message);
+          return;
+        }
+        alert("🗑️ Deleted");
+        await loadDistricts();
+      };
+    </script>
+  </body>
+</html>

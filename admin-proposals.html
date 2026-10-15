@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposals - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .page-intro {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+      }
+      .page-intro h1 {
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .page-intro p {
+        color: white;
+        font-size: 14px;
+        opacity: 0.7;
+      }
+
+      .tabs-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        margin-bottom: 22px;
+      }
+      .tab-btn {
+        padding: 11px 22px;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .tab-btn:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .tab-btn.active {
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        font-weight: 600;
+      }
+      .tab-btn .count {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .proposal-card {
+        padding: 22px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        margin-bottom: 14px;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      .proposal-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+      }
+      .proposal-card.pending::before {
+        background: #f59e0b;
+      }
+      .proposal-card.approved::before {
+        background: #1abc9c;
+      }
+      .proposal-card.rejected::before {
+        background: #ef4444;
+      }
+      .proposal-card:hover {
+        border-color: rgba(26, 188, 156, 0.3);
+      }
+
+      .proposal-header {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 12px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      .member-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .member-info {
+        flex: 1;
+        min-width: 200px;
+      }
+      .member-info h4 {
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .member-info p {
+        color: white;
+        font-size: 11px;
+        opacity: 0.65;
+      }
+
+      .type-badge {
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+      .type-badge.activity {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+      }
+      .type-badge.proposal {
+        background: rgba(26, 188, 156, 0.2);
+        color: #1abc9c;
+      }
+      .type-badge.sponsor {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+      }
+      .type-badge.feedback {
+        background: rgba(236, 72, 153, 0.2);
+        color: #f9a8d4;
+      }
+
+      .proposal-title {
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .proposal-desc {
+        color: white;
+        font-size: 13px;
+        line-height: 1.7;
+        opacity: 0.85;
+        margin-bottom: 12px;
+      }
+      .proposal-meta {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        font-size: 11px;
+        color: white;
+        opacity: 0.7;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 14px;
+      }
+
+      .status-badge {
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .status-badge.pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+      .status-badge.approved {
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+      .status-badge.rejected {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+
+      .action-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .btn-action {
+        flex: 1;
+        min-width: 120px;
+        padding: 11px 18px;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        border: 1.5px solid transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-approve {
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border-color: rgba(26, 188, 156, 0.35);
+      }
+      .btn-approve:hover {
+        background: #1abc9c;
+        color: white;
+        transform: translateY(-2px);
+      }
+      .btn-reject {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        border-color: rgba(239, 68, 68, 0.35);
+      }
+      .btn-reject:hover {
+        background: #ef4444;
+        color: white;
+        transform: translateY(-2px);
+      }
+      .btn-view {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        border-color: rgba(59, 130, 246, 0.35);
+      }
+      .btn-view:hover {
+        background: #3b82f6;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .response-box {
+        padding: 14px 16px;
+        background: rgba(26, 188, 156, 0.08);
+        border: 1px solid rgba(26, 188, 156, 0.2);
+        border-left: 3px solid #1abc9c;
+        border-radius: 10px;
+        margin-top: 12px;
+      }
+      .response-box h5 {
+        color: #1abc9c;
+        font-size: 11px;
+        font-weight: 700;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+      .response-box p {
+        color: white;
+        font-size: 12.5px;
+        line-height: 1.6;
+      }
+
+      /* MODAL */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(8px);
+        z-index: 9999;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px 20px;
+        overflow-y: auto;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-box {
+        background: linear-gradient(160deg, #1a2f3a 0%, #0f2027 100%);
+        border: 1px solid rgba(26, 188, 156, 0.25);
+        border-radius: 24px;
+        max-width: 600px;
+        width: 100%;
+        position: relative;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+        overflow: hidden;
+      }
+      .modal-header {
+        padding: 26px 30px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.12),
+          transparent
+        );
+        position: relative;
+      }
+      .modal-header h2 {
+        color: white;
+        font-size: 20px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .modal-header p {
+        color: white;
+        font-size: 12px;
+        opacity: 0.65;
+        margin-top: 5px;
+      }
+      .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .modal-close:hover {
+        background: #ef4444;
+        color: white;
+        transform: rotate(90deg);
+      }
+      .modal-body {
+        padding: 25px 30px;
+      }
+      .modal-footer {
+        padding: 18px 30px 25px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .field-label {
+        display: block;
+        font-size: 12px;
+        color: white;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .field-input,
+      .field-textarea {
+        width: 100%;
+        padding: 13px 16px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        outline: none;
+        transition: 0.3s;
+        margin-bottom: 20px;
+      }
+      .field-input:focus,
+      .field-textarea:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.06);
+      }
+      .field-textarea {
+        resize: vertical;
+        min-height: 110px;
+      }
+
+      .btn-primary {
+        padding: 12px 26px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 11px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(26, 188, 156, 0.4);
+      }
+      .btn-secondary {
+        padding: 12px 26px;
+        background: rgba(255, 255, 255, 0.06);
+        color: white;
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        border-radius: 11px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .empty-box {
+        text-align: center;
+        padding: 70px 30px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 18px;
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+      }
+      .empty-box .ico {
+        font-size: 64px;
+        opacity: 0.5;
+        margin-bottom: 18px;
+        display: block;
+      }
+      .empty-box h3 {
+        color: white;
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+      .empty-box p {
+        color: white;
+        font-size: 13px;
+        opacity: 0.65;
+      }
+
+      @media (max-width: 600px) {
+        .action-row {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Admin Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul>
+          <li>
+            <a href="admin.html"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Members</div>
+        <ul>
+          <li>
+            <a href="admin-members.html"
+              ><span class="nav-icon">👥</span><span>All Members</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-applications.html"
+              ><span class="nav-icon">📝</span><span>Applications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-waitlist.html"
+              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-proposals.html" class="active"
+              ><span class="nav-icon">💡</span><span>Proposals</span
+              ><span class="badge" id="propBadge">0</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-cabinet.html"
+              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-districts.html"
+              ><span class="nav-icon">🗺️</span><span>Districts</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Content</div>
+        <ul>
+          <li>
+            <a href="admin-activities.html"
+              ><span class="nav-icon">🎯</span><span>Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-news.html"
+              ><span class="nav-icon">📰</span><span>News</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-gallery.html"
+              ><span class="nav-icon">🖼️</span><span>Gallery</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Finance</div>
+        <ul>
+          <li>
+            <a href="admin-finance.html"
+              ><span class="nav-icon">💰</span><span>Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-expenses.html"
+              ><span class="nav-icon">💸</span><span>Expenses</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-donations.html"
+              ><span class="nav-icon">🎁</span><span>Donations</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-sponsorships.html"
+              ><span class="nav-icon">🤝</span><span>Sponsorships</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">System</div>
+        <ul>
+          <li>
+            <a href="admin-notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-email.html"
+              ><span class="nav-icon">📧</span><span>Email</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-reports.html"
+              ><span class="nav-icon">📈</span><span>Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a
+          href="index.html"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 14px;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            margin-bottom: 8px;
+          "
+          ><span>🌐</span><span>Back to Website</span></a
+        >
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Proposals</h2>
+          <p>Review member ideas</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar admin-avatar" id="topAvatar">A</div>
+            <div class="user-info">
+              <span class="user-name">Admin</span
+              ><span class="user-uid">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="page-intro">
+          <div>
+            <h1>💡 Member Proposals</h1>
+            <p>Review and respond to member ideas</p>
+          </div>
+        </div>
+
+        <div class="tabs-row">
+          <button class="tab-btn active" data-filter="all">
+            📋 All <span class="count" id="cntAll">0</span>
+          </button>
+          <button class="tab-btn" data-filter="Pending">
+            ⏳ Pending <span class="count" id="cntPending">0</span>
+          </button>
+          <button class="tab-btn" data-filter="Approved">
+            ✅ Approved <span class="count" id="cntApproved">0</span>
+          </button>
+          <button class="tab-btn" data-filter="Rejected">
+            ❌ Rejected <span class="count" id="cntRejected">0</span>
+          </button>
+        </div>
+
+        <div id="proposalsList">
+          <div class="empty-box">
+            <span class="ico">⏳</span>
+            <h3>Loading...</h3>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RESPONSE MODAL -->
+    <div class="modal-overlay" id="responseModal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h2 id="modalTitle">💬 Respond to Proposal</h2>
+          <p id="modalSub">Provide response for this proposal</p>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <form id="responseForm">
+          <div class="modal-body">
+            <input type="hidden" id="respId" />
+            <input type="hidden" id="respAction" />
+            <label class="field-label">📝 Your Response *</label>
+            <textarea
+              id="respText"
+              class="field-textarea"
+              placeholder="Write your response, feedback, or reason..."
+              required
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="closeModal()">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary">
+              <span>📤</span> Submit Response
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allProposals = [];
+      let currentFilter = "all";
+
+      window.closeModal = function () {
+        document.getElementById("responseModal").classList.remove("active");
+      };
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        const {
+          data: { session },
+        } = await supabaseClient.auth.getSession();
+        if (!session) {
+          window.location.href = "admin-login.html";
+          return;
+        }
+        const { data: admin } = await supabaseClient
+          .from("members")
+          .select("name, role")
+          .eq("email", session.user.email)
+          .single();
+        if (admin) {
+          document.getElementById("topAvatar").textContent = (admin.name || "A")
+            .charAt(0)
+            .toUpperCase();
+          document
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = admin.name));
+          document
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = admin.role));
+        }
+
+        await loadProposals();
+
+        document.querySelectorAll(".tab-btn").forEach((tab) => {
+          tab.addEventListener("click", function () {
+            document
+              .querySelectorAll(".tab-btn")
+              .forEach((t) => t.classList.remove("active"));
+            this.classList.add("active");
+            currentFilter = this.getAttribute("data-filter");
+            renderProposals();
+          });
+        });
+
+        document
+          .getElementById("responseForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const id = document.getElementById("respId").value;
+            const action = document.getElementById("respAction").value;
+            const response = document.getElementById("respText").value.trim();
+
+            const { error } = await supabaseClient
+              .from("proposals")
+              .update({
+                status: action,
+                admin_response: response,
+                reviewed_by: session.user.email,
+                reviewed_at: new Date().toISOString(),
+              })
+              .eq("id", id);
+
+            if (error) {
+              alert("❌ " + error.message);
+              return;
+            }
+            alert("✅ Proposal " + action + " successfully!");
+            closeModal();
+            await loadProposals();
+          });
+      });
+
+      async function loadProposals() {
+        const { data } = await supabaseClient
+          .from("proposals")
+          .select("*")
+          .order("created_at", { ascending: false });
+        allProposals = data || [];
+
+        document.getElementById("cntAll").textContent = allProposals.length;
+        document.getElementById("cntPending").textContent = allProposals.filter(
+          (p) => p.status === "Pending",
+        ).length;
+        document.getElementById("cntApproved").textContent =
+          allProposals.filter((p) => p.status === "Approved").length;
+        document.getElementById("cntRejected").textContent =
+          allProposals.filter((p) => p.status === "Rejected").length;
+
+        const badge = document.getElementById("propBadge");
+        if (badge) {
+          const pending = allProposals.filter(
+            (p) => p.status === "Pending",
+          ).length;
+          badge.textContent = pending;
+          badge.style.display = pending > 0 ? "inline-block" : "none";
+        }
+
+        renderProposals();
+      }
+
+      function renderProposals() {
+        const list = document.getElementById("proposalsList");
+        const filtered =
+          currentFilter === "all"
+            ? allProposals
+            : allProposals.filter((p) => p.status === currentFilter);
+
+        if (filtered.length === 0) {
+          list.innerHTML =
+            '<div class="empty-box"><span class="ico">💡</span><h3>No Proposals</h3><p>No proposals in this category.</p></div>';
+          return;
+        }
+
+        list.innerHTML = filtered
+          .map((p) => {
+            const status = (p.status || "Pending").toLowerCase();
+            const type = (p.proposal_type || "activity")
+              .split(" ")[0]
+              .toLowerCase();
+            const typeClass = type.includes("activity")
+              ? "activity"
+              : type.includes("project")
+                ? "proposal"
+                : type.includes("sponsor")
+                  ? "sponsor"
+                  : "feedback";
+            const date = new Date(p.created_at).toLocaleDateString("en-PK", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            });
+            const initial = (p.member_name || "M").charAt(0).toUpperCase();
+
+            const actions =
+              p.status === "Pending"
+                ? `
+                    <button class="btn-action btn-approve" onclick="openResponse(${p.id}, 'Approved', '${(p.title || "").replace(/'/g, "\\'")}')">✅ Approve</button>
+                    <button class="btn-action btn-reject" onclick="openResponse(${p.id}, 'Rejected', '${(p.title || "").replace(/'/g, "\\'")}')">❌ Reject</button>
+                `
+                : `
+                    <div style="flex:1;text-align:center;color:white;opacity:0.6;font-size:12px;padding:10px;">Response sent</div>
+                `;
+
+            return `
+                <div class="proposal-card ${status}">
+                    <div class="proposal-header">
+                        <div class="member-avatar">${initial}</div>
+                        <div class="member-info">
+                            <h4>${p.member_name || "Member"}</h4>
+                            <p>${p.member_uid || "-"} • ${p.member_email || "-"}</p>
+                        </div>
+                        <span class="type-badge ${typeClass}">${p.proposal_type}</span>
+                        <span class="status-badge ${status}">${p.status}</span>
+                    </div>
+                    <div class="proposal-title">${p.title}</div>
+                    <p class="proposal-desc">${p.description}</p>
+                    <div class="proposal-meta">
+                        <span>📅 ${date}</span>
+                        <span>💰 Rs. ${Number(p.expected_budget || 0).toLocaleString()}</span>
+                        <span>📊 ${p.priority || "Normal"}</span>
+                    </div>
+                    <div class="action-row">${actions}</div>
+                    ${
+                      p.admin_response
+                        ? `
+                        <div class="response-box">
+                            <h5>✅ Your Response</h5>
+                            <p>${p.admin_response}</p>
+                        </div>
+                    `
+                        : ""
+                    }
+                </div>`;
+          })
+          .join("");
+      }
+
+      window.openResponse = function (id, action, title) {
+        document.getElementById("respId").value = id;
+        document.getElementById("respAction").value = action;
+        document.getElementById("modalTitle").textContent =
+          action === "Approved" ? "✅ Approve Proposal" : "❌ Reject Proposal";
+        document.getElementById("modalSub").textContent = title;
+        document.getElementById("respText").value = "";
+        document.getElementById("responseModal").classList.add("active");
+      };
+    </script>
+  </body>
+</html>

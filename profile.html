@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .profile-hero {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 22px;
+        overflow: hidden;
+        margin-bottom: 25px;
+        position: relative;
+      }
+      .profile-cover {
+        height: 150px;
+        background: linear-gradient(
+          135deg,
+          #1abc9c 0%,
+          #16a085 50%,
+          #0f2027 100%
+        );
+        position: relative;
+      }
+      .profile-cover::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(
+            circle at 20% 50%,
+            rgba(255, 255, 255, 0.15) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 80%,
+            rgba(26, 188, 156, 0.3) 0%,
+            transparent 40%
+          );
+      }
+      .profile-hero-body {
+        padding: 0 35px 30px;
+        display: flex;
+        align-items: flex-end;
+        gap: 25px;
+        flex-wrap: wrap;
+        margin-top: -55px;
+        position: relative;
+      }
+      .profile-big-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 24px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: 700;
+        color: white;
+        border: 5px solid rgba(15, 32, 39, 0.95);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .profile-big-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .profile-hero-info {
+        flex: 1;
+        min-width: 250px;
+        padding-bottom: 5px;
+      }
+      .profile-hero-info h1 {
+        font-size: 30px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 6px;
+        line-height: 1.2;
+      }
+      .profile-hero-info .role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 14px;
+        background: rgba(26, 188, 156, 0.18);
+        border: 1px solid rgba(26, 188, 156, 0.35);
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #1abc9c;
+        margin-bottom: 12px;
+      }
+      .profile-hero-info .meta-row {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: white;
+        opacity: 0.75;
+      }
+      .profile-status-box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        padding-bottom: 5px;
+      }
+      .status-pill {
+        padding: 7px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .status-pill.active {
+        background: rgba(26, 188, 156, 0.2);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.4);
+      }
+      .status-pill.pending {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.4);
+      }
+      .status-pill.suspended {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.4);
+      }
+      .completion-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .completion-track {
+        width: 120px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .completion-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #1abc9c, #16a085);
+        transition: width 0.5s;
+      }
+      .completion-text {
+        font-size: 12px;
+        color: white;
+        font-weight: 600;
+      }
+
+      /* SCORE BADGE SECTION */
+      .score-badge-row {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 22px;
+        margin-bottom: 25px;
+      }
+      .score-mini {
+        padding: 24px;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.12),
+          rgba(15, 32, 39, 0.3)
+        );
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+      .score-mini-circle {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: conic-gradient(#1abc9c 0%, rgba(255, 255, 255, 0.08) 0%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .score-mini-circle::before {
+        content: "";
+        position: absolute;
+        inset: 10px;
+        border-radius: 50%;
+        background: #0f2027;
+      }
+      .score-mini-circle span {
+        position: relative;
+        z-index: 1;
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+      }
+      .score-mini-info h4 {
+        color: white;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .score-mini-info p {
+        color: #1abc9c;
+        font-size: 11px;
+        opacity: 0.85;
+      }
+
+      .badges-card {
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+      }
+      .badges-card h4 {
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .badges-flex {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .badge-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 25px;
+        font-size: 12.5px;
+        font-weight: 700;
+        transition: 0.3s;
+      }
+      .badge-chip:hover {
+        transform: translateY(-3px);
+      }
+
+      .profile-tabs {
+        display: flex;
+        gap: 8px;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        margin-bottom: 25px;
+        overflow-x: auto;
+      }
+      .profile-tab {
+        padding: 12px 24px;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: "Poppins", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .profile-tab.active {
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        font-weight: 600;
+      }
+
+      .form-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 22px;
+        overflow: hidden;
+      }
+      .form-card-header {
+        padding: 25px 32px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.1),
+          transparent
+        );
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .form-card-header .header-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: rgba(26, 188, 156, 0.15);
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .form-card-header h2 {
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+      .form-card-header p {
+        color: white;
+        font-size: 12.5px;
+        opacity: 0.65;
+      }
+      .form-card-body {
+        padding: 32px;
+      }
+
+      .fields-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+      }
+      .field-full {
+        grid-column: 1 / -1;
+      }
+      .field-box label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .field-box label .req {
+        color: #ef4444;
+      }
+      .field-box label .hint {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-left: auto;
+        font-style: italic;
+      }
+      .input-wrap {
+        position: relative;
+      }
+      .input-wrap .prefix-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        opacity: 0.6;
+        pointer-events: none;
+      }
+      .input-wrap input,
+      .input-wrap select,
+      .input-wrap textarea {
+        width: 100%;
+        padding: 14px 18px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: 0.3s;
+      }
+      .input-wrap input[type="text"],
+      .input-wrap input[type="email"],
+      .input-wrap input[type="tel"],
+      .input-wrap input[type="date"] {
+        padding-left: 45px;
+      }
+      .input-wrap input:focus,
+      .input-wrap select:focus,
+      .input-wrap textarea:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.06);
+        box-shadow: 0 0 0 4px rgba(26, 188, 156, 0.12);
+      }
+      .input-wrap input:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .input-wrap select option {
+        background: #203a43;
+      }
+      .input-wrap textarea {
+        resize: vertical;
+        min-height: 100px;
+        padding-left: 18px;
+      }
+      .field-help {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 2px;
+      }
+      .field-help.lock {
+        color: #fbbf24;
+      }
+
+      .form-actions {
+        padding: 20px 32px 32px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        justify-content: flex-end;
+        background: rgba(0, 0, 0, 0.1);
+      }
+      .btn-save {
+        padding: 14px 32px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(26, 188, 156, 0.4);
+      }
+      .btn-save:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 900px) {
+        .fields-grid {
+          grid-template-columns: 1fr;
+        }
+        .score-badge-row {
+          grid-template-columns: 1fr;
+        }
+        .profile-hero-body {
+          padding: 0 22px 25px;
+        }
+        .profile-big-avatar {
+          width: 95px;
+          height: 95px;
+          font-size: 38px;
+        }
+        .profile-hero-info h1 {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Member Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"
+              ><span class="nav-icon">📊</span><span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html" class="active"
+              ><span class="nav-icon">👤</span><span>My Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="my-payments.html"
+              ><span class="nav-icon">💰</span><span>My Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="my-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+          <li>
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="member-proposals.html"
+              ><span class="nav-icon">💡</span><span>My Proposals</span></a
+            >
+          </li>
+          <li>
+            <a href="my-certificate.html"
+              ><span class="nav-icon">📜</span><span>Certificate</span></a
+            >
+          </li>
+          <li>
+            <a href="my-id-card.html"
+              ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>My Profile</h2>
+          <p>Manage your information</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar" id="topAvatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Loading...</span
+              ><span class="user-uid">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="profile-hero">
+          <div class="profile-cover"></div>
+          <div class="profile-hero-body">
+            <div class="profile-big-avatar" id="bigAvatar">M</div>
+            <div class="profile-hero-info">
+              <h1 id="heroName">Loading...</h1>
+              <div class="role-badge">👑 <span id="heroRole">Member</span></div>
+              <div class="meta-row">
+                <span>🆔 <strong id="heroUid">-</strong></span>
+                <span>📍 <strong id="heroDistrict">-</strong></span>
+                <span>📅 Joined <strong id="heroJoined">-</strong></span>
+              </div>
+            </div>
+            <div class="profile-status-box">
+              <span class="status-pill active" id="heroStatus">✅ Active</span>
+              <div class="completion-bar">
+                <div class="completion-track">
+                  <div
+                    class="completion-fill"
+                    id="completionFill"
+                    style="width: 0%"
+                  ></div>
+                </div>
+                <span class="completion-text" id="completionText">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCORE + BADGES ROW -->
+        <div class="score-badge-row">
+          <div class="score-mini">
+            <div class="score-mini-circle" id="scoreMiniCircle">
+              <span id="scoreMiniNum">0</span>
+            </div>
+            <div class="score-mini-info">
+              <h4>📊 Engagement Score</h4>
+              <p id="scoreMiniLabel">Calculating...</p>
+            </div>
+          </div>
+
+          <div class="badges-card">
+            <h4>🏅 My Badges</h4>
+            <div class="badges-flex" id="badgesFlex">
+              <span style="color: white; opacity: 0.6; font-size: 12px"
+                >Loading...</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-tabs">
+          <button class="profile-tab active" data-tab="personal">
+            <span>👤</span> Personal Info
+          </button>
+          <button class="profile-tab" data-tab="contact">
+            <span>📞</span> Contact
+          </button>
+          <button class="profile-tab" data-tab="education">
+            <span>🎓</span> Education
+          </button>
+        </div>
+
+        <!-- PERSONAL TAB -->
+        <div class="form-card" id="tab-personal">
+          <div class="form-card-header">
+            <div class="header-icon">👤</div>
+            <div>
+              <h2>Personal Information</h2>
+              <p>Your basic identity details</p>
+            </div>
+          </div>
+          <form id="personalForm">
+            <div class="form-card-body">
+              <div class="fields-grid">
+                <div class="field-box">
+                  <label
+                    ><span>👤</span> Full Name <span class="req">*</span></label
+                  >
+                  <div class="input-wrap">
+                    <span class="prefix-icon">👤</span
+                    ><input
+                      type="text"
+                      id="pName"
+                      placeholder="Enter full name"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label
+                    ><span>👨</span> Father's Name
+                    <span class="req">*</span></label
+                  >
+                  <div class="input-wrap">
+                    <span class="prefix-icon">👨</span
+                    ><input
+                      type="text"
+                      id="pFather"
+                      placeholder="Father's name"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label
+                    ><span>🆔</span> CNIC
+                    <span class="hint">🔒 Locked</span></label
+                  >
+                  <div class="input-wrap">
+                    <span class="prefix-icon">🆔</span
+                    ><input type="text" id="pCnic" disabled />
+                  </div>
+                  <div class="field-help lock">🔒 Cannot be changed</div>
+                </div>
+                <div class="field-box">
+                  <label><span>🎂</span> Date of Birth</label>
+                  <div class="input-wrap">
+                    <span class="prefix-icon">🎂</span
+                    ><input type="date" id="pDob" />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label
+                    ><span>⚧</span> Gender
+                    <span class="hint">🔒 Locked</span></label
+                  >
+                  <div class="input-wrap">
+                    <select id="pGender" disabled>
+                      <option>Male</option>
+                      <option>Female</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label><span>🩸</span> Blood Group</label>
+                  <div class="input-wrap">
+                    <select id="pBlood">
+                      <option value="">Select</option>
+                      <option>A+</option>
+                      <option>A-</option>
+                      <option>B+</option>
+                      <option>B-</option>
+                      <option>O+</option>
+                      <option>O-</option>
+                      <option>AB+</option>
+                      <option>AB-</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-save">💾 Save Changes</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- CONTACT TAB -->
+        <div class="form-card" id="tab-contact" style="display: none">
+          <div class="form-card-header">
+            <div class="header-icon">📞</div>
+            <div>
+              <h2>Contact Information</h2>
+              <p>How we can reach you</p>
+            </div>
+          </div>
+          <form id="contactForm">
+            <div class="form-card-body">
+              <div class="fields-grid">
+                <div class="field-box">
+                  <label
+                    ><span>📧</span> Email
+                    <span class="hint">🔒 Locked</span></label
+                  >
+                  <div class="input-wrap">
+                    <span class="prefix-icon">📧</span
+                    ><input type="email" id="cEmail" disabled />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label
+                    ><span>📱</span> Phone <span class="req">*</span></label
+                  >
+                  <div class="input-wrap">
+                    <span class="prefix-icon">📱</span
+                    ><input
+                      type="tel"
+                      id="cPhone"
+                      placeholder="+92 3XX XXXXXXX"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label><span>💬</span> WhatsApp</label>
+                  <div class="input-wrap">
+                    <span class="prefix-icon">💬</span
+                    ><input
+                      type="tel"
+                      id="cWhatsapp"
+                      placeholder="+92 3XX XXXXXXX"
+                    />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label><span>🚨</span> Emergency Contact</label>
+                  <div class="input-wrap">
+                    <span class="prefix-icon">🚨</span
+                    ><input
+                      type="tel"
+                      id="cEmergency"
+                      placeholder="+92 3XX XXXXXXX"
+                    />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label
+                    ><span>📍</span> District <span class="req">*</span></label
+                  >
+                  <div class="input-wrap">
+                    <select id="cDistrict" required>
+                      <option value="">Select</option>
+                      <option>Swat</option>
+                      <option>Shangla</option>
+                      <option>Buner</option>
+                      <option>Malakand</option>
+                      <option>Upper Dir</option>
+                      <option>Lower Dir</option>
+                      <option>Upper Chitral</option>
+                      <option>Lower Chitral</option>
+                      <option>Bajaur</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label
+                    ><span>🏘️</span> Tehsil <span class="req">*</span></label
+                  >
+                  <div class="input-wrap">
+                    <span class="prefix-icon">🏘️</span
+                    ><input
+                      type="text"
+                      id="cTehsil"
+                      placeholder="Your tehsil"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="field-box field-full">
+                  <label><span>🏠</span> Address</label>
+                  <div class="input-wrap">
+                    <textarea
+                      id="cAddress"
+                      placeholder="House #, Street, Area..."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-save">💾 Save Changes</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- EDUCATION TAB -->
+        <div class="form-card" id="tab-education" style="display: none">
+          <div class="form-card-header">
+            <div class="header-icon">🎓</div>
+            <div>
+              <h2>Education & Profession</h2>
+              <p>Your academic details</p>
+            </div>
+          </div>
+          <form id="educationForm">
+            <div class="form-card-body">
+              <div class="fields-grid">
+                <div class="field-box">
+                  <label><span>🎓</span> Highest Education</label>
+                  <div class="input-wrap">
+                    <span class="prefix-icon">🎓</span
+                    ><input
+                      type="text"
+                      id="eEducation"
+                      placeholder="e.g. BS CS"
+                    />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label><span>🏛️</span> Institution</label>
+                  <div class="input-wrap">
+                    <span class="prefix-icon">🏛️</span
+                    ><input
+                      type="text"
+                      id="eInstitution"
+                      placeholder="University/College"
+                    />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label><span>💼</span> Profession</label>
+                  <div class="input-wrap">
+                    <span class="prefix-icon">💼</span
+                    ><input
+                      type="text"
+                      id="eProfession"
+                      placeholder="Student / Teacher"
+                    />
+                  </div>
+                </div>
+                <div class="field-box">
+                  <label><span>🏢</span> Organization</label>
+                  <div class="input-wrap">
+                    <span class="prefix-icon">🏢</span
+                    ><input
+                      type="text"
+                      id="eOrganization"
+                      placeholder="Company"
+                    />
+                  </div>
+                </div>
+                <div class="field-box field-full">
+                  <label><span>🛠️</span> Skills</label>
+                  <div class="input-wrap">
+                    <textarea
+                      id="eSkills"
+                      placeholder="Web Development, Public Speaking..."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-save">💾 Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      let currentEmail = null;
+
+      function showMsg(text, type) {
+        alert((type === "success" ? "✅ " : "❌ ") + text);
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        // Tabs
+        document.querySelectorAll(".profile-tab").forEach((tab) => {
+          tab.addEventListener("click", function () {
+            const target = this.getAttribute("data-tab");
+            document
+              .querySelectorAll(".profile-tab")
+              .forEach((t) => t.classList.remove("active"));
+            this.classList.add("active");
+            document.querySelectorAll(".form-card").forEach((c) => {
+              c.style.display = c.id === "tab-" + target ? "block" : "none";
+            });
+          });
+        });
+
+        try {
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          if (!session) {
+            window.location.href = "login.html";
+            return;
+          }
+          currentEmail = session.user.email;
+
+          const { data: member } = await supabaseClient
+            .from("members")
+            .select("*")
+            .eq("email", currentEmail)
+            .single();
+          if (!member) return;
+
+          const initial = (member.name || "M").charAt(0).toUpperCase();
+          document.getElementById("topAvatar").textContent = initial;
+
+          const bigAvatar = document.getElementById("bigAvatar");
+          if (
+            member.photo_url &&
+            (member.gender !== "Female" || member.photo_privacy !== "private")
+          ) {
+            bigAvatar.innerHTML =
+              '<img src="' + member.photo_url + '" alt="Photo">';
+          } else {
+            bigAvatar.textContent = initial;
+          }
+
+          document.getElementById("heroName").textContent =
+            member.name || "Member";
+          document.getElementById("heroRole").textContent =
+            member.role || "Member";
+          document.getElementById("heroUid").textContent = member.uid || "-";
+          document.getElementById("heroDistrict").textContent =
+            member.district || "-";
+          document.getElementById("heroJoined").textContent = member.created_at
+            ? new Date(member.created_at).toLocaleDateString("en-PK", {
+                month: "short",
+                year: "numeric",
+              })
+            : "-";
+          document
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = member.name || "Member"));
+          document
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = member.uid || "-"));
+
+          // Status
+          const statusEl = document.getElementById("heroStatus");
+          if (member.status === "Active") {
+            statusEl.className = "status-pill active";
+            statusEl.innerHTML = "✅ Active";
+          } else if (member.status === "Suspended") {
+            statusEl.className = "status-pill suspended";
+            statusEl.innerHTML = "⏸️ Suspended";
+          } else {
+            statusEl.className = "status-pill pending";
+            statusEl.innerHTML = "⏳ Pending";
+          }
+
+          // Completion
+          let filled = 0;
+          [
+            "name",
+            "father_name",
+            "cnic",
+            "dob",
+            "gender",
+            "email",
+            "phone",
+            "district",
+            "tehsil",
+            "photo_url",
+          ].forEach((f) => {
+            if (member[f]) filled++;
+          });
+          const percent = Math.round((filled / 10) * 100);
+          document.getElementById("completionText").textContent = percent + "%";
+          document.getElementById("completionFill").style.width = percent + "%";
+
+          // Fill forms
+          document.getElementById("pName").value = member.name || "";
+          document.getElementById("pFather").value = member.father_name || "";
+          document.getElementById("pCnic").value =
+            member.cnic_masked || "XXXXX-XXXXXXX-X";
+          document.getElementById("pDob").value = member.dob || "";
+          document.getElementById("pGender").value = member.gender || "Male";
+          document.getElementById("pBlood").value = member.blood_group || "";
+          document.getElementById("cEmail").value = member.email || "";
+          document.getElementById("cPhone").value = member.phone || "";
+          document.getElementById("cWhatsapp").value = member.whatsapp || "";
+          document.getElementById("cEmergency").value =
+            member.emergency_contact || "";
+          document.getElementById("cDistrict").value = member.district || "";
+          document.getElementById("cTehsil").value = member.tehsil || "";
+          document.getElementById("cAddress").value = member.address || "";
+          document.getElementById("eEducation").value = member.education || "";
+          document.getElementById("eInstitution").value =
+            member.institution || "";
+          document.getElementById("eProfession").value =
+            member.profession || "";
+          document.getElementById("eOrganization").value =
+            member.organization || "";
+          document.getElementById("eSkills").value = member.skills || "";
+
+          // ==========================================
+          // SCORE + BADGES
+          // ==========================================
+          try {
+            let sa = 0;
+            while (
+              typeof window.calculateMemberScore === "undefined" &&
+              sa < 30
+            ) {
+              await new Promise((r) => setTimeout(r, 100));
+              sa++;
+            }
+
+            if (typeof window.calculateMemberScore !== "undefined") {
+              const scoreData = await window.calculateMemberScore(member);
+
+              document.getElementById("scoreMiniNum").textContent =
+                scoreData.score;
+              const circle = document.getElementById("scoreMiniCircle");
+              circle.style.background = `conic-gradient(#1abc9c 0% ${scoreData.score}%, rgba(255,255,255,0.08) ${scoreData.score}% 100%)`;
+
+              // Label
+              let label = "Keep going!";
+              if (scoreData.score >= 80) label = "🌟 Excellent!";
+              else if (scoreData.score >= 60) label = "⭐ Very Good";
+              else if (scoreData.score >= 40) label = "👍 Good";
+              document.getElementById("scoreMiniLabel").textContent = label;
+
+              // Badges
+              const badgesFlex = document.getElementById("badgesFlex");
+              if (scoreData.badges && scoreData.badges.length > 0) {
+                badgesFlex.innerHTML = scoreData.badges
+                  .map((bName) => {
+                    const info = window.getBadgeInfo
+                      ? window.getBadgeInfo(bName)
+                      : { icon: "🏅", color: "#1abc9c", description: "" };
+                    return `<span class="badge-chip" style="background: ${info.color}20; color: ${info.color}; border: 1px solid ${info.color}50;" title="${info.description}">${info.icon} ${bName}</span>`;
+                  })
+                  .join("");
+              } else {
+                badgesFlex.innerHTML =
+                  '<span style="color:white;opacity:0.6;font-size:12px;">No badges yet</span>';
+              }
+            }
+          } catch (e) {
+            console.log(e);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
+        // SAVE FORMS
+        document
+          .getElementById("personalForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const orig = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "⏳ Saving...";
+            const { error } = await supabaseClient
+              .from("members")
+              .update({
+                name: document.getElementById("pName").value.trim(),
+                father_name: document.getElementById("pFather").value.trim(),
+                dob: document.getElementById("pDob").value || null,
+                blood_group: document.getElementById("pBlood").value || null,
+              })
+              .eq("email", currentEmail);
+            btn.disabled = false;
+            btn.textContent = orig;
+            if (error) {
+              showMsg(error.message, "error");
+              return;
+            }
+            showMsg("Personal info updated!", "success");
+            setTimeout(() => location.reload(), 1000);
+          });
+
+        document
+          .getElementById("contactForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const orig = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "⏳ Saving...";
+            const { error } = await supabaseClient
+              .from("members")
+              .update({
+                phone: document.getElementById("cPhone").value.trim(),
+                whatsapp:
+                  document.getElementById("cWhatsapp").value.trim() || null,
+                emergency_contact:
+                  document.getElementById("cEmergency").value.trim() || null,
+                district: document.getElementById("cDistrict").value,
+                tehsil: document.getElementById("cTehsil").value.trim(),
+                address:
+                  document.getElementById("cAddress").value.trim() || null,
+              })
+              .eq("email", currentEmail);
+            btn.disabled = false;
+            btn.textContent = orig;
+            if (error) {
+              showMsg(error.message, "error");
+              return;
+            }
+            showMsg("Contact info updated!", "success");
+            setTimeout(() => location.reload(), 1000);
+          });
+
+        document
+          .getElementById("educationForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const orig = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = "⏳ Saving...";
+            const { error } = await supabaseClient
+              .from("members")
+              .update({
+                education:
+                  document.getElementById("eEducation").value.trim() || null,
+                institution:
+                  document.getElementById("eInstitution").value.trim() || null,
+                profession:
+                  document.getElementById("eProfession").value.trim() || null,
+                organization:
+                  document.getElementById("eOrganization").value.trim() || null,
+                skills: document.getElementById("eSkills").value.trim() || null,
+              })
+              .eq("email", currentEmail);
+            btn.disabled = false;
+            btn.textContent = orig;
+            if (error) {
+              showMsg(error.message, "error");
+              return;
+            }
+            showMsg("Education info updated!", "success");
+            setTimeout(() => location.reload(), 1000);
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volunteer - SYDF</title>
+    <script src="js/head-includes.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+      .volunteer-section {
+        padding: 40px;
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+      .intro-block {
+        text-align: center;
+      }
+      .intro-block h2 {
+        font-size: 30px;
+        color: #1abc9c;
+        margin-bottom: 20px;
+      }
+      .intro-block p {
+        font-size: 16px;
+        line-height: 1.9;
+        opacity: 0.9;
+        color: white;
+      }
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+      }
+      .benefit-item {
+        padding: 22px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        text-align: center;
+        transition: 0.3s;
+      }
+      .benefit-item:hover {
+        border-color: rgba(26, 188, 156, 0.3);
+        transform: translateY(-3px);
+      }
+      .benefit-icon {
+        font-size: 34px;
+        margin-bottom: 12px;
+        display: block;
+      }
+      .benefit-item h4 {
+        font-size: 14px;
+        color: #1abc9c;
+        margin-bottom: 8px;
+      }
+      .benefit-item p {
+        font-size: 12px;
+        opacity: 0.8;
+        line-height: 1.6;
+        color: white;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        opacity: 0.9;
+        color: white;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 13px 15px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        outline: none;
+        transition: 0.3s;
+      }
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.08);
+      }
+      .form-group select option {
+        background: #203a43;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+      }
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .checkbox-item:hover {
+        background: rgba(26, 188, 156, 0.08);
+        border-color: rgba(26, 188, 156, 0.25);
+      }
+      .checkbox-item input {
+        width: auto;
+        accent-color: #1abc9c;
+        cursor: pointer;
+      }
+      .checkbox-item span {
+        font-size: 13px;
+        color: white;
+      }
+      .checkbox-item:has(input:checked) {
+        background: rgba(26, 188, 156, 0.12);
+        border-color: #1abc9c;
+      }
+      .btn-submit {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+      }
+      .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(26, 188, 156, 0.4);
+      }
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .page-hero-content {
+          padding: 30px 25px;
+        }
+        .volunteer-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>SWAT Youth Development Forum</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="leadership.html">Leadership</a></li>
+          <li><a href="districts.html">Districts</a></li>
+          <li><a href="activities.html">Activities</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="membership.html">Membership</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="login.html" class="btn-login">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>🙋 Volunteer</h1>
+        <p>Home / Volunteer</p>
+      </div>
+    </section>
+
+    <section class="volunteer-section">
+      <div class="glass-block intro-block">
+        <h2>Become a Volunteer</h2>
+        <p>
+          Join SYDF as a volunteer and make a real difference in your community.
+          No membership required — just passion and commitment to help the youth
+          of Malakand Division.
+        </p>
+      </div>
+
+      <div class="glass-block">
+        <h3
+          style="
+            color: #1abc9c;
+            font-size: 22px;
+            margin-bottom: 22px;
+            text-align: center;
+            font-weight: 600;
+          "
+        >
+          🌟 Why Volunteer With Us?
+        </h3>
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <span class="benefit-icon">🤝</span>
+            <h4>Make a Difference</h4>
+            <p>Directly impact the lives of young people</p>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">📚</span>
+            <h4>Learn New Skills</h4>
+            <p>Gain experience in leadership and community work</p>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">👥</span>
+            <h4>Build Network</h4>
+            <p>Meet passionate youth from across the region</p>
+          </div>
+          <div class="benefit-item">
+            <span class="benefit-icon">🏆</span>
+            <h4>Get Recognized</h4>
+            <p>Receive volunteer certificates and awards</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-block">
+        <h3
+          style="
+            color: #1abc9c;
+            font-size: 22px;
+            margin-bottom: 22px;
+            font-weight: 600;
+          "
+        >
+          📝 Volunteer Registration
+        </h3>
+
+        <form id="volunteerForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input
+                type="text"
+                id="volName"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input
+                type="email"
+                id="volEmail"
+                placeholder="example@email.com"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone / WhatsApp *</label>
+              <input
+                type="tel"
+                id="volPhone"
+                placeholder="+92 3XX XXXXXXX"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Gender</label>
+              <select id="volGender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>District *</label>
+              <select id="volDistrict" required>
+                <option value="">Select District</option>
+                <option value="Swat">Swat</option>
+                <option value="Shangla">Shangla</option>
+                <option value="Buner">Buner</option>
+                <option value="Malakand">Malakand</option>
+                <option value="Upper Dir">Upper Dir</option>
+                <option value="Lower Dir">Lower Dir</option>
+                <option value="Upper Chitral">Upper Chitral</option>
+                <option value="Lower Chitral">Lower Chitral</option>
+                <option value="Bajaur">Bajaur</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tehsil</label>
+              <input
+                type="text"
+                id="volTehsil"
+                placeholder="Enter your tehsil"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Availability *</label>
+            <select id="volAvailability" required>
+              <option value="">Select Availability</option>
+              <option value="Weekends">Weekends Only</option>
+              <option value="Evenings">Weekday Evenings</option>
+              <option value="Full Time">Full Time</option>
+              <option value="Flexible">Flexible</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Your Skills & Interests (Select all that apply)</label>
+            <div class="checkbox-grid">
+              <label class="checkbox-item"
+                ><input type="checkbox" value="Teaching" /><span
+                  >📚 Teaching</span
+                ></label
+              >
+              <label class="checkbox-item"
+                ><input type="checkbox" value="Medical" /><span
+                  >🏥 Medical Aid</span
+                ></label
+              >
+              <label class="checkbox-item"
+                ><input type="checkbox" value="Sports" /><span
+                  >⚽ Sports</span
+                ></label
+              >
+              <label class="checkbox-item"
+                ><input type="checkbox" value="IT" /><span
+                  >💻 IT & Tech</span
+                ></label
+              >
+              <label class="checkbox-item"
+                ><input type="checkbox" value="Media" /><span
+                  >📸 Media & Photography</span
+                ></label
+              >
+              <label class="checkbox-item"
+                ><input type="checkbox" value="Event Management" /><span
+                  >🎯 Event Management</span
+                ></label
+              >
+              <label class="checkbox-item"
+                ><input type="checkbox" value="Fundraising" /><span
+                  >💰 Fundraising</span
+                ></label
+              >
+              <label class="checkbox-item"
+                ><input type="checkbox" value="Marketing" /><span
+                  >📢 Marketing</span
+                ></label
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Why do you want to volunteer? *</label>
+            <textarea
+              rows="4"
+              id="volReason"
+              placeholder="Tell us why you want to join our volunteer team..."
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            🙋 Submit Application
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="glass-footer">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h3>SYDF</h3>
+          <p>SWAT Youth Development Forum</p>
+          <p>Empowering Youth, Building Future</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="leadership.html">Leadership</a></li>
+            <li><a href="activities.html">Activities</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Get Involved</h4>
+          <ul>
+            <li><a href="membership.html">Membership</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="sponsor.html">Sponsor</a></li>
+            <li><a href="volunteer.html">Volunteer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>Swat, Malakand Division</p>
+          <p>Khyber Pakhtunkhwa, Pakistan</p>
+          <p>info@SYDF.org</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      document
+        .getElementById("volunteerForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          alert(
+            "✅ Thank you for applying as a volunteer!\n\nOur team will review your application and contact you within 3-5 days.",
+          );
+          this.reset();
+        });
+    </script>
+  </body>
+</html>

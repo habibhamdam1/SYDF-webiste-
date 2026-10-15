@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applications - Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="dashboard-body admin-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>PYDF</h1>
+          <p>Admin Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul>
+          <li>
+            <a href="admin.html"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Members</div>
+        <ul>
+          <li>
+            <a href="admin-members.html"
+              ><span class="nav-icon">👥</span><span>All Members</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-applications.html" class="active"
+              ><span class="nav-icon">📝</span><span>Applications</span
+              ><span class="badge" id="appBadge">0</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-waitlist.html"
+              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-cabinet.html"
+              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-districts.html"
+              ><span class="nav-icon">🗺️</span
+              ><span>Districts & Tehsils</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Content</div>
+        <ul>
+          <li>
+            <a href="admin-activities.html"
+              ><span class="nav-icon">🎯</span><span>Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-news.html"
+              ><span class="nav-icon">📰</span><span>News & Blog</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-gallery.html"
+              ><span class="nav-icon">🖼️</span><span>Gallery</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Finance</div>
+        <ul>
+          <li>
+            <a href="admin-finance.html"
+              ><span class="nav-icon">💰</span><span>Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-expenses.html"
+              ><span class="nav-icon">💸</span><span>Expenses</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-donations.html"
+              ><span class="nav-icon">🎁</span><span>Donations</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-sponsorships.html"
+              ><span class="nav-icon">🤝</span><span>Sponsorships</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">System</div>
+        <ul>
+          <li>
+            <a href="admin-notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-email.html"
+              ><span class="nav-icon">📧</span><span>Email System</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-reports.html"
+              ><span class="nav-icon">📈</span><span>Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Membership Applications</h2>
+          <p>Review and approve new applications</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="topbar-btn" title="Refresh" id="refreshBtn">🔄</button>
+          <div class="topbar-user">
+            <div class="user-avatar admin-avatar">A</div>
+            <div class="user-info">
+              <span class="user-name">Admin</span
+              ><span class="user-uid">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="page-header-block">
+          <div class="page-header-info">
+            <h1>📝 Pending Applications</h1>
+            <p>
+              <strong id="pendingCount">0</strong> new applications waiting for
+              review
+            </p>
+          </div>
+          <div class="header-actions-group">
+            <button class="btn-filter-type active" data-type="pending">
+              Pending
+            </button>
+            <button class="btn-filter-type" data-type="Active">Approved</button>
+            <button class="btn-filter-type" data-type="Rejected">
+              Rejected
+            </button>
+            <button class="btn-filter-type" data-type="all">All</button>
+          </div>
+        </div>
+
+        <div
+          id="loadingState"
+          style="text-align: center; padding: 60px; color: white; opacity: 0.7"
+        >
+          <div style="font-size: 40px; margin-bottom: 15px">⏳</div>
+          <p>Loading applications...</p>
+        </div>
+
+        <div
+          class="applications-grid"
+          id="applicationsGrid"
+          style="display: none"
+        ></div>
+
+        <div class="empty-state" id="emptyState" style="display: none">
+          <div
+            class="glass-card empty-card"
+            style="
+              padding: 60px 40px;
+              text-align: center;
+              background: rgba(255, 255, 255, 0.08);
+              border-radius: 16px;
+            "
+          >
+            <span
+              style="
+                font-size: 68px;
+                display: block;
+                margin-bottom: 20px;
+                opacity: 0.6;
+              "
+              >📭</span
+            >
+            <h3 style="color: white; font-size: 22px; margin-bottom: 10px">
+              No Applications Found
+            </h3>
+            <p style="opacity: 0.75; color: white">
+              There are no applications in this category.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+      let allMembers = [];
+      let currentFilter = "pending";
+
+      async function loadApplications() {
+        const loadingState = document.getElementById("loadingState");
+        const grid = document.getElementById("applicationsGrid");
+        const emptyState = document.getElementById("emptyState");
+
+        loadingState.style.display = "block";
+        grid.style.display = "none";
+        emptyState.style.display = "none";
+
+        try {
+          const { data, error } = await supabaseClient
+            .from("members")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+
+          allMembers = data || [];
+          const pending = allMembers.filter((m) => m.status === "Pending");
+          document.getElementById("pendingCount").textContent = pending.length;
+          const badge = document.getElementById("appBadge");
+          if (badge) badge.textContent = pending.length;
+
+          loadingState.style.display = "none";
+          renderApplications();
+        } catch (err) {
+          loadingState.innerHTML =
+            '<div style="color:#fca5a5; padding:40px;">❌ Error: ' +
+            err.message +
+            "</div>";
+        }
+      }
+
+      function renderApplications() {
+        const grid = document.getElementById("applicationsGrid");
+        const emptyState = document.getElementById("emptyState");
+
+        let filtered = allMembers;
+        if (currentFilter === "pending")
+          filtered = allMembers.filter((m) => m.status === "Pending");
+        else if (currentFilter === "Active")
+          filtered = allMembers.filter((m) => m.status === "Active");
+        else if (currentFilter === "Rejected")
+          filtered = allMembers.filter((m) => m.status === "Rejected");
+
+        if (filtered.length === 0) {
+          grid.style.display = "none";
+          emptyState.style.display = "block";
+          return;
+        }
+
+        emptyState.style.display = "none";
+        grid.style.display = "grid";
+
+        grid.innerHTML = filtered
+          .map((m) => {
+            const initial = (m.name || "M").charAt(0).toUpperCase();
+            const gender = (m.gender || "").toLowerCase();
+            const avatarClass = gender === "female" ? "female" : "";
+            const statusClass =
+              m.status === "Active"
+                ? "approved"
+                : m.status === "Rejected"
+                  ? "rejected"
+                  : "pending";
+            const statusText =
+              m.status === "Active"
+                ? "Approved"
+                : m.status === "Rejected"
+                  ? "Rejected"
+                  : "Pending";
+            const date = m.created_at
+              ? new Date(m.created_at).toLocaleDateString()
+              : "N/A";
+
+            const actions =
+              m.status === "Pending"
+                ? `<button class="btn-approve-app" data-id="${m.id}" data-action="approve">✓ Approve</button>
+                       <button class="btn-reject-app" data-id="${m.id}" data-action="reject">✕ Reject</button>
+                       <button class="btn-view-app" data-id="${m.id}" data-action="view">👁️ View</button>`
+                : `<button class="btn-view-app" data-id="${m.id}" data-action="view">👁️ View</button>`;
+
+            return `
+                <div class="glass-card application-card" data-id="${m.id}">
+                    <div class="application-header">
+                        <div class="app-avatar ${avatarClass}">${initial}</div>
+                        <div class="app-header-info">
+                            <h3>${m.name || "Unknown"}</h3>
+                            <p>Applied: ${date}</p>
+                        </div>
+                        <span class="app-status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="application-details">
+                        <div class="detail-row"><span class="detail-label">📧 Email</span><span class="detail-value">${m.email || "-"}</span></div>
+                        <div class="detail-row"><span class="detail-label">📱 Phone</span><span class="detail-value">${m.phone || "-"}</span></div>
+                        <div class="detail-row"><span class="detail-label">🆔 CNIC</span><span class="detail-value">${m.cnic || "-"}</span></div>
+                        <div class="detail-row"><span class="detail-label">🎂 DOB</span><span class="detail-value">${m.dob || "-"}</span></div>
+                        <div class="detail-row"><span class="detail-label">⚧ Gender</span><span class="detail-value">${m.gender || "-"}</span></div>
+                        <div class="detail-row"><span class="detail-label">📍 Location</span><span class="detail-value">${m.district || "-"}, ${m.tehsil || "-"}</span></div>
+                        <div class="detail-row"><span class="detail-label">👨 Father</span><span class="detail-value">${m.father_name || "-"}</span></div>
+                        <div class="detail-row"><span class="detail-label">🆔 UID</span><span class="detail-value">${m.uid || "-"}</span></div>
+                    </div>
+                    <div class="application-actions">${actions}</div>
+                </div>`;
+          })
+          .join("");
+
+        grid.querySelectorAll("button[data-action]").forEach((btn) => {
+          btn.addEventListener("click", handleAction);
+        });
+      }
+
+      async function handleAction(e) {
+        const id = this.getAttribute("data-id");
+        const action = this.getAttribute("data-action");
+
+        if (action === "view") {
+          alert("Full details view coming soon.");
+          return;
+        }
+
+        const member = allMembers.find((m) => String(m.id) === String(id));
+        if (!member) return;
+
+        if (action === "approve") {
+          if (
+            !confirm(
+              "Approve " + member.name + "?\n\nAn account will be activated.",
+            )
+          )
+            return;
+          const { error } = await supabaseClient
+            .from("members")
+            .update({ status: "Active" })
+            .eq("id", id);
+          if (error) {
+            alert("❌ Error: " + error.message);
+            return;
+          }
+          alert("✅ " + member.name + " approved!");
+          loadApplications();
+        } else if (action === "reject") {
+          const reason = prompt(
+            "Reject " + member.name + "?\nReason (optional):",
+          );
+          if (reason === null) return;
+          const { error } = await supabaseClient
+            .from("members")
+            .update({ status: "Rejected" })
+            .eq("id", id);
+          if (error) {
+            alert("❌ Error: " + error.message);
+            return;
+          }
+          alert("❌ " + member.name + " rejected.");
+          loadApplications();
+        }
+      }
+
+      document.querySelectorAll(".btn-filter-type").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll(".btn-filter-type")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          currentFilter = this.getAttribute("data-type");
+          renderApplications();
+        });
+      });
+
+      const refreshBtn = document.getElementById("refreshBtn");
+      if (refreshBtn) refreshBtn.addEventListener("click", loadApplications);
+
+      window.addEventListener("load", function () {
+        setTimeout(loadApplications, 500);
+      });
+    </script>
+    <script src="js/admin-data.js"></script>
+  </body>
+</html>

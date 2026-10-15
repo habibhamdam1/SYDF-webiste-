@@ -1,0 +1,1123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Membership - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/head-includes.js"></script>
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 40px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 42px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+
+      .membership-section {
+        padding: 20px 20px 60px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Benefits Row */
+      .benefits-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+        margin-bottom: 40px;
+      }
+      .benefit-mini {
+        padding: 22px 20px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        text-align: center;
+        transition: 0.3s;
+      }
+      .benefit-mini:hover {
+        transform: translateY(-5px);
+        border-color: rgba(26, 188, 156, 0.4);
+        box-shadow: 0 15px 40px rgba(26, 188, 156, 0.2);
+      }
+      .benefit-mini .ico {
+        font-size: 36px;
+        display: block;
+        margin-bottom: 12px;
+      }
+      .benefit-mini h4 {
+        font-size: 14px;
+        color: white;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .benefit-mini p {
+        font-size: 12px;
+        opacity: 0.7;
+        color: white;
+        line-height: 1.6;
+      }
+
+      /* Form Container */
+      .form-container {
+        max-width: 720px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        padding: 45px 40px;
+        position: relative;
+        overflow: hidden;
+      }
+      .form-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1abc9c, #fbbf24, #1abc9c, #fbbf24);
+        background-size: 300% 100%;
+        animation: slideGradient 5s linear infinite;
+      }
+      @keyframes slideGradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 300% 50%;
+        }
+      }
+
+      .form-header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .form-header h2 {
+        font-size: 28px;
+        color: #1abc9c;
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+      .form-header p {
+        font-size: 14px;
+        opacity: 0.75;
+        color: white;
+      }
+
+      /* Form Grid */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .form-group.full {
+        grid-column: 1 / -1;
+      }
+      .form-label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+      .form-label .req {
+        color: #fca5a5;
+      }
+
+      .form-input,
+      .form-select {
+        padding: 13px 15px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13.5px;
+        outline: none;
+        transition: 0.3s;
+        width: 100%;
+      }
+      .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .form-input:focus,
+      .form-select:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.08);
+        box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.15);
+      }
+      .form-select option {
+        background: #203a43;
+        color: white;
+      }
+
+      .password-wrapper {
+        position: relative;
+      }
+      .password-wrapper .form-input {
+        padding-right: 45px;
+      }
+      .toggle-pass {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+        transition: 0.3s;
+      }
+      .toggle-pass:hover {
+        color: #1abc9c;
+      }
+
+      /* Radio Group */
+      .radio-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 4px;
+      }
+      .radio-option {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 13px;
+        color: white;
+      }
+      .radio-option:hover {
+        border-color: rgba(26, 188, 156, 0.4);
+      }
+      .radio-option input[type="radio"] {
+        accent-color: #1abc9c;
+        cursor: pointer;
+      }
+      .radio-option input[type="radio"]:checked ~ span {
+        color: #1abc9c;
+        font-weight: 600;
+      }
+
+      /* Checkbox */
+      .checkbox-group {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin: 18px 0 22px;
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.6;
+      }
+      .checkbox-group input[type="checkbox"] {
+        accent-color: #1abc9c;
+        cursor: pointer;
+        margin-top: 2px;
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+      .checkbox-group a {
+        color: #1abc9c;
+        text-decoration: underline;
+      }
+
+      /* Submit Button */
+      .btn-submit {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-submit:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 35px rgba(26, 188, 156, 0.4);
+      }
+      .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .btn-submit .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Alert boxes */
+      .alert {
+        padding: 14px 18px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        display: none;
+        align-items: flex-start;
+        gap: 10px;
+        line-height: 1.6;
+        animation: slideDown 0.3s ease;
+      }
+      .alert.show {
+        display: flex;
+      }
+      .alert .ico {
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .alert.error {
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.35);
+        color: #fca5a5;
+      }
+      .alert.success {
+        background: rgba(26, 188, 156, 0.12);
+        border: 1px solid rgba(26, 188, 156, 0.4);
+        color: #5eead4;
+      }
+      .alert.info {
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        color: #93c5fd;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-footer {
+        text-align: center;
+        margin-top: 22px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .form-footer a {
+        color: #1abc9c;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .form-footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* ==========================================
+         EMAIL VERIFICATION MODAL
+         ========================================== */
+      .email-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        padding: 20px;
+      }
+      .email-modal-overlay.show {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .email-modal {
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        border: 1px solid rgba(26, 188, 156, 0.4);
+        border-radius: 24px;
+        padding: 45px 35px 35px;
+        max-width: 480px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+        position: relative;
+        overflow: hidden;
+        animation: slideUp 0.4s ease;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(40px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .email-modal::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1abc9c, #fbbf24, #1abc9c, #fbbf24);
+        background-size: 300% 100%;
+        animation: slideGradient 4s linear infinite;
+      }
+
+      .email-icon-wrap {
+        width: 95px;
+        height: 95px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.3),
+          rgba(26, 188, 156, 0.05)
+        );
+        border: 2px solid rgba(26, 188, 156, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 22px;
+        font-size: 42px;
+        animation: pulseGlow 2s ease-in-out infinite;
+      }
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 30px rgba(26, 188, 156, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 55px rgba(26, 188, 156, 0.55);
+        }
+      }
+
+      .email-modal h2 {
+        font-size: 24px;
+        color: #1abc9c;
+        margin-bottom: 12px;
+        font-weight: 700;
+      }
+
+      .email-modal > p {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.7;
+        margin-bottom: 10px;
+      }
+
+      .email-address-box {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 10px;
+        padding: 13px 18px;
+        margin: 14px 0 22px;
+        font-family: "Courier New", monospace;
+        font-size: 13.5px;
+        color: #5eead4;
+        font-weight: 700;
+        word-break: break-all;
+      }
+
+      .email-tip-box {
+        background: rgba(251, 191, 36, 0.1);
+        border: 1px solid rgba(251, 191, 36, 0.3);
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 24px;
+        text-align: left;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+      .email-tip-box .ico {
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .email-tip-box .txt {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.6;
+      }
+      .email-tip-box .txt strong {
+        color: #fbbf24;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .btn-modal {
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13.5px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-modal-primary {
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+      }
+      .btn-modal-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(26, 188, 156, 0.4);
+      }
+      .btn-modal-secondary {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.4);
+      }
+      .btn-modal-secondary:hover {
+        background: rgba(59, 130, 246, 0.25);
+      }
+
+      /* Info block */
+      .info-notice {
+        background: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 24px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .info-notice .ico {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .info-notice .txt {
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.65;
+      }
+      .info-notice .txt strong {
+        color: #93c5fd;
+      }
+
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 30px;
+        }
+        .page-hero-content {
+          padding: 30px 22px;
+        }
+        .form-container {
+          padding: 32px 22px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .benefits-row {
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+        .radio-group {
+          flex-direction: column;
+        }
+        .email-modal {
+          padding: 35px 24px 28px;
+        }
+        .email-modal h2 {
+          font-size: 20px;
+        }
+        .modal-actions {
+          flex-direction: column;
+        }
+        .btn-modal {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>🤝 Become a Member</h1>
+        <p>Home / Membership</p>
+      </div>
+    </section>
+
+    <section class="membership-section">
+      <!-- Benefits -->
+      <div class="benefits-row">
+        <div class="benefit-mini">
+          <span class="ico">🎓</span>
+          <h4>Training & Workshops</h4>
+          <p>Free access to leadership programs</p>
+        </div>
+        <div class="benefit-mini">
+          <span class="ico">🆔</span>
+          <h4>Official ID Card</h4>
+          <p>Digital + printable member identity</p>
+        </div>
+        <div class="benefit-mini">
+          <span class="ico">📜</span>
+          <h4>Membership Certificate</h4>
+          <p>Verified membership certificate</p>
+        </div>
+        <div class="benefit-mini">
+          <span class="ico">🎯</span>
+          <h4>Community Activities</h4>
+          <p>Join social & welfare events</p>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="form-container">
+        <div class="form-header">
+          <h2>Create Your Account</h2>
+          <p>Fill the form below to apply for SYDF membership</p>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <div class="info-notice">
+          <span class="ico">💡</span>
+          <div class="txt">
+            <strong>Note:</strong> After registration, you'll receive a
+            verification email. Please verify your email, then wait for admin
+            approval to activate your account.
+          </div>
+        </div>
+
+        <form id="membershipForm" autocomplete="on">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label"
+                >Full Name <span class="req">*</span></label
+              >
+              <input
+                type="text"
+                class="form-input"
+                id="fullName"
+                placeholder="e.g. Habib Ur Rahman"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label"
+                >Email Address <span class="req">*</span></label
+              >
+              <input
+                type="email"
+                class="form-input"
+                id="email"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label"
+                >Phone Number <span class="req">*</span></label
+              >
+              <input
+                type="tel"
+                class="form-input"
+                id="phone"
+                placeholder="03XXXXXXXXX"
+                pattern="[0-9+ -]{10,15}"
+                required
+              />
+            </div>
+
+            <div class="form-group full">
+              <label class="form-label"
+                >Password <span class="req">*</span></label
+              >
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  class="form-input"
+                  id="password"
+                  placeholder="Minimum 6 characters"
+                  minlength="6"
+                  required
+                />
+                <button
+                  type="button"
+                  class="toggle-pass"
+                  onclick="togglePassword()"
+                >
+                  👁️
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label"
+                >Gender <span class="req">*</span></label
+              >
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="gender" value="Male" required />
+                  <span>👨 Male</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="gender" value="Female" required />
+                  <span>👩 Female</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label"
+                >Date of Birth <span class="req">*</span></label
+              >
+              <input type="date" class="form-input" id="dob" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label"
+                >District <span class="req">*</span></label
+              >
+              <select class="form-select" id="district" required>
+                <option value="">Select District</option>
+                <option value="Swat">Swat</option>
+                <option value="Shangla">Shangla</option>
+                <option value="Buner">Buner</option>
+                <option value="Malakand">Malakand</option>
+                <option value="Upper Dir">Upper Dir</option>
+                <option value="Lower Dir">Lower Dir</option>
+                <option value="Upper Chitral">Upper Chitral</option>
+                <option value="Lower Chitral">Lower Chitral</option>
+                <option value="Bajaur">Bajaur</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label"
+                >Tehsil <span class="req">*</span></label
+              >
+              <input
+                type="text"
+                class="form-input"
+                id="tehsil"
+                placeholder="e.g. Babuzai"
+                required
+              />
+            </div>
+          </div>
+
+          <label class="checkbox-group">
+            <input type="checkbox" id="terms" required />
+            <span>
+              I agree to the
+              <a href="terms.html" target="_blank">Terms & Conditions</a> and
+              <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+              of SYDF. I confirm that the information provided is accurate.
+            </span>
+          </label>
+
+          <button type="submit" class="btn-submit" id="submitBtn">
+            Create Account
+          </button>
+        </form>
+
+        <div class="form-footer">
+          Already have an account? <a href="login.html">Login Here</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         EMAIL VERIFICATION MODAL
+         ========================================== -->
+    <div class="email-modal-overlay" id="emailModal">
+      <div class="email-modal">
+        <div class="email-icon-wrap">📧</div>
+        <h2>Check Your Email!</h2>
+        <p>We've sent a verification link to:</p>
+        <div class="email-address-box" id="modalEmail">-</div>
+        <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px">
+          Please click the link in the email to verify your account, then you
+          can login.
+        </p>
+
+        <div class="email-tip-box">
+          <span class="ico">💡</span>
+          <div class="txt">
+            <strong>Tip:</strong> Email nahi mili? <strong>Spam</strong> ya
+            <strong>Promotions</strong> folder check karo.
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button
+            class="btn-modal btn-modal-primary"
+            onclick="closeEmailModal()"
+          >
+            ✓ Got It
+          </button>
+          <button
+            class="btn-modal btn-modal-secondary"
+            id="resendBtn"
+            onclick="resendEmail()"
+          >
+            🔄 Resend Email
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      let verificationEmail = "";
+
+      // ==========================================
+      // TOGGLE PASSWORD VISIBILITY
+      // ==========================================
+      function togglePassword() {
+        const inp = document.getElementById("password");
+        const btn = document.querySelector(".toggle-pass");
+        if (inp.type === "password") {
+          inp.type = "text";
+          btn.textContent = "🙈";
+        } else {
+          inp.type = "password";
+          btn.textContent = "👁️";
+        }
+      }
+
+      // ==========================================
+      // SHOW ALERT
+      // ==========================================
+      function showAlert(type, message) {
+        const box = document.getElementById("alertBox");
+        const icons = { error: "❌", success: "✅", info: "ℹ️" };
+        box.className = "alert " + type + " show";
+        box.innerHTML =
+          '<span class="ico">' +
+          (icons[type] || "ℹ️") +
+          "</span><span>" +
+          message +
+          "</span>";
+        box.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      function hideAlert() {
+        document.getElementById("alertBox").className = "alert";
+      }
+
+      // ==========================================
+      // FORM SUBMIT
+      // ==========================================
+      document
+        .getElementById("membershipForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          hideAlert();
+
+          const submitBtn = document.getElementById("submitBtn");
+          const originalText = submitBtn.innerHTML;
+
+          // Get values
+          const fullName = document.getElementById("fullName").value.trim();
+          const email = document
+            .getElementById("email")
+            .value.trim()
+            .toLowerCase();
+          const phone = document.getElementById("phone").value.trim();
+          const password = document.getElementById("password").value;
+          const gender = document.querySelector(
+            'input[name="gender"]:checked',
+          )?.value;
+          const dob = document.getElementById("dob").value;
+          const district = document.getElementById("district").value;
+          const tehsil = document.getElementById("tehsil").value.trim();
+
+          // Validation
+          if (!fullName || fullName.length < 3) {
+            showAlert(
+              "error",
+              "Please enter your full name (min 3 characters).",
+            );
+            return;
+          }
+          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showAlert("error", "Please enter a valid email address.");
+            return;
+          }
+          if (!phone || phone.length < 10) {
+            showAlert("error", "Please enter a valid phone number.");
+            return;
+          }
+          if (!password || password.length < 6) {
+            showAlert("error", "Password must be at least 6 characters.");
+            return;
+          }
+          if (!gender) {
+            showAlert("error", "Please select your gender.");
+            return;
+          }
+          if (!district || !tehsil) {
+            showAlert("error", "Please select district and enter tehsil.");
+            return;
+          }
+
+          // Wait for supabase
+          let attempts = 0;
+          while (
+            (typeof supabaseClient === "undefined" || !supabaseClient) &&
+            attempts < 30
+          ) {
+            await new Promise((r) => setTimeout(r, 100));
+            attempts++;
+          }
+          if (!supabaseClient) {
+            showAlert("error", "System not ready. Please refresh the page.");
+            return;
+          }
+
+          // Loading state
+          submitBtn.disabled = true;
+          submitBtn.innerHTML =
+            '<span class="spinner"></span>Creating account...';
+
+          try {
+            // ==========================================
+            // STEP 1: Sign up with Supabase Auth
+            // ==========================================
+            const { data: authData, error: authError } =
+              await supabaseClient.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                  data: {
+                    full_name: fullName,
+                    phone: phone,
+                    gender: gender,
+                  },
+                },
+              });
+
+            if (authError) {
+              if (
+                authError.message
+                  .toLowerCase()
+                  .includes("already registered") ||
+                authError.message.toLowerCase().includes("already exists") ||
+                authError.message.toLowerCase().includes("user already")
+              ) {
+                showAlert(
+                  "error",
+                  "This email is already registered. Please login or use a different email.",
+                );
+              } else {
+                showAlert("error", authError.message);
+              }
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalText;
+              return;
+            }
+
+            if (!authData || !authData.user) {
+              showAlert("error", "Registration failed. Please try again.");
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalText;
+              return;
+            }
+
+            // ==========================================
+            // STEP 2: Insert into members table
+            // ==========================================
+            const memberData = {
+              name: fullName,
+              email: email,
+              phone: phone,
+              gender: gender,
+              dob: dob || null,
+              district: district,
+              tehsil: tehsil,
+              status: "Pending",
+              role: "Member",
+              member_type: "Member",
+              created_at: new Date().toISOString(),
+            };
+
+            const { error: memberError } = await supabaseClient
+              .from("members")
+              .insert([memberData]);
+
+            if (memberError) {
+              console.error("Member insert error:", memberError);
+              // Auth user ban gaya hai but member table mein nahi - still show email verification
+              // Admin ko manually add karna hoga
+              showAlert(
+                "info",
+                "Account created. Please check your email to verify. (Note: Contact admin if profile missing)",
+              );
+            }
+
+            // ==========================================
+            // STEP 3: Check if email confirmation is required
+            // ==========================================
+            const requiresVerification = !authData.session;
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+
+            if (requiresVerification) {
+              // Show email verification modal
+              verificationEmail = email;
+              document.getElementById("modalEmail").textContent = email;
+              document.getElementById("emailModal").classList.add("show");
+            } else {
+              // Email confirmation OFF - direct login
+              showAlert(
+                "success",
+                "✅ Registration successful! Your account is pending admin approval. You can now <a href='login.html' style='color:#5eead4;text-decoration:underline;'>login here</a>.",
+              );
+              document.getElementById("membershipForm").reset();
+              setTimeout(() => {
+                window.location.href = "login.html";
+              }, 2500);
+            }
+          } catch (err) {
+            console.error("Registration error:", err);
+            showAlert(
+              "error",
+              "Something went wrong. Please try again or contact support.",
+            );
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+          }
+        });
+
+      // ==========================================
+      // EMAIL VERIFICATION MODAL
+      // ==========================================
+      function closeEmailModal() {
+        document.getElementById("emailModal").classList.remove("show");
+        window.location.href = "login.html";
+      }
+
+      async function resendEmail() {
+        if (!verificationEmail) return;
+
+        const btn = document.getElementById("resendBtn");
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = "⏳ Sending...";
+        btn.disabled = true;
+
+        try {
+          const { error } = await supabaseClient.auth.resend({
+            type: "signup",
+            email: verificationEmail,
+          });
+
+          if (error) {
+            btn.innerHTML = "❌ Failed";
+            setTimeout(() => {
+              btn.innerHTML = originalHTML;
+              btn.disabled = false;
+            }, 2000);
+            return;
+          }
+
+          btn.innerHTML = "✅ Sent!";
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+          }, 2500);
+        } catch (err) {
+          console.error(err);
+          btn.innerHTML = "❌ Error";
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+          }, 2000);
+        }
+      }
+
+      // ==========================================
+      // EXPOSE
+      // ==========================================
+      window.togglePassword = togglePassword;
+      window.closeEmailModal = closeEmailModal;
+      window.resendEmail = resendEmail;
+    </script>
+  </body>
+</html>

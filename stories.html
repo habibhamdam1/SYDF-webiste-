@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Success Stories - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+
+      .stories-section {
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+      .intro-block {
+        text-align: center;
+      }
+      .intro-block h2 {
+        font-size: 30px;
+        color: #1abc9c;
+        margin-bottom: 20px;
+      }
+      .intro-block p {
+        font-size: 16px;
+        line-height: 1.9;
+        opacity: 0.9;
+        color: white;
+      }
+
+      .stories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+        gap: 24px;
+      }
+
+      .story-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+      }
+      .story-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(139, 92, 246, 0.4);
+        box-shadow: 0 20px 50px rgba(139, 92, 246, 0.2);
+      }
+
+      .story-image {
+        height: 200px;
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 72px;
+        position: relative;
+        overflow: hidden;
+      }
+      .story-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        inset: 0;
+      }
+      .story-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        padding: 5px 13px;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        font-size: 10px;
+        font-weight: 700;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        z-index: 2;
+      }
+
+      .story-body {
+        padding: 24px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .story-member {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .story-member-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+      }
+      .story-member-info h5 {
+        font-size: 13px;
+        color: white;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .story-member-info p {
+        font-size: 10px;
+        color: #c4b5fd;
+        font-family: "JetBrains Mono", monospace;
+        letter-spacing: 0.5px;
+      }
+
+      .story-body h3 {
+        font-size: 17px;
+        color: white;
+        margin-bottom: 12px;
+        line-height: 1.4;
+        font-weight: 700;
+      }
+      .story-body p {
+        font-size: 13px;
+        line-height: 1.7;
+        opacity: 0.85;
+        color: white;
+        flex: 1;
+        margin-bottom: 15px;
+      }
+
+      .story-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .story-date {
+        font-size: 11px;
+        opacity: 0.7;
+        color: white;
+      }
+      .story-link {
+        font-size: 13px;
+        color: #a78bfa;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .story-link:hover {
+        color: #8b5cf6;
+      }
+
+      .loading-state,
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: white;
+        opacity: 0.75;
+        grid-column: 1/-1;
+      }
+      .loading-state .spinner {
+        width: 46px;
+        height: 46px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #8b5cf6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 18px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .page-hero-content {
+          padding: 30px 25px;
+        }
+        .stories-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .stories-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>⭐ Success Stories</h1>
+        <p>Home / Success Stories</p>
+      </div>
+    </section>
+
+    <section class="stories-section">
+      <div class="glass-block intro-block">
+        <h2>Real Stories, Real Impact</h2>
+        <p>
+          Discover how SYDF members are creating positive change in their
+          communities and building brighter futures.
+        </p>
+      </div>
+
+      <div class="glass-block">
+        <div id="storiesGrid" class="stories-grid">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading stories...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      function formatDate(d) {
+        if (!d) return "-";
+        try {
+          return new Date(d).toLocaleDateString("en-PK", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+        } catch {
+          return "-";
+        }
+      }
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function renderStories(list) {
+        const grid = document.getElementById("storiesGrid");
+        if (!list || list.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state">
+              <div style="font-size:60px; margin-bottom:15px; opacity:0.5;">⭐</div>
+              <h3>No Stories Yet</h3>
+              <p>Success stories will appear here once added.</p>
+            </div>`;
+          return;
+        }
+
+        grid.innerHTML = list
+          .map((s) => {
+            const imgHtml = s.image_url
+              ? `<img src="${escapeHtml(s.image_url)}" alt="${escapeHtml(s.title)}" onerror="this.remove()">`
+              : "⭐";
+            const excerpt =
+              s.excerpt ||
+              (s.content
+                ? String(s.content)
+                    .replace(/<[^>]*>/g, "")
+                    .slice(0, 130) + "..."
+                : "");
+            const initial = (s.member_name || "M").charAt(0).toUpperCase();
+
+            return `
+            <div class="story-card" onclick="window.location.href='story-detail.html?id=${s.id}'">
+              <div class="story-image">
+                ${imgHtml}
+                <span class="story-badge">⭐ Story</span>
+              </div>
+              <div class="story-body">
+                ${
+                  s.member_name
+                    ? `
+                  <div class="story-member">
+                    <div class="story-member-avatar">${initial}</div>
+                    <div class="story-member-info">
+                      <h5>${escapeHtml(s.member_name)}</h5>
+                      <p>${escapeHtml(s.member_uid || "SYDF Member")}</p>
+                    </div>
+                  </div>`
+                    : ""
+                }
+                <h3>${escapeHtml(s.title)}</h3>
+                <p>${escapeHtml(excerpt)}</p>
+                <div class="story-footer">
+                  <span class="story-date">📅 ${formatDate(s.created_at)}</span>
+                  <span class="story-link">Read Story →</span>
+                </div>
+              </div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          document.getElementById("storiesGrid").innerHTML =
+            '<div class="empty-state"><h3>⚠️ System Not Ready</h3><p>Please refresh the page.</p></div>';
+          return;
+        }
+
+        try {
+          const { data, error } = await supabaseClient
+            .from("stories")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+          const list = (data || []).filter(
+            (s) => !s.status || s.status === "Published",
+          );
+          renderStories(list);
+        } catch (err) {
+          console.error(err);
+          document.getElementById("storiesGrid").innerHTML =
+            '<div class="empty-state"><h3>❌ Error Loading Stories</h3><p>Please refresh the page.</p></div>';
+        }
+      });
+    </script>
+  </body>
+</html>

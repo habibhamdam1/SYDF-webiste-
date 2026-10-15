@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAQ - SYDF</title>
+    <script src="js/head-includes.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+      .faq-section {
+        padding: 40px;
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+      .intro-block {
+        text-align: center;
+      }
+      .intro-block h2 {
+        font-size: 30px;
+        color: #1abc9c;
+        margin-bottom: 20px;
+      }
+      .intro-block p {
+        font-size: 16px;
+        line-height: 1.9;
+        opacity: 0.9;
+        color: white;
+      }
+      .search-faq {
+        padding: 14px 20px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        width: 100%;
+        outline: none;
+        transition: 0.3s;
+      }
+      .search-faq::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .search-faq:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.08);
+      }
+      .faq-category {
+        margin-bottom: 25px;
+      }
+      .faq-category-title {
+        font-size: 18px;
+        color: #1abc9c;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .faq-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: 0.3s;
+      }
+      .faq-item:hover {
+        border-color: rgba(26, 188, 156, 0.3);
+      }
+      .faq-question {
+        padding: 18px 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .faq-question h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        line-height: 1.5;
+      }
+      .faq-toggle-icon {
+        font-size: 20px;
+        color: #1abc9c;
+        font-weight: 700;
+        transition: transform 0.3s;
+        flex-shrink: 0;
+      }
+      .faq-item.open .faq-toggle-icon {
+        transform: rotate(45deg);
+      }
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.4s ease,
+          padding 0.3s ease;
+        padding: 0 22px;
+      }
+      .faq-item.open .faq-answer {
+        max-height: 500px;
+        padding: 0 22px 20px;
+      }
+      .faq-answer p {
+        font-size: 13px;
+        line-height: 1.8;
+        opacity: 0.9;
+        color: white;
+      }
+      .contact-cta {
+        text-align: center;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.12),
+          rgba(26, 188, 156, 0.02)
+        );
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+      .contact-cta h2 {
+        color: #1abc9c;
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+      .contact-cta p {
+        font-size: 14px;
+        opacity: 0.9;
+        color: white;
+        margin-bottom: 20px;
+      }
+      .contact-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+      }
+      .contact-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(26, 188, 156, 0.4);
+        color: white;
+      }
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .page-hero-content {
+          padding: 30px 25px;
+        }
+        .faq-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .faq-question {
+          padding: 15px 18px;
+        }
+        .faq-question h4 {
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>SWAT Youth Development Forum</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="leadership.html">Leadership</a></li>
+          <li><a href="districts.html">Districts</a></li>
+          <li><a href="activities.html">Activities</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="membership.html">Membership</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="login.html" class="btn-login">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>❓ FAQ</h1>
+        <p>Home / Frequently Asked Questions</p>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <div class="glass-block intro-block">
+        <h2>How Can We Help?</h2>
+        <p>Find answers to the most common questions about SYDF.</p>
+      </div>
+
+      <div class="glass-block">
+        <input
+          type="text"
+          class="search-faq"
+          id="faqSearch"
+          placeholder="🔍 Search questions..."
+        />
+
+        <div class="faq-category">
+          <h3 class="faq-category-title">👥 Membership</h3>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>How can I become a member of SYDF?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                Simply visit our Membership page and fill out the application
+                form. Once membership is open, you'll be contacted for a short
+                interview. After approval, you'll receive your unique Member ID
+                (UID) and access to the member dashboard.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>What is the membership fee?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                The current monthly membership fee is Rs. 300. This can be paid
+                via JazzCash, EasyPaisa, or Bank Transfer. The fee may change
+                based on forum decisions.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Can female members join SYDF?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                Absolutely! SYDF has a dedicated Women Wing. We ensure privacy
+                with options like photo-optional profiles, restricted contact
+                visibility, and dedicated support for female members.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Why is membership sometimes closed?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                Membership opens periodically based on our capacity and current
+                needs. When closed, you can leave your details on the waitlist,
+                and we'll notify you via email when it opens again.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-category">
+          <h3 class="faq-category-title">💰 Payments</h3>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>What payment methods are accepted?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                We accept JazzCash, EasyPaisa, and Bank Transfer. After payment,
+                you should send the receipt or screenshot to admin for record
+                updating.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>How do I get my payment receipt?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                All payment receipts are available in your dashboard under "My
+                Payments". You can download any receipt as PDF anytime.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>What happens if I miss a payment?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                You'll receive a reminder notification. If payments remain
+                overdue for an extended period, your account may be temporarily
+                suspended until cleared.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-category">
+          <h3 class="faq-category-title">🎯 Activities</h3>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>How can I join SYDF activities?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                All upcoming activities are listed on the Activities page.
+                Members receive notifications via email, WhatsApp, and
+                dashboard. Simply register or show up at the venue.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Can I propose a new activity?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                Yes! We encourage members to propose activities. Contact your
+                district coordinator or use the Feedback form to share your
+                idea. The cabinet will review it.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-category">
+          <h3 class="faq-category-title">📄 Documents & Privacy</h3>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Can I view other districts' documents?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                No. For security and privacy, members only have access to
+                documents related to their district and role. This ensures
+                sensitive information stays protected.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Who can see my personal information?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                Only the Super Admin has access to your full details (CNIC,
+                phone, email). Other members can only see your name, photo (if
+                you allow), and district.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Is my photo required for membership?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                Photo is optional, especially for female members. If you choose
+                not to upload a photo, a default avatar will be shown on your
+                profile.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-category">
+          <h3 class="faq-category-title">⚙️ General</h3>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>What areas does SYDF cover?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                We are currently active across 9 districts of Malakand Division:
+                Swat, Shangla, Buner, Malakand, Upper Dir, Lower Dir, Upper
+                Chitral, Lower Chitral, and Bajaur. We are expanding to other
+                parts of Pakistan soon.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>How can I contact SYDF?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                You can reach us via the Contact page, email us at
+                info@SYDF.org, or call/WhatsApp us. Contact details are
+                available in the Contact section.
+              </p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question">
+              <h4>Can I donate or sponsor SYDF?</h4>
+              <span class="faq-toggle-icon">+</span>
+            </div>
+            <div class="faq-answer">
+              <p>
+                Yes! Visit our Donate page for donations (always open) or
+                Sponsor page to sponsor specific activities. Every contribution
+                supports youth empowerment.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-block contact-cta">
+        <h2>Still have questions?</h2>
+        <p>Our team is happy to help you.</p>
+        <a href="contact.html" class="contact-btn">💬 Contact Us</a>
+      </div>
+    </section>
+
+    <footer class="glass-footer">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h3>SYDF</h3>
+          <p>SWAT Youth Development Forum</p>
+          <p>Empowering Youth, Building Future</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="leadership.html">Leadership</a></li>
+            <li><a href="activities.html">Activities</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Get Involved</h4>
+          <ul>
+            <li><a href="membership.html">Membership</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="sponsor.html">Sponsor</a></li>
+            <li><a href="volunteer.html">Volunteer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>Swat, Malakand Division</p>
+          <p>Khyber Pakhtunkhwa, Pakistan</p>
+          <p>info@SYDF.org</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      document.querySelectorAll(".faq-item").forEach((item) => {
+        item
+          .querySelector(".faq-question")
+          .addEventListener("click", function () {
+            item.classList.toggle("open");
+          });
+      });
+
+      const faqSearch = document.getElementById("faqSearch");
+      if (faqSearch) {
+        faqSearch.addEventListener("input", function () {
+          const search = this.value.toLowerCase();
+          document.querySelectorAll(".faq-item").forEach((item) => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(search) ? "block" : "none";
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

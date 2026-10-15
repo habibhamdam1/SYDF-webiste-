@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sponsor - SYDF</title>
+    <script src="js/head-includes.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+      .sponsor-section {
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+      .intro-block {
+        text-align: center;
+      }
+      .intro-block h2 {
+        font-size: 30px;
+        color: #1abc9c;
+        margin-bottom: 20px;
+      }
+      .intro-block p {
+        font-size: 16px;
+        line-height: 1.9;
+        opacity: 0.9;
+        color: white;
+      }
+      .packages-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+      }
+      .package-card {
+        padding: 30px 25px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        text-align: center;
+        position: relative;
+        transition: 0.3s;
+      }
+      .package-card:hover {
+        transform: translateY(-8px);
+      }
+      .package-card.platinum {
+        border-color: rgba(139, 92, 246, 0.5);
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.1),
+          rgba(139, 92, 246, 0.02)
+        );
+      }
+      .package-card.gold {
+        border-color: rgba(251, 191, 36, 0.5);
+        background: linear-gradient(
+          135deg,
+          rgba(251, 191, 36, 0.1),
+          rgba(251, 191, 36, 0.02)
+        );
+      }
+      .package-card.silver {
+        border-color: rgba(156, 163, 175, 0.5);
+      }
+      .package-card.bronze {
+        border-color: rgba(217, 119, 6, 0.5);
+      }
+      .package-badge {
+        position: absolute;
+        top: -12px;
+        right: 20px;
+        padding: 5px 14px;
+        border-radius: 15px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .package-badge.platinum {
+        background: #8b5cf6;
+        color: white;
+      }
+      .package-badge.gold {
+        background: #fbbf24;
+        color: #1a1a1a;
+      }
+      .package-badge.silver {
+        background: #9ca3af;
+        color: white;
+      }
+      .package-badge.bronze {
+        background: #d97706;
+        color: white;
+      }
+      .package-icon {
+        font-size: 42px;
+        margin-bottom: 15px;
+      }
+      .package-card h3 {
+        font-size: 20px;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .package-card .price {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1abc9c;
+        margin: 15px 0;
+      }
+      .package-card .price span {
+        font-size: 13px;
+        opacity: 0.7;
+        font-weight: 400;
+      }
+      .package-features {
+        list-style: none;
+        text-align: left;
+        margin: 20px 0;
+        padding: 0;
+      }
+      .package-features li {
+        padding: 8px 0;
+        font-size: 13px;
+        opacity: 0.9;
+        color: white;
+      }
+      .btn-sponsor {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 15px;
+      }
+      .btn-sponsor:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(26, 188, 156, 0.4);
+      }
+      .activities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 18px;
+        margin-top: 20px;
+      }
+      .activity-card {
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        transition: 0.3s;
+      }
+      .activity-card:hover {
+        border-color: rgba(26, 188, 156, 0.3);
+        transform: translateY(-3px);
+      }
+      .activity-icon {
+        font-size: 34px;
+        margin-bottom: 12px;
+      }
+      .activity-card h4 {
+        font-size: 15px;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .activity-card p {
+        font-size: 12px;
+        opacity: 0.8;
+        line-height: 1.6;
+        margin-bottom: 12px;
+        color: white;
+      }
+      .activity-cost {
+        font-size: 13px;
+        color: #1abc9c;
+        font-weight: 700;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        opacity: 0.9;
+        color: white;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 13px 15px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        outline: none;
+        transition: 0.3s;
+      }
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.08);
+      }
+      .form-group select option {
+        background: #203a43;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .btn-submit {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(26, 188, 156, 0.4);
+      }
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .page-hero-content {
+          padding: 30px 25px;
+        }
+        .sponsor-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>SWAT Youth Development Forum</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="leadership.html">Leadership</a></li>
+          <li><a href="districts.html">Districts</a></li>
+          <li><a href="activities.html">Activities</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="membership.html">Membership</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="login.html" class="btn-login">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>🤝 Sponsor</h1>
+        <p>Home / Sponsor</p>
+      </div>
+    </section>
+
+    <section class="sponsor-section">
+      <div class="glass-block intro-block">
+        <h2>Sponsor an Activity</h2>
+        <p>
+          Partner with SYDF and support youth development in Malakand Division.
+          Choose an activity to sponsor or select a sponsorship package. Your
+          support helps create real impact in the lives of young people.
+        </p>
+      </div>
+
+      <div class="glass-block">
+        <h3
+          style="
+            color: #1abc9c;
+            font-size: 22px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+          "
+        >
+          📋 Sponsorship Packages
+        </h3>
+        <div class="packages-grid">
+          <div class="package-card platinum">
+            <span class="package-badge platinum">Platinum</span>
+            <div class="package-icon">💎</div>
+            <h3>Platinum Sponsor</h3>
+            <div class="price">Rs. 50,000+ <span>/ year</span></div>
+            <ul class="package-features">
+              <li>✅ Logo on all banners</li>
+              <li>✅ VIP event access</li>
+              <li>✅ Social media promotion</li>
+              <li>✅ Website feature</li>
+              <li>✅ Certificate of appreciation</li>
+            </ul>
+            <button class="btn-sponsor" data-package="Platinum">
+              Choose Platinum
+            </button>
+          </div>
+          <div class="package-card gold">
+            <span class="package-badge gold">Gold</span>
+            <div class="package-icon">🥇</div>
+            <h3>Gold Sponsor</h3>
+            <div class="price">Rs. 25,000+ <span>/ year</span></div>
+            <ul class="package-features">
+              <li>✅ Logo on select banners</li>
+              <li>✅ Event access</li>
+              <li>✅ Social media mention</li>
+              <li>✅ Certificate</li>
+            </ul>
+            <button class="btn-sponsor" data-package="Gold">Choose Gold</button>
+          </div>
+          <div class="package-card silver">
+            <span class="package-badge silver">Silver</span>
+            <div class="package-icon">🥈</div>
+            <h3>Silver Sponsor</h3>
+            <div class="price">Rs. 10,000+ <span>/ year</span></div>
+            <ul class="package-features">
+              <li>✅ Event participation</li>
+              <li>✅ Social media mention</li>
+              <li>✅ Certificate</li>
+            </ul>
+            <button class="btn-sponsor" data-package="Silver">
+              Choose Silver
+            </button>
+          </div>
+          <div class="package-card bronze">
+            <span class="package-badge bronze">Bronze</span>
+            <div class="package-icon">🥉</div>
+            <h3>Bronze Sponsor</h3>
+            <div class="price">Rs. 5,000+ <span>/ year</span></div>
+            <ul class="package-features">
+              <li>✅ Event participation</li>
+              <li>✅ Certificate</li>
+            </ul>
+            <button class="btn-sponsor" data-package="Bronze">
+              Choose Bronze
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-block">
+        <h3
+          style="
+            color: #1abc9c;
+            font-size: 22px;
+            margin-bottom: 15px;
+            font-weight: 600;
+          "
+        >
+          🎯 Or Sponsor a Specific Activity
+        </h3>
+        <p
+          style="
+            opacity: 0.85;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: white;
+          "
+        >
+          Choose an upcoming activity and fund it directly.
+        </p>
+        <div class="activities-grid">
+          <div class="activity-card">
+            <div class="activity-icon">🎓</div>
+            <h4>Leadership Training Workshop</h4>
+            <p>2-day intensive leadership training for young members</p>
+            <div class="activity-cost">💰 Needs Rs. 30,000</div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-icon">📚</div>
+            <h4>Youth Education Drive</h4>
+            <p>Free seminars and study material for rural areas</p>
+            <div class="activity-cost">💰 Needs Rs. 15,000</div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-icon">🌱</div>
+            <h4>Clean & Green Campaign</h4>
+            <p>Plantation drive across all districts</p>
+            <div class="activity-cost">💰 Needs Rs. 25,000</div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-icon">⚽</div>
+            <h4>Sports Gala 2027</h4>
+            <p>Inter-district sports competition</p>
+            <div class="activity-cost">💰 Needs Rs. 50,000</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-block">
+        <h3
+          style="
+            color: #1abc9c;
+            font-size: 22px;
+            margin-bottom: 20px;
+            font-weight: 600;
+          "
+        >
+          📝 Sponsorship Form
+        </h3>
+
+        <form id="sponsorForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Sponsor Type *</label>
+              <select id="sponsorType" required>
+                <option value="">Select Type</option>
+                <option value="Company">Company / Business</option>
+                <option value="Individual">Individual</option>
+                <option value="Organization">Organization</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Sponsor Name *</label>
+              <input
+                type="text"
+                id="sponsorName"
+                placeholder="Company or individual name"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Contact Person *</label>
+              <input
+                type="text"
+                id="contactPerson"
+                placeholder="Name of contact person"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Contact Email *</label>
+              <input
+                type="email"
+                id="contactEmail"
+                placeholder="example@email.com"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input
+                type="tel"
+                id="contactPhone"
+                placeholder="+92 3XX XXXXXXX"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Sponsorship Package</label>
+              <select id="sponsorPackage">
+                <option value="">Select Package</option>
+                <option value="Platinum">Platinum (Rs. 50,000+)</option>
+                <option value="Gold">Gold (Rs. 25,000+)</option>
+                <option value="Silver">Silver (Rs. 10,000+)</option>
+                <option value="Bronze">Bronze (Rs. 5,000+)</option>
+                <option value="Custom">Custom Amount</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Activity to Sponsor (Optional)</label>
+            <select id="sponsorActivity">
+              <option value="">General Sponsorship</option>
+              <option value="Leadership Workshop">
+                Leadership Training Workshop
+              </option>
+              <option value="Education Drive">Youth Education Drive</option>
+              <option value="Clean Green">Clean & Green Campaign</option>
+              <option value="Sports Gala">Sports Gala 2027</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Sponsorship Amount (Rs.) *</label>
+            <input
+              type="number"
+              id="sponsorAmount"
+              placeholder="e.g. 25000"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Message (Optional)</label>
+            <textarea
+              rows="3"
+              id="sponsorMessage"
+              placeholder="Tell us about your sponsorship goals..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            🤝 Submit Sponsorship
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="glass-footer">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h3>SYDF</h3>
+          <p>SWAT Youth Development Forum</p>
+          <p>Empowering Youth, Building Future</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="leadership.html">Leadership</a></li>
+            <li><a href="activities.html">Activities</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Get Involved</h4>
+          <ul>
+            <li><a href="membership.html">Membership</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="sponsor.html">Sponsor</a></li>
+            <li><a href="volunteer.html">Volunteer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>Swat, Malakand Division</p>
+          <p>Khyber Pakhtunkhwa, Pakistan</p>
+          <p>info@SYDF.org</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      document.querySelectorAll(".btn-sponsor").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const pkg = this.getAttribute("data-package");
+          document.getElementById("sponsorPackage").value = pkg;
+          document
+            .getElementById("sponsorForm")
+            .scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+
+      document
+        .getElementById("sponsorForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          alert(
+            "✅ Thank you for your sponsorship!\n\nOur team will contact you within 24-48 hours to discuss the details.",
+          );
+          this.reset();
+        });
+    </script>
+  </body>
+</html>

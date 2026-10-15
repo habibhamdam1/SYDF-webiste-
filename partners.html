@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Partners - SYDF</title>
+    <script src="js/head-includes.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+      .partners-section {
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+      .intro-block {
+        text-align: center;
+      }
+      .intro-block h2 {
+        font-size: 30px;
+        color: #1abc9c;
+        margin-bottom: 20px;
+      }
+      .intro-block p {
+        font-size: 16px;
+        line-height: 1.9;
+        opacity: 0.9;
+        color: white;
+      }
+      .partners-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .partner-card {
+        padding: 28px 22px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        text-align: center;
+        transition: 0.3s;
+      }
+      .partner-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(26, 188, 156, 0.3);
+        box-shadow: 0 15px 40px rgba(26, 188, 156, 0.15);
+      }
+      .partner-logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        margin: 0 auto 15px;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.15),
+          rgba(26, 188, 156, 0.05)
+        );
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+      .partner-card h3 {
+        font-size: 16px;
+        color: white;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .partner-card .partner-type {
+        display: inline-block;
+        padding: 4px 12px;
+        background: rgba(26, 188, 156, 0.12);
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #1abc9c;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+      }
+      .partner-card p {
+        font-size: 13px;
+        opacity: 0.8;
+        line-height: 1.7;
+        color: white;
+      }
+      .category-title {
+        color: #1abc9c;
+        font-size: 20px;
+        font-weight: 600;
+        margin: 25px 0 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .become-partner-block {
+        text-align: center;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.12),
+          rgba(26, 188, 156, 0.02)
+        );
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+      .become-partner-block h2 {
+        color: #1abc9c;
+        font-size: 24px;
+        margin-bottom: 15px;
+      }
+      .become-partner-block p {
+        font-size: 15px;
+        line-height: 1.8;
+        opacity: 0.9;
+        color: white;
+        margin-bottom: 25px;
+      }
+      .partner-btn {
+        display: inline-block;
+        padding: 14px 35px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+      }
+      .partner-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(26, 188, 156, 0.4);
+        color: white;
+      }
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .page-hero-content {
+          padding: 30px 25px;
+        }
+        .partners-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .partners-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>SWAT Youth Development Forum</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="leadership.html">Leadership</a></li>
+          <li><a href="districts.html">Districts</a></li>
+          <li><a href="activities.html">Activities</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="membership.html">Membership</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="login.html" class="btn-login">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>🤝 Our Partners</h1>
+        <p>Home / Partners</p>
+      </div>
+    </section>
+
+    <section class="partners-section">
+      <div class="glass-block intro-block">
+        <h2>Working Together for Change</h2>
+        <p>
+          We are proud to collaborate with organizations that share our vision
+          of empowering youth. Together, we create stronger impact.
+        </p>
+      </div>
+
+      <div class="glass-block">
+        <h3 class="category-title">💰 Funding Partners</h3>
+        <div class="partners-grid">
+          <div class="partner-card">
+            <div class="partner-logo">💎</div>
+            <h3>Swat Technologies Ltd.</h3>
+            <span class="partner-type">Platinum</span>
+            <p>
+              Corporate sponsor supporting our leadership programs and events.
+            </p>
+          </div>
+          <div class="partner-card">
+            <div class="partner-logo">🏢</div>
+            <h3>Malakand Foods</h3>
+            <span class="partner-type">Gold</span>
+            <p>
+              Supporting our sports and community activities across the region.
+            </p>
+          </div>
+        </div>
+
+        <h3 class="category-title">🎯 Collaboration Partners</h3>
+        <div class="partners-grid">
+          <div class="partner-card">
+            <div class="partner-logo">🎓</div>
+            <h3>University of Malakand</h3>
+            <span class="partner-type">Education</span>
+            <p>
+              Academic collaboration for youth training and skill development.
+            </p>
+          </div>
+          <div class="partner-card">
+            <div class="partner-logo">🏥</div>
+            <h3>Saifullah Hospital</h3>
+            <span class="partner-type">Healthcare</span>
+            <p>Medical partner for blood donation drives and health camps.</p>
+          </div>
+          <div class="partner-card">
+            <div class="partner-logo">📚</div>
+            <h3>KP Education Foundation</h3>
+            <span class="partner-type">Education</span>
+            <p>Collaborating on education drives and scholarship programs.</p>
+          </div>
+        </div>
+
+        <h3 class="category-title">📢 Media Partners</h3>
+        <div class="partners-grid">
+          <div class="partner-card">
+            <div class="partner-logo">📺</div>
+            <h3>Swat Media Network</h3>
+            <span class="partner-type">Media</span>
+            <p>
+              Covering our events and helping spread our message to the public.
+            </p>
+          </div>
+          <div class="partner-card">
+            <div class="partner-logo">📻</div>
+            <h3>Radio Malakand</h3>
+            <span class="partner-type">Media</span>
+            <p>Broadcasting youth-focused programs and SYDF updates.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-block become-partner-block">
+        <h2>💼 Become a Partner</h2>
+        <p>
+          Join hands with SYDF to empower the youth of Malakand Division.
+          Partner with us through funding, collaboration, or media support.
+        </p>
+        <a href="contact.html" class="partner-btn">🤝 Contact Us to Partner</a>
+      </div>
+    </section>
+
+    <footer class="glass-footer">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h3>SYDF</h3>
+          <p>SWAT Youth Development Forum</p>
+          <p>Empowering Youth, Building Future</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="leadership.html">Leadership</a></li>
+            <li><a href="activities.html">Activities</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Get Involved</h4>
+          <ul>
+            <li><a href="membership.html">Membership</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="sponsor.html">Sponsor</a></li>
+            <li><a href="volunteer.html">Volunteer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>Swat, Malakand Division</p>
+          <p>Khyber Pakhtunkhwa, Pakistan</p>
+          <p>info@SYDF.org</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Documents - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .info-banner {
+        padding: 18px 22px;
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.1),
+          rgba(59, 130, 246, 0.02)
+        );
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        border-left: 4px solid #3b82f6;
+        border-radius: 16px;
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+      }
+      .info-banner .ico {
+        font-size: 32px;
+        flex-shrink: 0;
+      }
+      .info-banner h4 {
+        color: #93c5fd;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .info-banner p {
+        color: white;
+        font-size: 13px;
+        line-height: 1.6;
+        opacity: 0.9;
+      }
+      .info-banner strong {
+        color: #93c5fd;
+      }
+
+      .filter-bar {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 18px 22px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        margin-bottom: 22px;
+      }
+      .search-box {
+        flex: 1;
+        min-width: 220px;
+        position: relative;
+      }
+      .search-box input {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        outline: none;
+      }
+      .search-box input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .search-box input:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.08);
+      }
+      .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        opacity: 0.7;
+      }
+      .filter-select {
+        padding: 11px 15px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        outline: none;
+        min-width: 160px;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231abc9c' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        padding-right: 40px;
+      }
+      .filter-select option {
+        background: #203a43;
+      }
+
+      .docs-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+      }
+      .doc-card {
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        position: relative;
+        overflow: hidden;
+      }
+      .doc-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #1abc9c, #16a085);
+      }
+      .doc-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(26, 188, 156, 0.3);
+        box-shadow: 0 20px 45px rgba(26, 188, 156, 0.2);
+      }
+
+      .doc-header {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+      }
+      .doc-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        flex-shrink: 0;
+      }
+      .doc-icon.pdf {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+      .doc-icon.doc {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+      .doc-icon.xls {
+        background: rgba(34, 197, 94, 0.15);
+        border: 1px solid rgba(34, 197, 94, 0.3);
+      }
+      .doc-icon.img {
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+
+      .doc-title-block {
+        flex: 1;
+        min-width: 0;
+      }
+      .doc-title-block h3 {
+        color: white;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        line-height: 1.4;
+      }
+      .doc-cat-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+
+      .doc-meta {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        font-size: 11px;
+        color: white;
+        opacity: 0.7;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .doc-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .doc-btn {
+        flex: 1;
+        padding: 11px 14px;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        border: 1px solid transparent;
+        text-decoration: none;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .doc-btn.view {
+        background: rgba(59, 130, 246, 0.12);
+        color: #93c5fd;
+        border-color: rgba(59, 130, 246, 0.3);
+      }
+      .doc-btn.view:hover {
+        background: #3b82f6;
+        color: white;
+        transform: translateY(-2px);
+      }
+      .doc-btn.download {
+        background: rgba(26, 188, 156, 0.12);
+        color: #1abc9c;
+        border-color: rgba(26, 188, 156, 0.3);
+      }
+      .doc-btn.download:hover {
+        background: #1abc9c;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 70px 30px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 18px;
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+      }
+      .empty-state .ico {
+        font-size: 64px;
+        opacity: 0.5;
+        margin-bottom: 18px;
+        display: block;
+      }
+      .empty-state h3 {
+        color: white;
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+      .empty-state p {
+        color: white;
+        font-size: 13px;
+        opacity: 0.65;
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Member Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"
+              ><span class="nav-icon">📊</span><span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><span class="nav-icon">👤</span><span>My Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="my-payments.html"
+              ><span class="nav-icon">💰</span><span>My Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="my-documents.html" class="active"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+          <li>
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="my-certificate.html"
+              ><span class="nav-icon">📜</span><span>Certificate</span></a
+            >
+          </li>
+          <li>
+            <a href="my-id-card.html"
+              ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Documents</h2>
+          <p>Access official documents</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar" id="topAvatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Loading...</span
+              ><span class="user-uid">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div style="margin-bottom: 22px">
+          <h1
+            style="
+              color: white;
+              font-size: 24px;
+              font-weight: 700;
+              margin-bottom: 5px;
+            "
+          >
+            📄 Documents Library
+          </h1>
+          <p style="color: white; font-size: 14px; opacity: 0.7">
+            Official SYDF documents and reports
+          </p>
+        </div>
+
+        <div class="info-banner">
+          <div class="ico">🔒</div>
+          <div>
+            <h4>Members-Only Access</h4>
+            <p>
+              These documents are for <strong>SYDF members only</strong>. You
+              can view and download documents relevant to your district and
+              role.
+            </p>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="docSearch"
+              placeholder="Search documents..."
+            />
+          </div>
+          <select class="filter-select" id="docCategory">
+            <option value="">All Categories</option>
+            <option value="Bylaws">Bylaws</option>
+            <option value="Constitution">Constitution</option>
+            <option value="Reports">Reports</option>
+            <option value="Meeting Minutes">Meeting Minutes</option>
+            <option value="Policies">Policies</option>
+            <option value="Forms">Forms</option>
+          </select>
+        </div>
+
+        <div class="docs-grid" id="docsGrid">
+          <div class="empty-state">
+            <span class="ico">⏳</span>
+            <h3>Loading...</h3>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allDocs = [];
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        try {
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          if (!session) {
+            window.location.href = "login.html";
+            return;
+          }
+
+          const { data: member } = await supabaseClient
+            .from("members")
+            .select("name, uid")
+            .eq("email", session.user.email)
+            .single();
+          if (member) {
+            document.getElementById("topAvatar").textContent = (
+              member.name || "M"
+            )
+              .charAt(0)
+              .toUpperCase();
+            document
+              .querySelectorAll(".user-name")
+              .forEach((el) => (el.textContent = member.name));
+            document
+              .querySelectorAll(".user-uid")
+              .forEach((el) => (el.textContent = member.uid));
+          }
+
+          const { data } = await supabaseClient
+            .from("documents")
+            .select("*")
+            .order("created_at", { ascending: false });
+          allDocs = data || [];
+          renderDocs();
+
+          document
+            .getElementById("docSearch")
+            .addEventListener("input", renderDocs);
+          document
+            .getElementById("docCategory")
+            .addEventListener("change", renderDocs);
+        } catch (err) {
+          console.error(err);
+        }
+      });
+
+      function renderDocs() {
+        const search = document.getElementById("docSearch").value.toLowerCase();
+        const cat = document.getElementById("docCategory").value;
+        const grid = document.getElementById("docsGrid");
+
+        const filtered = allDocs.filter((d) => {
+          const matchSearch =
+            !search || (d.title || "").toLowerCase().includes(search);
+          const matchCat = !cat || d.category === cat;
+          return matchSearch && matchCat;
+        });
+
+        if (filtered.length === 0) {
+          grid.innerHTML =
+            '<div class="empty-state"><span class="ico">📭</span><h3>No Documents Found</h3><p>Documents will appear here once admin uploads them.</p></div>';
+          return;
+        }
+
+        grid.innerHTML = filtered
+          .map((d) => {
+            const ext = (d.file_type || "PDF").toUpperCase();
+            const iconClass =
+              ext === "PDF"
+                ? "pdf"
+                : ext.includes("XLS")
+                  ? "xls"
+                  : ext === "IMG" || ext === "PNG" || ext === "JPG"
+                    ? "img"
+                    : "doc";
+            const iconEmoji =
+              ext === "PDF"
+                ? "📕"
+                : ext.includes("XLS")
+                  ? "💹"
+                  : ext === "IMG" || ext === "PNG" || ext === "JPG"
+                    ? "🖼️"
+                    : "📝";
+            const date = d.created_at
+              ? new Date(d.created_at).toLocaleDateString("en-PK", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })
+              : "-";
+            return `
+                <div class="doc-card">
+                    <div class="doc-header">
+                        <div class="doc-icon ${iconClass}">${iconEmoji}</div>
+                        <div class="doc-title-block">
+                            <h3>${d.title || "Untitled"}</h3>
+                            <span class="doc-cat-badge">${d.category || "General"}</span>
+                        </div>
+                    </div>
+                    <div class="doc-meta">
+                        <span>📅 ${date}</span>
+                        <span>📦 ${d.file_size || "N/A"}</span>
+                        <span>🔒 ${d.access_level || "All"}</span>
+                    </div>
+                    <div class="doc-actions">
+                        <a href="${d.file_url}" target="_blank" class="doc-btn view">👁️ View</a>
+                        <a href="${d.file_url}" download class="doc-btn download">📥 Download</a>
+                    </div>
+                </div>`;
+          })
+          .join("");
+      }
+    </script>
+  </body>
+</html>

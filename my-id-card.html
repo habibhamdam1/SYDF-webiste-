@@ -1,0 +1,1339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My ID Card - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      /* PAGE HEADER */
+      .page-header-block {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+      }
+      .page-header-info h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: white;
+      }
+      .page-header-info p {
+        font-size: 14px;
+        opacity: 0.75;
+        color: white;
+      }
+      .header-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .btn-print {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .btn-print:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(26, 188, 156, 0.4);
+      }
+      .btn-verify {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+      }
+      .btn-verify:hover {
+        background: rgba(59, 130, 246, 0.25);
+        transform: translateY(-2px);
+      }
+
+      /* WRAPPER */
+      .id-cards-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+        flex-wrap: wrap;
+        padding: 40px 0;
+        perspective: 2200px;
+      }
+      .card-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .card-label {
+        text-align: center;
+        font-size: 10px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 5px;
+        margin-top: 22px;
+        text-transform: uppercase;
+      }
+
+      /* CARD BASE */
+      .id-card {
+        width: 330px;
+        height: 495px;
+        border-radius: 14px;
+        position: relative;
+        overflow: hidden;
+        background: #f7f8fa;
+        box-shadow:
+          0 25px 60px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(0, 0, 0, 0.05);
+        transition:
+          transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+          box-shadow 0.5s ease,
+          background 0.3s;
+        display: flex;
+        font-family: "Poppins", sans-serif;
+      }
+      .id-card:hover {
+        transform: translateY(-10px);
+        box-shadow:
+          0 35px 75px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(30, 58, 95, 0.2);
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        width: 48px;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          #0a1628 0%,
+          #142a4a 50%,
+          #1e3a5f 100%
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        flex-shrink: 0;
+        z-index: 2;
+        padding: 22px 0;
+        transition: background 0.3s;
+      }
+      .sidebar-dots {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        z-index: 1;
+      }
+      .sidebar-dots span {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+      }
+      .sidebar-brand {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        color: #ffffff;
+        font-family: "Poppins", sans-serif;
+      }
+      .sidebar-id-block {
+        text-align: center;
+        font-size: 8px;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: 1.5px;
+        line-height: 1.3;
+        z-index: 1;
+      }
+      .sidebar-id-block .lbl {
+        font-size: 6px;
+        opacity: 0.75;
+        display: block;
+        margin-bottom: 3px;
+        letter-spacing: 2px;
+      }
+      .sidebar-id-block .val {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+      }
+
+      /* MAIN */
+      .main-content {
+        flex: 1;
+        padding: 24px 22px 20px 22px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 1;
+      }
+      .watermark-bg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 230px;
+        height: 230px;
+        opacity: 0.05;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .watermark-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      /* PHOTO */
+      .photo-area {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 6px;
+        position: relative;
+        z-index: 2;
+      }
+      .member-photo {
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 38px;
+        font-weight: 700;
+        color: #1e3a5f;
+        overflow: hidden;
+        border: 3px solid #ffffff;
+        box-shadow:
+          0 8px 20px rgba(30, 58, 95, 0.3),
+          0 0 0 1px rgba(30, 58, 95, 0.15);
+        transition: color 0.3s;
+      }
+      .member-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* NAME */
+      .name-area {
+        margin-top: 18px;
+        position: relative;
+        z-index: 2;
+        padding-right: 4px;
+      }
+      .member-name {
+        font-family: "Playfair Display", serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #0a1628;
+        line-height: 1.1;
+        letter-spacing: 0.3px;
+        margin-bottom: 4px;
+        transition: color 0.3s;
+      }
+      .member-role {
+        display: inline-block;
+        padding: 5px 16px;
+        border-radius: 20px;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+        margin-bottom: 3px;
+      }
+      .member-dept {
+        font-size: 8px;
+        font-weight: 400;
+        color: #64748b;
+        letter-spacing: 0.5px;
+        margin-top: 4px;
+      }
+
+      .divider-line {
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, #1e3a5f, transparent);
+        margin: 14px 0 12px 0;
+        opacity: 0.25;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* INFO */
+      .info-area {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-top: auto;
+      }
+      .info-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 8.5px;
+        padding-bottom: 4px;
+        border-bottom: 1px dashed #d1d5db;
+      }
+      .info-line:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .info-line .lbl {
+        color: #6b7280;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 7px;
+      }
+      .info-line .val {
+        color: #0a1628;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 8.5px;
+        letter-spacing: 0.3px;
+        text-align: right;
+      }
+      .info-line .val.accent {
+        color: #1e3a5f;
+      }
+
+      /* BARCODE */
+      .barcode {
+        display: flex;
+        gap: 1.5px;
+        align-items: flex-end;
+        height: 16px;
+        margin-top: 10px;
+        position: relative;
+        z-index: 2;
+      }
+      .barcode span {
+        width: 1.5px;
+        background: #0a1628;
+        border-radius: 1px;
+      }
+
+      /* BACK */
+      .back-main {
+        flex: 1;
+        padding: 22px 22px 18px 20px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 1;
+      }
+      .back-qr-area {
+        display: flex;
+        justify-content: center;
+        padding: 4px 0 12px;
+        position: relative;
+        z-index: 2;
+      }
+      .qr-box {
+        width: 118px;
+        height: 118px;
+        background: white;
+        border-radius: 8px;
+        padding: 6px;
+        box-shadow:
+          0 4px 14px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(30, 58, 95, 0.15);
+      }
+      .qr-box img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: 3px;
+      }
+      .qr-sub {
+        text-align: center;
+        font-size: 7px;
+        color: #6b7280;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 14px;
+        position: relative;
+        z-index: 2;
+      }
+      .instr-header {
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 2;
+      }
+      .instr-header h4 {
+        font-family: "Playfair Display", serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: #0a1628;
+        line-height: 1.1;
+      }
+      .instr-header p {
+        font-size: 9px;
+        color: #1e3a5f;
+        font-weight: 600;
+        margin-top: 1px;
+      }
+      .instr-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        position: relative;
+        z-index: 2;
+      }
+      .instr-list li {
+        display: flex;
+        gap: 7px;
+        font-size: 8px;
+        color: #4b5563;
+        line-height: 1.5;
+        align-items: flex-start;
+      }
+      .instr-list li::before {
+        content: "";
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #1e3a5f;
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+      .instr-list li strong {
+        color: #0a1628;
+        font-weight: 700;
+      }
+
+      .dates-area {
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid #d1d5db;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        position: relative;
+        z-index: 2;
+      }
+      .date-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .date-row .lbl {
+        font-size: 6.5px;
+        color: #6b7280;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .date-row .val {
+        font-size: 9.5px;
+        color: #0a1628;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+      }
+      .date-row .val.accent {
+        color: #1e3a5f;
+      }
+
+      .signature-area {
+        margin-top: 14px;
+        display: flex;
+        justify-content: flex-end;
+        position: relative;
+        z-index: 2;
+      }
+      .sig-block {
+        text-align: center;
+        min-width: 110px;
+      }
+      .sig-line {
+        border-top: 1px solid #6b7280;
+        padding-top: 3px;
+        margin-bottom: 3px;
+        font-family: "Playfair Display", serif;
+        font-style: italic;
+        font-size: 11px;
+        color: #1e3a5f;
+        letter-spacing: 0.5px;
+      }
+      .sig-lbl {
+        font-size: 6px;
+        color: #6b7280;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .bottom-strip {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          #ffffff 0%,
+          #1e3a5f 50%,
+          #0a1628 100%
+        );
+        z-index: 3;
+      }
+      .sidebar-right .bottom-strip {
+        background: linear-gradient(
+          90deg,
+          #0a1628 0%,
+          #1e3a5f 50%,
+          #ffffff 100%
+        );
+      }
+
+      /* ==========================================
+           THEME: MALE → NAVY BLUE
+           ========================================== */
+      body.theme-male .sidebar {
+        background: linear-gradient(
+          180deg,
+          #0a1628 0%,
+          #142a4a 50%,
+          #1e3a5f 100%
+        );
+      }
+      body.theme-male .bottom-strip {
+        background: linear-gradient(
+          90deg,
+          #ffffff 0%,
+          #1e3a5f 50%,
+          #0a1628 100%
+        );
+      }
+      body.theme-male .sidebar-right .bottom-strip {
+        background: linear-gradient(
+          90deg,
+          #0a1628 0%,
+          #1e3a5f 50%,
+          #ffffff 100%
+        );
+      }
+      body.theme-male .member-photo {
+        color: #1e3a5f;
+        box-shadow:
+          0 8px 20px rgba(30, 58, 95, 0.3),
+          0 0 0 1px rgba(30, 58, 95, 0.15);
+      }
+      body.theme-male .member-name {
+        color: #0a1628;
+      }
+      body.theme-male .divider-line {
+        background: linear-gradient(90deg, #1e3a5f, transparent);
+      }
+      body.theme-male .info-line .val {
+        color: #0a1628;
+      }
+      body.theme-male .info-line .val.accent {
+        color: #1e3a5f;
+      }
+      body.theme-male .barcode span {
+        background: #0a1628;
+      }
+      body.theme-male .instr-header h4 {
+        color: #0a1628;
+      }
+      body.theme-male .instr-header p {
+        color: #1e3a5f;
+      }
+      body.theme-male .instr-list li::before {
+        background: #1e3a5f;
+      }
+      body.theme-male .instr-list li strong {
+        color: #0a1628;
+      }
+      body.theme-male .date-row .val {
+        color: #0a1628;
+      }
+      body.theme-male .date-row .val.accent {
+        color: #1e3a5f;
+      }
+      body.theme-male .sig-line {
+        color: #1e3a5f;
+      }
+      body.theme-male .id-card {
+        background: #f7f8fa;
+      }
+      body.theme-male .qr-box {
+        box-shadow:
+          0 4px 14px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(30, 58, 95, 0.15);
+      }
+      body.theme-male .member-role {
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.3),
+          rgba(59, 130, 246, 0.1)
+        );
+        border: 1px solid rgba(96, 165, 250, 0.7);
+        color: #93c5fd;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
+      }
+
+      /* ==========================================
+           THEME: FEMALE → MAROON
+           ========================================== */
+      body.theme-female .sidebar {
+        background: linear-gradient(
+          180deg,
+          #450a0a 0%,
+          #7f1d1d 50%,
+          #991b1b 100%
+        );
+      }
+      body.theme-female .bottom-strip {
+        background: linear-gradient(
+          90deg,
+          #ffffff 0%,
+          #b91c1c 50%,
+          #450a0a 100%
+        );
+      }
+      body.theme-female .sidebar-right .bottom-strip {
+        background: linear-gradient(
+          90deg,
+          #450a0a 0%,
+          #b91c1c 50%,
+          #ffffff 100%
+        );
+      }
+      body.theme-female .member-photo {
+        color: #991b1b;
+        box-shadow:
+          0 8px 20px rgba(127, 29, 29, 0.3),
+          0 0 0 1px rgba(127, 29, 29, 0.15);
+      }
+      body.theme-female .member-name {
+        color: #450a0a;
+      }
+      body.theme-female .divider-line {
+        background: linear-gradient(90deg, #7f1d1d, transparent);
+      }
+      body.theme-female .info-line .val {
+        color: #450a0a;
+      }
+      body.theme-female .info-line .val.accent {
+        color: #991b1b;
+      }
+      body.theme-female .barcode span {
+        background: #450a0a;
+      }
+      body.theme-female .instr-header h4 {
+        color: #450a0a;
+      }
+      body.theme-female .instr-header p {
+        color: #7f1d1d;
+      }
+      body.theme-female .instr-list li::before {
+        background: #7f1d1d;
+      }
+      body.theme-female .instr-list li strong {
+        color: #450a0a;
+      }
+      body.theme-female .date-row .val {
+        color: #450a0a;
+      }
+      body.theme-female .date-row .val.accent {
+        color: #991b1b;
+      }
+      body.theme-female .sig-line {
+        color: #7f1d1d;
+      }
+      body.theme-female .id-card {
+        background: #faf7f5;
+      }
+      body.theme-female .qr-box {
+        box-shadow:
+          0 4px 14px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(127, 29, 29, 0.15);
+      }
+      body.theme-female .member-role {
+        background: linear-gradient(
+          135deg,
+          rgba(251, 113, 133, 0.3),
+          rgba(251, 113, 133, 0.1)
+        );
+        border: 1px solid rgba(253, 164, 175, 0.7);
+        color: #fda4af;
+        box-shadow: 0 4px 15px rgba(251, 113, 133, 0.25);
+      }
+
+      /* ==========================================
+           MEMBER TYPE BADGE OVERRIDES
+           ========================================== */
+      .member-role.volunteer {
+        background: linear-gradient(
+          135deg,
+          rgba(34, 197, 94, 0.3),
+          rgba(34, 197, 94, 0.1)
+        ) !important;
+        border: 1px solid rgba(74, 222, 128, 0.7) !important;
+        color: #4ade80 !important;
+        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.25) !important;
+      }
+      .member-role.intern {
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.3),
+          rgba(59, 130, 246, 0.1)
+        ) !important;
+        border: 1px solid rgba(147, 197, 253, 0.7) !important;
+        color: #93c5fd !important;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25) !important;
+      }
+      .member-role.coordinator {
+        background: linear-gradient(
+          135deg,
+          rgba(251, 146, 60, 0.3),
+          rgba(251, 146, 60, 0.1)
+        ) !important;
+        border: 1px solid rgba(253, 186, 116, 0.7) !important;
+        color: #fb923c !important;
+        box-shadow: 0 4px 15px rgba(251, 146, 60, 0.25) !important;
+      }
+
+      /* Loading */
+      .loading-box {
+        text-align: center;
+        padding: 80px 30px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 18px;
+        color: white;
+      }
+      .loading-box .ico {
+        font-size: 48px;
+        margin-bottom: 18px;
+        display: block;
+      }
+      .loading-box h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+      .loading-box p {
+        font-size: 14px;
+        opacity: 0.75;
+      }
+      .loading-box.warn {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.25);
+      }
+      .loading-box.warn .ico {
+        color: #fbbf24;
+      }
+      .loading-box.err {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+      }
+      .loading-box.err .ico {
+        color: #fca5a5;
+      }
+
+      /* PRINT */
+      @media print {
+        * {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        body {
+          background: white !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        .dashboard-sidebar,
+        .dashboard-topbar,
+        .sidebar-overlay,
+        .page-header-block,
+        .card-label,
+        .btn-print,
+        .btn-verify {
+          display: none !important;
+        }
+        .dashboard-main {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        .dashboard-content {
+          padding: 20px !important;
+        }
+        .id-cards-wrapper {
+          gap: 25px;
+          padding: 15px;
+          justify-content: center;
+        }
+        .id-card {
+          box-shadow: 0 0 0 1px #ccc !important;
+          page-break-inside: avoid !important;
+          transform: none !important;
+        }
+        .id-card:hover {
+          transform: none !important;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .id-card {
+          width: 300px;
+          height: 460px;
+        }
+        .member-name {
+          font-size: 20px;
+        }
+        .id-cards-wrapper {
+          gap: 30px;
+        }
+      }
+    </style>
+  </head>
+  <body class="dashboard-body theme-male">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Member Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"
+              ><span class="nav-icon">📊</span><span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><span class="nav-icon">👤</span><span>My Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="my-payments.html"
+              ><span class="nav-icon">💰</span><span>My Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="my-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+          <li>
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="member-proposals.html"
+              ><span class="nav-icon">💡</span><span>My Proposals</span></a
+            >
+          </li>
+          <li>
+            <a href="my-certificate.html"
+              ><span class="nav-icon">📜</span><span>Certificate</span></a
+            >
+          </li>
+          <li>
+            <a href="my-id-card.html" class="active"
+              ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>My ID Card</h2>
+          <p>Your digital identification</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar" id="topAvatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Loading...</span
+              ><span class="user-uid">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="page-header-block">
+          <div class="page-header-info">
+            <h1>🆔 My Digital ID Card</h1>
+            <p>Your official SYDF member identification</p>
+          </div>
+          <div class="header-actions">
+            <a
+              class="btn-verify"
+              id="verifyBtn"
+              href="#"
+              target="_blank"
+              style="display: none"
+              >🔍 Preview Verify Page</a
+            >
+            <button
+              class="btn-print"
+              id="printBtn"
+              style="display: none"
+              onclick="window.print()"
+            >
+              🖨️ Print / Save as PDF
+            </button>
+          </div>
+        </div>
+
+        <div id="statusBox" class="loading-box">
+          <span class="ico">⏳</span>
+          <h3>Loading ID Card...</h3>
+          <p>Please wait</p>
+        </div>
+
+        <div id="cardsContent" class="id-cards-wrapper" style="display: none">
+          <!-- FRONT -->
+          <div class="card-wrapper">
+            <div class="id-card">
+              <div class="sidebar">
+                <div class="sidebar-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="sidebar-brand">SYDF</div>
+                <div class="sidebar-id-block">
+                  <span class="lbl">ID</span>
+                  <span class="val" id="idUidShort">#001</span>
+                </div>
+              </div>
+
+              <div class="main-content">
+                <div class="watermark-bg">
+                  <img
+                    src="images/logo.png"
+                    alt=""
+                    onerror="this.style.display = 'none'"
+                  />
+                </div>
+
+                <div class="photo-area">
+                  <div class="member-photo" id="memberPhoto">M</div>
+                </div>
+
+                <div class="name-area">
+                  <div class="member-name" id="idName">Loading...</div>
+                  <div class="member-role" id="idRole">MEMBER</div>
+                  <div class="member-dept" id="idDept">
+                    Swat Youth Development Forum
+                  </div>
+                </div>
+
+                <div class="divider-line"></div>
+
+                <div class="info-area">
+                  <div class="info-line">
+                    <span class="lbl">CNIC</span>
+                    <span class="val" id="idCnic">XXXXX-XXXXXXX-X</span>
+                  </div>
+                  <div class="info-line">
+                    <span class="lbl">Phone</span>
+                    <span class="val" id="idPhone">-</span>
+                  </div>
+                  <div class="info-line">
+                    <span class="lbl">Blood Group</span>
+                    <span class="val accent" id="idBlood">-</span>
+                  </div>
+                  <div class="info-line">
+                    <span class="lbl">District</span>
+                    <span class="val" id="idDistrict">-</span>
+                  </div>
+                </div>
+
+                <div class="barcode" id="barcode"></div>
+              </div>
+
+              <div class="bottom-strip"></div>
+            </div>
+            <div class="card-label">◆ Front ◆</div>
+          </div>
+
+          <!-- BACK -->
+          <div class="card-wrapper">
+            <div class="id-card">
+              <div class="back-main">
+                <div class="watermark-bg">
+                  <img
+                    src="images/logo.png"
+                    alt=""
+                    onerror="this.style.display = 'none'"
+                  />
+                </div>
+
+                <div class="back-qr-area">
+                  <div class="qr-box">
+                    <img id="qrCode" src="" alt="QR" />
+                  </div>
+                </div>
+                <div class="qr-sub">Scan to Verify</div>
+
+                <div class="instr-header">
+                  <h4>Instructions</h4>
+                  <p>in case of lost</p>
+                </div>
+
+                <ul class="instr-list">
+                  <li><strong>Return</strong> card to nearest SYDF office</li>
+                  <li><strong>Contact</strong> administration via WhatsApp</li>
+                  <li><strong>Provide</strong> member ID for identification</li>
+                  <li><strong>Report</strong> lost card within 7 days</li>
+                </ul>
+
+                <div class="dates-area">
+                  <div class="date-row">
+                    <span class="lbl">Expiry Date</span>
+                    <span class="val accent" id="idValidity">--/----</span>
+                  </div>
+                  <div class="date-row">
+                    <span class="lbl">Start Date</span>
+                    <span class="val" id="idIssue">--/----</span>
+                  </div>
+                </div>
+
+                <div class="signature-area">
+                  <div class="sig-block">
+                    <div class="sig-line">General Secretary</div>
+                    <div class="sig-lbl">Authorized Signature</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sidebar sidebar-right">
+                <div class="sidebar-dots">
+                  <span></span><span></span><span></span>
+                </div>
+                <div class="sidebar-brand">SYDF</div>
+                <div class="sidebar-id-block">
+                  <span class="lbl">ID</span>
+                  <span class="val" id="idUidShortBack">#001</span>
+                </div>
+              </div>
+
+              <div class="bottom-strip"></div>
+            </div>
+            <div class="card-label">◆ Back ◆</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      const VERIFY_PAGE_BASE =
+        window.location.origin +
+        window.location.pathname.replace(/[^/]*$/, "") +
+        "verify.html";
+
+      function applyGenderTheme(gender) {
+        const body = document.body;
+        body.classList.remove("theme-male", "theme-female");
+        const isFemale = (gender || "").toLowerCase() === "female";
+        body.classList.add(isFemale ? "theme-female" : "theme-male");
+      }
+
+      function getQRColor() {
+        return document.body.classList.contains("theme-female")
+          ? "450a0a"
+          : "0a1628";
+      }
+
+      function showStatus(emoji, title, message, type) {
+        const box = document.getElementById("statusBox");
+        box.className = "loading-box" + (type ? " " + type : "");
+        box.innerHTML =
+          '<span class="ico">' +
+          emoji +
+          "</span><h3>" +
+          title +
+          "</h3><p>" +
+          message +
+          "</p>";
+        box.style.display = "block";
+        document.getElementById("cardsContent").style.display = "none";
+        document.getElementById("printBtn").style.display = "none";
+        document.getElementById("verifyBtn").style.display = "none";
+      }
+
+      function maskCnic(cnic) {
+        if (!cnic) return "XXXXX-XXXXXXX-X";
+        const clean = String(cnic).replace(/\D/g, "");
+        if (clean.length !== 13) return "XXXXX-XXXXXXX-X";
+        return (
+          clean.substring(0, 5) +
+          "-" +
+          clean.substring(5, 12) +
+          "-" +
+          clean.substring(12)
+        );
+      }
+
+      function generateBarcode(uid) {
+        const container = document.getElementById("barcode");
+        if (!container) return;
+        container.innerHTML = "";
+        const seed = (uid || "SYDF000").split("").map((c) => c.charCodeAt(0));
+        const bars = 42;
+        for (let i = 0; i < bars; i++) {
+          const h = 40 + ((seed[i % seed.length] * ((i % 4) + 1)) % 60);
+          const bar = document.createElement("span");
+          bar.style.height = h + "%";
+          bar.style.opacity = i % 5 === 0 ? "0.35" : "1";
+          container.appendChild(bar);
+        }
+      }
+
+      function showCard(member) {
+        document.getElementById("statusBox").style.display = "none";
+        document.getElementById("cardsContent").style.display = "flex";
+        document.getElementById("printBtn").style.display = "inline-flex";
+        document.getElementById("verifyBtn").style.display = "inline-flex";
+
+        applyGenderTheme(member.gender);
+
+        document.getElementById("idName").textContent = member.name || "Member";
+
+        // ========== ROLE / MEMBER_TYPE LOGIC ==========
+        const mtype = (member.member_type || "Member").toLowerCase();
+        let displayRole = member.role || "Member";
+        let roleClass = "";
+
+        if (mtype === "volunteer") {
+          displayRole = "Volunteer";
+          roleClass = "volunteer";
+        } else if (mtype === "intern") {
+          displayRole = "Intern";
+          roleClass = "intern";
+        } else if (mtype === "coordinator") {
+          displayRole = "Coordinator";
+          roleClass = "coordinator";
+        }
+
+        const roleEl = document.getElementById("idRole");
+        roleEl.textContent = displayRole.toUpperCase();
+        roleEl.className = "member-role" + (roleClass ? " " + roleClass : "");
+
+        document.getElementById("idDept").textContent =
+          "Swat Youth Development Forum";
+
+        const uid = member.uid || "SYDF-XXX";
+        const uidShort =
+          "#" +
+          uid
+            .replace(/[^0-9]/g, "")
+            .slice(-3)
+            .padStart(3, "0");
+        document.getElementById("idUidShort").textContent = uidShort;
+        document.getElementById("idUidShortBack").textContent = uidShort;
+
+        document.getElementById("idCnic").textContent =
+          member.cnic_masked || maskCnic(member.cnic);
+        document.getElementById("idPhone").textContent = member.phone || "-";
+        document.getElementById("idBlood").textContent =
+          member.blood_group || "-";
+        document.getElementById("idDistrict").textContent =
+          member.district || "-";
+
+        const startDate = member.created_at
+          ? new Date(member.created_at)
+          : new Date();
+        const expiryDate = new Date(startDate);
+        expiryDate.setFullYear(expiryDate.getFullYear() + 2);
+
+        const startStr =
+          String(startDate.getMonth() + 1).padStart(2, "0") +
+          "/" +
+          startDate.getFullYear();
+        const expiryStr =
+          String(expiryDate.getMonth() + 1).padStart(2, "0") +
+          "/" +
+          expiryDate.getFullYear();
+        document.getElementById("idIssue").textContent = startStr;
+        document.getElementById("idValidity").textContent = expiryStr;
+
+        const photoEl = document.getElementById("memberPhoto");
+        if (member.photo_url) {
+          photoEl.innerHTML =
+            '<img src="' +
+            member.photo_url +
+            '" alt="Photo" onerror="this.parentElement.textContent=\'' +
+            (member.name || "M").charAt(0).toUpperCase() +
+            "'\">";
+        } else {
+          photoEl.textContent = (member.name || "M").charAt(0).toUpperCase();
+        }
+
+        generateBarcode(uid);
+
+        const verifyUrl = VERIFY_PAGE_BASE + "?uid=" + encodeURIComponent(uid);
+        document.getElementById("qrCode").src =
+          "https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=" +
+          getQRColor() +
+          "&bgcolor=ffffff&margin=0&data=" +
+          encodeURIComponent(verifyUrl);
+        document.getElementById("verifyBtn").href = verifyUrl;
+
+        document.getElementById("topAvatar").textContent = (member.name || "M")
+          .charAt(0)
+          .toUpperCase();
+        document
+          .querySelectorAll(".user-name")
+          .forEach((el) => (el.textContent = member.name || "Member"));
+        document
+          .querySelectorAll(".user-uid")
+          .forEach((el) => (el.textContent = member.uid || "-"));
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          showStatus(
+            "⚠️",
+            "System Not Ready",
+            "Please refresh the page",
+            "warn",
+          );
+          return;
+        }
+
+        try {
+          const { data: sessionData } = await supabaseClient.auth.getSession();
+          const session = sessionData ? sessionData.session : null;
+
+          if (!session || !session.user) {
+            window.location.href = "login.html";
+            return;
+          }
+
+          const { data: member, error } = await supabaseClient
+            .from("members")
+            .select("*")
+            .eq("email", session.user.email)
+            .single();
+
+          if (error || !member) {
+            showStatus(
+              "❌",
+              "Member Not Found",
+              "Your profile could not be found.",
+              "err",
+            );
+            return;
+          }
+
+          if (member.status === "Suspended") {
+            showStatus(
+              "⏸️",
+              "Account Suspended",
+              "ID Card not available. Contact admin.",
+              "warn",
+            );
+            return;
+          }
+          if (member.status === "Pending") {
+            showStatus(
+              "⏳",
+              "Account Pending",
+              "ID Card will be available once approved.",
+              "warn",
+            );
+            return;
+          }
+          if (member.status === "Rejected") {
+            showStatus(
+              "❌",
+              "Account Rejected",
+              "ID Card not available.",
+              "err",
+            );
+            return;
+          }
+          if (member.status === "Inactive") {
+            showStatus(
+              "💤",
+              "Account Inactive",
+              "Contact admin to reactivate.",
+              "warn",
+            );
+            return;
+          }
+
+          showCard(member);
+        } catch (err) {
+          console.error(err);
+          showStatus("❌", "Error Loading", "Please refresh the page.", "err");
+        }
+      });
+    </script>
+  </body>
+</html>

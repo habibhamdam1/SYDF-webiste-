@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Activities - SYDF</title>
+    <script src="js/head-includes.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+
+      .activities-section {
+        padding: 40px;
+        max-width: 1300px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+
+      .intro-block {
+        text-align: center;
+      }
+      .intro-block h2 {
+        font-size: 30px;
+        color: #1abc9c;
+        margin-bottom: 20px;
+      }
+      .intro-block p {
+        font-size: 16px;
+        line-height: 1.9;
+        opacity: 0.9;
+        color: white;
+      }
+
+      /* Stats strip */
+      .stats-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 18px;
+      }
+      .mini-stat {
+        text-align: center;
+        padding: 22px 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        transition: 0.3s;
+      }
+      .mini-stat:hover {
+        border-color: rgba(26, 188, 156, 0.3);
+        background: rgba(26, 188, 156, 0.08);
+        transform: translateY(-4px);
+      }
+      .mini-stat .ico {
+        font-size: 28px;
+        display: block;
+        margin-bottom: 8px;
+      }
+      .mini-stat .num {
+        font-size: 26px;
+        font-weight: 800;
+        color: #1abc9c;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .mini-stat .lbl {
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        opacity: 0.75;
+        font-weight: 600;
+      }
+
+      /* Filter tabs */
+      .filter-tabs {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .filter-btn {
+        padding: 10px 22px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 30px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .filter-btn:hover {
+        background: rgba(26, 188, 156, 0.15);
+        border-color: #1abc9c;
+      }
+      .filter-btn.active {
+        background: #1abc9c;
+        color: white;
+        border-color: #1abc9c;
+        font-weight: 600;
+      }
+
+      /* Activities grid */
+      .activities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+        gap: 22px;
+      }
+
+      .activity-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+      }
+      .activity-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(26, 188, 156, 0.3);
+        box-shadow: 0 20px 50px rgba(26, 188, 156, 0.18);
+      }
+
+      .activity-image {
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 68px;
+        position: relative;
+        overflow: hidden;
+      }
+      .activity-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        inset: 0;
+      }
+      .activity-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        padding: 5px 13px;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        font-size: 10px;
+        font-weight: 700;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 2;
+      }
+      .activity-badge.upcoming {
+        background: rgba(59, 130, 246, 0.85);
+        border-color: rgba(147, 197, 253, 0.5);
+      }
+      .activity-badge.ongoing {
+        background: rgba(251, 191, 36, 0.85);
+        color: #1a1a1a;
+        border-color: rgba(253, 224, 71, 0.5);
+      }
+      .activity-badge.completed {
+        background: rgba(34, 197, 94, 0.85);
+        border-color: rgba(134, 239, 172, 0.5);
+      }
+      .activity-badge.cancelled {
+        background: rgba(239, 68, 68, 0.85);
+        border-color: rgba(252, 165, 165, 0.5);
+      }
+
+      .activity-body {
+        padding: 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .activity-meta {
+        display: flex;
+        gap: 15px;
+        font-size: 11px;
+        opacity: 0.75;
+        margin-bottom: 12px;
+        color: white;
+        flex-wrap: wrap;
+      }
+      .activity-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .activity-body h3 {
+        font-size: 17px;
+        color: white;
+        margin-bottom: 12px;
+        line-height: 1.4;
+        font-weight: 700;
+      }
+      .activity-body p {
+        font-size: 13px;
+        line-height: 1.7;
+        opacity: 0.85;
+        color: white;
+        flex: 1;
+        margin-bottom: 15px;
+      }
+
+      .activity-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .activity-cat {
+        font-size: 10px;
+        padding: 4px 11px;
+        border-radius: 10px;
+        background: rgba(26, 188, 156, 0.15);
+        border: 1px solid rgba(26, 188, 156, 0.35);
+        color: #5eead4;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+      }
+      .activity-link {
+        font-size: 13px;
+        color: #1abc9c;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .activity-link:hover {
+        color: #16a085;
+      }
+
+      .loading-state,
+      .empty-state {
+        text-align: center;
+        padding: 70px 20px;
+        color: white;
+        opacity: 0.75;
+      }
+      .loading-state .spinner {
+        width: 46px;
+        height: 46px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #1abc9c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 18px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .page-hero-content {
+          padding: 30px 25px;
+        }
+        .activities-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .activities-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>🎯 Our Activities</h1>
+        <p>Home / Activities</p>
+      </div>
+    </section>
+
+    <section class="activities-section">
+      <div class="glass-block intro-block">
+        <h2>Making a Difference Together</h2>
+        <p>
+          Explore our community initiatives, youth programs, and social welfare
+          activities across Malakand Division.
+        </p>
+      </div>
+
+      <div class="glass-block">
+        <div class="stats-strip" id="statsStrip">
+          <div class="mini-stat">
+            <span class="ico">📋</span>
+            <div class="num" id="statTotal">0</div>
+            <div class="lbl">Total Activities</div>
+          </div>
+          <div class="mini-stat">
+            <span class="ico">🔵</span>
+            <div class="num" id="statUpcoming">0</div>
+            <div class="lbl">Upcoming</div>
+          </div>
+          <div class="mini-stat">
+            <span class="ico">🟡</span>
+            <div class="num" id="statOngoing">0</div>
+            <div class="lbl">Ongoing</div>
+          </div>
+          <div class="mini-stat">
+            <span class="ico">🟢</span>
+            <div class="num" id="statCompleted">0</div>
+            <div class="lbl">Completed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-block">
+        <div class="filter-tabs" style="margin-bottom: 25px">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="upcoming">🔵 Upcoming</button>
+          <button class="filter-btn" data-filter="ongoing">🟡 Ongoing</button>
+          <button class="filter-btn" data-filter="completed">
+            🟢 Completed
+          </button>
+        </div>
+
+        <div id="activitiesGrid" class="activities-grid">
+          <div class="loading-state" style="grid-column: 1/-1">
+            <div class="spinner"></div>
+            <p>Loading activities...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allActivities = [];
+      let currentFilter = "all";
+
+      const CATEGORY_META = {
+        education: {
+          emoji: "📚",
+          gradient: "linear-gradient(135deg,#3b82f6,#1e40af)",
+        },
+        sports: {
+          emoji: "⚽",
+          gradient: "linear-gradient(135deg,#22c55e,#15803d)",
+        },
+        health: {
+          emoji: "🏥",
+          gradient: "linear-gradient(135deg,#ef4444,#b91c1c)",
+        },
+        environment: {
+          emoji: "🌱",
+          gradient: "linear-gradient(135deg,#10b981,#047857)",
+        },
+        welfare: {
+          emoji: "🤝",
+          gradient: "linear-gradient(135deg,#f59e0b,#b45309)",
+        },
+        culture: {
+          emoji: "🎭",
+          gradient: "linear-gradient(135deg,#a855f7,#6b21a8)",
+        },
+        training: {
+          emoji: "🎓",
+          gradient: "linear-gradient(135deg,#06b6d4,#0e7490)",
+        },
+        awareness: {
+          emoji: "📢",
+          gradient: "linear-gradient(135deg,#ec4899,#be185d)",
+        },
+        community: {
+          emoji: "🏘️",
+          gradient: "linear-gradient(135deg,#1abc9c,#16a085)",
+        },
+      };
+
+      function getCatMeta(cat) {
+        const key = (cat || "community").toLowerCase();
+        return (
+          CATEGORY_META[key] || {
+            emoji: "🎯",
+            gradient: "linear-gradient(135deg,#1abc9c,#16a085)",
+          }
+        );
+      }
+
+      function getStatusClass(status) {
+        const s = (status || "upcoming").toLowerCase();
+        if (s.includes("ongoing")) return "ongoing";
+        if (s.includes("completed") || s.includes("done")) return "completed";
+        if (s.includes("cancel")) return "cancelled";
+        return "upcoming";
+      }
+
+      function formatDate(d) {
+        if (!d) return "-";
+        try {
+          return new Date(d).toLocaleDateString("en-PK", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+        } catch {
+          return "-";
+        }
+      }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function computeStats() {
+        document.getElementById("statTotal").textContent = allActivities.length;
+        document.getElementById("statUpcoming").textContent =
+          allActivities.filter(
+            (a) => getStatusClass(a.status) === "upcoming",
+          ).length;
+        document.getElementById("statOngoing").textContent =
+          allActivities.filter(
+            (a) => getStatusClass(a.status) === "ongoing",
+          ).length;
+        document.getElementById("statCompleted").textContent =
+          allActivities.filter(
+            (a) => getStatusClass(a.status) === "completed",
+          ).length;
+      }
+
+      function renderActivities() {
+        const grid = document.getElementById("activitiesGrid");
+        const list =
+          currentFilter === "all"
+            ? allActivities
+            : allActivities.filter(
+                (a) => getStatusClass(a.status) === currentFilter,
+              );
+
+        if (list.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1;">
+              <div style="font-size:60px; margin-bottom:15px; opacity:0.5;">🎯</div>
+              <h3>No Activities ${currentFilter !== "all" ? "in this category" : "Yet"}</h3>
+              <p>${currentFilter === "all" ? "Activities will appear here once admin adds them." : "Try a different filter."}</p>
+            </div>`;
+          return;
+        }
+
+        grid.innerHTML = list
+          .map((a) => {
+            const catMeta = getCatMeta(a.category);
+            const statusClass = getStatusClass(a.status);
+            const statusLabel = (a.status || "Upcoming").toUpperCase();
+            const imgHtml = a.image_url
+              ? `<img src="${escapeHtml(a.image_url)}" alt="${escapeHtml(a.title)}" onerror="this.remove()">`
+              : catMeta.emoji;
+            const bgStyle = a.image_url
+              ? ""
+              : `background:${catMeta.gradient};`;
+            const desc = a.description || "";
+            const shortDesc =
+              String(desc)
+                .replace(/<[^>]*>/g, "")
+                .slice(0, 130) + (desc.length > 130 ? "..." : "");
+            const participants = a.participants || 0;
+
+            return `
+            <div class="activity-card" onclick="openActivity(${a.id})">
+              <div class="activity-image" style="${bgStyle}">
+                ${imgHtml}
+                <span class="activity-badge ${statusClass}">${escapeHtml(statusLabel)}</span>
+              </div>
+              <div class="activity-body">
+                <div class="activity-meta">
+                  <span>📅 ${formatDate(a.activity_date)}</span>
+                  ${a.location ? `<span>📍 ${escapeHtml(a.location)}</span>` : ""}
+                </div>
+                <h3>${escapeHtml(a.title)}</h3>
+                <p>${escapeHtml(shortDesc)}</p>
+                <div class="activity-footer">
+                  <span class="activity-cat">${escapeHtml(a.category || "Community")}</span>
+                  <a href="activity-detail.html?id=${a.id}" class="activity-link" onclick="event.stopPropagation()">
+                    View Details →
+                  </a>
+                </div>
+              </div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function openActivity(id) {
+        window.location.href = "activity-detail.html?id=" + id;
+      }
+
+      function attachFilters() {
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            document
+              .querySelectorAll(".filter-btn")
+              .forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            currentFilter = this.getAttribute("data-filter");
+            renderActivities();
+          });
+        });
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          document.getElementById("activitiesGrid").innerHTML =
+            '<div class="empty-state" style="grid-column:1/-1;"><h3>⚠️ System Not Ready</h3><p>Please refresh the page.</p></div>';
+          return;
+        }
+
+        try {
+          const { data, error } = await supabaseClient
+            .from("activities")
+            .select("*")
+            .order("activity_date", { ascending: false });
+
+          if (error) throw error;
+          allActivities = data || [];
+          computeStats();
+          renderActivities();
+          attachFilters();
+        } catch (err) {
+          console.error(err);
+          document.getElementById("activitiesGrid").innerHTML =
+            '<div class="empty-state" style="grid-column:1/-1;"><h3>❌ Error Loading Activities</h3><p>Please refresh the page.</p></div>';
+        }
+      });
+
+      window.openActivity = openActivity;
+    </script>
+  </body>
+</html>

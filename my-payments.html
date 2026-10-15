@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Payments - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .payments-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+      }
+      .summary-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 22px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+        min-height: 100px;
+        transition: transform 0.3s;
+      }
+      .summary-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+      }
+      .summary-card.total::before {
+        background: #1abc9c;
+      }
+      .summary-card.current::before {
+        background: #3b82f6;
+      }
+      .summary-card.due::before {
+        background: #f59e0b;
+      }
+      .summary-card.streak::before {
+        background: #ec4899;
+      }
+      .summary-card:hover {
+        transform: translateY(-5px);
+      }
+      .summary-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        flex-shrink: 0;
+      }
+      .summary-card.total .summary-icon {
+        background: rgba(26, 188, 156, 0.15);
+      }
+      .summary-card.current .summary-icon {
+        background: rgba(59, 130, 246, 0.15);
+      }
+      .summary-card.due .summary-icon {
+        background: rgba(245, 158, 11, 0.15);
+      }
+      .summary-card.streak .summary-icon {
+        background: rgba(236, 72, 153, 0.15);
+      }
+      .summary-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .summary-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        opacity: 0.7;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: white;
+      }
+      .summary-value {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 3px;
+        line-height: 1.2;
+      }
+      .summary-card.total .summary-value {
+        color: #1abc9c;
+      }
+      .summary-card.current .summary-value {
+        color: #93c5fd;
+      }
+      .summary-card.due .summary-value {
+        color: #fbbf24;
+      }
+      .summary-card.streak .summary-value {
+        color: #f9a8d4;
+      }
+      .summary-sub {
+        font-size: 11px;
+        opacity: 0.7;
+        color: white;
+      }
+
+      .payment-table-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        padding: 0;
+        overflow: hidden;
+        margin-bottom: 25px;
+      }
+      .payment-table-card .table-wrap {
+        overflow-x: auto;
+      }
+      .payment-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 750px;
+      }
+      .payment-table thead {
+        background: rgba(26, 188, 156, 0.1);
+        border-bottom: 2px solid rgba(26, 188, 156, 0.2);
+      }
+      .payment-table th {
+        text-align: left;
+        padding: 18px 15px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #1abc9c;
+        white-space: nowrap;
+      }
+      .payment-table tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .payment-table tbody tr:hover {
+        background: rgba(26, 188, 156, 0.05);
+      }
+      .payment-table td {
+        padding: 15px;
+        font-size: 13px;
+        color: white;
+        vertical-align: middle;
+      }
+      .receipt-badge {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: "Courier New", monospace;
+      }
+      .amount {
+        color: #1abc9c;
+        font-weight: 700;
+      }
+      .method-badge {
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+      }
+      .method-badge.jazzcash {
+        background: rgba(239, 68, 68, 0.12);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.25);
+      }
+      .method-badge.easypaisa {
+        background: rgba(34, 197, 94, 0.12);
+        color: #86efac;
+        border: 1px solid rgba(34, 197, 94, 0.25);
+      }
+      .method-badge.bank {
+        background: rgba(59, 130, 246, 0.12);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.25);
+      }
+      .method-badge.cash {
+        background: rgba(107, 114, 128, 0.15);
+        color: #d1d5db;
+        border: 1px solid rgba(107, 114, 128, 0.3);
+      }
+      .status-badge-paid {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+      .status-badge-pending {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(245, 158, 11, 0.15);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+      .btn-download {
+        padding: 8px 12px;
+        background: rgba(26, 188, 156, 0.12);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+      }
+      .btn-download:hover {
+        background: #1abc9c;
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .pay-instructions {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        padding: 28px;
+      }
+      .pay-instructions h3 {
+        color: #1abc9c;
+        font-size: 17px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .pay-instructions .sub {
+        font-size: 13px;
+        color: white;
+        opacity: 0.8;
+        margin-bottom: 22px;
+      }
+      .pay-instructions .sub strong {
+        color: #1abc9c;
+      }
+      .pay-methods-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+        margin-bottom: 22px;
+      }
+      .pay-method-card {
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        text-align: center;
+      }
+      .pay-method-card .icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin: 0 auto 12px;
+      }
+      .pay-method-card.jazzcash .icon {
+        background: rgba(239, 68, 68, 0.2);
+      }
+      .pay-method-card.easypaisa .icon {
+        background: rgba(34, 197, 94, 0.2);
+      }
+      .pay-method-card.bank .icon {
+        background: rgba(59, 130, 246, 0.2);
+      }
+      .pay-method-card h4 {
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .pay-method-card .account {
+        color: #1abc9c;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: "Courier New", monospace;
+        margin-bottom: 4px;
+      }
+      .pay-method-card .title {
+        color: white;
+        font-size: 11px;
+        opacity: 0.7;
+      }
+      .pay-note {
+        display: flex;
+        gap: 14px;
+        padding: 15px 18px;
+        background: rgba(59, 130, 246, 0.08);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-left: 4px solid #3b82f6;
+        border-radius: 10px;
+      }
+      .pay-note p {
+        color: white;
+        font-size: 12px;
+        line-height: 1.7;
+        opacity: 0.9;
+      }
+      .pay-note strong {
+        color: #93c5fd;
+      }
+
+      .empty-msg {
+        color: white;
+        opacity: 0.7;
+        padding: 40px;
+        text-align: center;
+      }
+
+      @media (max-width: 1100px) {
+        .payments-summary-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .payments-summary-grid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        .summary-card {
+          padding: 18px;
+        }
+        .summary-icon {
+          width: 48px;
+          height: 48px;
+          font-size: 22px;
+        }
+        .summary-value {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Member Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"
+              ><span class="nav-icon">📊</span><span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><span class="nav-icon">👤</span><span>My Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="my-payments.html" class="active"
+              ><span class="nav-icon">💰</span><span>My Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="my-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+          <li>
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="member-proposals.html"
+              ><span class="nav-icon">💡</span><span>My Proposals</span></a
+            >
+          </li>
+          <li>
+            <a href="my-certificate.html"
+              ><span class="nav-icon">📜</span><span>Certificate</span></a
+            >
+          </li>
+          <li>
+            <a href="my-id-card.html"
+              ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>My Payments</h2>
+          <p>Payment history & receipts</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar" id="topAvatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Loading...</span
+              ><span class="user-uid">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div style="margin-bottom: 20px">
+          <h1
+            style="
+              color: white;
+              font-size: 24px;
+              font-weight: 700;
+              margin-bottom: 5px;
+            "
+          >
+            💰 My Payments
+          </h1>
+          <p style="color: white; font-size: 14px; opacity: 0.7">
+            Your complete payment record
+          </p>
+        </div>
+
+        <div class="payments-summary-grid">
+          <div class="summary-card total">
+            <div class="summary-icon">💰</div>
+            <div class="summary-info">
+              <p class="summary-label">Total Paid</p>
+              <h3 class="summary-value" id="totalPaid">Rs. 0</h3>
+              <p class="summary-sub" id="totalMonths">0 months</p>
+            </div>
+          </div>
+          <div class="summary-card current">
+            <div class="summary-icon">✅</div>
+            <div class="summary-info">
+              <p class="summary-label">Current Month</p>
+              <h3 class="summary-value" id="currentStatus">-</h3>
+              <p class="summary-sub" id="currentMonth">-</p>
+            </div>
+          </div>
+          <div class="summary-card due">
+            <div class="summary-icon">⏳</div>
+            <div class="summary-info">
+              <p class="summary-label">Next Due</p>
+              <h3 class="summary-value">Rs. 300</h3>
+              <p class="summary-sub" id="nextDue">-</p>
+            </div>
+          </div>
+          <div class="summary-card streak">
+            <div class="summary-icon">🔥</div>
+            <div class="summary-info">
+              <p class="summary-label">Payment Streak</p>
+              <h3 class="summary-value" id="streak">0 Months</h3>
+              <p class="summary-sub">On-time payer</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="payment-table-card">
+          <div class="table-wrap">
+            <table class="payment-table" id="paymentsTable">
+              <thead>
+                <tr>
+                  <th>Receipt #</th>
+                  <th>Month</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th style="text-align: right">Receipt</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsBody">
+                <tr>
+                  <td colspan="7" class="empty-msg">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            style="
+              padding: 18px 22px;
+              background: rgba(255, 255, 255, 0.03);
+              border-top: 1px solid rgba(255, 255, 255, 0.08);
+              font-size: 13px;
+              color: white;
+              opacity: 0.8;
+            "
+          >
+            Showing
+            <strong id="showingCount" style="color: #1abc9c">0</strong> payments
+          </div>
+        </div>
+
+        <div class="pay-instructions">
+          <h3>💳 How to Pay Membership Fee</h3>
+          <p class="sub">
+            Monthly fee: <strong>Rs. 300</strong> — Pay via any method below
+          </p>
+
+          <div class="pay-methods-row">
+            <div class="pay-method-card jazzcash">
+              <div class="icon">📱</div>
+              <h4>JazzCash</h4>
+              <p class="account">0300-1234567</p>
+              <p class="title">Title: SYDF</p>
+            </div>
+            <div class="pay-method-card easypaisa">
+              <div class="icon">💚</div>
+              <h4>EasyPaisa</h4>
+              <p class="account">0301-2345678</p>
+              <p class="title">Title: SYDF</p>
+            </div>
+            <div class="pay-method-card bank">
+              <div class="icon">🏦</div>
+              <h4>Bank Transfer</h4>
+              <p class="account">HBL: 1234-5678-9012</p>
+              <p class="title">Title: SYDF</p>
+            </div>
+          </div>
+
+          <div class="pay-note">
+            <span style="font-size: 20px">ℹ️</span>
+            <p>
+              After payment, send your <strong>receipt or screenshot</strong> to
+              admin via WhatsApp or email so they can update your record.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      let currentMember = null;
+      let allPayments = [];
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        try {
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          if (!session) {
+            window.location.href = "login.html";
+            return;
+          }
+
+          const { data: member } = await supabaseClient
+            .from("members")
+            .select("*")
+            .eq("email", session.user.email)
+            .single();
+          currentMember = member;
+          if (member) {
+            document.getElementById("topAvatar").textContent = (
+              member.name || "M"
+            )
+              .charAt(0)
+              .toUpperCase();
+            document
+              .querySelectorAll(".user-name")
+              .forEach((el) => (el.textContent = member.name));
+            document
+              .querySelectorAll(".user-uid")
+              .forEach((el) => (el.textContent = member.uid));
+          }
+
+          const { data: payments } = await supabaseClient
+            .from("payments")
+            .select("*")
+            .eq("member_email", session.user.email)
+            .order("payment_date", { ascending: false });
+
+          allPayments = payments || [];
+          const tbody = document.getElementById("paymentsBody");
+
+          if (allPayments.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="7" class="empty-msg">No payments recorded yet</td></tr>';
+            document.getElementById("totalPaid").textContent = "Rs. 0";
+            document.getElementById("showingCount").textContent = "0";
+          } else {
+            tbody.innerHTML = allPayments
+              .map((p) => {
+                const mc = (p.method || "cash").toLowerCase();
+                const methodClass = mc.includes("jazz")
+                  ? "jazzcash"
+                  : mc.includes("easy")
+                    ? "easypaisa"
+                    : mc.includes("bank")
+                      ? "bank"
+                      : "cash";
+                const methodIcon = mc.includes("jazz")
+                  ? "📱"
+                  : mc.includes("easy")
+                    ? "💚"
+                    : mc.includes("bank")
+                      ? "🏦"
+                      : "💵";
+                const sc =
+                  p.status === "Paid"
+                    ? "status-badge-paid"
+                    : "status-badge-pending";
+                const date = p.payment_date
+                  ? new Date(p.payment_date).toLocaleDateString("en-PK", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })
+                  : "-";
+                return `
+                        <tr>
+                            <td><span class="receipt-badge">#${p.receipt_no || "-"}</span></td>
+                            <td style="font-weight:600;">${p.month || "-"}</td>
+                            <td class="amount">Rs. ${p.amount}</td>
+                            <td><span class="method-badge ${methodClass}">${methodIcon} ${p.method}</span></td>
+                            <td>${date}</td>
+                            <td><span class="${sc}">${p.status === "Paid" ? "✅" : "⏳"} ${p.status}</span></td>
+                            <td style="text-align:right;">
+                                <button class="btn-download" onclick="downloadReceipt(${p.id})">📥 PDF</button>
+                            </td>
+                        </tr>`;
+              })
+              .join("");
+
+            const total = allPayments.reduce(
+              (s, p) => s + Number(p.amount || 0),
+              0,
+            );
+            document.getElementById("totalPaid").textContent =
+              "Rs. " + total.toLocaleString();
+            document.getElementById("totalMonths").textContent =
+              allPayments.length + " months";
+            document.getElementById("streak").textContent =
+              allPayments.length + " Months";
+            document.getElementById("showingCount").textContent =
+              allPayments.length;
+
+            const now = new Date();
+            const currentMonthName = now.toLocaleDateString("en-PK", {
+              month: "long",
+              year: "numeric",
+            });
+            document.getElementById("currentMonth").textContent =
+              currentMonthName;
+            const current = allPayments.find(
+              (p) => p.month === currentMonthName,
+            );
+            document.getElementById("currentStatus").textContent = current
+              ? "Paid"
+              : "Pending";
+
+            const nextMonth = new Date(
+              now.getFullYear(),
+              now.getMonth() + 1,
+              5,
+            );
+            document.getElementById("nextDue").textContent =
+              nextMonth.toLocaleDateString("en-PK", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              });
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+
+      // ==========================================
+      // DOWNLOAD PAYMENT RECEIPT PDF
+      // ==========================================
+      window.downloadReceipt = function (paymentId) {
+        const p = allPayments.find((x) => x.id === paymentId);
+        if (!p) {
+          alert("❌ Payment not found");
+          return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4",
+        });
+
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        // ==========================================
+        // HEADER (Green Bar)
+        // ==========================================
+        doc.setFillColor(26, 188, 156);
+        doc.rect(0, 0, pageWidth, 35, "F");
+
+        doc.setFillColor(15, 32, 39);
+        doc.rect(0, 35, pageWidth, 3, "F");
+
+        // Logo circle
+        doc.setFillColor(255, 255, 255);
+        doc.circle(22, 17, 9, "F");
+        doc.setTextColor(26, 188, 156);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.text("SYDF", 22, 18.5, { align: "center" });
+
+        // Title
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(20);
+        doc.text("Swat Youth Development Forum", 38, 15);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text("Empowering Youth, Building Future", 38, 23);
+
+        // ==========================================
+        // RECEIPT TITLE
+        // ==========================================
+        doc.setTextColor(15, 32, 39);
+        doc.setFontSize(22);
+        doc.setFont("helvetica", "bold");
+        doc.text("PAYMENT RECEIPT", 14, 55);
+
+        // Receipt Number Box
+        doc.setFillColor(240, 253, 249);
+        doc.roundedRect(pageWidth - 75, 45, 61, 18, 3, 3, "F");
+        doc.setDrawColor(26, 188, 156);
+        doc.setLineWidth(0.5);
+        doc.roundedRect(pageWidth - 75, 45, 61, 18, 3, 3, "S");
+        doc.setTextColor(26, 188, 156);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.text("RECEIPT NO.", pageWidth - 72, 51);
+        doc.setFontSize(13);
+        doc.text(p.receipt_no || "N/A", pageWidth - 72, 59);
+
+        // Date Line
+        doc.setTextColor(100, 100, 100);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        const issueDate = new Date().toLocaleDateString("en-PK", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
+        doc.text("Date: " + issueDate, 14, 68);
+
+        // ==========================================
+        // DIVIDER
+        // ==========================================
+        doc.setDrawColor(26, 188, 156);
+        doc.setLineWidth(0.5);
+        doc.line(14, 73, pageWidth - 14, 73);
+
+        // ==========================================
+        // MEMBER INFO BOX
+        // ==========================================
+        doc.setFillColor(248, 250, 252);
+        doc.rect(14, 80, pageWidth - 28, 40, "F");
+
+        doc.setTextColor(26, 188, 156);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("MEMBER INFORMATION", 20, 90);
+
+        doc.setTextColor(50, 50, 50);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+
+        doc.text("Name:", 20, 100);
+        doc.setFont("helvetica", "bold");
+        doc.text(currentMember.name || p.member_name || "Member", 55, 100);
+
+        doc.setFont("helvetica", "normal");
+        doc.text("Member UID:", 20, 108);
+        doc.setFont("helvetica", "bold");
+        doc.text(currentMember.uid || p.uid || "N/A", 55, 108);
+
+        doc.setFont("helvetica", "normal");
+        doc.text("Email:", 20, 116);
+        doc.setFont("helvetica", "bold");
+        doc.text(currentMember.email || p.member_email || "N/A", 55, 116);
+
+        // ==========================================
+        // PAYMENT DETAILS TABLE
+        // ==========================================
+        doc.setFillColor(26, 188, 156);
+        doc.rect(14, 135, pageWidth - 28, 12, "F");
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("PAYMENT DETAILS", 20, 143);
+
+        // Table Rows
+        const startY = 155;
+        const rowHeight = 12;
+
+        // Row 1 - Month
+        doc.setFillColor(245, 250, 249);
+        doc.rect(14, startY, pageWidth - 28, rowHeight, "F");
+        doc.setTextColor(80, 80, 80);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        doc.text("Payment For:", 20, startY + 8);
+        doc.setTextColor(15, 32, 39);
+        doc.setFont("helvetica", "bold");
+        doc.text(p.month || "N/A", pageWidth - 20, startY + 8, {
+          align: "right",
+        });
+
+        // Row 2 - Method
+        doc.setFillColor(255, 255, 255);
+        doc.rect(14, startY + rowHeight, pageWidth - 28, rowHeight, "F");
+        doc.setTextColor(80, 80, 80);
+        doc.setFont("helvetica", "normal");
+        doc.text("Payment Method:", 20, startY + rowHeight + 8);
+        doc.setTextColor(15, 32, 39);
+        doc.setFont("helvetica", "bold");
+        doc.text(p.method || "N/A", pageWidth - 20, startY + rowHeight + 8, {
+          align: "right",
+        });
+
+        // Row 3 - Date
+        doc.setFillColor(245, 250, 249);
+        doc.rect(14, startY + rowHeight * 2, pageWidth - 28, rowHeight, "F");
+        doc.setTextColor(80, 80, 80);
+        doc.setFont("helvetica", "normal");
+        doc.text("Payment Date:", 20, startY + rowHeight * 2 + 8);
+        doc.setTextColor(15, 32, 39);
+        doc.setFont("helvetica", "bold");
+        const payDate = p.payment_date
+          ? new Date(p.payment_date).toLocaleDateString("en-PK", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })
+          : "N/A";
+        doc.text(payDate, pageWidth - 20, startY + rowHeight * 2 + 8, {
+          align: "right",
+        });
+
+        // Row 4 - Status
+        doc.setFillColor(255, 255, 255);
+        doc.rect(14, startY + rowHeight * 3, pageWidth - 28, rowHeight, "F");
+        doc.setTextColor(80, 80, 80);
+        doc.setFont("helvetica", "normal");
+        doc.text("Status:", 20, startY + rowHeight * 3 + 8);
+        doc.setTextColor(
+          p.status === "Paid" ? 26 : 245,
+          p.status === "Paid" ? 188 : 158,
+          p.status === "Paid" ? 156 : 11,
+        );
+        doc.setFont("helvetica", "bold");
+        doc.text(
+          p.status || "N/A",
+          pageWidth - 20,
+          startY + rowHeight * 3 + 8,
+          { align: "right" },
+        );
+
+        // ==========================================
+        // AMOUNT BOX (Big)
+        // ==========================================
+        const amountY = startY + rowHeight * 4 + 15;
+
+        doc.setFillColor(26, 188, 156);
+        doc.roundedRect(14, amountY, pageWidth - 28, 25, 4, 4, "F");
+
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.text("TOTAL AMOUNT PAID:", 22, amountY + 10);
+
+        doc.setFontSize(22);
+        doc.setFont("helvetica", "bold");
+        doc.text(
+          "Rs. " + Number(p.amount).toLocaleString(),
+          pageWidth - 22,
+          amountY + 17,
+          { align: "right" },
+        );
+
+        // ==========================================
+        // FOOTER NOTE
+        // ==========================================
+        const footerY = amountY + 40;
+
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.3);
+        doc.line(14, footerY - 5, pageWidth - 14, footerY - 5);
+
+        doc.setTextColor(100, 100, 100);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "italic");
+        doc.text(
+          "This is a computer-generated receipt. No signature required.",
+          14,
+          footerY,
+        );
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.text(
+          "For any queries, contact: info@sydf.org | +92 300 1234567",
+          14,
+          footerY + 6,
+        );
+
+        // ==========================================
+        // BOTTOM FOOTER BAR
+        // ==========================================
+        doc.setFillColor(15, 32, 39);
+        doc.rect(0, pageHeight - 15, pageWidth, 15, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(8);
+        doc.text(
+          "SYDF © " + new Date().getFullYear() + " - All Rights Reserved",
+          14,
+          pageHeight - 6,
+        );
+        doc.text("Page 1 of 1", pageWidth - 14, pageHeight - 6, {
+          align: "right",
+        });
+
+        // ==========================================
+        // SAVE
+        // ==========================================
+        doc.save("SYDF-Receipt-" + (p.receipt_no || "payment") + ".pdf");
+        console.log("✅ Receipt downloaded");
+      };
+    </script>
+  </body>
+</html>

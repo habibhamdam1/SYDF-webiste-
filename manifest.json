@@ -1,0 +1,59 @@
+{
+  "name": "Swat Youth Development Forum",
+  "short_name": "SYDF",
+  "description": "Empowering Youth of Pakistan - Malakand Division",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0f2027",
+  "theme_color": "#1abc9c",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "images/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Membership",
+      "short_name": "Join",
+      "description": "Apply for SYDF membership",
+      "url": "/membership.html"
+    },
+    {
+      "name": "Activities",
+      "short_name": "Activities",
+      "description": "View our activities",
+      "url": "/activities.html"
+    },
+    {
+      "name": "Events",
+      "short_name": "Events",
+      "description": "Upcoming events calendar",
+      "url": "/events.html"
+    }
+  ]
+}

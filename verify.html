@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Member - SYDF</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/head-includes.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        color: white;
+      }
+      .verify-container {
+        width: 100%;
+        max-width: 620px;
+      }
+
+      .verify-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        padding: 0;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.4s;
+      }
+      .verify-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #1abc9c, #fbbf24, #1abc9c, #fbbf24);
+        background-size: 300% 100%;
+        animation: slideGrad 4s linear infinite;
+        z-index: 10;
+      }
+      @keyframes slideGrad {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 300% 50%;
+        }
+      }
+      .verify-card.theme-male::before {
+        background: linear-gradient(90deg, #0a1628, #1e3a5f, #0a1628);
+        background-size: 300% 100%;
+      }
+      .verify-card.theme-female::before {
+        background: linear-gradient(90deg, #450a0a, #991b1b, #450a0a);
+        background-size: 300% 100%;
+      }
+
+      .card-inner {
+        padding: 45px 40px 40px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      .brand-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .brand-logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: white;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 8px 25px rgba(26, 188, 156, 0.35),
+          0 0 0 4px rgba(26, 188, 156, 0.2);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .brand-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+      }
+      .brand-text {
+        text-align: left;
+      }
+      .brand-text h1 {
+        font-size: 22px;
+        color: #1abc9c;
+        font-weight: 800;
+        letter-spacing: 2px;
+        line-height: 1;
+        margin: 0;
+      }
+      .brand-text p {
+        font-size: 9.5px;
+        color: rgba(255, 255, 255, 0.7);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-top: 4px;
+        font-weight: 600;
+      }
+
+      .status-icon {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        margin: 0 auto 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 52px;
+        position: relative;
+      }
+      .status-icon.verified {
+        background: radial-gradient(
+          circle,
+          rgba(26, 188, 156, 0.25),
+          rgba(26, 188, 156, 0.05)
+        );
+        border: 3px solid #1abc9c;
+        box-shadow:
+          0 0 50px rgba(26, 188, 156, 0.5),
+          0 0 0 10px rgba(26, 188, 156, 0.1);
+        animation: pulseGreen 2s ease-in-out infinite;
+      }
+      @keyframes pulseGreen {
+        0%,
+        100% {
+          box-shadow:
+            0 0 50px rgba(26, 188, 156, 0.5),
+            0 0 0 10px rgba(26, 188, 156, 0.1);
+        }
+        50% {
+          box-shadow:
+            0 0 70px rgba(26, 188, 156, 0.7),
+            0 0 0 15px rgba(26, 188, 156, 0.15);
+        }
+      }
+      .status-icon.invalid {
+        background: radial-gradient(
+          circle,
+          rgba(239, 68, 68, 0.25),
+          rgba(239, 68, 68, 0.05)
+        );
+        border: 3px solid #ef4444;
+        box-shadow: 0 0 50px rgba(239, 68, 68, 0.4);
+      }
+      .status-icon.loading {
+        background: rgba(255, 255, 255, 0.05);
+        border: 3px solid rgba(255, 255, 255, 0.15);
+      }
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #1abc9c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .status-title {
+        font-size: 26px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+      }
+      .status-title.verified {
+        color: #1abc9c;
+      }
+      .status-title.invalid {
+        color: #fca5a5;
+      }
+      .status-title.loading {
+        color: white;
+      }
+
+      .status-subtitle {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+
+      .member-display {
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(26, 188, 156, 0.25);
+        border-radius: 20px;
+        padding: 0;
+        margin-top: 24px;
+        text-align: left;
+        overflow: hidden;
+        animation: fadeInUp 0.5s ease;
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .member-display.theme-male {
+        border-color: rgba(30, 58, 95, 0.5);
+        background: linear-gradient(
+          180deg,
+          rgba(10, 22, 40, 0.4),
+          rgba(0, 0, 0, 0.35)
+        );
+      }
+      .member-display.theme-female {
+        border-color: rgba(153, 27, 27, 0.5);
+        background: linear-gradient(
+          180deg,
+          rgba(69, 10, 10, 0.4),
+          rgba(0, 0, 0, 0.35)
+        );
+      }
+
+      .member-display-header {
+        height: 5px;
+        background: linear-gradient(90deg, #1abc9c, #16a085);
+      }
+      .member-display.theme-male .member-display-header {
+        background: linear-gradient(90deg, #0a1628, #1e3a5f, #2c5f8d);
+      }
+      .member-display.theme-female .member-display-header {
+        background: linear-gradient(90deg, #450a0a, #991b1b, #b91c1c);
+      }
+
+      .member-display-body {
+        padding: 28px 28px 24px;
+      }
+
+      .member-photo-wrap {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 18px;
+        position: relative;
+      }
+      .member-photo-display {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin: 0 auto;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.25),
+          rgba(26, 188, 156, 0.08)
+        );
+        border: 3px solid #1abc9c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        font-weight: 700;
+        color: white;
+        overflow: hidden;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          0 0 0 5px rgba(26, 188, 156, 0.15);
+        position: relative;
+      }
+      .member-display.theme-male .member-photo-display {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 58, 95, 0.4),
+          rgba(10, 22, 40, 0.2)
+        );
+        border-color: #2c5f8d;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          0 0 0 5px rgba(30, 58, 95, 0.25);
+      }
+      .member-display.theme-female .member-photo-display {
+        background: linear-gradient(
+          135deg,
+          rgba(153, 27, 27, 0.4),
+          rgba(69, 10, 10, 0.2)
+        );
+        border-color: #b91c1c;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          0 0 0 5px rgba(153, 27, 27, 0.25);
+      }
+      .member-photo-display img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .photo-badge {
+        position: absolute;
+        bottom: 0;
+        right: calc(50% - 58px);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        border: 3px solid rgba(15, 32, 39, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: white;
+        box-shadow: 0 4px 12px rgba(26, 188, 156, 0.5);
+      }
+
+      .verified-name {
+        font-family: "Playfair Display", serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: white;
+        text-align: center;
+        margin-bottom: 6px;
+        letter-spacing: 0.3px;
+        line-height: 1.2;
+      }
+      .verified-uid {
+        display: block;
+        text-align: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        font-weight: 700;
+        color: #5eead4;
+        letter-spacing: 2px;
+        margin-bottom: 22px;
+      }
+      .member-display.theme-male .verified-uid {
+        color: #93c5fd;
+      }
+      .member-display.theme-female .verified-uid {
+        color: #fca5a5;
+      }
+
+      .verified-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .verified-info-item {
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        text-align: left;
+      }
+      .verified-info-item .lbl {
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .verified-info-item .val {
+        font-size: 13px;
+        color: white;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+        letter-spacing: 0.3px;
+        word-break: break-word;
+      }
+      .verified-info-item.full {
+        grid-column: 1 / -1;
+      }
+
+      .verified-badge-final {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 22px;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.25),
+          rgba(26, 188, 156, 0.1)
+        );
+        border: 1px solid rgba(26, 188, 156, 0.5);
+        border-radius: 30px;
+        font-size: 11px;
+        font-weight: 800;
+        color: #1abc9c;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-top: 16px;
+      }
+      .member-display.theme-male .verified-badge-final {
+        background: linear-gradient(
+          135deg,
+          rgba(30, 58, 95, 0.4),
+          rgba(30, 58, 95, 0.15)
+        );
+        border-color: rgba(44, 95, 141, 0.7);
+        color: #93c5fd;
+      }
+      .member-display.theme-female .verified-badge-final {
+        background: linear-gradient(
+          135deg,
+          rgba(153, 27, 27, 0.4),
+          rgba(153, 27, 27, 0.15)
+        );
+        border-color: rgba(185, 28, 28, 0.7);
+        color: #fca5a5;
+      }
+      .verified-badge-final .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+        animation: blink 1.5s ease-in-out infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.35;
+        }
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 26px;
+        padding: 12px 24px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .back-link:hover {
+        background: rgba(26, 188, 156, 0.15);
+        border-color: #1abc9c;
+        transform: translateY(-2px);
+      }
+
+      .privacy-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 18px;
+        background: rgba(251, 191, 36, 0.08);
+        border: 1px solid rgba(251, 191, 36, 0.25);
+        border-radius: 12px;
+        margin-top: 16px;
+        text-align: left;
+      }
+      .privacy-notice .ico {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .privacy-notice .txt {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.5;
+      }
+      .privacy-notice .txt strong {
+        color: #fbbf24;
+        font-weight: 700;
+      }
+
+      .footer-note {
+        margin-top: 26px;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.4);
+        line-height: 1.6;
+        text-align: center;
+      }
+      .footer-note strong {
+        color: rgba(26, 188, 156, 0.7);
+      }
+
+      @media (max-width: 600px) {
+        .card-inner {
+          padding: 32px 24px 30px;
+        }
+        .brand-logo {
+          width: 48px;
+          height: 48px;
+        }
+        .brand-text h1 {
+          font-size: 18px;
+        }
+        .status-icon {
+          width: 90px;
+          height: 90px;
+          font-size: 44px;
+        }
+        .status-title {
+          font-size: 22px;
+        }
+        .member-display-body {
+          padding: 22px 20px 20px;
+        }
+        .verified-name {
+          font-size: 22px;
+        }
+        .verified-info-grid {
+          gap: 8px;
+        }
+        .verified-info-item {
+          padding: 10px 12px;
+        }
+        .verified-info-item .val {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="verify-container">
+      <div class="verify-card" id="verifyCard">
+        <div class="card-inner">
+          <div class="brand-header">
+            <div class="brand-logo">
+              <img
+                src="images/logo.png"
+                alt="SYDF"
+                onerror="
+                  this.parentElement.innerHTML =
+                    '<span style=\'color:#1abc9c;font-weight:900;font-size:20px;\'>SYDF</span>'
+                "
+              />
+            </div>
+            <div class="brand-text">
+              <h1>SYDF</h1>
+              <p>Member Verification</p>
+            </div>
+          </div>
+
+          <div id="content">
+            <div class="status-icon loading"><div class="spinner"></div></div>
+            <div class="status-title loading">Verifying...</div>
+            <div class="status-subtitle">
+              Please wait while we check the member record
+            </div>
+          </div>
+
+          <a href="index.html" class="back-link">← Back to Website</a>
+
+          <div class="footer-note">
+            This verification is provided by
+            <strong>Swat Youth Development Forum</strong>.<br />
+            For any queries, contact SYDF administration.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function getParam(name) {
+        return new URLSearchParams(window.location.search).get(name);
+      }
+
+      function renderInvalid(message) {
+        document.getElementById("content").innerHTML = `
+                <div class="status-icon invalid">✕</div>
+                <div class="status-title invalid">Not Verified</div>
+                <div class="status-subtitle">${message}</div>
+            `;
+      }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function renderVerified(m) {
+        const isFemale = (m.gender || "").toLowerCase() === "female";
+        const themeClass = isFemale ? "theme-female" : "theme-male";
+
+        document.getElementById("verifyCard").classList.add(themeClass);
+
+        const showPhoto = m.photo_url && !isFemale;
+        const initial = (m.name || "M").charAt(0).toUpperCase();
+
+        const photoHTML = showPhoto
+          ? `<img src="${escapeHtml(m.photo_url)}" alt="${escapeHtml(m.name)}" onerror="this.parentElement.textContent='${initial}'">`
+          : initial;
+
+        const joinedDate = m.joined_at
+          ? new Date(m.joined_at).toLocaleDateString("en-PK", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })
+          : "-";
+
+        const privacyHTML = isFemale
+          ? `
+                <div class="privacy-notice">
+                    <span class="ico">🔒</span>
+                    <div class="txt"><strong>Privacy Protected:</strong> Photo and personal contact details are hidden in accordance with SYDF's privacy policy.</div>
+                </div>`
+          : "";
+
+        document.getElementById("content").innerHTML = `
+                <div class="status-icon verified">✓</div>
+                <div class="status-title verified">Verified Member</div>
+                <div class="status-subtitle">This is a valid and active SYDF membership</div>
+
+                <div class="member-display ${themeClass}">
+                    <div class="member-display-header"></div>
+                    <div class="member-display-body">
+                        <div class="member-photo-wrap">
+                            <div class="member-photo-display">${photoHTML}</div>
+                            ${showPhoto ? '<div class="photo-badge">✓</div>' : ""}
+                        </div>
+
+                        <h2 class="verified-name">${escapeHtml(m.name || "-")}</h2>
+                        <span class="verified-uid">${escapeHtml(m.uid || "-")}</span>
+
+                        <div class="verified-info-grid">
+                            <div class="verified-info-item">
+                                <div class="lbl">Type</div>
+                                <div class="val">${escapeHtml((m.member_type || "Member").toUpperCase())}</div>
+                            </div>
+                            <div class="verified-info-item">
+                                <div class="lbl">Role</div>
+                                <div class="val">${escapeHtml((m.role || "Member").toUpperCase())}</div>
+                            </div>
+                            <div class="verified-info-item">
+                                <div class="lbl">Status</div>
+                                <div class="val">${escapeHtml(m.status || "Active")}</div>
+                            </div>
+                            <div class="verified-info-item">
+                                <div class="lbl">District</div>
+                                <div class="val">${escapeHtml(m.district || "-")}</div>
+                            </div>
+                            <div class="verified-info-item">
+                                <div class="lbl">Tehsil</div>
+                                <div class="val">${escapeHtml(m.tehsil || "-")}</div>
+                            </div>
+                            <div class="verified-info-item">
+                                <div class="lbl">Member Since</div>
+                                <div class="val">${joinedDate}</div>
+                            </div>
+                        </div>
+
+                        <div class="verified-badge-final">
+                            <span class="dot"></span> Authentic SYDF ID
+                        </div>
+
+                        ${privacyHTML}
+                    </div>
+                </div>
+            `;
+      }
+
+      window.addEventListener("load", async function () {
+        const uid = getParam("uid");
+
+        if (!uid) {
+          renderInvalid("No member ID provided in the QR code.");
+          return;
+        }
+
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 40
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+
+        if (!supabaseClient) {
+          renderInvalid("Verification service unavailable. Please try again.");
+          return;
+        }
+
+        try {
+          const { data, error } = await supabaseClient.rpc("verify_member", {
+            member_uid: uid.trim(),
+          });
+
+          if (error) {
+            console.error("RPC error:", error);
+            renderInvalid("Verification failed. Please try again later.");
+            return;
+          }
+
+          if (!data || data.length === 0) {
+            renderInvalid(
+              "This member ID is not recognized. The card may be fake or the membership may be inactive.",
+            );
+            return;
+          }
+
+          const member = data[0];
+
+          if (member.status !== "Active") {
+            renderInvalid(
+              "This membership is currently <strong>" +
+                member.status +
+                "</strong>. Please contact SYDF administration.",
+            );
+            return;
+          }
+
+          renderVerified(member);
+        } catch (err) {
+          console.error(err);
+          renderInvalid("Something went wrong. Please try again.");
+        }
+      });
+    </script>
+  </body>
+</html>

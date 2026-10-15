@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News Article - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .article-hero {
+        padding: 140px 20px 30px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .breadcrumb {
+        font-size: 13px;
+        opacity: 0.7;
+        color: white;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .breadcrumb a {
+        color: #1abc9c;
+        text-decoration: none;
+      }
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
+
+      .article-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        overflow: hidden;
+      }
+
+      .article-image {
+        width: 100%;
+        height: 420px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 120px;
+        position: relative;
+        overflow: hidden;
+      }
+      .article-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .article-body {
+        padding: 45px 55px 55px;
+      }
+
+      .article-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        background: rgba(26, 188, 156, 0.2);
+        border: 1px solid rgba(26, 188, 156, 0.4);
+        border-radius: 20px;
+        color: #1abc9c;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+
+      .article-title {
+        font-family: "Playfair Display", serif;
+        font-size: 42px;
+        font-weight: 700;
+        color: white;
+        line-height: 1.2;
+        margin-bottom: 22px;
+        letter-spacing: 0.3px;
+      }
+
+      .article-meta {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+        padding-bottom: 22px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 30px;
+        font-size: 13px;
+        color: white;
+        opacity: 0.75;
+      }
+
+      .article-content {
+        font-size: 16px;
+        line-height: 1.9;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.2px;
+      }
+      .article-content p {
+        margin-bottom: 22px;
+      }
+      .article-content h2 {
+        font-size: 26px;
+        color: #1abc9c;
+        margin: 36px 0 18px 0;
+        font-weight: 700;
+        font-family: "Playfair Display", serif;
+      }
+      .article-content h3 {
+        font-size: 20px;
+        color: white;
+        margin: 28px 0 14px 0;
+        font-weight: 600;
+      }
+      .article-content ul,
+      .article-content ol {
+        margin: 20px 0 22px 28px;
+      }
+      .article-content li {
+        margin-bottom: 10px;
+      }
+      .article-content blockquote {
+        border-left: 4px solid #1abc9c;
+        padding: 18px 25px;
+        background: rgba(26, 188, 156, 0.08);
+        border-radius: 0 12px 12px 0;
+        margin: 28px 0;
+        font-style: italic;
+        font-size: 17px;
+        color: #e5e7eb;
+      }
+      .article-content img {
+        max-width: 100%;
+        border-radius: 12px;
+        margin: 20px 0;
+        display: block;
+      }
+      .article-content a {
+        color: #1abc9c;
+        text-decoration: underline;
+      }
+      .article-content strong {
+        color: white;
+        font-weight: 700;
+      }
+
+      .article-footer {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .share-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .share-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: 0.3s;
+        font-family: "Poppins", sans-serif;
+        cursor: pointer;
+      }
+      .share-btn:hover {
+        background: rgba(26, 188, 156, 0.15);
+        border-color: #1abc9c;
+        transform: translateY(-2px);
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #1abc9c;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .back-link:hover {
+        transform: translateX(-4px);
+      }
+
+      .related-section {
+        padding: 40px 20px 60px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .related-header {
+        font-size: 24px;
+        color: #1abc9c;
+        margin-bottom: 25px;
+        font-weight: 700;
+        font-family: "Playfair Display", serif;
+      }
+      .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .related-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+        color: white;
+        display: flex;
+        flex-direction: column;
+      }
+      .related-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(26, 188, 156, 0.3);
+        box-shadow: 0 15px 40px rgba(26, 188, 156, 0.15);
+      }
+      .related-image {
+        height: 140px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        overflow: hidden;
+        position: relative;
+      }
+      .related-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .related-body {
+        padding: 18px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .related-cat {
+        font-size: 10px;
+        color: #1abc9c;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .related-title {
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 10px;
+      }
+      .related-date {
+        font-size: 11px;
+        opacity: 0.6;
+        margin-top: auto;
+      }
+
+      .loading-wrap {
+        text-align: center;
+        padding: 100px 30px;
+        max-width: 700px;
+        margin: 0 auto;
+        color: white;
+      }
+      .loading-wrap .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #1abc9c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-wrap h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+      .loading-wrap p {
+        font-size: 14px;
+        opacity: 0.75;
+      }
+
+      .notfound-card {
+        max-width: 550px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 60px 40px;
+      }
+      .notfound-card .ico {
+        font-size: 70px;
+        margin-bottom: 20px;
+        display: block;
+      }
+      .notfound-card h2 {
+        font-size: 24px;
+        color: white;
+        margin-bottom: 10px;
+      }
+      .notfound-card p {
+        font-size: 14px;
+        opacity: 0.75;
+        margin-bottom: 25px;
+      }
+
+      @media (max-width: 768px) {
+        .article-hero {
+          padding: 120px 15px 20px;
+        }
+        .article-image {
+          height: 240px;
+          font-size: 80px;
+        }
+        .article-body {
+          padding: 30px 22px 35px;
+        }
+        .article-title {
+          font-size: 28px;
+        }
+        .article-meta {
+          font-size: 12px;
+          gap: 15px;
+        }
+        .article-content {
+          font-size: 15px;
+        }
+        .related-section {
+          padding: 30px 15px 50px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="article-hero">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="news.html">News</a>
+        <span>/</span>
+        <span id="crumbTitle">Article</span>
+      </div>
+      <div id="articleContent">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <h2>Loading article...</h2>
+          <p>Please wait</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="relatedSection" class="related-section" style="display: none">
+      <h2 class="related-header">📚 Related Articles</h2>
+      <div id="relatedGrid" class="related-grid"></div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      const CATEGORY_META = {
+        news: {
+          emoji: "🎓",
+          label: "Forum News",
+          gradient: "linear-gradient(135deg,#1abc9c,#16a085)",
+        },
+        achievements: {
+          emoji: "🏆",
+          label: "Achievement",
+          gradient: "linear-gradient(135deg,#fbbf24,#f59e0b)",
+        },
+        press: {
+          emoji: "📢",
+          label: "Press Release",
+          gradient: "linear-gradient(135deg,#3b82f6,#1e40af)",
+        },
+        articles: {
+          emoji: "📝",
+          label: "Article",
+          gradient: "linear-gradient(135deg,#8b5cf6,#6d28d9)",
+        },
+      };
+
+      function getMeta(cat) {
+        const key = (cat || "news").toLowerCase();
+        return (
+          CATEGORY_META[key] || {
+            emoji: "📰",
+            label: cat || "News",
+            gradient: "linear-gradient(135deg,#1abc9c,#16a085)",
+          }
+        );
+      }
+
+      function formatDate(d, long) {
+        if (!d) return "-";
+        try {
+          return new Date(d).toLocaleDateString(
+            "en-PK",
+            long
+              ? { day: "numeric", month: "long", year: "numeric" }
+              : { day: "numeric", month: "short", year: "numeric" },
+          );
+        } catch {
+          return "-";
+        }
+      }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function getParam(name) {
+        return new URLSearchParams(window.location.search).get(name);
+      }
+
+      function renderNotFound(msg) {
+        document.getElementById("articleContent").innerHTML = `
+          <div class="glass-block notfound-card">
+            <span class="ico">📭</span>
+            <h2>Article Not Found</h2>
+            <p>${escapeHtml(msg || "This article may have been removed or the link is invalid.")}</p>
+            <a href="news.html" class="back-link">← Back to News</a>
+          </div>`;
+      }
+
+      function renderArticle(news) {
+        const meta = getMeta(news.category);
+        const imgHtml = news.image_url
+          ? `<img src="${escapeHtml(news.image_url)}" alt="${escapeHtml(news.title)}" onerror="this.remove()">`
+          : meta.emoji;
+        const bgStyle = news.image_url ? "" : `background:${meta.gradient};`;
+
+        // Format content (support plain text + line breaks)
+        let contentHTML = news.content || "";
+        if (!/<[a-z][\s\S]*>/i.test(contentHTML)) {
+          // Plain text → convert \n\n to paragraphs
+          contentHTML = contentHTML
+            .split(/\n\n+/)
+            .map((p) => p.trim())
+            .filter(Boolean)
+            .map((p) => "<p>" + escapeHtml(p).replace(/\n/g, "<br>") + "</p>")
+            .join("");
+        }
+
+        const shareUrl = window.location.href;
+
+        document.getElementById("crumbTitle").textContent =
+          news.title || "Article";
+
+        document.getElementById("articleContent").innerHTML = `
+          <article class="article-card">
+            <div class="article-image" style="${bgStyle}">${imgHtml}</div>
+            <div class="article-body">
+              <span class="article-badge">${escapeHtml(meta.label)}</span>
+              <h1 class="article-title">${escapeHtml(news.title)}</h1>
+              <div class="article-meta">
+                <span>📅 ${formatDate(news.created_at, true)}</span>
+                <span>👤 ${escapeHtml(news.author || "SYDF Team")}</span>
+                ${news.views ? `<span>👁️ ${news.views} views</span>` : ""}
+              </div>
+              <div class="article-content">${contentHTML}</div>
+
+              <div class="article-footer">
+                <a href="news.html" class="back-link">← Back to News</a>
+                <div class="share-buttons">
+                  <a class="share-btn" target="_blank"
+                     href="https://wa.me/?text=${encodeURIComponent((news.title || "") + " " + shareUrl)}">
+                    💬 WhatsApp
+                  </a>
+                  <a class="share-btn" target="_blank"
+                     href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}">
+                    📘 Facebook
+                  </a>
+                  <a class="share-btn" target="_blank"
+                     href="https://twitter.com/intent/tweet?text=${encodeURIComponent(news.title || "")}&url=${encodeURIComponent(shareUrl)}">
+                    🐦 Twitter
+                  </a>
+                  <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+                </div>
+              </div>
+            </div>
+          </article>`;
+
+        // Increase view count (best-effort, non-blocking)
+        try {
+          supabaseClient
+            .from("news")
+            .update({ views: (news.views || 0) + 1 })
+            .eq("id", news.id)
+            .then(() => {});
+        } catch (e) {}
+      }
+
+      function copyLink() {
+        navigator.clipboard
+          .writeText(window.location.href)
+          .then(() => {
+            alert("✅ Link copied to clipboard!");
+          })
+          .catch(() => {
+            alert("Please copy the URL manually.");
+          });
+      }
+
+      function renderRelated(list) {
+        if (!list || list.length === 0) return;
+        const section = document.getElementById("relatedSection");
+        const grid = document.getElementById("relatedGrid");
+        section.style.display = "block";
+        grid.innerHTML = list
+          .map((n) => {
+            const meta = getMeta(n.category);
+            const imgHtml = n.image_url
+              ? `<img src="${escapeHtml(n.image_url)}" alt="" onerror="this.remove()">`
+              : meta.emoji;
+            const bgStyle = n.image_url ? "" : `background:${meta.gradient};`;
+            return `
+            <a href="news-detail.html?id=${n.id}" class="related-card">
+              <div class="related-image" style="${bgStyle}">${imgHtml}</div>
+              <div class="related-body">
+                <div class="related-cat">${escapeHtml(meta.label)}</div>
+                <div class="related-title">${escapeHtml(n.title)}</div>
+                <div class="related-date">📅 ${formatDate(n.created_at)}</div>
+              </div>
+            </a>`;
+          })
+          .join("");
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          renderNotFound("System not ready. Please refresh the page.");
+          return;
+        }
+
+        const id = getParam("id");
+        if (!id) {
+          renderNotFound("No article ID provided.");
+          return;
+        }
+
+        try {
+          const { data: news, error } = await supabaseClient
+            .from("news")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+          if (error || !news) {
+            renderNotFound("This article does not exist or has been removed.");
+            return;
+          }
+
+          if (news.status && news.status !== "Published") {
+            renderNotFound("This article is not published yet.");
+            return;
+          }
+
+          renderArticle(news);
+
+          // Fetch related (same category, excluding current)
+          const { data: related } = await supabaseClient
+            .from("news")
+            .select("id, title, category, created_at, image_url")
+            .neq("id", id)
+            .order("created_at", { ascending: false })
+            .limit(3);
+
+          renderRelated(related || []);
+        } catch (err) {
+          console.error(err);
+          renderNotFound("Something went wrong while loading the article.");
+        }
+      });
+
+      window.copyLink = copyLink;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Members Directory - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+      .members-section {
+        padding: 40px;
+        max-width: 1300px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+      .filters-bar {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+      }
+      .search-box {
+        flex: 1;
+        min-width: 220px;
+        position: relative;
+      }
+      .search-box input {
+        width: 100%;
+        padding: 13px 15px 13px 45px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        outline: none;
+      }
+      .search-box input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .search-box input:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.08);
+      }
+      .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        opacity: 0.7;
+      }
+      .filter-select {
+        padding: 11px 15px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        outline: none;
+        min-width: 150px;
+      }
+      .filter-select option {
+        background: #203a43;
+      }
+      .members-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+      }
+      .member-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        padding: 22px;
+        text-align: center;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      .member-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #1abc9c, #16a085);
+      }
+      .member-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(26, 188, 156, 0.3);
+        box-shadow: 0 20px 50px rgba(26, 188, 156, 0.2);
+      }
+      .member-avatar-lg {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: white;
+        font-size: 28px;
+        margin: 0 auto 15px;
+        box-shadow: 0 8px 20px rgba(26, 188, 156, 0.3);
+        overflow: hidden;
+      }
+      .member-avatar-lg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .member-avatar-lg.female {
+        background: linear-gradient(135deg, #ec4899, #be185d);
+      }
+      .member-avatar-lg.private {
+        background: rgba(107, 114, 128, 0.3);
+        font-size: 32px;
+      }
+      .member-name {
+        font-size: 16px;
+        color: white;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+      .member-uid {
+        display: inline-block;
+        padding: 3px 10px;
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #93c5fd;
+        font-family: "Courier New", monospace;
+        margin-bottom: 12px;
+      }
+      .member-role {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: inline-block;
+        margin-bottom: 12px;
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+      .member-role.president {
+        background: rgba(251, 191, 36, 0.15);
+        color: #fbbf24;
+        border-color: rgba(251, 191, 36, 0.3);
+      }
+      .member-role.vp {
+        background: rgba(168, 85, 247, 0.15);
+        color: #c084fc;
+        border-color: rgba(168, 85, 247, 0.3);
+      }
+      .member-role.gs {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+        border-color: rgba(59, 130, 246, 0.3);
+      }
+      .member-district {
+        font-size: 12px;
+        opacity: 0.75;
+        color: white;
+      }
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .members-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .members-grid {
+          grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+          gap: 12px;
+        }
+        .member-card {
+          padding: 15px;
+        }
+        .member-avatar-lg {
+          width: 60px;
+          height: 60px;
+          font-size: 22px;
+        }
+        .member-name {
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>👥 Members Directory</h1>
+        <p>Home / Members</p>
+      </div>
+    </section>
+
+    <section class="members-section">
+      <div class="glass-block">
+        <div class="filters-bar">
+          <div class="search-box">
+            <span class="search-icon">🔍</span
+            ><input
+              type="text"
+              id="memberSearch"
+              placeholder="Search by name, UID, or district..."
+            />
+          </div>
+          <select class="filter-select" id="memberDistrict">
+            <option value="">All Districts</option>
+            <option value="Swat">Swat</option>
+            <option value="Shangla">Shangla</option>
+            <option value="Buner">Buner</option>
+            <option value="Malakand">Malakand</option>
+            <option value="Upper Dir">Upper Dir</option>
+            <option value="Lower Dir">Lower Dir</option>
+            <option value="Upper Chitral">Upper Chitral</option>
+            <option value="Lower Chitral">Lower Chitral</option>
+            <option value="Bajaur">Bajaur</option>
+          </select>
+          <select class="filter-select" id="memberRole">
+            <option value="">All Roles</option>
+            <option value="President">President</option>
+            <option value="Vice President">Vice Presidents</option>
+            <option value="Secretary General">Secretary General</option>
+            <option value="Member">Members</option>
+          </select>
+        </div>
+        <div class="members-grid" id="membersGrid">
+          <div
+            style="
+              grid-column: 1/-1;
+              text-align: center;
+              padding: 60px;
+              color: white;
+              opacity: 0.7;
+            "
+          >
+            <div style="font-size: 40px; margin-bottom: 15px">⏳</div>
+            <p>Loading members...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allMembers = [];
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        try {
+          const { data, error } = await supabaseClient
+            .from("members")
+            .select(
+              "name, uid, district, gender, photo_url, photo_privacy, role, status",
+            )
+            .eq("status", "Active")
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+          allMembers = data || [];
+
+          // Get current user
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          const currentEmail = session?.user?.email;
+
+          renderMembers(currentEmail);
+          attachFilters(currentEmail);
+        } catch (err) {
+          console.error(err);
+        }
+      });
+
+      function renderMembers(currentEmail) {
+        const grid = document.getElementById("membersGrid");
+        if (!grid) return;
+
+        if (allMembers.length === 0) {
+          grid.innerHTML =
+            '<div style="grid-column:1/-1; text-align:center; padding:60px; color:white; opacity:0.7;"><div style="font-size:60px; margin-bottom:15px; opacity:0.5;">👥</div><h3>No Members Yet</h3><p>Members will appear here once they are approved.</p></div>';
+          return;
+        }
+
+        grid.innerHTML = allMembers
+          .map((m) => {
+            const initial = (m.name || "M").charAt(0).toUpperCase();
+            const isFemale = (m.gender || "").toLowerCase() === "female";
+            const isOwn = currentEmail && m.email === currentEmail;
+
+            let avatarHTML = initial;
+            let avatarClass = "";
+
+            // Photo privacy
+            if (m.photo_url && !isFemale) {
+              avatarHTML =
+                '<img src="' + m.photo_url + '" alt="' + m.name + '">';
+            } else if (m.photo_url && isFemale && isOwn) {
+              avatarHTML =
+                '<img src="' + m.photo_url + '" alt="' + m.name + '">';
+              avatarClass = "female";
+            } else if (isFemale) {
+              avatarHTML = "👤";
+              avatarClass = "female private";
+            } else {
+              avatarClass = "";
+            }
+
+            const roleClass =
+              m.role === "President"
+                ? "president"
+                : m.role?.includes("Vice")
+                  ? "vp"
+                  : m.role?.includes("Secretary")
+                    ? "gs"
+                    : "";
+
+            return `
+            <div class="member-card" data-district="${m.district || ""}" data-role="${m.role || "Member"}" onclick="openProfile('${m.uid || ""}')" style="cursor:pointer;">
+            <div class="member-avatar-lg ${avatarClass}">${avatarHTML}</div>
+                    <div class="member-name">${m.name || "Member"}</div>
+                    <div class="member-uid">${m.uid || "-"}</div>
+                    <div class="member-role ${roleClass}">${m.role || "Member"}</div>
+                    <div class="member-district">📍 ${m.district || "-"}</div>
+                </div>`;
+          })
+          .join("");
+      }
+
+      function attachFilters(currentEmail) {
+        const search = document.getElementById("memberSearch");
+        const district = document.getElementById("memberDistrict");
+        const role = document.getElementById("memberRole");
+
+        function filter() {
+          const s = search.value.toLowerCase();
+          const d = district.value;
+          const r = role.value;
+          document.querySelectorAll(".member-card").forEach((card) => {
+            const text = card.textContent.toLowerCase();
+            const cardDistrict = card.getAttribute("data-district") || "";
+            const cardRole = card.getAttribute("data-role") || "";
+            const matchS = !s || text.includes(s);
+            const matchD = !d || cardDistrict === d;
+            const matchR =
+              !r ||
+              cardRole === r ||
+              (r === "Vice President" && cardRole.includes("Vice"));
+            card.style.display = matchS && matchD && matchR ? "block" : "none";
+          });
+        }
+        if (search) search.addEventListener("input", filter);
+        if (district) district.addEventListener("change", filter);
+        if (role) role.addEventListener("change", filter);
+      }
+      window.openProfile = function (uid) {
+        if (!uid) {
+          alert("Member ID not available");
+          return;
+        }
+        window.location.href =
+          "member-profile.html?uid=" + encodeURIComponent(uid);
+      };
+    </script>
+  </body>
+</html>

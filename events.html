@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events Calendar - SYDF</title>
+    <script src="js/head-includes.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+      .events-section {
+        padding: 40px;
+        max-width: 1150px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+      .intro-block {
+        text-align: center;
+      }
+      .intro-block h2 {
+        font-size: 30px;
+        color: #1abc9c;
+        margin-bottom: 20px;
+      }
+      .intro-block p {
+        font-size: 16px;
+        line-height: 1.9;
+        opacity: 0.9;
+        color: white;
+      }
+      .filter-tabs {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 25px;
+      }
+      .filter-btn {
+        padding: 10px 22px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 30px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .filter-btn:hover {
+        background: rgba(26, 188, 156, 0.15);
+        border-color: #1abc9c;
+      }
+      .filter-btn.active {
+        background: #1abc9c;
+        color: white;
+        border-color: #1abc9c;
+        font-weight: 600;
+      }
+
+      .events-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .event-card {
+        display: flex;
+        gap: 22px;
+        padding: 22px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        transition: 0.3s;
+        align-items: center;
+        flex-wrap: wrap;
+        cursor: pointer;
+      }
+      .event-card:hover {
+        transform: translateX(5px);
+        border-color: rgba(26, 188, 156, 0.3);
+        box-shadow: 0 15px 40px rgba(26, 188, 156, 0.15);
+      }
+      .event-date {
+        min-width: 95px;
+        text-align: center;
+        padding: 15px 10px;
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.15),
+          rgba(26, 188, 156, 0.05)
+        );
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 12px;
+        flex-shrink: 0;
+      }
+      .event-day {
+        font-size: 32px;
+        font-weight: 800;
+        color: #1abc9c;
+        line-height: 1;
+      }
+      .event-month {
+        font-size: 11px;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 5px;
+        font-weight: 700;
+      }
+      .event-info {
+        flex: 1;
+        min-width: 200px;
+      }
+      .event-info h3 {
+        font-size: 17px;
+        color: white;
+        margin: 8px 0;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+      .event-meta {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        opacity: 0.75;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .event-desc {
+        font-size: 13px;
+        line-height: 1.7;
+        opacity: 0.85;
+        color: white;
+      }
+      .event-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+      }
+      .event-badge.upcoming {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.4);
+      }
+      .event-badge.ongoing {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.4);
+      }
+      .event-badge.completed {
+        background: rgba(26, 188, 156, 0.2);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.4);
+      }
+      .event-badge.cancelled {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.4);
+      }
+      .event-action {
+        padding: 10px 22px;
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.35);
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        white-space: nowrap;
+      }
+      .event-action:hover {
+        background: #1abc9c;
+        color: white;
+      }
+
+      .loading-state,
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: white;
+        opacity: 0.75;
+      }
+      .loading-state .spinner {
+        width: 46px;
+        height: 46px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #1abc9c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 18px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .page-hero-content {
+          padding: 30px 25px;
+        }
+        .events-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .event-card {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .event-action {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>📅 Events Calendar</h1>
+        <p>Home / Events</p>
+      </div>
+    </section>
+
+    <section class="events-section">
+      <div class="glass-block intro-block">
+        <h2>Upcoming & Past Events</h2>
+        <p>
+          Browse all SYDF events — meetings, workshops, activities, and
+          community gatherings.
+        </p>
+      </div>
+
+      <div class="glass-block">
+        <div class="filter-tabs">
+          <button class="filter-btn active" data-filter="all">
+            All Events
+          </button>
+          <button class="filter-btn" data-filter="upcoming">🔵 Upcoming</button>
+          <button class="filter-btn" data-filter="ongoing">🟡 Ongoing</button>
+          <button class="filter-btn" data-filter="completed">
+            🟢 Completed
+          </button>
+        </div>
+
+        <div id="eventsList" class="events-list">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading events...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allEvents = [];
+      let currentFilter = "all";
+
+      function getStatusClass(status) {
+        const s = (status || "upcoming").toLowerCase();
+        if (s.includes("ongoing")) return "ongoing";
+        if (s.includes("completed") || s.includes("done")) return "completed";
+        if (s.includes("cancel")) return "cancelled";
+        return "upcoming";
+      }
+
+      function formatDateObj(d) {
+        if (!d) return { day: "-", month: "-", full: "-" };
+        try {
+          const date = new Date(d);
+          const day = date.getDate();
+          const month = date.toLocaleDateString("en-PK", {
+            month: "short",
+            year: "numeric",
+          });
+          const full = date.toLocaleDateString("en-PK", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          });
+          return { day, month, full };
+        } catch {
+          return { day: "-", month: "-", full: "-" };
+        }
+      }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function renderEvents() {
+        const list = document.getElementById("eventsList");
+        const filtered =
+          currentFilter === "all"
+            ? allEvents
+            : allEvents.filter(
+                (e) => getStatusClass(e.status) === currentFilter,
+              );
+
+        if (filtered.length === 0) {
+          list.innerHTML = `
+            <div class="empty-state">
+              <div style="font-size:60px; margin-bottom:15px; opacity:0.5;">📅</div>
+              <h3>No Events ${currentFilter !== "all" ? "in this category" : "Yet"}</h3>
+              <p>${currentFilter === "all" ? "Events will appear here once admin adds them." : "Try a different filter."}</p>
+            </div>`;
+          return;
+        }
+
+        list.innerHTML = filtered
+          .map((e) => {
+            const d = formatDateObj(e.event_date);
+            const statusClass = getStatusClass(e.status);
+            const statusLabel = (e.status || "Upcoming").toUpperCase();
+            const isCompleted = statusClass === "completed";
+            const isCancelled = statusClass === "cancelled";
+
+            // Date block style based on status
+            let dateStyle = "";
+            let dayStyle = "";
+            if (statusClass === "ongoing") {
+              dateStyle =
+                "background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4);";
+              dayStyle = "color:#fbbf24; font-size:16px;";
+            } else if (isCompleted) {
+              dateStyle =
+                "background:rgba(26,188,156,0.15); border-color:rgba(26,188,156,0.4);";
+            } else if (isCancelled) {
+              dateStyle =
+                "background:rgba(239,68,68,0.15); border-color:rgba(239,68,68,0.4);";
+              dayStyle = "color:#fca5a5;";
+            }
+
+            const timeText = e.start_time
+              ? e.end_time
+                ? `${e.start_time} - ${e.end_time}`
+                : e.start_time
+              : "Time TBA";
+
+            const actionText = isCompleted
+              ? "View Details"
+              : isCancelled
+                ? "View Details"
+                : "Register Now";
+
+            return `
+            <div class="event-card" onclick="openEvent(${e.id})">
+              <div class="event-date" style="${dateStyle}">
+                ${
+                  statusClass === "ongoing"
+                    ? `<div class="event-day" style="${dayStyle}">Now</div><div class="event-month">Ongoing</div>`
+                    : `<div class="event-day" style="${dayStyle}">${d.day}</div><div class="event-month">${d.month}</div>`
+                }
+              </div>
+              <div class="event-info">
+                <span class="event-badge ${statusClass}">${escapeHtml(statusLabel)}</span>
+                <h3>${escapeHtml(e.title)}</h3>
+                <div class="event-meta">
+                  <span>🕐 ${escapeHtml(timeText)}</span>
+                  ${e.location ? `<span>📍 ${escapeHtml(e.location)}</span>` : ""}
+                  ${e.participants ? `<span>👥 ${e.participants}${e.max_participants ? "/" + e.max_participants : ""}</span>` : ""}
+                </div>
+                <p class="event-desc">${escapeHtml(
+                  String(e.description || "")
+                    .replace(/<[^>]*>/g, "")
+                    .slice(0, 150),
+                )}${String(e.description || "").length > 150 ? "..." : ""}</p>
+              </div>
+              <button class="event-action" onclick="event.stopPropagation(); openEvent(${e.id})">
+                ${actionText}
+              </button>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function openEvent(id) {
+        window.location.href = "event-detail.html?id=" + id;
+      }
+
+      function attachFilters() {
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            document
+              .querySelectorAll(".filter-btn")
+              .forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            currentFilter = this.getAttribute("data-filter");
+            renderEvents();
+          });
+        });
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          document.getElementById("eventsList").innerHTML =
+            '<div class="empty-state"><h3>⚠️ System Not Ready</h3><p>Please refresh the page.</p></div>';
+          return;
+        }
+
+        try {
+          const { data, error } = await supabaseClient
+            .from("events")
+            .select("*")
+            .order("event_date", { ascending: false });
+
+          if (error) throw error;
+          allEvents = data || [];
+          renderEvents();
+          attachFilters();
+        } catch (err) {
+          console.error(err);
+          document.getElementById("eventsList").innerHTML =
+            '<div class="empty-state"><h3>❌ Error Loading Events</h3><p>Please refresh the page.</p></div>';
+        }
+      });
+
+      window.openEvent = openEvent;
+    </script>
+  </body>
+</html>

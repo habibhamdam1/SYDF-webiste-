@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .notif-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .notif-card {
+        padding: 22px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        display: flex;
+        gap: 16px;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      .notif-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+      }
+      .notif-card.info::before {
+        background: #3b82f6;
+      }
+      .notif-card.success::before {
+        background: #1abc9c;
+      }
+      .notif-card.warning::before {
+        background: #f59e0b;
+      }
+      .notif-card.urgent::before {
+        background: #ef4444;
+      }
+      .notif-card:hover {
+        background: rgba(26, 188, 156, 0.06);
+        border-color: rgba(26, 188, 156, 0.25);
+        transform: translateX(4px);
+      }
+
+      .notif-icon-box {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+      .notif-icon-box.info {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+      .notif-icon-box.success {
+        background: rgba(26, 188, 156, 0.15);
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+      .notif-icon-box.warning {
+        background: rgba(245, 158, 11, 0.15);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+      .notif-icon-box.urgent {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+
+      .notif-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .notif-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+      }
+      .notif-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .notif-badge {
+        padding: 3px 10px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .notif-badge.info {
+        background: rgba(59, 130, 246, 0.2);
+        color: #93c5fd;
+      }
+      .notif-badge.success {
+        background: rgba(26, 188, 156, 0.2);
+        color: #1abc9c;
+      }
+      .notif-badge.warning {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+      }
+      .notif-badge.urgent {
+        background: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+      }
+      .notif-time {
+        font-size: 11px;
+        color: white;
+        opacity: 0.55;
+        white-space: nowrap;
+      }
+      .notif-msg {
+        color: white;
+        font-size: 13px;
+        line-height: 1.7;
+        opacity: 0.85;
+        margin-bottom: 10px;
+      }
+      .notif-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 11px;
+        color: white;
+        opacity: 0.65;
+        flex-wrap: wrap;
+      }
+
+      .empty-box {
+        text-align: center;
+        padding: 70px 30px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 18px;
+        border: 1px dashed rgba(255, 255, 255, 0.12);
+      }
+      .empty-box .ico {
+        font-size: 64px;
+        opacity: 0.5;
+        margin-bottom: 18px;
+        display: block;
+      }
+      .empty-box h3 {
+        color: white;
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+      .empty-box p {
+        color: white;
+        font-size: 13px;
+        opacity: 0.65;
+      }
+
+      @media (max-width: 600px) {
+        .notif-card {
+          flex-direction: column;
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Member Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"
+              ><span class="nav-icon">📊</span><span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><span class="nav-icon">👤</span><span>My Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="my-payments.html"
+              ><span class="nav-icon">💰</span><span>My Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="my-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+          <li>
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="my-certificate.html"
+              ><span class="nav-icon">📜</span><span>Certificate</span></a
+            >
+          </li>
+          <li>
+            <a href="my-id-card.html"
+              ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="notifications.html" class="active"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Notifications</h2>
+          <p>Updates and alerts</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar" id="topAvatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Loading...</span
+              ><span class="user-uid">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div style="margin-bottom: 22px">
+          <h1
+            style="
+              color: white;
+              font-size: 24px;
+              font-weight: 700;
+              margin-bottom: 5px;
+            "
+          >
+            🔔 Notifications
+          </h1>
+          <p style="color: white; font-size: 14px; opacity: 0.7">
+            Stay updated with SYDF announcements
+          </p>
+        </div>
+
+        <div id="notifList" class="notif-list">
+          <div class="empty-box">
+            <span class="ico">⏳</span>
+            <h3>Loading...</h3>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        try {
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          if (!session) {
+            window.location.href = "login.html";
+            return;
+          }
+
+          const { data: member } = await supabaseClient
+            .from("members")
+            .select("name, uid")
+            .eq("email", session.user.email)
+            .single();
+          if (member) {
+            document.getElementById("topAvatar").textContent = (
+              member.name || "M"
+            )
+              .charAt(0)
+              .toUpperCase();
+            document
+              .querySelectorAll(".user-name")
+              .forEach((el) => (el.textContent = member.name));
+            document
+              .querySelectorAll(".user-uid")
+              .forEach((el) => (el.textContent = member.uid));
+          }
+
+          const { data } = await supabaseClient
+            .from("notifications")
+            .select("*")
+            .order("created_at", { ascending: false });
+          const list = data || [];
+          const container = document.getElementById("notifList");
+
+          if (list.length === 0) {
+            container.innerHTML =
+              '<div class="empty-box"><span class="ico">🔔</span><h3>No Notifications</h3><p>You\'re all caught up! Notifications will appear here when admin sends them.</p></div>';
+            return;
+          }
+
+          container.innerHTML = list
+            .map((n) => {
+              const type = (n.type || "info").toLowerCase();
+              const iconEmoji =
+                type === "urgent"
+                  ? "🚨"
+                  : type === "warning"
+                    ? "⚠️"
+                    : type === "success"
+                      ? "✅"
+                      : "ℹ️";
+              const date = new Date(n.created_at).toLocaleDateString("en-PK", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              });
+              return `
+                    <div class="notif-card ${type}">
+                        <div class="notif-icon-box ${type}">${iconEmoji}</div>
+                        <div class="notif-body">
+                            <div class="notif-top">
+                                <div class="notif-title"><span class="notif-badge ${type}">${n.type || "Info"}</span> ${n.title}</div>
+                                <span class="notif-time">📅 ${date}</span>
+                            </div>
+                            <p class="notif-msg">${n.message || ""}</p>
+                            <div class="notif-meta">
+                                <span>👥 ${n.target || "All Members"}</span>
+                                <span>📊 ${n.priority || "Normal"} Priority</span>
+                            </div>
+                        </div>
+                    </div>`;
+            })
+            .join("");
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity Details - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .detail-hero {
+        padding: 140px 20px 30px;
+        max-width: 1150px;
+        margin: 0 auto;
+      }
+      .breadcrumb {
+        font-size: 13px;
+        opacity: 0.7;
+        color: white;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .breadcrumb a {
+        color: #1abc9c;
+        text-decoration: none;
+      }
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
+
+      .detail-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        overflow: hidden;
+      }
+
+      .detail-image {
+        width: 100%;
+        height: 380px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 120px;
+        position: relative;
+        overflow: hidden;
+      }
+      .detail-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .detail-status {
+        position: absolute;
+        top: 22px;
+        right: 22px;
+        padding: 8px 18px;
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 800;
+        color: white;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        z-index: 2;
+      }
+      .detail-status.upcoming {
+        background: rgba(59, 130, 246, 0.9);
+        border: 1px solid rgba(147, 197, 253, 0.6);
+      }
+      .detail-status.ongoing {
+        background: rgba(251, 191, 36, 0.9);
+        color: #1a1a1a;
+        border: 1px solid rgba(253, 224, 71, 0.6);
+      }
+      .detail-status.completed {
+        background: rgba(34, 197, 94, 0.9);
+        border: 1px solid rgba(134, 239, 172, 0.6);
+      }
+      .detail-status.cancelled {
+        background: rgba(239, 68, 68, 0.9);
+        border: 1px solid rgba(252, 165, 165, 0.6);
+      }
+
+      .detail-body {
+        padding: 42px 50px 50px;
+      }
+
+      .detail-cat {
+        display: inline-block;
+        padding: 5px 15px;
+        background: rgba(26, 188, 156, 0.15);
+        border: 1px solid rgba(26, 188, 156, 0.4);
+        border-radius: 18px;
+        color: #5eead4;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+      }
+
+      .detail-title {
+        font-family: "Playfair Display", serif;
+        font-size: 38px;
+        font-weight: 700;
+        color: white;
+        line-height: 1.2;
+        margin-bottom: 24px;
+      }
+
+      .detail-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 18px;
+        padding: 22px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 32px;
+      }
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .meta-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: rgba(26, 188, 156, 0.15);
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .meta-text .lbl {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .meta-text .val {
+        font-size: 14px;
+        color: white;
+        font-weight: 600;
+        margin-top: 2px;
+      }
+
+      .detail-content {
+        font-size: 15.5px;
+        line-height: 1.9;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 32px;
+      }
+      .detail-content p {
+        margin-bottom: 18px;
+      }
+      .detail-content h2 {
+        font-size: 24px;
+        color: #1abc9c;
+        margin: 28px 0 14px;
+        font-family: "Playfair Display", serif;
+      }
+      .detail-content h3 {
+        font-size: 19px;
+        color: white;
+        margin: 22px 0 12px;
+      }
+      .detail-content ul,
+      .detail-content ol {
+        margin: 18px 0 20px 26px;
+      }
+      .detail-content li {
+        margin-bottom: 8px;
+      }
+      .detail-content a {
+        color: #1abc9c;
+        text-decoration: underline;
+      }
+      .detail-content strong {
+        color: white;
+      }
+
+      .detail-actions {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding-top: 26px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .btn-join {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+      }
+      .btn-join:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(26, 188, 156, 0.4);
+      }
+      .btn-join:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+      }
+      .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #1abc9c;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #1abc9c;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .back-link:hover {
+        transform: translateX(-4px);
+      }
+
+      .notfound-card {
+        max-width: 550px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 60px 40px;
+      }
+      .notfound-card .ico {
+        font-size: 70px;
+        margin-bottom: 20px;
+        display: block;
+      }
+      .notfound-card h2 {
+        font-size: 24px;
+        color: white;
+        margin-bottom: 10px;
+      }
+      .notfound-card p {
+        font-size: 14px;
+        opacity: 0.75;
+        margin-bottom: 25px;
+      }
+
+      .loading-wrap {
+        text-align: center;
+        padding: 100px 30px;
+        max-width: 700px;
+        margin: 0 auto;
+        color: white;
+      }
+      .loading-wrap .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #1abc9c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .detail-hero {
+          padding: 120px 15px 20px;
+        }
+        .detail-image {
+          height: 220px;
+          font-size: 80px;
+        }
+        .detail-body {
+          padding: 28px 22px 32px;
+        }
+        .detail-title {
+          font-size: 26px;
+        }
+        .detail-meta-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="detail-hero">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="activities.html">Activities</a>
+        <span>/</span>
+        <span id="crumbTitle">Details</span>
+      </div>
+      <div id="detailContent">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <h2>Loading activity...</h2>
+          <p>Please wait</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      const CATEGORY_META = {
+        education: {
+          emoji: "📚",
+          gradient: "linear-gradient(135deg,#3b82f6,#1e40af)",
+        },
+        sports: {
+          emoji: "⚽",
+          gradient: "linear-gradient(135deg,#22c55e,#15803d)",
+        },
+        health: {
+          emoji: "🏥",
+          gradient: "linear-gradient(135deg,#ef4444,#b91c1c)",
+        },
+        environment: {
+          emoji: "🌱",
+          gradient: "linear-gradient(135deg,#10b981,#047857)",
+        },
+        welfare: {
+          emoji: "🤝",
+          gradient: "linear-gradient(135deg,#f59e0b,#b45309)",
+        },
+        culture: {
+          emoji: "🎭",
+          gradient: "linear-gradient(135deg,#a855f7,#6b21a8)",
+        },
+        training: {
+          emoji: "🎓",
+          gradient: "linear-gradient(135deg,#06b6d4,#0e7490)",
+        },
+        awareness: {
+          emoji: "📢",
+          gradient: "linear-gradient(135deg,#ec4899,#be185d)",
+        },
+        community: {
+          emoji: "🏘️",
+          gradient: "linear-gradient(135deg,#1abc9c,#16a085)",
+        },
+      };
+      function getCatMeta(cat) {
+        const key = (cat || "community").toLowerCase();
+        return (
+          CATEGORY_META[key] || {
+            emoji: "🎯",
+            gradient: "linear-gradient(135deg,#1abc9c,#16a085)",
+          }
+        );
+      }
+      function getStatusClass(status) {
+        const s = (status || "upcoming").toLowerCase();
+        if (s.includes("ongoing")) return "ongoing";
+        if (s.includes("completed") || s.includes("done")) return "completed";
+        if (s.includes("cancel")) return "cancelled";
+        return "upcoming";
+      }
+      function formatDate(d, long) {
+        if (!d) return "-";
+        try {
+          return new Date(d).toLocaleDateString(
+            "en-PK",
+            long
+              ? { day: "numeric", month: "long", year: "numeric" }
+              : { day: "numeric", month: "short", year: "numeric" },
+          );
+        } catch {
+          return "-";
+        }
+      }
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      function getParam(name) {
+        return new URLSearchParams(window.location.search).get(name);
+      }
+
+      function renderNotFound(msg) {
+        document.getElementById("detailContent").innerHTML = `
+          <div class="glass-block notfound-card">
+            <span class="ico">🎯</span>
+            <h2>Activity Not Found</h2>
+            <p>${escapeHtml(msg || "This activity may have been removed or the link is invalid.")}</p>
+            <a href="activities.html" class="back-link">← Back to Activities</a>
+          </div>`;
+      }
+
+      function renderActivity(a) {
+        const catMeta = getCatMeta(a.category);
+        const statusClass = getStatusClass(a.status);
+        const imgHtml = a.image_url
+          ? `<img src="${escapeHtml(a.image_url)}" alt="${escapeHtml(a.title)}" onerror="this.remove()">`
+          : catMeta.emoji;
+        const bgStyle = a.image_url ? "" : `background:${catMeta.gradient};`;
+
+        let contentHTML = a.description || "";
+        if (!/<[a-z][\s\S]*>/i.test(contentHTML)) {
+          contentHTML = contentHTML
+            .split(/\n\n+/)
+            .map((p) => p.trim())
+            .filter(Boolean)
+            .map((p) => "<p>" + escapeHtml(p).replace(/\n/g, "<br>") + "</p>")
+            .join("");
+        }
+
+        document.getElementById("crumbTitle").textContent =
+          a.title || "Details";
+
+        const canJoin = statusClass === "upcoming" || statusClass === "ongoing";
+        const participants = a.participants || 0;
+        const budgetText = a.budget
+          ? "Rs. " + Number(a.budget).toLocaleString()
+          : "Not specified";
+
+        document.getElementById("detailContent").innerHTML = `
+          <article class="detail-card">
+            <div class="detail-image" style="${bgStyle}">
+              ${imgHtml}
+              <span class="detail-status ${statusClass}">${escapeHtml((a.status || "Upcoming").toUpperCase())}</span>
+            </div>
+            <div class="detail-body">
+              <span class="detail-cat">${escapeHtml(a.category || "Community")}</span>
+              <h1 class="detail-title">${escapeHtml(a.title)}</h1>
+
+              <div class="detail-meta-grid">
+                <div class="meta-item">
+                  <div class="meta-icon">📅</div>
+                  <div class="meta-text">
+                    <div class="lbl">Date</div>
+                    <div class="val">${formatDate(a.activity_date, true)}</div>
+                  </div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-icon">📍</div>
+                  <div class="meta-text">
+                    <div class="lbl">Location</div>
+                    <div class="val">${escapeHtml(a.location || "TBA")}</div>
+                  </div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-icon">👥</div>
+                  <div class="meta-text">
+                    <div class="lbl">Participants</div>
+                    <div class="val">${participants}${a.max_participants ? " / " + a.max_participants : ""}</div>
+                  </div>
+                </div>
+                <div class="meta-item">
+                  <div class="meta-icon">💰</div>
+                  <div class="meta-text">
+                    <div class="lbl">Budget</div>
+                    <div class="val">${budgetText}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="detail-content">${contentHTML}</div>
+
+              <div class="detail-actions">
+                ${
+                  canJoin
+                    ? `<button class="btn-join" id="joinBtn" onclick="handleJoin()">✋ Join This Activity</button>`
+                    : `<button class="btn-join" disabled>✓ Activity ${escapeHtml(a.status || "Completed")}</button>`
+                }
+                <a href="activities.html" class="btn-outline">← Back to Activities</a>
+              </div>
+            </div>
+          </article>`;
+
+        // Store current activity
+        window.__currentActivity = a;
+      }
+
+      async function handleJoin() {
+        const a = window.__currentActivity;
+        if (!a) return;
+
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          alert("⚠️ System not ready. Please refresh.");
+          return;
+        }
+
+        try {
+          const { data: sessionData } = await supabaseClient.auth.getSession();
+          const session = sessionData ? sessionData.session : null;
+
+          if (!session || !session.user) {
+            if (
+              confirm(
+                "You need to login to join this activity.\n\nGo to login page now?",
+              )
+            ) {
+              window.location.href =
+                "login.html?redirect=" +
+                encodeURIComponent(
+                  window.location.pathname + window.location.search,
+                );
+            }
+            return;
+          }
+
+          // Fetch member
+          const { data: member, error: memErr } = await supabaseClient
+            .from("members")
+            .select("id, name, email, uid, status")
+            .eq("email", session.user.email)
+            .single();
+
+          if (memErr || !member) {
+            alert("❌ Member profile not found.");
+            return;
+          }
+          if (member.status !== "Active") {
+            alert("⚠️ Your account is " + member.status + ". Contact admin.");
+            return;
+          }
+
+          // Check if already joined
+          const { data: existing } = await supabaseClient
+            .from("activity_participants")
+            .select("id")
+            .eq("activity_id", a.id)
+            .eq("member_email", member.email)
+            .maybeSingle();
+
+          if (existing) {
+            alert("✅ You have already joined this activity!");
+            return;
+          }
+
+          // Insert participation
+          const { error: insErr } = await supabaseClient
+            .from("activity_participants")
+            .insert([
+              {
+                activity_id: a.id,
+                member_email: member.email,
+                member_name: member.name,
+                member_uid: member.uid,
+              },
+            ]);
+
+          if (insErr) {
+            alert("❌ " + insErr.message);
+            return;
+          }
+
+          alert(
+            '🎉 Successfully joined "' +
+              a.title +
+              '"!\n\nCheck "My Activities" for updates.',
+          );
+          window.location.href = "my-activities.html";
+        } catch (err) {
+          console.error(err);
+          alert("Something went wrong. Please try again.");
+        }
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          renderNotFound("System not ready. Please refresh the page.");
+          return;
+        }
+
+        const id = getParam("id");
+        if (!id) {
+          renderNotFound("No activity ID provided.");
+          return;
+        }
+
+        try {
+          const { data: activity, error } = await supabaseClient
+            .from("activities")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+          if (error || !activity) {
+            renderNotFound("This activity does not exist or has been removed.");
+            return;
+          }
+
+          renderActivity(activity);
+        } catch (err) {
+          console.error(err);
+          renderNotFound("Something went wrong while loading the activity.");
+        }
+      });
+
+      window.handleJoin = handleJoin;
+    </script>
+  </body>
+</html>

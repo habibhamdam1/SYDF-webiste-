@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .report-card {
+        padding: 25px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        transition: 0.3s;
+      }
+      .report-card:hover {
+        border-color: rgba(26, 188, 156, 0.3);
+        transform: translateY(-5px);
+      }
+      .report-icon {
+        font-size: 42px;
+        margin-bottom: 15px;
+      }
+      .btn-download {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 15px;
+      }
+      .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(26, 188, 156, 0.4);
+      }
+      .btn-download:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Admin Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul>
+          <li>
+            <a href="admin.html"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Members</div>
+        <ul>
+          <li>
+            <a href="admin-members.html"
+              ><span class="nav-icon">👥</span><span>All Members</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-applications.html"
+              ><span class="nav-icon">📝</span><span>Applications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-waitlist.html"
+              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-cabinet.html"
+              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-districts.html"
+              ><span class="nav-icon">🗺️</span><span>Districts</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Content</div>
+        <ul>
+          <li>
+            <a href="admin-activities.html"
+              ><span class="nav-icon">🎯</span><span>Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-news.html"
+              ><span class="nav-icon">📰</span><span>News</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-gallery.html"
+              ><span class="nav-icon">🖼️</span><span>Gallery</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Finance</div>
+        <ul>
+          <li>
+            <a href="admin-finance.html"
+              ><span class="nav-icon">💰</span><span>Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-expenses.html"
+              ><span class="nav-icon">💸</span><span>Expenses</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-donations.html"
+              ><span class="nav-icon">🎁</span><span>Donations</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-sponsorships.html"
+              ><span class="nav-icon">🤝</span><span>Sponsorships</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">System</div>
+        <ul>
+          <li>
+            <a href="admin-notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-email.html"
+              ><span class="nav-icon">📧</span><span>Email</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-reports.html" class="active"
+              ><span class="nav-icon">📈</span><span>Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a
+          href="index.html"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 14px;
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            margin-bottom: 8px;
+          "
+          ><span>🌐</span><span>Back to Website</span></a
+        >
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Reports & Analytics</h2>
+          <p>Download reports</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar admin-avatar" id="topAvatar">A</div>
+            <div class="user-info">
+              <span class="user-name">Admin</span
+              ><span class="user-uid">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="page-header-block" style="margin-bottom: 20px">
+          <div class="page-header-info">
+            <h1 style="color: white">📈 Reports & Analytics</h1>
+            <p style="color: white; opacity: 0.75">Download PDF reports</p>
+          </div>
+        </div>
+
+        <div
+          id="statsOverview"
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+          "
+        >
+          <div
+            class="glass-card"
+            style="
+              padding: 22px;
+              background: rgba(255, 255, 255, 0.08);
+              border-radius: 16px;
+              border-left: 4px solid #1abc9c;
+            "
+          >
+            <p
+              style="
+                font-size: 11px;
+                color: white;
+                opacity: 0.7;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+              "
+            >
+              Total Members
+            </p>
+            <h3
+              id="statMembers"
+              style="color: #1abc9c; font-size: 22px; font-weight: 700"
+            >
+              -
+            </h3>
+          </div>
+          <div
+            class="glass-card"
+            style="
+              padding: 22px;
+              background: rgba(255, 255, 255, 0.08);
+              border-radius: 16px;
+              border-left: 4px solid #3b82f6;
+            "
+          >
+            <p
+              style="
+                font-size: 11px;
+                color: white;
+                opacity: 0.7;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+              "
+            >
+              Payments
+            </p>
+            <h3
+              id="statPayments"
+              style="color: #93c5fd; font-size: 22px; font-weight: 700"
+            >
+              -
+            </h3>
+          </div>
+          <div
+            class="glass-card"
+            style="
+              padding: 22px;
+              background: rgba(255, 255, 255, 0.08);
+              border-radius: 16px;
+              border-left: 4px solid #fbbf24;
+            "
+          >
+            <p
+              style="
+                font-size: 11px;
+                color: white;
+                opacity: 0.7;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+              "
+            >
+              Donations
+            </p>
+            <h3
+              id="statDonations"
+              style="color: #fbbf24; font-size: 22px; font-weight: 700"
+            >
+              -
+            </h3>
+          </div>
+          <div
+            class="glass-card"
+            style="
+              padding: 22px;
+              background: rgba(255, 255, 255, 0.08);
+              border-radius: 16px;
+              border-left: 4px solid #ef4444;
+            "
+          >
+            <p
+              style="
+                font-size: 11px;
+                color: white;
+                opacity: 0.7;
+                text-transform: uppercase;
+                margin-bottom: 5px;
+              "
+            >
+              Expenses
+            </p>
+            <h3
+              id="statExpenses"
+              style="color: #fca5a5; font-size: 22px; font-weight: 700"
+            >
+              -
+            </h3>
+          </div>
+        </div>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+          "
+        >
+          <div class="report-card">
+            <div class="report-icon">👥</div>
+            <h3 style="color: white; font-size: 17px; margin-bottom: 8px">
+              Members Report
+            </h3>
+            <p style="color: white; font-size: 12px; opacity: 0.75">
+              Complete list of all members with details
+            </p>
+            <button class="btn-download" onclick="downloadMembersReport()">
+              📥 Download PDF
+            </button>
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon">💰</div>
+            <h3 style="color: white; font-size: 17px; margin-bottom: 8px">
+              Finance Report
+            </h3>
+            <p style="color: white; font-size: 12px; opacity: 0.75">
+              All payments, expenses, balance
+            </p>
+            <button class="btn-download" onclick="downloadFinanceReport()">
+              📥 Download PDF
+            </button>
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon">🎁</div>
+            <h3 style="color: white; font-size: 17px; margin-bottom: 8px">
+              Donations Report
+            </h3>
+            <p style="color: white; font-size: 12px; opacity: 0.75">
+              All donations with donor info
+            </p>
+            <button class="btn-download" onclick="downloadDonationsReport()">
+              📥 Download PDF
+            </button>
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon">💸</div>
+            <h3 style="color: white; font-size: 17px; margin-bottom: 8px">
+              Expenses Report
+            </h3>
+            <p style="color: white; font-size: 12px; opacity: 0.75">
+              All expenses with categories
+            </p>
+            <button class="btn-download" onclick="downloadExpensesReport()">
+              📥 Download PDF
+            </button>
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon">🤝</div>
+            <h3 style="color: white; font-size: 17px; margin-bottom: 8px">
+              Sponsorships Report
+            </h3>
+            <p style="color: white; font-size: 12px; opacity: 0.75">
+              All sponsors and packages
+            </p>
+            <button class="btn-download" onclick="downloadSponsorsReport()">
+              📥 Download PDF
+            </button>
+          </div>
+
+          <div class="report-card">
+            <div class="report-icon">⏳</div>
+            <h3 style="color: white; font-size: 17px; margin-bottom: 8px">
+              Waitlist Report
+            </h3>
+            <p style="color: white; font-size: 12px; opacity: 0.75">
+              All waitlist entries
+            </p>
+            <button class="btn-download" onclick="downloadWaitlistReport()">
+              📥 Download PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        const {
+          data: { session },
+        } = await supabaseClient.auth.getSession();
+        if (!session) {
+          window.location.href = "admin-login.html";
+          return;
+        }
+        const { data: admin } = await supabaseClient
+          .from("members")
+          .select("name, role")
+          .eq("email", session.user.email)
+          .single();
+        if (admin) {
+          document.getElementById("topAvatar").textContent = (admin.name || "A")
+            .charAt(0)
+            .toUpperCase();
+          document
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = admin.name));
+          document
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = admin.role));
+        }
+
+        await loadStats();
+      });
+
+      async function loadStats() {
+        const [m, p, d, e] = await Promise.all([
+          supabaseClient
+            .from("members")
+            .select("*", { count: "exact", head: true }),
+          supabaseClient
+            .from("payments")
+            .select("*", { count: "exact", head: true }),
+          supabaseClient
+            .from("donations")
+            .select("*", { count: "exact", head: true }),
+          supabaseClient
+            .from("expenses")
+            .select("*", { count: "exact", head: true }),
+        ]);
+        document.getElementById("statMembers").textContent = m.count || 0;
+        document.getElementById("statPayments").textContent = p.count || 0;
+        document.getElementById("statDonations").textContent = d.count || 0;
+        document.getElementById("statExpenses").textContent = e.count || 0;
+      }
+
+      function createPDFHeader(doc, title) {
+        const pageWidth = doc.internal.pageSize.getWidth();
+        doc.setFillColor(26, 188, 156);
+        doc.rect(0, 0, pageWidth, 30, "F");
+        doc.setFillColor(15, 32, 39);
+        doc.rect(0, 30, pageWidth, 3, "F");
+        doc.setFillColor(255, 255, 255);
+        doc.circle(20, 15, 8, "F");
+        doc.setTextColor(26, 188, 156);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.text("SYDF", 20, 16.5, { align: "center" });
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(18);
+        doc.text("Swat Youth Development Forum", 35, 14);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "normal");
+        doc.text("Empowering Youth, Building Future", 35, 21);
+
+        doc.setTextColor(15, 32, 39);
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text(title, 14, 45);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(100, 100, 100);
+        doc.text(
+          "Generated on: " +
+            new Date().toLocaleDateString("en-PK", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+          14,
+          52,
+        );
+        doc.setDrawColor(26, 188, 156);
+        doc.setLineWidth(0.5);
+        doc.line(14, 56, pageWidth - 14, 56);
+      }
+
+      function addFooter(doc) {
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+          doc.setPage(i);
+          doc.setFillColor(15, 32, 39);
+          doc.rect(0, pageHeight - 12, pageWidth, 12, "F");
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(8);
+          doc.text(
+            "SYDF © " + new Date().getFullYear() + " - All Rights Reserved",
+            14,
+            pageHeight - 5,
+          );
+          doc.text(
+            "Page " + i + " of " + pageCount,
+            pageWidth - 14,
+            pageHeight - 5,
+            { align: "right" },
+          );
+        }
+      }
+
+      window.downloadMembersReport = async function () {
+        const { data } = await supabaseClient
+          .from("members")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (!data || data.length === 0) {
+          alert("⚠️ No members to export");
+          return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "landscape" });
+        createPDFHeader(doc, "Members Report");
+        doc.autoTable({
+          head: [
+            ["Name", "Email", "UID", "District", "Role", "Phone", "Status"],
+          ],
+          body: data.map((m) => [
+            m.name || "-",
+            m.email || "-",
+            m.uid || "-",
+            m.district || "-",
+            m.role || "Member",
+            m.phone || "-",
+            m.status || "Pending",
+          ]),
+          startY: 62,
+          theme: "grid",
+          styles: { font: "helvetica", fontSize: 9, cellPadding: 3 },
+          headStyles: {
+            fillColor: [26, 188, 156],
+            textColor: [255, 255, 255],
+            fontStyle: "bold",
+          },
+          alternateRowStyles: { fillColor: [245, 250, 249] },
+          margin: { left: 14, right: 14 },
+        });
+        addFooter(doc);
+        doc.save("SYDF-Members-Report.pdf");
+      };
+
+      window.downloadFinanceReport = async function () {
+        const { data } = await supabaseClient
+          .from("payments")
+          .select("*")
+          .order("payment_date", { ascending: false });
+        if (!data || data.length === 0) {
+          alert("⚠️ No payments to export");
+          return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "landscape" });
+        createPDFHeader(doc, "Finance Report - Payments");
+        doc.autoTable({
+          head: [
+            [
+              "Receipt #",
+              "Member",
+              "UID",
+              "Amount",
+              "Method",
+              "Month",
+              "Date",
+              "Status",
+            ],
+          ],
+          body: data.map((p) => [
+            p.receipt_no || "-",
+            p.member_name || "-",
+            p.uid || "-",
+            "Rs. " + p.amount,
+            p.method || "-",
+            p.month || "-",
+            p.payment_date || "-",
+            p.status || "-",
+          ]),
+          startY: 62,
+          theme: "grid",
+          styles: { font: "helvetica", fontSize: 9, cellPadding: 3 },
+          headStyles: {
+            fillColor: [26, 188, 156],
+            textColor: [255, 255, 255],
+            fontStyle: "bold",
+          },
+          alternateRowStyles: { fillColor: [245, 250, 249] },
+          margin: { left: 14, right: 14 },
+        });
+        addFooter(doc);
+        doc.save("SYDF-Finance-Report.pdf");
+      };
+
+      window.downloadDonationsReport = async function () {
+        const { data } = await supabaseClient
+          .from("donations")
+          .select("*")
+          .order("donation_date", { ascending: false });
+        if (!data || data.length === 0) {
+          alert("⚠️ No donations to export");
+          return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "landscape" });
+        createPDFHeader(doc, "Donations Report");
+        doc.autoTable({
+          head: [
+            [
+              "Receipt #",
+              "Donor",
+              "Email",
+              "Amount",
+              "Method",
+              "Purpose",
+              "Date",
+              "Type",
+            ],
+          ],
+          body: data.map((d) => [
+            d.receipt_no || "-",
+            d.is_anonymous ? "Anonymous" : d.donor_name || "-",
+            d.is_anonymous ? "Hidden" : d.donor_email || "-",
+            "Rs. " + d.amount,
+            d.method || "-",
+            d.purpose || "General",
+            d.donation_date || "-",
+            d.is_anonymous ? "Anonymous" : "Named",
+          ]),
+          startY: 62,
+          theme: "grid",
+          styles: { font: "helvetica", fontSize: 9, cellPadding: 3 },
+          headStyles: {
+            fillColor: [26, 188, 156],
+            textColor: [255, 255, 255],
+            fontStyle: "bold",
+          },
+          alternateRowStyles: { fillColor: [245, 250, 249] },
+          margin: { left: 14, right: 14 },
+        });
+        addFooter(doc);
+        doc.save("SYDF-Donations-Report.pdf");
+      };
+
+      window.downloadExpensesReport = async function () {
+        const { data } = await supabaseClient
+          .from("expenses")
+          .select("*")
+          .order("expense_date", { ascending: false });
+        if (!data || data.length === 0) {
+          alert("⚠️ No expenses to export");
+          return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "landscape" });
+        createPDFHeader(doc, "Expenses Report");
+        doc.autoTable({
+          head: [
+            [
+              "Record #",
+              "Description",
+              "Category",
+              "Amount",
+              "Paid By",
+              "Date",
+              "Status",
+            ],
+          ],
+          body: data.map((e) => [
+            e.record_no || "-",
+            e.description || "-",
+            e.category || "-",
+            "Rs. " + e.amount,
+            e.paid_by || "-",
+            e.expense_date || "-",
+            e.status || "-",
+          ]),
+          startY: 62,
+          theme: "grid",
+          styles: { font: "helvetica", fontSize: 9, cellPadding: 3 },
+          headStyles: {
+            fillColor: [26, 188, 156],
+            textColor: [255, 255, 255],
+            fontStyle: "bold",
+          },
+          alternateRowStyles: { fillColor: [245, 250, 249] },
+          margin: { left: 14, right: 14 },
+        });
+        addFooter(doc);
+        doc.save("SYDF-Expenses-Report.pdf");
+      };
+
+      window.downloadSponsorsReport = async function () {
+        const { data } = await supabaseClient
+          .from("sponsorships")
+          .select("*")
+          .order("sponsorship_date", { ascending: false });
+        if (!data || data.length === 0) {
+          alert("⚠️ No sponsors to export");
+          return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "landscape" });
+        createPDFHeader(doc, "Sponsorships Report");
+        doc.autoTable({
+          head: [
+            [
+              "Sponsor",
+              "Type",
+              "Contact",
+              "Package",
+              "Activity",
+              "Amount",
+              "Status",
+            ],
+          ],
+          body: data.map((s) => [
+            s.sponsor_name || "-",
+            s.sponsor_type || "-",
+            s.contact_person || "-",
+            s.package || "-",
+            s.activity || "General",
+            "Rs. " + s.amount,
+            s.status || "-",
+          ]),
+          startY: 62,
+          theme: "grid",
+          styles: { font: "helvetica", fontSize: 9, cellPadding: 3 },
+          headStyles: {
+            fillColor: [26, 188, 156],
+            textColor: [255, 255, 255],
+            fontStyle: "bold",
+          },
+          alternateRowStyles: { fillColor: [245, 250, 249] },
+          margin: { left: 14, right: 14 },
+        });
+        addFooter(doc);
+        doc.save("SYDF-Sponsorships-Report.pdf");
+      };
+
+      window.downloadWaitlistReport = async function () {
+        const { data } = await supabaseClient
+          .from("waitlist")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (!data || data.length === 0) {
+          alert("⚠️ No waitlist entries to export");
+          return;
+        }
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "portrait" });
+        createPDFHeader(doc, "Waitlist Report");
+        doc.autoTable({
+          head: [["Name", "Email", "WhatsApp", "District", "Status", "Date"]],
+          body: data.map((w) => [
+            w.name || "-",
+            w.email || "-",
+            w.whatsapp || "-",
+            w.district || "-",
+            w.notified ? "Notified" : "Not Notified",
+            w.created_at
+              ? new Date(w.created_at).toLocaleDateString("en-PK")
+              : "-",
+          ]),
+          startY: 62,
+          theme: "grid",
+          styles: { font: "helvetica", fontSize: 9, cellPadding: 3 },
+          headStyles: {
+            fillColor: [26, 188, 156],
+            textColor: [255, 255, 255],
+            fontStyle: "bold",
+          },
+          alternateRowStyles: { fillColor: [245, 250, 249] },
+          margin: { left: 14, right: 14 },
+        });
+        addFooter(doc);
+        doc.save("SYDF-Waitlist-Report.pdf");
+      };
+    </script>
+  </body>
+</html>

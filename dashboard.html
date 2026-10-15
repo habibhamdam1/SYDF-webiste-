@@ -1,0 +1,965 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .welcome-hero {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.18),
+          rgba(15, 32, 39, 0.3)
+        );
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 22px;
+        padding: 32px 35px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+        position: relative;
+        overflow: hidden;
+      }
+      .welcome-hero::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(26, 188, 156, 0.2),
+          transparent 70%
+        );
+        border-radius: 50%;
+      }
+      .welcome-hero .hero-text {
+        position: relative;
+        z-index: 1;
+        flex: 1;
+        min-width: 250px;
+      }
+      .welcome-hero h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 8px;
+      }
+      .welcome-hero p {
+        font-size: 14px;
+        color: white;
+        opacity: 0.85;
+        line-height: 1.7;
+      }
+      .badge-role {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: rgba(251, 191, 36, 0.15);
+        border: 1px solid rgba(251, 191, 36, 0.4);
+        border-radius: 30px;
+        color: #fbbf24;
+        font-size: 13px;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 18px;
+        margin-bottom: 25px;
+      }
+      .stat-box {
+        padding: 22px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      .stat-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+      }
+      .stat-box.s1::before {
+        background: #1abc9c;
+      }
+      .stat-box.s2::before {
+        background: #3b82f6;
+      }
+      .stat-box.s3::before {
+        background: #f59e0b;
+      }
+      .stat-box.s4::before {
+        background: #ec4899;
+      }
+      .stat-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(26, 188, 156, 0.2);
+      }
+      .stat-box .icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        flex-shrink: 0;
+      }
+      .stat-box.s1 .icon {
+        background: rgba(26, 188, 156, 0.15);
+      }
+      .stat-box.s2 .icon {
+        background: rgba(59, 130, 246, 0.15);
+      }
+      .stat-box.s3 .icon {
+        background: rgba(245, 158, 11, 0.15);
+      }
+      .stat-box.s4 .icon {
+        background: rgba(236, 72, 153, 0.15);
+      }
+      .stat-box h3 {
+        font-size: 22px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 3px;
+      }
+      .stat-box.s1 h3 {
+        color: #1abc9c;
+      }
+      .stat-box.s2 h3 {
+        color: #93c5fd;
+      }
+      .stat-box.s3 h3 {
+        color: #fbbf24;
+      }
+      .stat-box.s4 h3 {
+        color: #f9a8d4;
+      }
+      .stat-box p {
+        font-size: 12px;
+        color: white;
+        opacity: 0.75;
+      }
+
+      /* SCORE CARD */
+      .score-card {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.12),
+          rgba(15, 32, 39, 0.3)
+        );
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 22px;
+        padding: 30px;
+        margin-bottom: 25px;
+        display: flex;
+        gap: 30px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .score-circle {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        flex-shrink: 0;
+      }
+      .score-circle svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .score-circle .circle-bg {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.08);
+        stroke-width: 10;
+      }
+      .score-circle .circle-fill {
+        fill: none;
+        stroke: url(#scoreGradient);
+        stroke-width: 10;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1.5s ease;
+      }
+      .score-value {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .score-value h2 {
+        font-size: 36px;
+        font-weight: 700;
+        color: white;
+        line-height: 1;
+      }
+      .score-value p {
+        font-size: 11px;
+        color: white;
+        opacity: 0.7;
+        letter-spacing: 1px;
+        margin-top: 5px;
+      }
+
+      .score-info {
+        flex: 1;
+        min-width: 250px;
+      }
+      .score-info h3 {
+        color: white;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .score-info > p {
+        color: white;
+        font-size: 13px;
+        opacity: 0.8;
+        margin-bottom: 18px;
+      }
+
+      .score-breakdown {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .score-item {
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        text-align: center;
+      }
+      .score-item .lbl {
+        font-size: 10px;
+        color: white;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+      }
+      .score-item .val {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1abc9c;
+      }
+      .score-item .max {
+        font-size: 10px;
+        color: white;
+        opacity: 0.5;
+      }
+
+      /* BADGES */
+      .badges-section {
+        margin-top: 15px;
+      }
+      .badges-section .lbl {
+        font-size: 11px;
+        color: white;
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+      .badges-list {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .dashboard-cols {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+      }
+      .content-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        padding: 24px;
+      }
+      .content-card h3 {
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .content-card h3 a {
+        color: #1abc9c;
+        font-size: 12px;
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .payment-row {
+        padding: 16px;
+        background: rgba(26, 188, 156, 0.08);
+        border: 1px solid rgba(26, 188, 156, 0.2);
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      .payment-row .left {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .payment-row .status {
+        display: inline-block;
+        padding: 4px 12px;
+        background: rgba(26, 188, 156, 0.2);
+        color: #1abc9c;
+        border-radius: 15px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+      .payment-row .month {
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .payment-row .amount {
+        color: #1abc9c;
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .payment-row .next {
+        text-align: right;
+      }
+      .payment-row .next-label {
+        font-size: 10px;
+        color: white;
+        opacity: 0.7;
+        margin-bottom: 4px;
+      }
+      .payment-row .next-date {
+        color: #fbbf24;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .quick-action {
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        text-decoration: none;
+        color: white;
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        text-align: center;
+      }
+      .quick-action:hover {
+        background: rgba(26, 188, 156, 0.12);
+        border-color: rgba(26, 188, 156, 0.3);
+        transform: translateY(-3px);
+      }
+      .quick-action .q-icon {
+        font-size: 26px;
+      }
+      .quick-action .q-label {
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .activity-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .activity-item:last-child {
+        border-bottom: none;
+      }
+      .activity-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-top: 5px;
+      }
+      .activity-item h4 {
+        color: white;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 3px;
+      }
+      .activity-item p {
+        color: white;
+        font-size: 11px;
+        opacity: 0.65;
+      }
+
+      .empty-msg {
+        color: white;
+        opacity: 0.6;
+        text-align: center;
+        padding: 25px;
+        font-size: 13px;
+      }
+
+      @media (max-width: 900px) {
+        .dashboard-cols {
+          grid-template-columns: 1fr;
+        }
+        .welcome-hero {
+          padding: 25px 22px;
+        }
+        .welcome-hero h1 {
+          font-size: 20px;
+        }
+        .score-breakdown {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+        .quick-actions {
+          grid-template-columns: 1fr 1fr;
+        }
+        .score-card {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Member Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html" class="active"
+              ><span class="nav-icon">📊</span><span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><span class="nav-icon">👤</span><span>My Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="my-payments.html"
+              ><span class="nav-icon">💰</span><span>My Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="my-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+          <li>
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="member-proposals.html"
+              ><span class="nav-icon">💡</span><span>My Proposals</span></a
+            >
+          </li>
+          <li>
+            <a href="my-certificate.html"
+              ><span class="nav-icon">📜</span><span>Certificate</span></a
+            >
+          </li>
+          <li>
+            <a href="my-id-card.html"
+              ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Dashboard</h2>
+          <p>Welcome back!</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar" id="topAvatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Loading...</span
+              ><span class="user-uid">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="welcome-hero">
+          <div class="hero-text">
+            <h1 id="welcomeMsg">Assalam-o-Alaikum! 👋</h1>
+            <p id="welcomeSub">Welcome to your SYDF dashboard.</p>
+          </div>
+          <div class="badge-role">
+            <span>⭐</span> <span id="memberRole">Member</span>
+          </div>
+        </div>
+
+        <!-- SCORE CARD -->
+        <div class="score-card">
+          <div class="score-circle">
+            <svg viewBox="0 0 140 140">
+              <defs>
+                <linearGradient
+                  id="scoreGradient"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stop-color="#1abc9c" />
+                  <stop offset="100%" stop-color="#16a085" />
+                </linearGradient>
+              </defs>
+              <circle class="circle-bg" cx="70" cy="70" r="60" />
+              <circle
+                class="circle-fill"
+                cx="70"
+                cy="70"
+                r="60"
+                stroke-dasharray="377"
+                stroke-dashoffset="377"
+                id="scoreCircle"
+              />
+            </svg>
+            <div class="score-value">
+              <h2 id="scoreNum">0</h2>
+              <p>SCORE</p>
+            </div>
+          </div>
+          <div class="score-info">
+            <h3>📊 Your Engagement Score</h3>
+            <p>Based on payments, activities, tenure & profile completion</p>
+
+            <div class="score-breakdown">
+              <div class="score-item">
+                <div class="lbl">💰 Payments</div>
+                <div class="val" id="scorePayments">0</div>
+                <div class="max">/ 40</div>
+              </div>
+              <div class="score-item">
+                <div class="lbl">🎯 Activities</div>
+                <div class="val" id="scoreActivities">0</div>
+                <div class="max">/ 30</div>
+              </div>
+              <div class="score-item">
+                <div class="lbl">📅 Tenure</div>
+                <div class="val" id="scoreTenure">0</div>
+                <div class="max">/ 20</div>
+              </div>
+              <div class="score-item">
+                <div class="lbl">👤 Profile</div>
+                <div class="val" id="scoreProfile">0</div>
+                <div class="max">/ 10</div>
+              </div>
+            </div>
+
+            <div class="badges-section">
+              <div class="lbl">🏅 Your Badges</div>
+              <div class="badges-list" id="badgesList">
+                <span class="empty-msg" style="padding: 0; font-size: 12px"
+                  >Loading...</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box s1">
+            <div class="icon">💰</div>
+            <div>
+              <h3 id="statPaid">Rs. 0</h3>
+              <p>Total Paid</p>
+            </div>
+          </div>
+          <div class="stat-box s2">
+            <div class="icon">📅</div>
+            <div>
+              <h3 id="statMonths">0</h3>
+              <p>Months Active</p>
+            </div>
+          </div>
+          <div class="stat-box s3">
+            <div class="icon">🎯</div>
+            <div>
+              <h3 id="statActivities">0</h3>
+              <p>Activities</p>
+            </div>
+          </div>
+          <div class="stat-box s4">
+            <div class="icon">📈</div>
+            <div>
+              <h3 id="statCompletion">0%</h3>
+              <p>Profile Complete</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-cols">
+          <div>
+            <div class="content-card" style="margin-bottom: 22px">
+              <h3>
+                💳 Payment Status <a href="my-payments.html">View All →</a>
+              </h3>
+              <div id="paymentStatusBlock">
+                <div class="empty-msg">Loading...</div>
+              </div>
+            </div>
+
+            <div class="content-card">
+              <h3>🎯 Recent Activities</h3>
+              <div id="recentActivitiesBlock">
+                <div class="empty-msg">Loading...</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="content-card" style="margin-bottom: 22px">
+              <h3>⚡ Quick Actions</h3>
+              <div class="quick-actions">
+                <a href="my-payments.html" class="quick-action"
+                  ><span class="q-icon">💰</span
+                  ><span class="q-label">Pay Fee</span></a
+                >
+                <a href="member-proposals.html" class="quick-action"
+                  ><span class="q-icon">💡</span
+                  ><span class="q-label">New Proposal</span></a
+                >
+                <a href="my-id-card.html" class="quick-action"
+                  ><span class="q-icon">🆔</span
+                  ><span class="q-label">My ID Card</span></a
+                >
+                <a href="activities.html" class="quick-action"
+                  ><span class="q-icon">🎯</span
+                  ><span class="q-label">Activities</span></a
+                >
+              </div>
+            </div>
+
+            <div class="content-card">
+              <h3>
+                📢 Announcements <a href="notifications.html">View All →</a>
+              </h3>
+              <div id="announcementsBlock">
+                <div class="empty-msg">Loading...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        try {
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          if (!session) {
+            window.location.href = "login.html";
+            return;
+          }
+
+          const { data: member } = await supabaseClient
+            .from("members")
+            .select("*")
+            .eq("email", session.user.email)
+            .single();
+          if (!member) return;
+
+          if (member.status === "Suspended") {
+            alert("⚠️ Your account is suspended.");
+            await supabaseClient.auth.signOut();
+            window.location.href = "login.html";
+            return;
+          }
+
+          const name = member.name || "Member";
+          const initial = name.charAt(0).toUpperCase();
+          document.getElementById("welcomeMsg").textContent =
+            "Assalam-o-Alaikum, " + name + "! 👋";
+          document.getElementById("welcomeSub").textContent =
+            "Welcome back to your SYDF dashboard.";
+          document.getElementById("memberRole").textContent =
+            member.role || "Member";
+          document.getElementById("topAvatar").textContent = initial;
+          document
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = name));
+          document
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = member.uid || "-"));
+
+          // ==========================================
+          // SCORE CALCULATION
+          // ==========================================
+          try {
+            let scoreAttempts = 0;
+            while (
+              typeof window.calculateMemberScore === "undefined" &&
+              scoreAttempts < 30
+            ) {
+              await new Promise((r) => setTimeout(r, 100));
+              scoreAttempts++;
+            }
+
+            if (typeof window.calculateMemberScore !== "undefined") {
+              const scoreData = await window.calculateMemberScore(member);
+
+              // Update score number
+              document.getElementById("scoreNum").textContent = scoreData.score;
+
+              // Update circular progress
+              const circle = document.getElementById("scoreCircle");
+              const dasharray = 377;
+              const offset = dasharray - (dasharray * scoreData.score) / 100;
+              setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+              }, 200);
+
+              // Update breakdown
+              if (scoreData.breakdown) {
+                document.getElementById("scorePayments").textContent =
+                  scoreData.breakdown.payments || 0;
+                document.getElementById("scoreActivities").textContent =
+                  scoreData.breakdown.activities || 0;
+                document.getElementById("scoreTenure").textContent =
+                  scoreData.breakdown.tenure || 0;
+                document.getElementById("scoreProfile").textContent =
+                  scoreData.breakdown.profile || 0;
+              }
+
+              // Render badges
+              const badgesList = document.getElementById("badgesList");
+              if (scoreData.badges && scoreData.badges.length > 0) {
+                badgesList.innerHTML = scoreData.badges
+                  .map((bName) => {
+                    const info = window.getBadgeInfo
+                      ? window.getBadgeInfo(bName)
+                      : { icon: "🏅", color: "#1abc9c", description: "" };
+                    return `<span class="badge-pill" style="background: ${info.color}20; color: ${info.color}; border: 1px solid ${info.color}50;" title="${info.description}">${info.icon} ${bName}</span>`;
+                  })
+                  .join("");
+              } else {
+                badgesList.innerHTML =
+                  '<span style="font-size:12px;opacity:0.6;color:white;">No badges yet</span>';
+              }
+
+              // Update profile completion stat
+              if (scoreData.stats) {
+                document.getElementById("statCompletion").textContent =
+                  (scoreData.stats.profilePercent || 0) + "%";
+                document.getElementById("statMonths").textContent =
+                  scoreData.stats.monthsSinceJoin || 0;
+              }
+            }
+          } catch (scoreErr) {
+            console.log("Score error:", scoreErr);
+          }
+
+          // ==========================================
+          // PAYMENTS
+          // ==========================================
+          const { data: payments } = await supabaseClient
+            .from("payments")
+            .select("*")
+            .eq("member_email", session.user.email)
+            .order("payment_date", { ascending: false });
+          const payList = payments || [];
+          const total = payList.reduce((s, p) => s + Number(p.amount || 0), 0);
+          document.getElementById("statPaid").textContent =
+            "Rs. " + total.toLocaleString();
+
+          const payBlock = document.getElementById("paymentStatusBlock");
+          if (payList.length === 0) {
+            payBlock.innerHTML = '<div class="empty-msg">No payments yet</div>';
+          } else {
+            const now = new Date();
+            const currentMonthName = now.toLocaleDateString("en-PK", {
+              month: "long",
+              year: "numeric",
+            });
+            const current = payList.find((p) => p.month === currentMonthName);
+            const nextMonth = new Date(
+              now.getFullYear(),
+              now.getMonth() + 1,
+              5,
+            );
+            payBlock.innerHTML = `
+                        <div class="payment-row">
+                            <div class="left">
+                                <span class="status">${current ? "✅ Paid" : "⏳ Pending"}</span>
+                                <div class="month">${currentMonthName}</div>
+                                <div class="amount">Rs. ${current ? current.amount : "300"}</div>
+                            </div>
+                            <div class="next">
+                                <div class="next-label">Next Due</div>
+                                <div class="next-date">${nextMonth.toLocaleDateString("en-PK", { day: "numeric", month: "short", year: "numeric" })}</div>
+                            </div>
+                        </div>`;
+          }
+
+          // ==========================================
+          // ACTIVITIES
+          // ==========================================
+          const { data: acts } = await supabaseClient
+            .from("activity_participants")
+            .select("*")
+            .eq("member_email", session.user.email)
+            .order("joined_at", { ascending: false })
+            .limit(5);
+          const actList = acts || [];
+          document.getElementById("statActivities").textContent =
+            actList.length;
+          const actBlock = document.getElementById("recentActivitiesBlock");
+          if (actList.length === 0) {
+            actBlock.innerHTML =
+              '<div class="empty-msg">No activities joined yet</div>';
+          } else {
+            actBlock.innerHTML = actList
+              .map(
+                (a) => `
+                        <div class="activity-item">
+                            <div class="activity-dot" style="background:#1abc9c;"></div>
+                            <div>
+                                <h4>${a.activity_title || "Activity"}</h4>
+                                <p>Joined • ${a.joined_at ? new Date(a.joined_at).toLocaleDateString("en-PK", { day: "numeric", month: "short" }) : "-"}</p>
+                            </div>
+                        </div>`,
+              )
+              .join("");
+          }
+
+          // ==========================================
+          // ANNOUNCEMENTS
+          // ==========================================
+          const { data: notifs } = await supabaseClient
+            .from("notifications")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(3);
+          const notifList = notifs || [];
+          const annBlock = document.getElementById("announcementsBlock");
+          if (notifList.length === 0) {
+            annBlock.innerHTML =
+              '<div class="empty-msg">No announcements</div>';
+          } else {
+            annBlock.innerHTML = notifList
+              .map(
+                (n) => `
+                        <div class="activity-item">
+                            <div class="activity-dot" style="background:#fbbf24;"></div>
+                            <div>
+                                <h4>${n.title}</h4>
+                                <p>${n.message ? n.message.substring(0, 60) + "..." : ""}</p>
+                            </div>
+                        </div>`,
+              )
+              .join("");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    </script>
+  </body>
+</html>

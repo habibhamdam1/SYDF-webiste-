@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News & Blog - SYDF</title>
+    <script src="js/head-includes.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+      .news-section {
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+      .intro-block {
+        text-align: center;
+      }
+      .intro-block h2 {
+        font-size: 30px;
+        color: #1abc9c;
+        margin-bottom: 20px;
+      }
+      .intro-block p {
+        font-size: 16px;
+        line-height: 1.9;
+        opacity: 0.9;
+        color: white;
+      }
+      .filter-tabs {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .filter-btn {
+        padding: 10px 22px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 30px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .filter-btn:hover {
+        background: rgba(26, 188, 156, 0.15);
+        border-color: #1abc9c;
+      }
+      .filter-btn.active {
+        background: #1abc9c;
+        color: white;
+        border-color: #1abc9c;
+        font-weight: 600;
+      }
+      .news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 22px;
+      }
+      .news-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+      }
+      .news-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(26, 188, 156, 0.3);
+        box-shadow: 0 20px 50px rgba(26, 188, 156, 0.15);
+      }
+      .news-image {
+        height: 170px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 64px;
+        position: relative;
+        overflow: hidden;
+      }
+      .news-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        inset: 0;
+      }
+      .news-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        padding: 4px 12px;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        font-size: 10px;
+        font-weight: 700;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 2;
+      }
+      .news-body {
+        padding: 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .news-meta {
+        display: flex;
+        gap: 15px;
+        font-size: 11px;
+        opacity: 0.7;
+        margin-bottom: 12px;
+        color: white;
+      }
+      .news-body h3 {
+        font-size: 16px;
+        color: white;
+        margin-bottom: 12px;
+        line-height: 1.4;
+        font-weight: 600;
+      }
+      .news-body p {
+        font-size: 13px;
+        line-height: 1.7;
+        opacity: 0.85;
+        color: white;
+        flex: 1;
+        margin-bottom: 15px;
+      }
+      .news-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .news-author {
+        font-size: 11px;
+        opacity: 0.7;
+        color: white;
+      }
+      .news-link {
+        font-size: 13px;
+        color: #1abc9c;
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .loading-state,
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: white;
+        opacity: 0.75;
+      }
+      .loading-state .spinner {
+        width: 44px;
+        height: 44px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #1abc9c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 18px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .page-hero-content {
+          padding: 30px 25px;
+        }
+        .news-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .news-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>📰 News & Blog</h1>
+        <p>Home / News</p>
+      </div>
+    </section>
+
+    <section class="news-section">
+      <div class="glass-block intro-block">
+        <h2>Latest Updates</h2>
+        <p>
+          Stay informed about SYDF activities, achievements, and announcements.
+        </p>
+      </div>
+
+      <div class="glass-block">
+        <div class="filter-tabs" style="margin-bottom: 25px">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="news">Forum News</button>
+          <button class="filter-btn" data-filter="press">Press Releases</button>
+          <button class="filter-btn" data-filter="articles">Articles</button>
+          <button class="filter-btn" data-filter="achievements">
+            Achievements
+          </button>
+        </div>
+
+        <div id="newsGrid" class="news-grid">
+          <div class="loading-state" style="grid-column: 1/-1">
+            <div class="spinner"></div>
+            <p>Loading news...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allNews = [];
+      let currentFilter = "all";
+
+      const CATEGORY_META = {
+        news: {
+          emoji: "🎓",
+          label: "Forum News",
+          gradient: "linear-gradient(135deg,#1abc9c,#16a085)",
+        },
+        achievements: {
+          emoji: "🏆",
+          label: "Achievement",
+          gradient: "linear-gradient(135deg,#fbbf24,#f59e0b)",
+        },
+        press: {
+          emoji: "📢",
+          label: "Press Release",
+          gradient: "linear-gradient(135deg,#3b82f6,#1e40af)",
+        },
+        articles: {
+          emoji: "📝",
+          label: "Article",
+          gradient: "linear-gradient(135deg,#8b5cf6,#6d28d9)",
+        },
+      };
+
+      function getMeta(cat) {
+        const key = (cat || "news").toLowerCase();
+        return (
+          CATEGORY_META[key] || {
+            emoji: "📰",
+            label: cat || "News",
+            gradient: "linear-gradient(135deg,#1abc9c,#16a085)",
+          }
+        );
+      }
+
+      function formatDate(d) {
+        if (!d) return "-";
+        try {
+          return new Date(d).toLocaleDateString("en-PK", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          });
+        } catch {
+          return "-";
+        }
+      }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function renderNews() {
+        const grid = document.getElementById("newsGrid");
+        if (!grid) return;
+
+        const list =
+          currentFilter === "all"
+            ? allNews
+            : allNews.filter(
+                (n) => (n.category || "").toLowerCase() === currentFilter,
+              );
+
+        if (list.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1;">
+              <div style="font-size:60px; margin-bottom:15px; opacity:0.5;">📭</div>
+              <h3>No News Yet</h3>
+              <p>${currentFilter === "all" ? "News will appear here once published." : "No articles in this category."}</p>
+            </div>`;
+          return;
+        }
+
+        grid.innerHTML = list
+          .map((n) => {
+            const meta = getMeta(n.category);
+            const imgHtml = n.image_url
+              ? `<img src="${escapeHtml(n.image_url)}" alt="${escapeHtml(n.title)}" onerror="this.remove()">`
+              : meta.emoji;
+            const bgStyle = n.image_url ? "" : `background:${meta.gradient};`;
+            const excerpt =
+              n.excerpt ||
+              (n.content
+                ? String(n.content)
+                    .replace(/<[^>]*>/g, "")
+                    .slice(0, 140) + "..."
+                : "");
+
+            return `
+            <div class="news-card" data-category="${escapeHtml((n.category || "news").toLowerCase())}" onclick="openNews(${n.id})">
+              <div class="news-image" style="${bgStyle}">
+                ${imgHtml}
+                <span class="news-badge">${escapeHtml(meta.label)}</span>
+              </div>
+              <div class="news-body">
+                <div class="news-meta">
+                  <span>📅 ${formatDate(n.created_at)}</span>
+                  <span>👤 ${escapeHtml(n.author || "SYDF Team")}</span>
+                </div>
+                <h3>${escapeHtml(n.title)}</h3>
+                <p>${escapeHtml(excerpt)}</p>
+                <div class="news-footer">
+                  <span class="news-author">${escapeHtml(n.author || "SYDF Team")}</span>
+                  <a href="news-detail.html?id=${n.id}" class="news-link" onclick="event.stopPropagation()">Read More →</a>
+                </div>
+              </div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function openNews(id) {
+        window.location.href = "news-detail.html?id=" + id;
+      }
+
+      function attachFilters() {
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            document
+              .querySelectorAll(".filter-btn")
+              .forEach((b) => b.classList.remove("active"));
+            this.classList.add("active");
+            currentFilter = this.getAttribute("data-filter");
+            renderNews();
+          });
+        });
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          document.getElementById("newsGrid").innerHTML =
+            '<div class="empty-state" style="grid-column:1/-1;"><h3>⚠️ System Not Ready</h3><p>Please refresh the page.</p></div>';
+          return;
+        }
+
+        try {
+          const { data, error } = await supabaseClient
+            .from("news")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+          allNews = (data || []).filter(
+            (n) => !n.status || n.status === "Published",
+          );
+          renderNews();
+          attachFilters();
+        } catch (err) {
+          console.error(err);
+          document.getElementById("newsGrid").innerHTML =
+            '<div class="empty-state" style="grid-column:1/-1;"><h3>❌ Error Loading News</h3><p>Please refresh the page.</p></div>';
+        }
+      });
+
+      window.openNews = openNews;
+    </script>
+  </body>
+</html>

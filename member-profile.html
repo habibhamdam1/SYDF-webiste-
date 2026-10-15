@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Member Profile - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .profile-hero {
+        padding: 140px 20px 40px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .breadcrumb {
+        font-size: 13px;
+        opacity: 0.7;
+        color: white;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .breadcrumb a {
+        color: #1abc9c;
+        text-decoration: none;
+      }
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
+
+      .profile-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .profile-banner {
+        height: 140px;
+        background: linear-gradient(
+          135deg,
+          #0f3d3e 0%,
+          #0d9488 50%,
+          #14b8a6 100%
+        );
+        position: relative;
+        overflow: hidden;
+      }
+      .profile-banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+          circle at 1px 1px,
+          rgba(255, 255, 255, 0.15) 1px,
+          transparent 0
+        );
+        background-size: 18px 18px;
+      }
+      .profile-banner::after {
+        content: "";
+        position: absolute;
+        bottom: -50px;
+        right: -50px;
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(
+          circle,
+          rgba(251, 191, 36, 0.25),
+          transparent 70%
+        );
+        border-radius: 50%;
+      }
+
+      .banner-brand {
+        position: absolute;
+        top: 22px;
+        left: 30px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 2;
+      }
+      .banner-logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #fbbf24;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+        overflow: hidden;
+      }
+      .banner-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 50%;
+      }
+      .banner-text {
+        font-size: 12px;
+        font-weight: 800;
+        color: white;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .banner-role-badge {
+        position: absolute;
+        top: 22px;
+        right: 30px;
+        padding: 6px 14px;
+        background: rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(251, 191, 36, 0.5);
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 800;
+        color: #fbbf24;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        z-index: 2;
+      }
+
+      .profile-photo-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: -80px;
+        position: relative;
+        z-index: 3;
+      }
+      .profile-photo {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 68px;
+        font-weight: 700;
+        color: #0d9488;
+        overflow: hidden;
+        border: 6px solid rgba(15, 32, 39, 0.95);
+        box-shadow:
+          0 15px 40px rgba(0, 0, 0, 0.5),
+          0 0 0 3px rgba(26, 188, 156, 0.3);
+        position: relative;
+      }
+      .profile-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .profile-photo.private {
+        background: linear-gradient(
+          135deg,
+          rgba(15, 32, 39, 0.9),
+          rgba(32, 58, 67, 0.9)
+        );
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 54px;
+      }
+      .photo-verified {
+        position: absolute;
+        bottom: 6px;
+        right: 6px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        border: 3px solid rgba(15, 32, 39, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        color: white;
+        box-shadow: 0 4px 12px rgba(26, 188, 156, 0.5);
+      }
+
+      .profile-body {
+        padding: 30px 45px 45px;
+      }
+
+      .profile-name-section {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .profile-name {
+        font-family: "Playfair Display", serif;
+        font-size: 32px;
+        font-weight: 700;
+        color: white;
+        line-height: 1.2;
+        letter-spacing: 0.3px;
+        margin-bottom: 10px;
+      }
+      .profile-uid {
+        display: inline-block;
+        padding: 7px 20px;
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(26, 188, 156, 0.5);
+        border-radius: 10px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        font-weight: 700;
+        color: #5eead4;
+        letter-spacing: 2px;
+      }
+
+      .badges-strip {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .badge-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 15px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .badge-chip.status-active {
+        background: rgba(26, 188, 156, 0.15);
+        border: 1px solid rgba(26, 188, 156, 0.4);
+        color: #5eead4;
+      }
+      .badge-chip.role-president {
+        background: rgba(251, 191, 36, 0.15);
+        border: 1px solid rgba(251, 191, 36, 0.4);
+        color: #fbbf24;
+      }
+      .badge-chip.role-vp {
+        background: rgba(168, 85, 247, 0.15);
+        border: 1px solid rgba(168, 85, 247, 0.4);
+        color: #c084fc;
+      }
+      .badge-chip.role-gs {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        color: #93c5fd;
+      }
+      .badge-chip.role-coordinator {
+        background: rgba(251, 146, 60, 0.15);
+        border: 1px solid rgba(251, 146, 60, 0.4);
+        color: #fb923c;
+      }
+      .badge-chip.score {
+        background: linear-gradient(
+          135deg,
+          rgba(251, 191, 36, 0.2),
+          rgba(245, 158, 11, 0.1)
+        );
+        border: 1px solid rgba(251, 191, 36, 0.5);
+        color: #fbbf24;
+      }
+      .badge-chip.badge {
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #93c5fd;
+      }
+      .badge-chip.type-volunteer {
+        background: rgba(34, 197, 94, 0.15);
+        border: 1px solid rgba(34, 197, 94, 0.4);
+        color: #4ade80;
+      }
+      .badge-chip.type-intern {
+        background: rgba(59, 130, 246, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        color: #93c5fd;
+      }
+      .badge-chip.type-coordinator {
+        background: rgba(251, 146, 60, 0.15);
+        border: 1px solid rgba(251, 146, 60, 0.4);
+        color: #fb923c;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+        margin-bottom: 32px;
+      }
+      .info-item {
+        padding: 18px 20px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        transition: 0.3s;
+      }
+      .info-item:hover {
+        border-color: rgba(26, 188, 156, 0.3);
+        background: rgba(26, 188, 156, 0.05);
+      }
+      .info-item .ico {
+        font-size: 20px;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .info-item .lbl {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.55);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .info-item .val {
+        font-size: 15px;
+        color: white;
+        font-weight: 600;
+        word-break: break-word;
+      }
+
+      .privacy-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 20px;
+        background: rgba(251, 191, 36, 0.08);
+        border: 1px solid rgba(251, 191, 36, 0.25);
+        border-radius: 14px;
+        margin-bottom: 26px;
+      }
+      .privacy-notice .ico {
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .privacy-notice .txt {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.6;
+      }
+      .privacy-notice .txt strong {
+        color: #fbbf24;
+      }
+
+      .profile-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 26px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .btn-profile {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 13px 26px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        color: white;
+        text-decoration: none;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .btn-profile:hover {
+        background: rgba(26, 188, 156, 0.15);
+        border-color: #1abc9c;
+        transform: translateY(-2px);
+      }
+      .btn-profile.primary {
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        border-color: transparent;
+      }
+      .btn-profile.primary:hover {
+        box-shadow: 0 12px 30px rgba(26, 188, 156, 0.4);
+      }
+
+      .loading-wrap {
+        text-align: center;
+        padding: 100px 30px;
+        max-width: 700px;
+        margin: 0 auto;
+        color: white;
+      }
+      .loading-wrap .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #1abc9c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-wrap h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+      .loading-wrap p {
+        font-size: 14px;
+        opacity: 0.75;
+      }
+
+      .notfound-card {
+        max-width: 550px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 60px 40px;
+      }
+      .notfound-card .ico {
+        font-size: 70px;
+        margin-bottom: 20px;
+        display: block;
+      }
+      .notfound-card h2 {
+        font-size: 24px;
+        color: white;
+        margin-bottom: 10px;
+      }
+      .notfound-card p {
+        font-size: 14px;
+        opacity: 0.75;
+        margin-bottom: 25px;
+      }
+      .notfound-card a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #1abc9c;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      @media (max-width: 600px) {
+        .profile-hero {
+          padding: 120px 15px 30px;
+        }
+        .profile-banner {
+          height: 110px;
+        }
+        .banner-brand {
+          top: 15px;
+          left: 18px;
+        }
+        .banner-role-badge {
+          top: 15px;
+          right: 18px;
+          font-size: 9px;
+          padding: 5px 10px;
+        }
+        .profile-photo-wrap {
+          margin-top: -65px;
+        }
+        .profile-photo {
+          width: 130px;
+          height: 130px;
+          font-size: 54px;
+        }
+        .profile-body {
+          padding: 24px 22px 35px;
+        }
+        .profile-name {
+          font-size: 24px;
+        }
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="profile-hero">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="members.html">Members</a>
+        <span>/</span>
+        <span id="crumbTitle">Profile</span>
+      </div>
+      <div id="profileContent">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <h2>Loading profile...</h2>
+          <p>Please wait</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      const ROLE_BADGE_MAP = {
+        President: "role-president",
+        "Chairman & President": "role-president",
+        "Senior Vice President": "role-vp",
+        "Vice President": "role-vp",
+        "Secretary General": "role-gs",
+        "Deputy Secretary": "role-gs",
+        Coordinator: "role-coordinator",
+      };
+
+      const TYPE_BADGE_MAP = {
+        Volunteer: "type-volunteer",
+        Intern: "type-intern",
+        Coordinator: "type-coordinator",
+      };
+
+      const BADGE_DEF = {
+        "New Member": { icon: "🌟", color: "#93c5fd" },
+        Active: { icon: "🔥", color: "#fb923c" },
+        Gold: { icon: "💎", color: "#fbbf24" },
+        Elite: { icon: "👑", color: "#c084fc" },
+      };
+
+      function getRoleBadgeClass(role) {
+        return ROLE_BADGE_MAP[role] || "";
+      }
+
+      function formatDate(d, long) {
+        if (!d) return "-";
+        try {
+          return new Date(d).toLocaleDateString(
+            "en-PK",
+            long
+              ? { day: "numeric", month: "long", year: "numeric" }
+              : { day: "numeric", month: "short", year: "numeric" },
+          );
+        } catch {
+          return "-";
+        }
+      }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function getParam(name) {
+        return new URLSearchParams(window.location.search).get(name);
+      }
+
+      function renderNotFound(msg) {
+        document.getElementById("profileContent").innerHTML = `
+          <div class="notfound-card glass-block" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:20px;">
+            <span class="ico">👤</span>
+            <h2>Member Not Found</h2>
+            <p>${escapeHtml(msg || "This member may have been removed or the link is invalid.")}</p>
+            <a href="members.html">← Back to Members</a>
+          </div>`;
+      }
+
+      function renderProfile(member) {
+        const isFemale = (member.gender || "").toLowerCase() === "female";
+        const initial = (member.name || "M").charAt(0).toUpperCase();
+
+        let photoHTML,
+          photoClass = "profile-photo";
+        if (isFemale) {
+          photoHTML = "👤";
+          photoClass += " private";
+        } else if (member.photo_url) {
+          photoHTML = `<img src="${escapeHtml(member.photo_url)}" alt="${escapeHtml(member.name)}" onerror="this.parentElement.textContent='${initial}'">`;
+        } else {
+          photoHTML = initial;
+        }
+
+        const roleBadgeClass = getRoleBadgeClass(member.role);
+        const roleLabel = member.role || "Member";
+
+        // Member type badge
+        let typeBadgeHTML = "";
+        if (member.member_type && member.member_type !== "Member") {
+          const typeClass = TYPE_BADGE_MAP[member.member_type] || "";
+          typeBadgeHTML = `<span class="badge-chip ${typeClass}">${escapeHtml(member.member_type)}</span>`;
+        }
+
+        let badgesArr = [];
+        try {
+          if (Array.isArray(member.badges)) badgesArr = member.badges;
+          else if (typeof member.badges === "string" && member.badges.trim()) {
+            badgesArr = member.badges
+              .replace(/[{}]/g, "")
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean);
+          }
+        } catch {}
+
+        let badgesHTML = "";
+        if (member.engagement_score) {
+          badgesHTML += `<span class="badge-chip score">⭐ Score: ${member.engagement_score}</span>`;
+        }
+        badgesArr.forEach((b) => {
+          const def = BADGE_DEF[b];
+          if (def)
+            badgesHTML += `<span class="badge-chip badge">${def.icon} ${escapeHtml(b)}</span>`;
+        });
+
+        const privacyHTML = isFemale
+          ? `<div class="privacy-notice">
+              <span class="ico">🔒</span>
+              <div class="txt"><strong>Privacy Protected:</strong> This member has chosen to keep her photo and personal contact details private, in accordance with SYDF's privacy policy.</div>
+            </div>`
+          : "";
+
+        const phoneVal = isFemale ? "🔒 Private" : member.phone || "-";
+
+        document.getElementById("crumbTitle").textContent =
+          member.name || "Profile";
+
+        document.getElementById("profileContent").innerHTML = `
+          <div class="profile-card">
+            <div class="profile-banner">
+              <div class="banner-brand">
+                <div class="banner-logo">
+                  <img src="images/logo.png" alt="SYDF" onerror="this.parentElement.innerHTML='<span style=\\'color:#0d9488;font-weight:900;font-size:11px;\\'>S</span>'">
+                </div>
+                <div class="banner-text">SYDF Verified Member</div>
+              </div>
+              <div class="banner-role-badge">${escapeHtml(roleLabel.toUpperCase())}</div>
+            </div>
+
+            <div class="profile-photo-wrap">
+              <div class="${photoClass}">
+                ${photoHTML}
+                ${!isFemale ? `<div class="photo-verified" title="Verified">✓</div>` : ""}
+              </div>
+            </div>
+
+            <div class="profile-body">
+              <div class="profile-name-section">
+                <h1 class="profile-name">${escapeHtml(member.name || "Member")}</h1>
+                <span class="profile-uid">${escapeHtml(member.uid || "-")}</span>
+              </div>
+
+              <div class="badges-strip">
+                <span class="badge-chip status-active">✓ ${escapeHtml(member.status || "Active")}</span>
+                ${typeBadgeHTML}
+                <span class="badge-chip ${roleBadgeClass}">${escapeHtml(roleLabel)}</span>
+                ${badgesHTML}
+              </div>
+
+              ${privacyHTML}
+
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="ico">📍</span>
+                  <div class="lbl">District</div>
+                  <div class="val">${escapeHtml(member.district || "-")}</div>
+                </div>
+                <div class="info-item">
+                  <span class="ico">🏘️</span>
+                  <div class="lbl">Tehsil</div>
+                  <div class="val">${escapeHtml(member.tehsil || "-")}</div>
+                </div>
+                <div class="info-item">
+                  <span class="ico">📅</span>
+                  <div class="lbl">Member Since</div>
+                  <div class="val">${formatDate(member.created_at, true)}</div>
+                </div>
+                <div class="info-item">
+                  <span class="ico">📞</span>
+                  <div class="lbl">Contact</div>
+                  <div class="val">${escapeHtml(phoneVal)}</div>
+                </div>
+              </div>
+
+              <div class="profile-actions">
+                <a href="members.html" class="btn-profile">← Back to Members</a>
+                <a href="contact.html" class="btn-profile primary">✉️ Send Message</a>
+              </div>
+            </div>
+          </div>`;
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          renderNotFound("System not ready. Please refresh the page.");
+          return;
+        }
+
+        const uid = getParam("uid");
+        if (!uid) {
+          renderNotFound("No member ID provided.");
+          return;
+        }
+
+        try {
+          const { data: member, error } = await supabaseClient
+            .from("members")
+            .select(
+              "id, name, uid, district, tehsil, gender, photo_url, role, member_type, status, engagement_score, badges, created_at",
+            )
+            .eq("uid", uid)
+            .eq("status", "Active")
+            .maybeSingle();
+
+          if (error || !member) {
+            renderNotFound(
+              "This member does not exist or is not publicly listed.",
+            );
+            return;
+          }
+
+          renderProfile(member);
+        } catch (err) {
+          console.error(err);
+          renderNotFound("Something went wrong while loading the profile.");
+        }
+      });
+    </script>
+  </body>
+</html>

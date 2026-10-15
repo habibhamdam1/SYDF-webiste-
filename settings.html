@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .settings-tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        margin-bottom: 25px;
+        overflow-x: auto;
+      }
+      .settings-tab {
+        padding: 12px 22px;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: "Poppins", sans-serif;
+        font-size: 13.5px;
+        font-weight: 500;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .settings-tab:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .settings-tab.active {
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        font-weight: 600;
+        box-shadow: 0 6px 20px rgba(26, 188, 156, 0.35);
+      }
+
+      .settings-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 22px;
+        overflow: hidden;
+        margin-bottom: 22px;
+      }
+      .settings-card-header {
+        padding: 22px 30px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(
+          135deg,
+          rgba(26, 188, 156, 0.08),
+          transparent
+        );
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .settings-card-header .icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: rgba(26, 188, 156, 0.15);
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .settings-card-header h3 {
+        color: white;
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+      .settings-card-header p {
+        color: white;
+        font-size: 12.5px;
+        opacity: 0.65;
+      }
+      .settings-card-body {
+        padding: 25px 30px;
+      }
+
+      .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 18px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .toggle-row:last-child {
+        border-bottom: none;
+      }
+      .toggle-row .info h4 {
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .toggle-row .info p {
+        color: white;
+        font-size: 12px;
+        opacity: 0.7;
+      }
+
+      .toggle {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 28px;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+      .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.15);
+        transition: 0.3s;
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+      .toggle input:checked + .toggle-slider {
+        background: #1abc9c;
+        border-color: #1abc9c;
+      }
+      .toggle input:checked + .toggle-slider:before {
+        transform: translateX(22px);
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        color: white;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-row .label {
+        font-size: 13.5px;
+        opacity: 0.75;
+      }
+      .info-row .value {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: white;
+        text-align: right;
+      }
+
+      .field-group {
+        margin-bottom: 20px;
+      }
+      .field-group label {
+        display: block;
+        font-size: 13px;
+        color: white;
+        opacity: 0.85;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .field-input {
+        width: 100%;
+        padding: 14px 18px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: 0.3s;
+      }
+      .field-input:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.06);
+        box-shadow: 0 0 0 4px rgba(26, 188, 156, 0.12);
+      }
+
+      .btn-save {
+        padding: 13px 32px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(26, 188, 156, 0.4);
+      }
+      .btn-save:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-danger {
+        padding: 12px 22px;
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+        border: 1.5px solid rgba(239, 68, 68, 0.35);
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .btn-danger:hover {
+        background: #ef4444;
+        color: white;
+      }
+
+      .danger-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 20px;
+        background: rgba(239, 68, 68, 0.06);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 14px;
+        margin-bottom: 12px;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      .danger-row:last-child {
+        margin-bottom: 0;
+      }
+      .danger-row h4 {
+        color: #fca5a5;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .danger-row p {
+        color: white;
+        font-size: 12px;
+        opacity: 0.75;
+      }
+
+      .tab-pane {
+        display: none;
+      }
+      .tab-pane.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Member Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"
+              ><span class="nav-icon">📊</span><span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><span class="nav-icon">👤</span><span>My Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="my-payments.html"
+              ><span class="nav-icon">💰</span><span>My Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="my-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+          <li>
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="my-certificate.html"
+              ><span class="nav-icon">📜</span><span>Certificate</span></a
+            >
+          </li>
+          <li>
+            <a href="my-id-card.html"
+              ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html" class="active"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Settings</h2>
+          <p>Manage your account</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar" id="topAvatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Loading...</span
+              ><span class="user-uid">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div style="margin-bottom: 22px">
+          <h1
+            style="
+              color: white;
+              font-size: 24px;
+              font-weight: 700;
+              margin-bottom: 5px;
+            "
+          >
+            ⚙️ Account Settings
+          </h1>
+          <p style="color: white; font-size: 14px; opacity: 0.7">
+            Manage your account and preferences
+          </p>
+        </div>
+
+        <div class="settings-tabs">
+          <button class="settings-tab active" data-tab="account">
+            <span>👤</span> Account Info
+          </button>
+          <button class="settings-tab" data-tab="notifications">
+            <span>🔔</span> Notifications
+          </button>
+          <button class="settings-tab" data-tab="privacy">
+            <span>🔒</span> Privacy
+          </button>
+          <button class="settings-tab" data-tab="security">
+            <span>🛡️</span> Security
+          </button>
+        </div>
+
+        <!-- ACCOUNT TAB -->
+        <div class="tab-pane active" id="pane-account">
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="icon">👤</div>
+              <div>
+                <h3>Account Information</h3>
+                <p>Your registered details</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="info-row">
+                <span class="label">👤 Full Name</span
+                ><span class="value" id="accName">-</span>
+              </div>
+              <div class="info-row">
+                <span class="label">🆔 Member UID</span
+                ><span class="value" id="accUid">-</span>
+              </div>
+              <div class="info-row">
+                <span class="label">📧 Email</span
+                ><span class="value" id="accEmail">-</span>
+              </div>
+              <div class="info-row">
+                <span class="label">📍 District</span
+                ><span class="value" id="accDistrict">-</span>
+              </div>
+              <div class="info-row">
+                <span class="label">👑 Role</span
+                ><span class="value" id="accRole">-</span>
+              </div>
+              <div class="info-row">
+                <span class="label">📅 Member Since</span
+                ><span class="value" id="accJoined">-</span>
+              </div>
+              <div class="info-row">
+                <span class="label">✅ Status</span
+                ><span class="value" id="accStatus">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS TAB -->
+        <div class="tab-pane" id="pane-notifications">
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="icon">🔔</div>
+              <div>
+                <h3>Notification Preferences</h3>
+                <p>Control how you receive updates</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="toggle-row">
+                <div class="info">
+                  <h4>📢 Activity Announcements</h4>
+                  <p>Get notified when new activities are announced</p>
+                </div>
+                <label class="toggle"
+                  ><input type="checkbox" id="prefActivities" checked /><span
+                    class="toggle-slider"
+                  ></span
+                ></label>
+              </div>
+              <div class="toggle-row">
+                <div class="info">
+                  <h4>💰 Payment Reminders</h4>
+                  <p>Receive monthly payment reminders</p>
+                </div>
+                <label class="toggle"
+                  ><input type="checkbox" id="prefPayments" checked /><span
+                    class="toggle-slider"
+                  ></span
+                ></label>
+              </div>
+              <div class="toggle-row">
+                <div class="info">
+                  <h4>📅 Meeting Invitations</h4>
+                  <p>Get emails for meetings and events</p>
+                </div>
+                <label class="toggle"
+                  ><input type="checkbox" id="prefMeetings" checked /><span
+                    class="toggle-slider"
+                  ></span
+                ></label>
+              </div>
+              <div class="toggle-row">
+                <div class="info">
+                  <h4>📄 Document Updates</h4>
+                  <p>Alert when new documents are uploaded</p>
+                </div>
+                <label class="toggle"
+                  ><input type="checkbox" id="prefDocs" /><span
+                    class="toggle-slider"
+                  ></span
+                ></label>
+              </div>
+              <div class="toggle-row">
+                <div class="info">
+                  <h4>📬 Newsletter</h4>
+                  <p>Monthly SYDF newsletter</p>
+                </div>
+                <label class="toggle"
+                  ><input type="checkbox" id="prefNewsletter" checked /><span
+                    class="toggle-slider"
+                  ></span
+                ></label>
+              </div>
+            </div>
+          </div>
+          <button class="btn-save" id="saveNotifPrefs">
+            💾 Save Preferences
+          </button>
+        </div>
+
+        <!-- PRIVACY TAB -->
+        <div class="tab-pane" id="pane-privacy">
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="icon">🔒</div>
+              <div>
+                <h3>Privacy Settings</h3>
+                <p>Control what others can see</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="toggle-row">
+                <div class="info">
+                  <h4>👥 Show in Members Directory</h4>
+                  <p>Your name and photo visible to other members</p>
+                </div>
+                <label class="toggle"
+                  ><input type="checkbox" id="privDirectory" checked /><span
+                    class="toggle-slider"
+                  ></span
+                ></label>
+              </div>
+              <div class="toggle-row">
+                <div class="info">
+                  <h4>📧 Show Email Address</h4>
+                  <p>Other members can see your email</p>
+                </div>
+                <label class="toggle"
+                  ><input type="checkbox" id="privEmail" /><span
+                    class="toggle-slider"
+                  ></span
+                ></label>
+              </div>
+              <div class="toggle-row">
+                <div class="info">
+                  <h4>📱 Show Phone Number</h4>
+                  <p>Other members can see your phone</p>
+                </div>
+                <label class="toggle"
+                  ><input type="checkbox" id="privPhone" /><span
+                    class="toggle-slider"
+                  ></span
+                ></label>
+              </div>
+              <div class="toggle-row">
+                <div class="info">
+                  <h4>📍 Show District & Tehsil</h4>
+                  <p>Show your location in members directory</p>
+                </div>
+                <label class="toggle"
+                  ><input type="checkbox" id="privLocation" checked /><span
+                    class="toggle-slider"
+                  ></span
+                ></label>
+              </div>
+            </div>
+          </div>
+          <button class="btn-save" id="savePrivacyPrefs">
+            💾 Save Privacy
+          </button>
+        </div>
+
+        <!-- SECURITY TAB -->
+        <div class="tab-pane" id="pane-security">
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="icon">🔐</div>
+              <div>
+                <h3>Change Password</h3>
+                <p>Update your account password</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <form id="passwordForm">
+                <div class="field-group">
+                  <label>Current Password *</label>
+                  <input
+                    type="password"
+                    id="currPass"
+                    class="field-input"
+                    placeholder="Enter current password"
+                    required
+                  />
+                </div>
+                <div class="field-group">
+                  <label>New Password * (Min 8 characters)</label>
+                  <input
+                    type="password"
+                    id="newPass"
+                    class="field-input"
+                    placeholder="Enter new password"
+                    required
+                  />
+                </div>
+                <div class="field-group">
+                  <label>Confirm New Password *</label>
+                  <input
+                    type="password"
+                    id="confPass"
+                    class="field-input"
+                    placeholder="Re-enter new password"
+                    required
+                  />
+                </div>
+                <button type="submit" class="btn-save" id="changePassBtn">
+                  🔐 Update Password
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <div class="icon">⚠️</div>
+              <div>
+                <h3>Danger Zone</h3>
+                <p>Critical account actions</p>
+              </div>
+            </div>
+            <div class="settings-card-body">
+              <div class="danger-row">
+                <div>
+                  <h4>🚪 Logout from All Devices</h4>
+                  <p>Sign out from every device</p>
+                </div>
+                <button class="btn-danger" id="logoutAllBtn">Logout All</button>
+              </div>
+              <div class="danger-row">
+                <div>
+                  <h4>🗑️ Request Account Deletion</h4>
+                  <p>Permanently delete your account</p>
+                </div>
+                <button class="btn-danger" id="deleteAccBtn">Request</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      let currentEmail = null;
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        // Tabs
+        document.querySelectorAll(".settings-tab").forEach((tab) => {
+          tab.addEventListener("click", function () {
+            const target = this.getAttribute("data-tab");
+            document
+              .querySelectorAll(".settings-tab")
+              .forEach((t) => t.classList.remove("active"));
+            this.classList.add("active");
+            document.querySelectorAll(".tab-pane").forEach((p) => {
+              p.classList.toggle("active", p.id === "pane-" + target);
+            });
+          });
+        });
+
+        try {
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          if (!session) {
+            window.location.href = "login.html";
+            return;
+          }
+          currentEmail = session.user.email;
+
+          const { data: member } = await supabaseClient
+            .from("members")
+            .select("*")
+            .eq("email", currentEmail)
+            .single();
+          if (!member) return;
+
+          document.getElementById("topAvatar").textContent = (
+            member.name || "M"
+          )
+            .charAt(0)
+            .toUpperCase();
+          document
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = member.name || "Member"));
+          document
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = member.uid || "-"));
+
+          document.getElementById("accName").textContent = member.name || "-";
+          document.getElementById("accUid").textContent = member.uid || "-";
+          document.getElementById("accEmail").textContent = member.email || "-";
+          document.getElementById("accDistrict").textContent =
+            member.district || "-";
+          document.getElementById("accRole").textContent =
+            member.role || "Member";
+          document.getElementById("accJoined").textContent = member.created_at
+            ? new Date(member.created_at).toLocaleDateString("en-PK", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })
+            : "-";
+
+          const statusEl = document.getElementById("accStatus");
+          if (member.status === "Active") {
+            statusEl.innerHTML = "✅ Active";
+            statusEl.style.color = "#1abc9c";
+          } else if (member.status === "Suspended") {
+            statusEl.innerHTML = "⏸️ Suspended";
+            statusEl.style.color = "#fca5a5";
+          } else if (member.status === "Pending") {
+            statusEl.innerHTML = "⏳ Pending";
+            statusEl.style.color = "#fbbf24";
+          } else {
+            statusEl.textContent = member.status || "-";
+          }
+
+          // Load preferences
+          document.getElementById("prefActivities").checked =
+            member.notif_activities !== false;
+          document.getElementById("prefPayments").checked =
+            member.notif_payments !== false;
+          document.getElementById("prefMeetings").checked =
+            member.notif_meetings !== false;
+          document.getElementById("prefDocs").checked =
+            member.notif_docs === true;
+          document.getElementById("prefNewsletter").checked =
+            member.notif_newsletter !== false;
+
+          document.getElementById("privDirectory").checked =
+            member.privacy_directory !== false;
+          document.getElementById("privEmail").checked =
+            member.privacy_email === true;
+          document.getElementById("privPhone").checked =
+            member.privacy_phone === true;
+          document.getElementById("privLocation").checked =
+            member.privacy_location !== false;
+        } catch (err) {
+          console.error(err);
+        }
+
+        // Save notification prefs
+        document
+          .getElementById("saveNotifPrefs")
+          .addEventListener("click", async function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = "⏳ Saving...";
+            const { error } = await supabaseClient
+              .from("members")
+              .update({
+                notif_activities:
+                  document.getElementById("prefActivities").checked,
+                notif_payments: document.getElementById("prefPayments").checked,
+                notif_meetings: document.getElementById("prefMeetings").checked,
+                notif_docs: document.getElementById("prefDocs").checked,
+                notif_newsletter:
+                  document.getElementById("prefNewsletter").checked,
+              })
+              .eq("email", currentEmail);
+            btn.disabled = false;
+            btn.textContent = "💾 Save Preferences";
+            if (error) {
+              alert("❌ " + error.message);
+              return;
+            }
+            alert("✅ Notification preferences saved!");
+          });
+
+        // Save privacy prefs
+        document
+          .getElementById("savePrivacyPrefs")
+          .addEventListener("click", async function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = "⏳ Saving...";
+            const { error } = await supabaseClient
+              .from("members")
+              .update({
+                privacy_directory:
+                  document.getElementById("privDirectory").checked,
+                privacy_email: document.getElementById("privEmail").checked,
+                privacy_phone: document.getElementById("privPhone").checked,
+                privacy_location:
+                  document.getElementById("privLocation").checked,
+              })
+              .eq("email", currentEmail);
+            btn.disabled = false;
+            btn.textContent = "💾 Save Privacy";
+            if (error) {
+              alert("❌ " + error.message);
+              return;
+            }
+            alert("✅ Privacy settings saved!");
+          });
+
+        // Change password
+        document
+          .getElementById("passwordForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const curr = document.getElementById("currPass").value;
+            const np = document.getElementById("newPass").value;
+            const cp = document.getElementById("confPass").value;
+            if (np !== cp) {
+              alert("❌ Passwords do not match!");
+              return;
+            }
+            if (np.length < 8) {
+              alert("❌ Password must be at least 8 characters.");
+              return;
+            }
+
+            const btn = document.getElementById("changePassBtn");
+            btn.disabled = true;
+            btn.textContent = "⏳ Updating...";
+
+            const { error } = await supabaseClient.auth.updateUser({
+              password: np,
+            });
+            btn.disabled = false;
+            btn.textContent = "🔐 Update Password";
+
+            if (error) {
+              alert("❌ " + error.message);
+              return;
+            }
+            alert("✅ Password updated successfully!");
+            this.reset();
+          });
+
+        // Logout all
+        document
+          .getElementById("logoutAllBtn")
+          .addEventListener("click", async function () {
+            if (!confirm("Logout from all devices?")) return;
+            await supabaseClient.auth.signOut();
+            window.location.href = "login.html";
+          });
+
+        // Delete account
+        document
+          .getElementById("deleteAccBtn")
+          .addEventListener("click", function () {
+            if (
+              !confirm(
+                "⚠️ Request account deletion?\n\nThis will send a request to admin for approval.",
+              )
+            )
+              return;
+            alert("📩 Your deletion request has been sent to admin.");
+          });
+      });
+    </script>
+  </body>
+</html>

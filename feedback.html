@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback - SYDF</title>
+    <script src="js/head-includes.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .page-hero {
+        min-height: 40vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 140px 20px 60px;
+      }
+      .page-hero-content {
+        text-align: center;
+        padding: 40px 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+      }
+      .page-hero-content h1 {
+        font-size: 44px;
+        color: #1abc9c;
+        margin-bottom: 10px;
+      }
+      .page-hero-content p {
+        font-size: 14px;
+        opacity: 0.8;
+        color: white;
+      }
+      .feedback-section {
+        padding: 40px;
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .glass-block {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 40px;
+      }
+      .intro-block {
+        text-align: center;
+      }
+      .intro-block h2 {
+        font-size: 30px;
+        color: #1abc9c;
+        margin-bottom: 20px;
+      }
+      .intro-block p {
+        font-size: 16px;
+        line-height: 1.9;
+        opacity: 0.9;
+        color: white;
+      }
+      .type-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin-bottom: 25px;
+      }
+      .type-option {
+        padding: 18px 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .type-option:hover {
+        transform: translateY(-3px);
+        border-color: rgba(26, 188, 156, 0.3);
+      }
+      .type-option.active {
+        background: rgba(26, 188, 156, 0.12);
+        border-color: #1abc9c;
+      }
+      .type-option .type-icon {
+        font-size: 30px;
+        display: block;
+        margin-bottom: 8px;
+      }
+      .type-option h4 {
+        font-size: 13px;
+        color: white;
+        font-weight: 600;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        opacity: 0.9;
+        color: white;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 13px 15px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        outline: none;
+        transition: 0.3s;
+      }
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        border-color: #1abc9c;
+        background: rgba(26, 188, 156, 0.08);
+      }
+      .form-group select option {
+        background: #203a43;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        font-size: 13px;
+        color: white;
+        margin-bottom: 20px;
+      }
+      .checkbox-label input {
+        width: auto;
+        accent-color: #1abc9c;
+      }
+      .rating {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .rating-star {
+        font-size: 30px;
+        cursor: pointer;
+        transition: 0.2s;
+        filter: grayscale(100%);
+        opacity: 0.4;
+      }
+      .rating-star:hover,
+      .rating-star.active {
+        filter: grayscale(0%);
+        opacity: 1;
+        transform: scale(1.1);
+      }
+      .btn-submit {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(26, 188, 156, 0.4);
+      }
+      @media (max-width: 768px) {
+        .page-hero-content h1 {
+          font-size: 32px;
+        }
+        .page-hero-content {
+          padding: 30px 25px;
+        }
+        .feedback-section {
+          padding: 20px;
+        }
+        .glass-block {
+          padding: 25px 20px;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>SWAT Youth Development Forum</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="leadership.html">Leadership</a></li>
+          <li><a href="districts.html">Districts</a></li>
+          <li><a href="activities.html">Activities</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="membership.html">Membership</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="login.html" class="btn-login">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="page-hero">
+      <div class="page-hero-content">
+        <h1>💬 Feedback</h1>
+        <p>Home / Feedback</p>
+      </div>
+    </section>
+
+    <section class="feedback-section">
+      <div class="glass-block intro-block">
+        <h2>We Value Your Feedback</h2>
+        <p>
+          Your suggestions, complaints, and ideas help us improve. All feedback
+          is read by our team and taken seriously. You can also send feedback
+          anonymously if you prefer.
+        </p>
+      </div>
+
+      <div class="glass-block">
+        <form id="feedbackForm">
+          <div class="form-group">
+            <label>Feedback Type *</label>
+            <div class="type-selector">
+              <div class="type-option active" data-type="Suggestion">
+                <span class="type-icon">💡</span>
+                <h4>Suggestion</h4>
+              </div>
+              <div class="type-option" data-type="Complaint">
+                <span class="type-icon">⚠️</span>
+                <h4>Complaint</h4>
+              </div>
+              <div class="type-option" data-type="Appreciation">
+                <span class="type-icon">❤️</span>
+                <h4>Appreciation</h4>
+              </div>
+              <div class="type-option" data-type="Bug Report">
+                <span class="type-icon">🐛</span>
+                <h4>Bug Report</h4>
+              </div>
+            </div>
+            <input type="hidden" id="feedbackType" value="Suggestion" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" id="fbName" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="fbEmail" placeholder="Optional" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Subject *</label>
+            <input
+              type="text"
+              id="fbSubject"
+              placeholder="Brief subject of your feedback"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Rate Your Experience</label>
+            <div class="rating" id="ratingStars">
+              <span class="rating-star" data-value="1">⭐</span>
+              <span class="rating-star" data-value="2">⭐</span>
+              <span class="rating-star" data-value="3">⭐</span>
+              <span class="rating-star" data-value="4">⭐</span>
+              <span class="rating-star" data-value="5">⭐</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Your Message *</label>
+            <textarea
+              rows="5"
+              id="fbMessage"
+              placeholder="Write your detailed feedback here..."
+              required
+            ></textarea>
+          </div>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="fbAnonymous" />
+            <span>Send anonymously (your name and email will be hidden)</span>
+          </label>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="fbContact" />
+            <span>Contact me back for follow-up</span>
+          </label>
+
+          <button type="submit" class="btn-submit">💬 Submit Feedback</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="glass-footer">
+      <div class="footer-content">
+        <div class="footer-col">
+          <h3>SYDF</h3>
+          <p>SWAT Youth Development Forum</p>
+          <p>Empowering Youth, Building Future</p>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="leadership.html">Leadership</a></li>
+            <li><a href="activities.html">Activities</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Get Involved</h4>
+          <ul>
+            <li><a href="membership.html">Membership</a></li>
+            <li><a href="donate.html">Donate</a></li>
+            <li><a href="sponsor.html">Sponsor</a></li>
+            <li><a href="volunteer.html">Volunteer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>Swat, Malakand Division</p>
+          <p>Khyber Pakhtunkhwa, Pakistan</p>
+          <p>info@SYDF.org</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      document.querySelectorAll(".type-option").forEach((opt) => {
+        opt.addEventListener("click", function () {
+          document
+            .querySelectorAll(".type-option")
+            .forEach((o) => o.classList.remove("active"));
+          this.classList.add("active");
+          document.getElementById("feedbackType").value =
+            this.getAttribute("data-type");
+        });
+      });
+
+      document.querySelectorAll(".rating-star").forEach((star) => {
+        star.addEventListener("click", function () {
+          const value = parseInt(this.getAttribute("data-value"));
+          document.querySelectorAll(".rating-star").forEach((s, i) => {
+            s.classList.toggle("active", i < value);
+          });
+        });
+      });
+
+      document
+        .getElementById("feedbackForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          alert(
+            "✅ Thank you for your feedback!\n\nWe appreciate you taking the time to help us improve.",
+          );
+          this.reset();
+          document
+            .querySelectorAll(".rating-star")
+            .forEach((s) => s.classList.remove("active"));
+        });
+    </script>
+  </body>
+</html>

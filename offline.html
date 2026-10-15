@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline - SYDF</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 20px;
+        color: white;
+      }
+      .offline-card {
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+        padding: 55px 40px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+      .offline-icon {
+        font-size: 80px;
+        margin-bottom: 22px;
+        display: block;
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(0.95);
+        }
+      }
+      h1 {
+        font-size: 28px;
+        color: #1abc9c;
+        margin-bottom: 12px;
+        font-weight: 700;
+      }
+      p {
+        font-size: 14px;
+        line-height: 1.7;
+        opacity: 0.85;
+        margin-bottom: 28px;
+      }
+      .retry-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+      }
+      .retry-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(26, 188, 156, 0.4);
+      }
+      .footer-note {
+        margin-top: 30px;
+        font-size: 12px;
+        opacity: 0.5;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-card">
+      <span class="offline-icon">📡</span>
+      <h1>You're Offline</h1>
+      <p>
+        It looks like you've lost your internet connection. Please check your
+        network and try again.
+      </p>
+      <a href="javascript:window.location.reload()" class="retry-btn"
+        >🔄 Try Again</a
+      >
+      <div class="footer-note">SWAT YOUTH DEVELOPMENT FORUM</div>
+    </div>
+  </body>
+</html>

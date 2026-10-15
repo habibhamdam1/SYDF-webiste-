@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Success Story - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .article-hero {
+        padding: 140px 20px 30px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .breadcrumb {
+        font-size: 13px;
+        opacity: 0.7;
+        color: white;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .breadcrumb a {
+        color: #1abc9c;
+        text-decoration: none;
+      }
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
+
+      .article-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        overflow: hidden;
+      }
+
+      .article-image {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 120px;
+        position: relative;
+        overflow: hidden;
+      }
+      .article-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .article-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          transparent 40%,
+          rgba(0, 0, 0, 0.5) 100%
+        );
+        pointer-events: none;
+      }
+
+      .article-body {
+        padding: 45px 55px 55px;
+      }
+
+      .article-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        background: rgba(139, 92, 246, 0.15);
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        border-radius: 20px;
+        color: #c4b5fd;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+
+      .article-title {
+        font-family: "Playfair Display", serif;
+        font-size: 40px;
+        font-weight: 700;
+        color: white;
+        line-height: 1.2;
+        margin-bottom: 22px;
+        letter-spacing: 0.3px;
+      }
+
+      .member-highlight {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px 24px;
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.12),
+          rgba(15, 32, 39, 0.2)
+        );
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 16px;
+        margin-bottom: 28px;
+      }
+      .member-highlight .avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+        border: 3px solid rgba(255, 255, 255, 0.15);
+      }
+      .member-highlight .info {
+        flex: 1;
+      }
+      .member-highlight .info h4 {
+        font-size: 16px;
+        color: white;
+        font-weight: 700;
+        margin-bottom: 3px;
+      }
+      .member-highlight .info p {
+        font-size: 12px;
+        color: #c4b5fd;
+        font-family: "JetBrains Mono", monospace;
+        letter-spacing: 1px;
+      }
+
+      .article-meta {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+        padding-bottom: 22px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 30px;
+        font-size: 13px;
+        color: white;
+        opacity: 0.75;
+      }
+
+      .article-content {
+        font-size: 16px;
+        line-height: 1.9;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .article-content p {
+        margin-bottom: 22px;
+      }
+      .article-content h2 {
+        font-size: 26px;
+        color: #1abc9c;
+        margin: 36px 0 18px 0;
+        font-weight: 700;
+        font-family: "Playfair Display", serif;
+      }
+      .article-content h3 {
+        font-size: 20px;
+        color: white;
+        margin: 28px 0 14px 0;
+        font-weight: 600;
+      }
+      .article-content ul,
+      .article-content ol {
+        margin: 20px 0 22px 28px;
+      }
+      .article-content li {
+        margin-bottom: 10px;
+      }
+      .article-content blockquote {
+        border-left: 4px solid #8b5cf6;
+        padding: 18px 25px;
+        background: rgba(139, 92, 246, 0.08);
+        border-radius: 0 12px 12px 0;
+        margin: 28px 0;
+        font-style: italic;
+        font-size: 17px;
+        color: #e5e7eb;
+      }
+      .article-content strong {
+        color: white;
+        font-weight: 700;
+      }
+      .article-content a {
+        color: #1abc9c;
+        text-decoration: underline;
+      }
+
+      .article-footer {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .share-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .share-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: 0.3s;
+        font-family: "Poppins", sans-serif;
+        cursor: pointer;
+      }
+      .share-btn:hover {
+        background: rgba(139, 92, 246, 0.15);
+        border-color: #8b5cf6;
+        transform: translateY(-2px);
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #1abc9c;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      .back-link:hover {
+        transform: translateX(-4px);
+      }
+
+      .related-section {
+        padding: 40px 20px 60px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      .related-header {
+        font-size: 24px;
+        color: #1abc9c;
+        margin-bottom: 25px;
+        font-weight: 700;
+        font-family: "Playfair Display", serif;
+      }
+      .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .related-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+        color: white;
+        display: flex;
+        flex-direction: column;
+      }
+      .related-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(139, 92, 246, 0.3);
+        box-shadow: 0 15px 40px rgba(139, 92, 246, 0.15);
+      }
+      .related-image {
+        height: 140px;
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        overflow: hidden;
+      }
+      .related-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .related-body {
+        padding: 18px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .related-title {
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 10px;
+      }
+      .related-date {
+        font-size: 11px;
+        opacity: 0.6;
+        margin-top: auto;
+      }
+
+      .loading-wrap {
+        text-align: center;
+        padding: 100px 30px;
+        max-width: 700px;
+        margin: 0 auto;
+        color: white;
+      }
+      .loading-wrap .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.15);
+        border-top-color: #8b5cf6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .notfound-card {
+        max-width: 550px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 60px 40px;
+      }
+      .notfound-card .ico {
+        font-size: 70px;
+        margin-bottom: 20px;
+        display: block;
+      }
+      .notfound-card h2 {
+        font-size: 24px;
+        color: white;
+        margin-bottom: 10px;
+      }
+      .notfound-card p {
+        font-size: 14px;
+        opacity: 0.75;
+        margin-bottom: 25px;
+      }
+
+      @media (max-width: 768px) {
+        .article-hero {
+          padding: 120px 15px 20px;
+        }
+        .article-image {
+          height: 240px;
+          font-size: 80px;
+        }
+        .article-body {
+          padding: 30px 22px 35px;
+        }
+        .article-title {
+          font-size: 26px;
+        }
+        .article-meta {
+          font-size: 12px;
+          gap: 15px;
+        }
+        .article-content {
+          font-size: 15px;
+        }
+        .related-section {
+          padding: 30px 15px 50px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="article-hero">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="stories.html">Success Stories</a>
+        <span>/</span>
+        <span id="crumbTitle">Story</span>
+      </div>
+      <div id="articleContent">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <h2>Loading story...</h2>
+          <p>Please wait</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="relatedSection" class="related-section" style="display: none">
+      <h2 class="related-header">📖 More Success Stories</h2>
+      <div id="relatedGrid" class="related-grid"></div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      function formatDate(d, long) {
+        if (!d) return "-";
+        try {
+          return new Date(d).toLocaleDateString(
+            "en-PK",
+            long
+              ? { day: "numeric", month: "long", year: "numeric" }
+              : { day: "numeric", month: "short", year: "numeric" },
+          );
+        } catch {
+          return "-";
+        }
+      }
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      function getParam(name) {
+        return new URLSearchParams(window.location.search).get(name);
+      }
+
+      function renderNotFound(msg) {
+        document.getElementById("articleContent").innerHTML = `
+          <div class="glass-block notfound-card" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:20px;">
+            <span class="ico">📖</span>
+            <h2>Story Not Found</h2>
+            <p>${escapeHtml(msg || "This story may have been removed or the link is invalid.")}</p>
+            <a href="stories.html" class="back-link">← Back to Stories</a>
+          </div>`;
+      }
+
+      function renderStory(s) {
+        const imgHtml = s.image_url
+          ? `<img src="${escapeHtml(s.image_url)}" alt="${escapeHtml(s.title)}" onerror="this.remove()">`
+          : "📖";
+
+        let contentHTML = s.content || "";
+        if (!/<[a-z][\s\S]*>/i.test(contentHTML)) {
+          contentHTML = contentHTML
+            .split(/\n\n+/)
+            .map((p) => p.trim())
+            .filter(Boolean)
+            .map((p) => "<p>" + escapeHtml(p).replace(/\n/g, "<br>") + "</p>")
+            .join("");
+        }
+
+        const memberHTML = s.member_name
+          ? `
+          <div class="member-highlight">
+            <div class="avatar">${escapeHtml((s.member_name || "M").charAt(0).toUpperCase())}</div>
+            <div class="info">
+              <h4>${escapeHtml(s.member_name)}</h4>
+              <p>${escapeHtml(s.member_uid || "SYDF Member")}</p>
+            </div>
+          </div>`
+          : "";
+
+        const shareUrl = window.location.href;
+
+        document.getElementById("crumbTitle").textContent = s.title || "Story";
+
+        document.getElementById("articleContent").innerHTML = `
+          <article class="article-card">
+            <div class="article-image">${imgHtml}</div>
+            <div class="article-body">
+              <span class="article-badge">⭐ Success Story${s.category ? " • " + escapeHtml(s.category) : ""}</span>
+              <h1 class="article-title">${escapeHtml(s.title)}</h1>
+              ${memberHTML}
+              <div class="article-meta">
+                <span>📅 ${formatDate(s.created_at, true)}</span>
+                ${s.views ? `<span>👁️ ${s.views} views</span>` : ""}
+              </div>
+              <div class="article-content">${contentHTML}</div>
+
+              <div class="article-footer">
+                <a href="stories.html" class="back-link">← Back to Stories</a>
+                <div class="share-buttons">
+                  <a class="share-btn" target="_blank"
+                     href="https://wa.me/?text=${encodeURIComponent((s.title || "") + " " + shareUrl)}">💬 WhatsApp</a>
+                  <a class="share-btn" target="_blank"
+                     href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}">📘 Facebook</a>
+                  <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+                </div>
+              </div>
+            </div>
+          </article>`;
+
+        try {
+          supabaseClient
+            .from("stories")
+            .update({ views: (s.views || 0) + 1 })
+            .eq("id", s.id)
+            .then(() => {});
+        } catch (e) {}
+      }
+
+      function copyLink() {
+        navigator.clipboard
+          .writeText(window.location.href)
+          .then(() => {
+            alert("✅ Link copied!");
+          })
+          .catch(() => alert("Please copy the URL manually."));
+      }
+
+      function renderRelated(list) {
+        if (!list || list.length === 0) return;
+        const section = document.getElementById("relatedSection");
+        const grid = document.getElementById("relatedGrid");
+        section.style.display = "block";
+        grid.innerHTML = list
+          .map((s) => {
+            const imgHtml = s.image_url
+              ? `<img src="${escapeHtml(s.image_url)}" alt="" onerror="this.remove()">`
+              : "📖";
+            return `
+            <a href="story-detail.html?id=${s.id}" class="related-card">
+              <div class="related-image">${imgHtml}</div>
+              <div class="related-body">
+                <div class="related-title">${escapeHtml(s.title)}</div>
+                <div class="related-date">📅 ${formatDate(s.created_at)}</div>
+              </div>
+            </a>`;
+          })
+          .join("");
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          renderNotFound("System not ready. Please refresh.");
+          return;
+        }
+
+        const id = getParam("id");
+        if (!id) {
+          renderNotFound("No story ID provided.");
+          return;
+        }
+
+        try {
+          const { data: story, error } = await supabaseClient
+            .from("stories")
+            .select("*")
+            .eq("id", id)
+            .single();
+
+          if (error || !story) {
+            renderNotFound("This story does not exist.");
+            return;
+          }
+
+          renderStory(story);
+
+          const { data: related } = await supabaseClient
+            .from("stories")
+            .select("id, title, image_url, created_at")
+            .neq("id", id)
+            .order("created_at", { ascending: false })
+            .limit(3);
+
+          renderRelated(related || []);
+        } catch (err) {
+          console.error(err);
+          renderNotFound("Something went wrong while loading the story.");
+        }
+      });
+
+      window.copyLink = copyLink;
+    </script>
+  </body>
+</html>
