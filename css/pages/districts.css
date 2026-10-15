@@ -1,0 +1,232 @@
+/* ==========================================
+   DISTRICTS PAGE STYLES
+   ========================================== */
+
+/* Intro */
+.districts-intro {
+    padding: 60px 40px 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.intro-block {
+    padding: 40px 40px;
+    text-align: center;
+}
+
+.intro-block h2 {
+    font-size: 30px;
+    color: #1abc9c;
+    margin-bottom: 20px;
+}
+
+.intro-block p {
+    font-size: 16px;
+    line-height: 1.9;
+    opacity: 0.9;
+}
+
+.intro-block strong {
+    color: #1abc9c;
+    font-weight: 600;
+}
+
+/* Districts Grid */
+.districts-section {
+    padding: 40px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.districts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+/* District Card */
+.district-card {
+    padding: 30px 25px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.district-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(26, 188, 156, 0.3);
+}
+
+.district-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #1abc9c, #16a085);
+}
+
+.district-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.district-icon {
+    font-size: 38px;
+    line-height: 1;
+}
+
+.district-header h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1abc9c;
+}
+
+.district-info {
+    font-size: 13px;
+    opacity: 0.75;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Tehsil List */
+.tehsil-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.tehsil-list span {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    transition: 0.3s;
+}
+
+.tehsil-list span:hover {
+    background: rgba(26, 188, 156, 0.3);
+    border-color: #1abc9c;
+}
+
+/* District Footer */
+.district-footer {
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.district-footer p {
+    font-size: 13px;
+    opacity: 0.85;
+}
+
+.district-footer em {
+    color: #1abc9c;
+    font-style: normal;
+    font-weight: 600;
+}
+
+/* Expansion Roadmap */
+.expansion-section {
+    padding: 60px 40px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.roadmap-card {
+    padding: 35px 25px;
+    text-align: center;
+    transition: transform 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.roadmap-card:hover {
+    transform: translateY(-8px);
+}
+
+.roadmap-card.active {
+    background: rgba(26, 188, 156, 0.15);
+    border: 1px solid rgba(26, 188, 156, 0.4);
+}
+
+.roadmap-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(26, 188, 156, 0.3);
+    color: #1abc9c;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid rgba(26, 188, 156, 0.4);
+}
+
+.roadmap-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.roadmap-card h3 {
+    font-size: 20px;
+    color: #1abc9c;
+    margin-bottom: 10px;
+}
+
+.roadmap-card > p {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    opacity: 0.9;
+}
+
+.roadmap-desc {
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    line-height: 1.7;
+    opacity: 0.75 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .districts-intro {
+        padding: 40px 20px 20px;
+    }
+    .intro-block {
+        padding: 30px 20px;
+    }
+    .intro-block h2 {
+        font-size: 24px;
+    }
+    .districts-section, .expansion-section {
+        padding: 30px 20px;
+    }
+    .districts-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .district-card {
+        padding: 25px 20px;
+    }
+    .district-header h3 {
+        font-size: 20px;
+    }
+    .roadmap-grid {
+        grid-template-columns: 1fr;
+    }
+}

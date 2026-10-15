@@ -13,4 +13,4 @@ Disallow: /notifications.html
 Disallow: /login.html
 Disallow: /register.html
 
-Sitemap: https://pydf.netlify.app/sitemap.xml
+Sitemap: https://habibhamdam1.github.io/SYDF-website/sitemap.xml

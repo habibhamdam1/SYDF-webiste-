@@ -41,7 +41,6 @@ body {
   z-index: 1000;
   gap: 20px;
 }
-
 .logo {
   display: flex;
   align-items: center;
@@ -70,6 +69,11 @@ body {
   font-weight: 700;
   color: #1abc9c;
   line-height: 1.1;
+}
+.logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1abc9c;
 }
 
 .logo p {
@@ -256,7 +260,9 @@ body {
 .stat-card {
   padding: 35px 20px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .stat-card:hover {
@@ -503,7 +509,6 @@ body {
     padding: 120px 15px 40px;
   }
 }
-
 /* ==========================================
    SHARED AUTH STYLES (Login + Register)
    ========================================== */
@@ -526,6 +531,7 @@ body {
   align-items: center;
 }
 
+/* Welcome Panel (Left Side) */
 .auth-welcome {
   padding: 50px 40px;
   background: linear-gradient(
@@ -615,6 +621,7 @@ body {
   margin-bottom: 15px !important;
 }
 
+/* Auth Form Block (Right Side) */
 .auth-form-block {
   padding: 50px 45px;
 }
@@ -632,6 +639,7 @@ body {
   margin-bottom: 35px;
 }
 
+/* Auth Footer */
 .auth-footer {
   text-align: center;
   padding: 20px;
@@ -639,6 +647,7 @@ body {
   opacity: 0.6;
 }
 
+/* Auth Responsive */
 @media (max-width: 900px) {
   .auth-section {
     grid-template-columns: 1fr;
@@ -672,7 +681,7 @@ body {
     font-size: 24px;
   }
 }
-
+/* Nav Login Button - Logged In State */
 .btn-login.logged-in {
   background: rgba(251, 191, 36, 0.85);
   color: #1a1a1a;
@@ -682,4 +691,4 @@ body {
 .btn-login.logged-in:hover {
   background: #fbbf24;
   color: #1a1a1a;
-  }
+}

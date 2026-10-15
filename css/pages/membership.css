@@ -1,0 +1,320 @@
+/* ==========================================
+   MEMBERSHIP PAGE STYLES
+   ========================================== */
+
+/* Intro */
+.membership-intro {
+    padding: 60px 40px 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.intro-block {
+    padding: 40px;
+    text-align: center;
+}
+
+.intro-block h2 {
+    font-size: 30px;
+    color: #1abc9c;
+    margin-bottom: 20px;
+}
+
+.intro-block p {
+    font-size: 16px;
+    line-height: 1.9;
+    opacity: 0.9;
+}
+
+/* Benefits */
+.benefits-section {
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+/* Fee Section */
+.fee-section {
+    padding: 40px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.fee-block {
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.fee-block h2 {
+    font-size: 24px;
+    color: #1abc9c;
+    margin-bottom: 20px;
+}
+
+.fee-amount {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.currency {
+    font-size: 24px;
+    color: #1abc9c;
+    font-weight: 600;
+}
+
+.amount {
+    font-size: 60px;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+}
+
+.period {
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.fee-desc {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* Waitlist & Apply Sections */
+.membership-closed, .membership-open {
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.waitlist-block, .apply-block {
+    padding: 45px 40px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status-badge.status-open {
+    background: rgba(26, 188, 156, 0.15);
+    color: #1abc9c;
+    border-color: rgba(26, 188, 156, 0.3);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.waitlist-block h2, .apply-block h2 {
+    font-size: 28px;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.waitlist-block > p, .apply-block > p {
+    font-size: 15px;
+    line-height: 1.8;
+    opacity: 0.85;
+    margin-bottom: 30px;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 13px 16px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    transition: 0.3s;
+    outline: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #1abc9c;
+    background: rgba(26, 188, 156, 0.1);
+    box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.15);
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.form-group select option {
+    background: #203a43;
+    color: white;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.checkbox-group {
+    margin: 25px 0;
+}
+
+.checkbox-label {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 0 !important;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    cursor: pointer;
+    accent-color: #1abc9c;
+}
+
+.btn-full {
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-note {
+    font-size: 12px;
+    text-align: center;
+    margin-top: 20px;
+    opacity: 0.7;
+    line-height: 1.6;
+}
+
+/* Contact Info */
+.contact-info-section {
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contact-info-block {
+    padding: 45px 40px;
+    text-align: center;
+}
+
+.contact-info-block h2 {
+    font-size: 26px;
+    color: #1abc9c;
+    margin-bottom: 12px;
+}
+
+.contact-info-block > p {
+    font-size: 15px;
+    opacity: 0.85;
+    margin-bottom: 30px;
+}
+
+.contact-methods {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-icon {
+    font-size: 22px;
+}
+
+.contact-item p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .membership-intro, .benefits-section, .fee-section,
+    .membership-closed, .membership-open, .contact-info-section {
+        padding: 30px 20px;
+    }
+    .intro-block, .waitlist-block, .apply-block,
+    .contact-info-block {
+        padding: 30px 20px;
+    }
+    .intro-block h2, .waitlist-block h2, .apply-block h2 {
+        font-size: 22px;
+    }
+    .amount {
+        font-size: 48px;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    .contact-methods {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
