@@ -1,0 +1,685 @@
+/* ==========================================
+   PAKISTAN YOUTH DEVELOPMENT FORUM
+   MAIN STYLESHEET
+   ========================================== */
+
+/* Reset & Basic */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: white;
+  line-height: 1.6;
+}
+
+/* ================= HEADER ================= */
+.glass-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  gap: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.logo img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 3px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  box-shadow: 0 3px 12px rgba(26, 188, 156, 0.3);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1abc9c;
+  line-height: 1.1;
+}
+
+.logo p {
+  font-size: 10px;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.glass-header nav ul {
+  display: flex;
+  list-style: none;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.glass-header nav ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 13px;
+  font-weight: 400;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+.glass-header nav ul li a:hover {
+  color: #1abc9c;
+}
+
+.glass-header nav ul li a.active {
+  color: #1abc9c;
+  font-weight: 600;
+}
+
+.btn-login {
+  background: rgba(26, 188, 156, 0.8);
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 600 !important;
+}
+
+.btn-login:hover {
+  background: #1abc9c;
+  color: white !important;
+  transform: translateY(-2px);
+}
+
+/* ================= HERO SECTION ================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 20px 40px;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+}
+
+.hero-content {
+  text-align: center;
+  padding: 60px 40px;
+  max-width: 800px;
+}
+
+.hero-content h2 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.hero-content p {
+  font-size: 18px;
+  margin-bottom: 35px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+  text-decoration: none;
+  padding: 12px 30px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: 0.3s;
+  display: inline-block;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+}
+
+.btn-primary {
+  background: #1abc9c;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #16a085;
+  transform: translateY(-3px);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px);
+}
+
+/* ================= SECTION TITLE ================= */
+.section-title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 50px;
+  color: #1abc9c;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.8;
+  margin-top: -30px;
+  margin-bottom: 50px;
+}
+
+/* ================= PAGE HERO (Shared) ================= */
+.page-hero {
+  min-height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 140px 20px 60px;
+}
+
+.page-hero-content {
+  text-align: center;
+  padding: 40px 60px;
+}
+
+.page-hero-content h1 {
+  font-size: 44px;
+  color: #1abc9c;
+  margin-bottom: 10px;
+}
+
+.page-hero-content p {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* ================= STATS SECTION ================= */
+.stats-section {
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  padding: 35px 20px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(26, 188, 156, 0.3);
+}
+
+.stat-card h3 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #1abc9c;
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+/* ================= ABOUT PREVIEW ================= */
+.about-preview {
+  padding: 80px 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.about-content {
+  max-width: 900px;
+  padding: 50px 40px;
+  text-align: center;
+}
+
+.about-content h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #1abc9c;
+}
+
+.about-content p {
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+/* ================= CTA SECTION ================= */
+.cta-section {
+  padding: 80px 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.cta-content {
+  max-width: 800px;
+  padding: 50px 40px;
+  text-align: center;
+}
+
+.cta-content h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #1abc9c;
+}
+
+.cta-content p {
+  font-size: 17px;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+/* ================= FOOTER ================= */
+.glass-footer {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 60px 40px 20px;
+  margin-top: 40px;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-col h3 {
+  font-size: 24px;
+  color: #1abc9c;
+  margin-bottom: 15px;
+}
+
+.footer-col h4 {
+  font-size: 17px;
+  margin-bottom: 18px;
+  color: #1abc9c;
+}
+
+.footer-col p {
+  font-size: 14px;
+  line-height: 1.8;
+  opacity: 0.85;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+  opacity: 0.85;
+  transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+  color: #1abc9c;
+  opacity: 1;
+  padding-left: 5px;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* ================= BENEFIT CARDS (Shared) ================= */
+.benefit-card {
+  padding: 35px 25px;
+  text-align: center;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.benefit-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #1abc9c, #16a085);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.benefit-card:hover::before {
+  transform: scaleX(1);
+}
+
+.benefit-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 50px rgba(26, 188, 156, 0.35);
+}
+
+.benefit-icon {
+  font-size: 48px;
+  margin-bottom: 18px;
+  display: inline-block;
+  filter: drop-shadow(0 4px 8px rgba(26, 188, 156, 0.4));
+}
+
+.benefit-card h3 {
+  font-size: 19px;
+  color: #1abc9c;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.benefit-card p {
+  font-size: 14px;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .glass-header {
+    flex-direction: column;
+    padding: 10px;
+  }
+  .glass-header nav ul {
+    margin-top: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  .hero-content h2 {
+    font-size: 32px;
+  }
+  .hero-content {
+    padding: 40px 20px;
+  }
+  .section-title {
+    font-size: 28px;
+  }
+  .stat-card h3 {
+    font-size: 34px;
+  }
+  .about-content,
+  .cta-content {
+    padding: 35px 20px;
+  }
+  .about-content h2,
+  .cta-content h2 {
+    font-size: 24px;
+  }
+  .stats-section,
+  .about-preview,
+  .cta-section {
+    padding: 50px 20px;
+  }
+  .glass-footer {
+    padding: 40px 20px 15px;
+  }
+  .page-hero-content h1 {
+    font-size: 32px;
+  }
+  .page-hero-content {
+    padding: 30px 25px;
+  }
+  .page-hero {
+    padding: 120px 15px 40px;
+  }
+}
+
+/* ==========================================
+   SHARED AUTH STYLES (Login + Register)
+   ========================================== */
+
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.auth-section {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 140px 60px 60px;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+  align-items: center;
+}
+
+.auth-welcome {
+  padding: 50px 40px;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 188, 156, 0.15),
+    rgba(15, 32, 39, 0.3)
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-welcome::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(26, 188, 156, 0.3), transparent 70%);
+  border-radius: 50%;
+}
+
+.welcome-content {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-logo {
+  display: inline-block;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1abc9c;
+  padding: 10px 25px;
+  background: rgba(26, 188, 156, 0.15);
+  border: 1px solid rgba(26, 188, 156, 0.3);
+  border-radius: 15px;
+  margin-bottom: 25px;
+  letter-spacing: 2px;
+}
+
+.welcome-content h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.welcome-content > p {
+  font-size: 15px;
+  line-height: 1.8;
+  opacity: 0.9;
+  margin-bottom: 35px;
+}
+
+.welcome-features {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 35px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.feature-item:hover {
+  background: rgba(26, 188, 156, 0.12);
+  border-color: rgba(26, 188, 156, 0.3);
+  transform: translateX(5px);
+}
+
+.feature-icon {
+  font-size: 20px;
+}
+
+.welcome-note {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 15px !important;
+}
+
+.auth-form-block {
+  padding: 50px 45px;
+}
+
+.auth-form-block h2 {
+  font-size: 28px;
+  color: #1abc9c;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 35px;
+}
+
+.auth-footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+@media (max-width: 900px) {
+  .auth-section {
+    grid-template-columns: 1fr;
+    padding: 130px 30px 40px;
+    gap: 25px;
+  }
+  .auth-welcome {
+    padding: 35px 30px;
+  }
+  .welcome-content h1 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 500px) {
+  .auth-section {
+    padding: 120px 20px 30px;
+  }
+  .auth-welcome,
+  .auth-form-block {
+    padding: 30px 22px;
+  }
+  .welcome-logo {
+    font-size: 26px;
+    padding: 8px 20px;
+  }
+  .welcome-content h1 {
+    font-size: 24px;
+  }
+  .auth-form-block h2 {
+    font-size: 24px;
+  }
+}
+
+.btn-login.logged-in {
+  background: rgba(251, 191, 36, 0.85);
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.btn-login.logged-in:hover {
+  background: #fbbf24;
+  color: #1a1a1a;
+  }
