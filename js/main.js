@@ -610,3 +610,16 @@ window.logoutUser = logoutUser;
     };
   }
 })();
+// ==========================================
+// AUTO-LOAD TOAST SYSTEM
+// ==========================================
+(function () {
+  if (typeof window.syfToast === "undefined") {
+    const script = document.createElement("script");
+    script.src = "js/toast.js";
+    document.head.appendChild(script);
+    script.onload = function () {
+      console.log("✅ Toast System Auto-Loaded");
+    };
+  }
+})();
