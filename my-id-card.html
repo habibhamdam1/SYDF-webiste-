@@ -828,6 +828,7 @@
     </style>
   </head>
   <body class="dashboard-body theme-male">
+    <!-- SIDEBAR (MEMBER PANEL) -->
     <aside class="dashboard-sidebar" id="dashboardSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">
@@ -836,6 +837,7 @@
         </div>
         <button class="sidebar-close" id="sidebarClose">✕</button>
       </div>
+
       <nav class="sidebar-nav">
         <ul>
           <li>
@@ -874,8 +876,13 @@
             >
           </li>
           <li>
-            <a href="my-id-card.html" class="active"
+            <a href="my-id-card.html"
               ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="member-reports.html"
+              ><span class="nav-icon">🚨</span><span>Report Issue</span></a
             >
           </li>
           <li>
@@ -888,13 +895,26 @@
               ><span class="nav-icon">⚙️</span><span>Settings</span></a
             >
           </li>
+
+          <!-- DIVIDER -->
+          <div class="sidebar-divider"></div>
+
+          <!-- BACK TO WEBSITE & LOGOUT (Scrollable) -->
+          <li>
+            <a href="index.html" class="back-to-site-btn">
+              <span class="nav-icon">🌐</span>
+              <span>Back to Website</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="logout-btn">
+              <span class="nav-icon">🚪</span>
+              <span>Logout</span>
+            </a>
+          </li>
         </ul>
       </nav>
-      <div class="sidebar-footer">
-        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
-      </div>
     </aside>
-
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <main class="dashboard-main">

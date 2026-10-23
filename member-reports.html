@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report Issue - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .report-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      @media (max-width: 900px) {
+        .report-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .report-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-lg);
+        padding: 24px;
+        backdrop-filter: blur(20px);
+      }
+      .report-card h3 {
+        color: var(--text-primary);
+        font-size: 18px;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--card-border);
+      }
+
+      .report-item {
+        padding: 16px;
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-md);
+        margin-bottom: 12px;
+      }
+      .report-item h4 {
+        color: var(--text-primary);
+        font-size: 14px;
+        margin-bottom: 6px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .report-item p {
+        color: var(--text-secondary);
+        font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 8px;
+      }
+      .report-item .meta {
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex;
+        gap: 12px;
+      }
+
+      .status-badge {
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .status-pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+      .status-resolved {
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+
+      .empty-reports {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-muted);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <!-- SIDEBAR (Perfectly Synced) -->
+    <!-- SIDEBAR (MEMBER PANEL) -->
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Member Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"
+              ><span class="nav-icon">📊</span><span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><span class="nav-icon">👤</span><span>My Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="my-payments.html"
+              ><span class="nav-icon">💰</span><span>My Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="my-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+          <li>
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="member-proposals.html"
+              ><span class="nav-icon">💡</span><span>My Proposals</span></a
+            >
+          </li>
+          <li>
+            <a href="my-certificate.html"
+              ><span class="nav-icon">📜</span><span>Certificate</span></a
+            >
+          </li>
+          <li>
+            <a href="my-id-card.html"
+              ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="member-reports.html"
+              ><span class="nav-icon">🚨</span><span>Report Issue</span></a
+            >
+          </li>
+          <li>
+            <a href="notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+
+          <!-- DIVIDER -->
+          <div class="sidebar-divider"></div>
+
+          <!-- BACK TO WEBSITE & LOGOUT (Scrollable) -->
+          <li>
+            <a href="index.html" class="back-to-site-btn">
+              <span class="nav-icon">🌐</span>
+              <span>Back to Website</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="logout-btn">
+              <span class="nav-icon">🚪</span>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Report an Issue</h2>
+          <p>Help us keep the community safe</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar" id="topAvatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Loading...</span
+              ><span class="user-uid">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="page-intro" style="margin-bottom: 24px">
+          <div>
+            <h1
+              style="
+                color: var(--text-primary);
+                font-size: 24px;
+                margin-bottom: 5px;
+              "
+            >
+              🚨 Report an Issue
+            </h1>
+            <p style="color: var(--text-secondary); font-size: 14px">
+              Facing a problem? Let our admin team know immediately.
+            </p>
+          </div>
+        </div>
+
+        <div class="report-grid">
+          <!-- Form -->
+          <div class="report-card">
+            <h3>Submit a Report</h3>
+            <form id="reportForm">
+              <div class="form-group">
+                <label>Issue Category *</label>
+                <select id="repCategory" required>
+                  <option value="">Select Category</option>
+                  <optgroup label="Member / Conduct Issues">
+                    <option value="Harassment">Harassment / Bullying</option>
+                    <option value="Fake Profile">
+                      Fake Profile / Impersonation
+                    </option>
+                    <option value="Spam/Scam">Spam / Scam</option>
+                    <option value="Misbehavior">
+                      Misbehavior / Bad Language
+                    </option>
+                  </optgroup>
+                  <optgroup label="System / Technical Issues">
+                    <option value="Website Bug">Bug / Error on Website</option>
+                    <option value="Login Issue">
+                      Login / Registration Issue
+                    </option>
+                    <option value="Payment Issue">Payment Issue</option>
+                    <option value="Upload Issue">Document Upload Issue</option>
+                  </optgroup>
+                  <optgroup label="Event / Admin Issues">
+                    <option value="Activity Issue">
+                      Issue with an Activity
+                    </option>
+                    <option value="Admin Misconduct">
+                      Misconduct by Moderator/Admin
+                    </option>
+                  </optgroup>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Member Name (Optional)</label>
+                <input
+                  type="text"
+                  id="repTarget"
+                  placeholder="If this is about a specific member"
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Describe the Issue *</label>
+                <textarea
+                  id="repDescription"
+                  rows="4"
+                  placeholder="Please provide details about what happened..."
+                  required
+                ></textarea>
+              </div>
+
+              <p
+                style="
+                  font-size: 11px;
+                  color: var(--text-muted);
+                  margin-bottom: 16px;
+                "
+              >
+                Note: If you have screenshots or proof, please send them to our
+                WhatsApp support after submitting this form.
+              </p>
+
+              <button
+                type="submit"
+                class="btn-primary btn-full"
+                id="btnSubmitReport"
+              >
+                Submit Report
+              </button>
+            </form>
+          </div>
+
+          <!-- History -->
+          <div class="report-card">
+            <h3>Your Previous Reports</h3>
+            <div id="reportsList">
+              <div class="empty-reports">Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      let currentEmail = null;
+      let currentName = null;
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        const { data: sessionData } = await supabaseClient.auth.getSession();
+        const session = sessionData ? sessionData.session : null;
+
+        if (!session || !session.user) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        currentEmail = session.user.email;
+        const { data: member } = await supabaseClient
+          .from("members")
+          .select("name, uid")
+          .eq("email", currentEmail)
+          .maybeSingle();
+
+        if (member) {
+          currentName = member.name;
+          document.getElementById("topAvatar").textContent = (
+            member.name || "M"
+          )
+            .charAt(0)
+            .toUpperCase();
+          document
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = member.name || "Member"));
+          document
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = member.uid || "-"));
+        }
+
+        loadReports();
+
+        // Form Submit
+        document
+          .getElementById("reportForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById("btnSubmitReport");
+            const category = document.getElementById("repCategory").value;
+            const target = document.getElementById("repTarget").value.trim();
+            const desc = document.getElementById("repDescription").value.trim();
+
+            btn.disabled = true;
+            btn.textContent = "Submitting...";
+
+            try {
+              const { error } = await supabaseClient.from("reports").insert([
+                {
+                  reporter_email: currentEmail,
+                  reporter_name: currentName,
+                  target_name: target || null,
+                  category: category,
+                  description: desc,
+                },
+              ]);
+
+              if (error) throw error;
+
+              window.syfSuccess(
+                "✅ Report submitted successfully. Admin will review it soon.",
+              );
+              this.reset();
+              loadReports();
+            } catch (err) {
+              window.syfError("❌ Failed to submit: " + err.message);
+            } finally {
+              btn.disabled = false;
+              btn.textContent = "Submit Report";
+            }
+          });
+      });
+
+      async function loadReports() {
+        const list = document.getElementById("reportsList");
+        try {
+          const { data, error } = await supabaseClient
+            .from("reports")
+            .select("*")
+            .eq("reporter_email", currentEmail)
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+
+          if (!data || data.length === 0) {
+            list.innerHTML = `<div class="empty-reports">You haven't submitted any reports yet.</div>`;
+            return;
+          }
+
+          list.innerHTML = data
+            .map((r) => {
+              const date = new Date(r.created_at).toLocaleDateString("en-PK", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              });
+              const statusClass =
+                r.status === "Resolved" ? "status-resolved" : "status-pending";
+              return `
+              <div class="report-item">
+                <h4>
+                  ${escapeHtml(r.category)} 
+                  <span class="status-badge ${statusClass}">${r.status || "Pending"}</span>
+                </h4>
+                <p>${escapeHtml(r.description)}</p>
+                <div class="meta">
+                  <span>📅 ${date}</span>
+                  ${r.target_name ? `<span>👤 Against: ${escapeHtml(r.target_name)}</span>` : ""}
+                </div>
+              </div>
+            `;
+            })
+            .join("");
+        } catch (err) {
+          list.innerHTML = `<div class="empty-reports" style="color:#ef4444;">Failed to load reports.</div>`;
+        }
+      }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+    </script>
+  </body>
+</html>

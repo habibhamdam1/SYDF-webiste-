@@ -120,7 +120,6 @@ if (yearElement) {
     logoDiv.style.display = "flex";
     logoDiv.style.alignItems = "center";
 
-    // Wrap text in a div so it stacks properly
     if (!logoDiv.querySelector(".logo-text")) {
       const wrapper = document.createElement("div");
       wrapper.className = "logo-text";
@@ -584,42 +583,305 @@ window.addEventListener("load", async function () {
 
 window.getCurrentUser = getCurrentUser;
 window.logoutUser = logoutUser;
+
 // ==========================================
-// AUTO-LOAD EMAIL SERVICE
+// AUTO-LOAD SERVICES
 // ==========================================
 (function () {
   if (typeof window.sendEmail === "undefined") {
     const script = document.createElement("script");
     script.src = "js/email-service.js";
     document.head.appendChild(script);
-    script.onload = function () {
-      console.log("✅ Email Service Auto-Loaded");
-    };
   }
 })();
-// ==========================================
-// AUTO-LOAD SCORE SERVICE
-// ==========================================
 (function () {
   if (typeof window.calculateMemberScore === "undefined") {
     const script = document.createElement("script");
     script.src = "js/score-service.js";
     document.head.appendChild(script);
-    script.onload = function () {
-      console.log("✅ Score Service Auto-Loaded");
-    };
   }
 })();
-// ==========================================
-// AUTO-LOAD TOAST SYSTEM
-// ==========================================
 (function () {
   if (typeof window.syfToast === "undefined") {
     const script = document.createElement("script");
     script.src = "js/toast.js";
     document.head.appendChild(script);
-    script.onload = function () {
-      console.log("✅ Toast System Auto-Loaded");
-    };
   }
 })();
+(function () {
+  if (typeof window.syfToggleTheme === "undefined") {
+    const script = document.createElement("script");
+    script.src = "js/theme-toggle.js";
+    document.head.appendChild(script);
+  }
+})();
+// ==========================================
+// AUTO-HIGHLIGHT SIDEBAR LINKS
+// ==========================================
+document.addEventListener("DOMContentLoaded", function () {
+  const currentPage =
+    window.location.pathname.split("/").pop() || "dashboard.html";
+
+  // Sidebar ke saare links ko check karo
+  document.querySelectorAll(".sidebar-nav a").forEach((link) => {
+    // Pehle sab se 'active' class hatao
+    link.classList.remove("active");
+
+    // Agar link ka href current page se match kare, toh active laga do
+    const href = link.getAttribute("href");
+    if (href && href === currentPage) {
+      link.classList.add("active");
+    }
+  });
+});
+// ==========================================
+// MAGIC FIX: AUTO-ADD MISSING SIDEBAR BUTTONS
+// ==========================================
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebarNav = document.querySelector(
+    ".dashboard-sidebar .sidebar-nav ul",
+  );
+  if (!sidebarNav) return;
+
+  // 1. Check and Add "Report Issue"
+  const hasReportBtn = Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
+    a.href.includes("member-reports.html"),
+  );
+  if (!hasReportBtn) {
+    const newLi = document.createElement("li");
+    newLi.innerHTML = `<a href="member-reports.html"><span class="nav-icon">🚨</span><span>Report Issue</span></a>`;
+    const idCardLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) =>
+      a.href.includes("my-id-card.html"),
+    );
+    if (idCardLink) {
+      idCardLink.parentElement.insertAdjacentElement("afterend", newLi);
+    } else {
+      sidebarNav.appendChild(newLi);
+    }
+  }
+
+  // 2. Check and Add "Back to Website" & "Logout" at the bottom
+  const hasBackBtn = Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
+    a.href.includes("index.html"),
+  );
+  const hasLogoutBtn = Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
+    a.classList.contains("logout-btn"),
+  );
+
+  // Agar dono mein se koi bhi missing hai, toh divider aur buttons add karo
+  if (!hasBackBtn || !hasLogoutBtn) {
+    // Divider Line
+    const divider = document.createElement("div");
+    divider.className = "sidebar-divider";
+    divider.style.cssText =
+      "height: 1px; background: var(--card-border); margin: 15px 10px;";
+    sidebarNav.appendChild(divider);
+
+    // Back to Website
+    if (!hasBackBtn) {
+      const backLi = document.createElement("li");
+      backLi.innerHTML = `<a href="index.html" class="back-to-site-btn" style="color: var(--accent);"><span class="nav-icon">🌐</span><span>Back to Website</span></a>`;
+      sidebarNav.appendChild(backLi);
+    }
+
+    // Logout
+    if (!hasLogoutBtn) {
+      const logoutLi = document.createElement("li");
+      logoutLi.innerHTML = `<a href="#" class="logout-btn" style="color: #ef4444;"><span class="nav-icon">🚪</span><span>Logout</span></a>`;
+      sidebarNav.appendChild(logoutLi);
+
+      // Re-attach logout handler since it's a new element
+      logoutLi.querySelector("a").addEventListener("click", function (e) {
+        e.preventDefault();
+        if (window.logoutUser) window.logoutUser();
+        else {
+          window.syfConfirm("Logout?", async (c) => {
+            if (c) {
+              await supabaseClient.auth.signOut();
+              window.location.href = "login.html";
+            }
+          });
+        }
+      });
+    }
+  }
+});
+// ============================================================
+// MAGIC FIX: SMART SIDEBAR INJECTION (Admin vs Member)
+// ============================================================
+document.addEventListener("DOMContentLoaded", function () {
+  const sidebarNav = document.querySelector(".dashboard-sidebar .sidebar-nav");
+  if (!sidebarNav) return;
+
+  // 1. Check karo ke yeh Admin Panel hai ya Member Panel
+  const isAdminPanel =
+    document.querySelector(".admin-sidebar") !== null ||
+    window.location.pathname.includes("admin");
+
+  if (isAdminPanel) {
+    // ==========================================
+    // ADMIN PANEL FIXES
+    // ==========================================
+    // Pehle galti se lagaya hua "Report Issue" hatao (agar hai toh)
+    const wrongBtn = Array.from(sidebarNav.querySelectorAll("a")).find((a) =>
+      a.href.includes("member-reports.html"),
+    );
+    if (wrongBtn) wrongBtn.parentElement.remove();
+
+    // "Issue Reports" add karo
+    const hasIssueReportBtn = Array.from(sidebarNav.querySelectorAll("a")).some(
+      (a) => a.href.includes("admin-issue-reports.html"),
+    );
+    if (!hasIssueReportBtn) {
+      const newLi = document.createElement("li");
+      newLi.innerHTML = `
+        <a href="admin-issue-reports.html">
+          <span class="nav-icon">🚨</span>
+          <span>Issue Reports</span>
+          <span class="badge" id="sidebarReportBadgeJS" style="display: none">0</span>
+        </a>
+      `;
+      // Waitlist ke baad daalo
+      const waitlistLink = Array.from(sidebarNav.querySelectorAll("a")).find(
+        (a) => a.href.includes("admin-waitlist.html"),
+      );
+      if (waitlistLink) {
+        waitlistLink.parentElement.insertAdjacentElement("afterend", newLi);
+      } else {
+        sidebarNav.appendChild(newLi);
+      }
+    }
+
+    // Admin ke liye Back to Website & Logout (Agar missing hain)
+    addBottomButtons(sidebarNav, true);
+  } else {
+    // ==========================================
+    // MEMBER PANEL FIXES
+    // ==========================================
+    // "Report Issue" add karo
+    const hasReportBtn = Array.from(sidebarNav.querySelectorAll("a")).some(
+      (a) => a.href.includes("member-reports.html"),
+    );
+    if (!hasReportBtn) {
+      const newLi = document.createElement("li");
+      newLi.innerHTML = `<a href="member-reports.html"><span class="nav-icon">🚨</span><span>Report Issue</span></a>`;
+      const idCardLink = Array.from(sidebarNav.querySelectorAll("a")).find(
+        (a) => a.href.includes("my-id-card.html"),
+      );
+      if (idCardLink) {
+        idCardLink.parentElement.insertAdjacentElement("afterend", newLi);
+      } else {
+        sidebarNav.appendChild(newLi);
+      }
+    }
+
+    // Member ke liye Back to Website & Logout
+    addBottomButtons(sidebarNav, false);
+  }
+});
+
+// Helper function for Bottom Buttons
+function addBottomButtons(sidebarNav, isAdmin) {
+  const hasBackBtn = Array.from(sidebarNav.querySelectorAll("a")).some(
+    (a) => a.href === "index.html" || a.href.includes("index.html"),
+  );
+  const hasLogoutBtn = Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
+    a.classList.contains("logout-btn"),
+  );
+
+  if (!hasBackBtn || !hasLogoutBtn) {
+    const divider = document.createElement("div");
+    divider.style.cssText =
+      "height: 1px; background: var(--card-border); margin: 15px 10px;";
+    sidebarNav.appendChild(divider);
+
+    if (!hasBackBtn) {
+      const backLi = document.createElement("li");
+      backLi.innerHTML = `<a href="index.html" class="back-to-site-btn" style="color: var(--accent);"><span class="nav-icon">🌐</span><span>Back to Website</span></a>`;
+      sidebarNav.appendChild(backLi);
+    }
+
+    if (!hasLogoutBtn) {
+      const logoutLi = document.createElement("li");
+      logoutLi.innerHTML = `<a href="#" class="logout-btn" style="color: #ef4444;"><span class="nav-icon">🚪</span><span>Logout</span></a>`;
+      sidebarNav.appendChild(logoutLi);
+
+      logoutLi.querySelector("a").addEventListener("click", function (e) {
+        e.preventDefault();
+        if (window.logoutUser) window.logoutUser();
+      });
+    }
+  }
+}
+// ==========================================
+// SMART ROLE-BASED ACCESS CONTROL (RBAC)
+// ==========================================
+async function enforceAdminPermissions() {
+  // Sirf admin pages par chalao
+  if (!window.location.pathname.includes("admin")) return;
+
+  let attempts = 0;
+  while (
+    (typeof supabaseClient === "undefined" || !supabaseClient) &&
+    attempts < 30
+  ) {
+    await new Promise((r) => setTimeout(r, 100));
+    attempts++;
+  }
+  if (!supabaseClient) return;
+
+  const {
+    data: { session },
+  } = await supabaseClient.auth.getSession();
+  if (!session) return;
+
+  const { data: admin } = await supabaseClient
+    .from("members")
+    .select("role, district")
+    .eq("email", session.user.email)
+    .maybeSingle();
+  if (!admin) return;
+
+  // Global variables banado taaki baqi pages use kar sakein
+  window.currentAdminRole = admin.role;
+  window.currentAdminDistrict = admin.district;
+
+  // Agar District Admin hai, toh restrictions lagao
+  if (admin.role === "District Admin") {
+    // 1. Sidebar se global settings hide karo
+    const restrictedHrefs = [
+      "admin-settings.html",
+      "admin-districts.html",
+      "admin-cabinet.html",
+      "admin-section-controls.html",
+      "admin-reports.html",
+      "admin-email.html",
+    ];
+
+    document.querySelectorAll(".sidebar-nav a").forEach((a) => {
+      if (
+        restrictedHrefs.some((href) => a.getAttribute("href").includes(href))
+      ) {
+        a.parentElement.style.display = "none";
+      }
+    });
+
+    // 2. Faltu nav-section titles hide karo agar unke saare links hide ho gaye hain
+    document.querySelectorAll(".nav-section-title").forEach((title) => {
+      let nextEl = title.nextElementSibling;
+      if (nextEl && nextEl.tagName === "UL") {
+        let visibleLinks = Array.from(nextEl.querySelectorAll("li")).filter(
+          (li) => li.style.display !== "none",
+        );
+        if (visibleLinks.length === 0) title.style.display = "none";
+      }
+    });
+
+    // 3. Topbar mein "Super Admin" ki jagah "District Admin" dikhao
+    document.querySelectorAll(".user-uid").forEach((el) => {
+      el.textContent = `District Admin (${admin.district || "Unassigned"})`;
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", enforceAdminPermissions);

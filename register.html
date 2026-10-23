@@ -12,13 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      .auth-page {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
+      /* Sirf register page ki zaroori layout CSS */
       .auth-section {
-        flex: 1;
         display: grid;
         grid-template-columns: 1fr 1.5fr;
         gap: 30px;
@@ -30,60 +25,20 @@
       }
       .auth-welcome {
         padding: 50px 40px;
-        background: linear-gradient(
-          135deg,
-          rgba(26, 188, 156, 0.15),
-          rgba(15, 32, 39, 0.3)
-        );
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 20px;
         position: relative;
         overflow: hidden;
-      }
-      .auth-welcome::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(
-          circle,
-          rgba(26, 188, 156, 0.3),
-          transparent 70%
-        );
-        border-radius: 50%;
-      }
-      .welcome-content {
-        position: relative;
-        z-index: 1;
       }
       .welcome-logo {
         display: inline-block;
         font-size: 32px;
         font-weight: 700;
-        color: #1abc9c;
+        color: var(--accent);
         padding: 10px 25px;
-        background: rgba(26, 188, 156, 0.15);
-        border: 1px solid rgba(26, 188, 156, 0.3);
+        background: var(--accent-soft);
+        border: 1px solid var(--card-border);
         border-radius: 15px;
         margin-bottom: 25px;
         letter-spacing: 2px;
-      }
-      .welcome-content h1 {
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 15px;
-        line-height: 1.2;
-        color: white;
-      }
-      .welcome-content > p {
-        font-size: 14px;
-        line-height: 1.8;
-        opacity: 0.9;
-        color: white;
-        margin-bottom: 30px;
       }
       .welcome-features {
         display: flex;
@@ -96,14 +51,10 @@
         align-items: center;
         gap: 12px;
         padding: 10px 15px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
         border-radius: 10px;
         font-size: 13px;
-        color: white;
-      }
-      .feature-icon {
-        font-size: 18px;
       }
       .info-box {
         background: rgba(59, 130, 246, 0.1);
@@ -121,128 +72,30 @@
       .info-text {
         font-size: 12px;
         line-height: 1.6;
-        opacity: 0.85;
-        color: white;
-      }
-      .welcome-note {
-        font-size: 13px;
-        opacity: 0.8;
-        color: white;
-        margin-bottom: 15px !important;
-      }
-      .btn-secondary {
-        display: inline-block;
-        padding: 12px 30px;
-        background: rgba(255, 255, 255, 0.15);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 10px;
-        font-family: "Poppins", sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: 0.3s;
-      }
-      .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.25);
-        transform: translateY(-3px);
-      }
-      .auth-form-block {
-        padding: 40px 40px;
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      }
-      .auth-form-block h2 {
-        font-size: 26px;
-        color: #1abc9c;
-        margin-bottom: 8px;
-        font-weight: 700;
-      }
-      .form-subtitle {
-        font-size: 13px;
-        opacity: 0.8;
-        color: white;
-        margin-bottom: 30px;
-      }
-      .form-section-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: #1abc9c;
-        margin: 22px 0 15px;
-        padding-bottom: 8px;
-        border-bottom: 1px solid rgba(26, 188, 156, 0.2);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .form-section-title:first-of-type {
-        margin-top: 0;
+        color: var(--text-secondary);
       }
       .form-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 18px;
       }
-      .form-group {
-        margin-bottom: 16px;
-      }
-      .form-group label {
-        display: block;
-        font-size: 12px;
-        font-weight: 500;
-        margin-bottom: 7px;
-        opacity: 0.9;
-        color: white;
-      }
-      .form-group input,
-      .form-group select {
-        width: 100%;
-        padding: 12px 15px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        color: white;
-        font-family: "Poppins", sans-serif;
+      .form-section-title {
         font-size: 13px;
-        transition: 0.3s;
-        outline: none;
-      }
-      .form-group input::placeholder {
-        color: rgba(255, 255, 255, 0.5);
-      }
-      .form-group input:focus,
-      .form-group select:focus {
-        border-color: #1abc9c;
-        background: rgba(26, 188, 156, 0.1);
-        box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.15);
-      }
-      .form-group select option {
-        background: #203a43;
-      }
-      .form-group input[type="file"] {
-        padding: 10px;
-        cursor: pointer;
-      }
-      .form-group input[type="file"]::file-selector-button {
-        background: rgba(26, 188, 156, 0.15);
-        color: #1abc9c;
-        border: 1px solid rgba(26, 188, 156, 0.3);
-        padding: 8px 16px;
-        border-radius: 8px;
-        margin-right: 12px;
-        cursor: pointer;
-        font-family: "Poppins", sans-serif;
-        font-size: 12px;
         font-weight: 600;
+        color: var(--accent);
+        margin: 22px 0 15px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--card-border);
+        text-transform: uppercase;
+      }
+      .form-section-title:first-of-type {
+        margin-top: 0;
       }
       .form-hint {
         display: block;
         font-size: 11px;
         opacity: 0.7;
         margin-top: 5px;
-        color: white;
         font-style: italic;
       }
       .photo-preview-box {
@@ -254,8 +107,8 @@
         height: 120px;
         object-fit: cover;
         border-radius: 10px;
-        border: 2px solid #1abc9c;
-        box-shadow: 0 8px 20px rgba(26, 188, 156, 0.3);
+        border: 2px solid var(--accent);
+        box-shadow: 0 8px 20px var(--accent-glow);
       }
       .privacy-notice-box {
         display: none;
@@ -271,9 +124,6 @@
         color: #f9a8d4;
         line-height: 1.7;
         margin: 0;
-      }
-      .privacy-notice-box strong {
-        color: #fbcfe8;
       }
       .password-wrapper {
         position: relative;
@@ -291,13 +141,7 @@
         font-size: 16px;
         cursor: pointer;
         opacity: 0.7;
-        padding: 5px;
-      }
-      .toggle-password:hover {
-        opacity: 1;
-      }
-      .checkbox-group {
-        margin: 20px 0;
+        color: var(--text-primary);
       }
       .checkbox-label {
         display: flex;
@@ -305,62 +149,11 @@
         gap: 10px;
         cursor: pointer;
         font-size: 12px;
-        color: white;
         line-height: 1.6;
-        opacity: 0.9;
       }
-      .checkbox-label input[type="checkbox"] {
-        width: auto;
+      .checkbox-label input {
+        accent-color: var(--accent);
         margin-top: 3px;
-        cursor: pointer;
-        accent-color: #1abc9c;
-        flex-shrink: 0;
-      }
-      .checkbox-label a {
-        color: #1abc9c;
-        text-decoration: none;
-        font-weight: 500;
-      }
-      .checkbox-label a:hover {
-        text-decoration: underline;
-      }
-      .btn-primary.btn-full {
-        width: 100%;
-        padding: 15px;
-        font-size: 15px;
-        text-align: center;
-        border: none;
-        cursor: pointer;
-        background: #1abc9c;
-        color: white;
-        border-radius: 10px;
-        font-family: "Poppins", sans-serif;
-        font-weight: 600;
-        transition: 0.3s;
-      }
-      .btn-primary.btn-full:hover {
-        background: #16a085;
-        transform: translateY(-2px);
-      }
-      .btn-primary.btn-full:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-      }
-      .form-note {
-        font-size: 11px;
-        text-align: center;
-        margin-top: 18px;
-        opacity: 0.7;
-        color: white;
-        line-height: 1.6;
-      }
-      .auth-footer {
-        text-align: center;
-        padding: 20px;
-        font-size: 12px;
-        opacity: 0.6;
-        color: white;
       }
       .message-box {
         display: none;
@@ -368,7 +161,6 @@
         border-radius: 10px;
         margin-bottom: 20px;
         font-size: 13px;
-        line-height: 1.6;
       }
       .message-box.error {
         display: block;
@@ -378,26 +170,45 @@
       }
       .message-box.success {
         display: block;
-        background: rgba(26, 188, 156, 0.15);
-        border: 1px solid rgba(26, 188, 156, 0.4);
-        color: #1abc9c;
+        background: var(--accent-soft);
+        border: 1px solid var(--accent);
+        color: var(--accent);
       }
+
+      .back-to-site {
+        position: fixed;
+        top: 90px;
+        left: 20px;
+        z-index: 999;
+        padding: 8px 16px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .back-to-site:hover {
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-color: var(--accent);
+      }
+
       @media (max-width: 900px) {
         .auth-section {
           grid-template-columns: 1fr;
           padding: 120px 30px 40px;
         }
-        .auth-welcome {
-          padding: 30px 25px;
-        }
       }
       @media (max-width: 500px) {
         .auth-section {
           padding: 110px 20px 30px;
-        }
-        .auth-welcome,
-        .auth-form-block {
-          padding: 25px 20px;
         }
         .form-row {
           grid-template-columns: 1fr;
@@ -407,6 +218,9 @@
     </style>
   </head>
   <body class="auth-page">
+    <!-- Back to Website Button -->
+    <a href="index.html" class="back-to-site">← Back to Website</a>
+
     <header class="glass-header">
       <div class="logo">
         <h1>SYDF</h1>
@@ -416,21 +230,13 @@
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About Us</a></li>
-          <li><a href="leadership.html">Leadership</a></li>
-          <li><a href="districts.html">Districts</a></li>
-          <li><a href="activities.html">Activities</a></li>
-          <li><a href="gallery.html">Gallery</a></li>
-          <li><a href="news.html">News</a></li>
-          <li><a href="membership.html">Membership</a></li>
-          <li><a href="donate.html">Donate</a></li>
-          <li><a href="contact.html">Contact</a></li>
           <li><a href="login.html" class="btn-login">Login</a></li>
         </ul>
       </nav>
     </header>
 
     <section class="auth-section">
-      <div class="auth-welcome">
+      <div class="auth-welcome glass-card">
         <div class="welcome-content">
           <div class="welcome-logo">SYDF</div>
           <h1>Create Your Account</h1>
@@ -465,7 +271,7 @@
         </div>
       </div>
 
-      <div class="auth-form-block">
+      <div class="auth-form-block glass-card">
         <h2>Member Registration</h2>
         <p class="form-subtitle">Fill in your details to create an account</p>
 
@@ -538,10 +344,8 @@
 
           <div class="privacy-notice-box" id="privacyNotice">
             <p>
-              🔒 <strong>Privacy Notice for Female Members:</strong><br />
-              Your photo will be <strong>private by default</strong>. Only you
-              can see your photo. Other members will see a default avatar. Your
-              contact information is always private.
+              🔒 <strong>Privacy Notice for Female Members:</strong><br />Your
+              photo will be <strong>private by default</strong>.
             </p>
           </div>
 
@@ -670,10 +474,6 @@
       </div>
     </section>
 
-    <div class="auth-footer">
-      <p>&copy; 2026 Swat Youth Development Forum. All Rights Reserved.</p>
-    </div>
-
     <script src="js/main.js"></script>
     <script>
       window.addEventListener("load", function () {
@@ -691,7 +491,6 @@
           messageBox.style.display = "none";
         }
 
-        // Password toggles
         document.querySelectorAll(".toggle-password").forEach((btn) => {
           btn.addEventListener("click", function () {
             const target = document.getElementById(
@@ -704,20 +503,15 @@
           });
         });
 
-        // Privacy notice for females
         const regGender = document.getElementById("regGender");
         const privacyNotice = document.getElementById("privacyNotice");
         if (regGender && privacyNotice) {
           regGender.addEventListener("change", function () {
-            if (this.value === "Female") {
-              privacyNotice.style.display = "block";
-            } else {
-              privacyNotice.style.display = "none";
-            }
+            privacyNotice.style.display =
+              this.value === "Female" ? "block" : "none";
           });
         }
 
-        // Photo preview
         const regPhoto = document.getElementById("regPhoto");
         const photoPreview = document.getElementById("photoPreview");
         const previewImg = document.getElementById("previewImg");
@@ -764,25 +558,22 @@
             document.getElementById("regConfirmPassword").value;
           const photoFile = regPhoto.files[0];
 
-          if (password !== confirmPassword) {
-            showMessage("❌ Passwords do not match!", "error");
-            return;
-          }
-          if (password.length < 8) {
-            showMessage("❌ Password must be at least 8 characters.", "error");
-            return;
-          }
-          if (!photoFile) {
-            showMessage("❌ Please upload a profile photo.", "error");
-            return;
-          }
+          if (password !== confirmPassword)
+            return showMessage("❌ Passwords do not match!", "error");
+          if (password.length < 8)
+            return showMessage(
+              "❌ Password must be at least 8 characters.",
+              "error",
+            );
+          if (!photoFile)
+            return showMessage("❌ Please upload a profile photo.", "error");
 
           const originalText = registerBtn.textContent;
           registerBtn.textContent = "Creating Account...";
           registerBtn.disabled = true;
 
           try {
-            // Step 1: Create Auth User
+            // Step 1: Auth User
             const { data: authData, error: authError } =
               await supabaseClient.auth.signUp({
                 email: email,
@@ -796,15 +587,11 @@
               return;
             }
 
-            // Step 2: Generate UID
-            const uid = "SYDF-" + String(Date.now()).slice(-6);
-
-            // Step 3: Upload Photo
+            // Step 2: Upload Photo
             registerBtn.textContent = "Uploading photo...";
             let photoUrl = null;
-
             const fileExt = photoFile.name.split(".").pop();
-            const fileName = uid + "-" + Date.now() + "." + fileExt;
+            const fileName = "SYDF-" + Date.now() + "." + fileExt;
 
             const { error: uploadError } = await supabaseClient.storage
               .from("member-photos")
@@ -813,6 +600,7 @@
                 upsert: false,
               });
 
+            if (uploadError) console.error("Photo upload error:", uploadError);
             if (!uploadError) {
               const { data: urlData } = supabaseClient.storage
                 .from("member-photos")
@@ -820,8 +608,9 @@
               photoUrl = urlData.publicUrl;
             }
 
-            // Step 4: Save to members table
+            // Step 3: Save Member
             registerBtn.textContent = "Saving profile...";
+            const uid = "SYDF-" + String(Date.now()).slice(-6);
 
             const { error: dbError } = await supabaseClient
               .from("members")
@@ -857,41 +646,17 @@
               return;
             }
 
-            // Step 5: Send Welcome Email
-            registerBtn.textContent = "Sending email...";
-            try {
-              let emailAttempts = 0;
-              while (
-                typeof window.sendRegistrationConfirmation === "undefined" &&
-                emailAttempts < 30
-              ) {
-                await new Promise((r) => setTimeout(r, 100));
-                emailAttempts++;
-              }
-              if (typeof window.sendRegistrationConfirmation !== "undefined") {
-                await window.sendRegistrationConfirmation({
-                  email: email,
-                  name: name,
-                });
-                console.log("✅ Welcome email sent");
-              }
-            } catch (emailErr) {
-              console.log("Email send failed (non-critical):", emailErr);
-            }
-
-            // Success
+            // Step 4: Success
             showMessage(
               "✅ Registration successful!\n\nYour account is pending admin approval.\n\nYour UID: " +
-                uid +
-                "\n\nWe have sent a confirmation email to " +
-                email,
+                uid,
               "success",
             );
             registerForm.reset();
             photoPreview.style.display = "none";
             if (privacyNotice) privacyNotice.style.display = "none";
 
-            setTimeout(function () {
+            setTimeout(() => {
               window.location.replace("login.html");
             }, 4000);
           } catch (err) {

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Applications - Admin Panel</title>
+    <title>Applications - SYDF Admin</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages/dashboard.css" />
     <link rel="stylesheet" href="css/pages/admin.css" />
@@ -11,12 +11,14 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
   </head>
   <body class="dashboard-body admin-body">
     <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">
-          <h1>PYDF</h1>
+          <h1>SYDF</h1>
           <p>Admin Panel</p>
         </div>
         <button class="sidebar-close" id="sidebarClose">✕</button>
@@ -39,13 +41,22 @@
           </li>
           <li>
             <a href="admin-applications.html" class="active"
-              ><span class="nav-icon">📝</span><span>Applications</span
-              ><span class="badge" id="appBadge">0</span></a
+              ><span class="nav-icon">📝</span><span>Applications</span></a
             >
           </li>
           <li>
             <a href="admin-waitlist.html"
               ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-issue-reports.html"
+              ><span class="nav-icon">🚨</span><span>Issue Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-proposals.html"
+              ><span class="nav-icon">💡</span><span>Proposals</span></a
             >
           </li>
           <li>
@@ -55,8 +66,7 @@
           </li>
           <li>
             <a href="admin-districts.html"
-              ><span class="nav-icon">🗺️</span
-              ><span>Districts & Tehsils</span></a
+              ><span class="nav-icon">🗺️</span><span>Districts</span></a
             >
           </li>
         </ul>
@@ -69,7 +79,7 @@
           </li>
           <li>
             <a href="admin-news.html"
-              ><span class="nav-icon">📰</span><span>News & Blog</span></a
+              ><span class="nav-icon">📰</span><span>News</span></a
             >
           </li>
           <li>
@@ -115,7 +125,7 @@
           </li>
           <li>
             <a href="admin-email.html"
-              ><span class="nav-icon">📧</span><span>Email System</span></a
+              ><span class="nav-icon">📧</span><span>Email</span></a
             >
           </li>
           <li>
@@ -130,9 +140,6 @@
           </li>
         </ul>
       </nav>
-      <div class="sidebar-footer">
-        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
-      </div>
     </aside>
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -145,41 +152,113 @@
           <p>Review and approve new applications</p>
         </div>
         <div class="topbar-actions">
-          <button class="topbar-btn" title="Refresh" id="refreshBtn">🔄</button>
+          <button
+            class="topbar-btn"
+            title="Refresh"
+            id="refreshBtn"
+            style="
+              background: var(--input-bg);
+              border: 1px solid var(--card-border);
+              color: var(--text-primary);
+              padding: 8px 12px;
+              border-radius: 8px;
+              cursor: pointer;
+            "
+          >
+            🔄
+          </button>
           <div class="topbar-user">
             <div class="user-avatar admin-avatar">A</div>
             <div class="user-info">
               <span class="user-name">Admin</span
-              ><span class="user-uid">Super Admin</span>
+              ><span class="user-uid" id="topRole">Super Admin</span>
             </div>
           </div>
         </div>
       </div>
 
       <div class="dashboard-content">
-        <div class="page-header-block">
+        <div
+          class="page-header-block"
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+          "
+        >
           <div class="page-header-info">
-            <h1>📝 Pending Applications</h1>
-            <p>
-              <strong id="pendingCount">0</strong> new applications waiting for
-              review
+            <h1 style="color: var(--text-primary)">📝 Pending Applications</h1>
+            <p style="color: var(--text-secondary)">
+              <strong id="pendingCount" style="color: var(--accent)">0</strong>
+              new applications waiting for review
             </p>
           </div>
-          <div class="header-actions-group">
-            <button class="btn-filter-type active" data-type="pending">
+          <div class="header-actions-group" style="display: flex; gap: 8px">
+            <button
+              class="btn-filter-type active"
+              data-type="pending"
+              style="
+                padding: 8px 16px;
+                border-radius: 20px;
+                background: var(--accent);
+                color: white;
+                border: none;
+                cursor: pointer;
+              "
+            >
               Pending
             </button>
-            <button class="btn-filter-type" data-type="Active">Approved</button>
-            <button class="btn-filter-type" data-type="Rejected">
+            <button
+              class="btn-filter-type"
+              data-type="Active"
+              style="
+                padding: 8px 16px;
+                border-radius: 20px;
+                background: var(--input-bg);
+                color: var(--text-secondary);
+                border: 1px solid var(--card-border);
+                cursor: pointer;
+              "
+            >
+              Approved
+            </button>
+            <button
+              class="btn-filter-type"
+              data-type="Rejected"
+              style="
+                padding: 8px 16px;
+                border-radius: 20px;
+                background: var(--input-bg);
+                color: var(--text-secondary);
+                border: 1px solid var(--card-border);
+                cursor: pointer;
+              "
+            >
               Rejected
             </button>
-            <button class="btn-filter-type" data-type="all">All</button>
+            <button
+              class="btn-filter-type"
+              data-type="all"
+              style="
+                padding: 8px 16px;
+                border-radius: 20px;
+                background: var(--input-bg);
+                color: var(--text-secondary);
+                border: 1px solid var(--card-border);
+                cursor: pointer;
+              "
+            >
+              All
+            </button>
           </div>
         </div>
 
         <div
           id="loadingState"
-          style="text-align: center; padding: 60px; color: white; opacity: 0.7"
+          style="text-align: center; padding: 60px; color: var(--text-muted)"
         >
           <div style="font-size: 40px; margin-bottom: 15px">⏳</div>
           <p>Loading applications...</p>
@@ -188,18 +267,17 @@
         <div
           class="applications-grid"
           id="applicationsGrid"
-          style="display: none"
+          style="
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+          "
         ></div>
 
         <div class="empty-state" id="emptyState" style="display: none">
           <div
             class="glass-card empty-card"
-            style="
-              padding: 60px 40px;
-              text-align: center;
-              background: rgba(255, 255, 255, 0.08);
-              border-radius: 16px;
-            "
+            style="padding: 60px 40px; text-align: center; border-radius: 16px"
           >
             <span
               style="
@@ -210,10 +288,16 @@
               "
               >📭</span
             >
-            <h3 style="color: white; font-size: 22px; margin-bottom: 10px">
+            <h3
+              style="
+                color: var(--text-primary);
+                font-size: 22px;
+                margin-bottom: 10px;
+              "
+            >
               No Applications Found
             </h3>
-            <p style="opacity: 0.75; color: white">
+            <p style="color: var(--text-secondary)">
               There are no applications in this category.
             </p>
           </div>
@@ -221,12 +305,12 @@
       </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-config.js"></script>
     <script src="js/main.js"></script>
     <script>
       let allMembers = [];
       let currentFilter = "pending";
+      let currentAdminRole = "";
+      let currentAdminDistrict = "";
 
       async function loadApplications() {
         const loadingState = document.getElementById("loadingState");
@@ -238,18 +322,39 @@
         emptyState.style.display = "none";
 
         try {
-          const { data, error } = await supabaseClient
+          // 1. Get Current User Role & District
+          const {
+            data: { session },
+          } = await supabaseClient.auth.getSession();
+          if (session) {
+            const { data: admin } = await supabaseClient
+              .from("members")
+              .select("role, district")
+              .eq("email", session.user.email)
+              .maybeSingle();
+            if (admin) {
+              currentAdminRole = admin.role;
+              currentAdminDistrict = admin.district;
+              document.getElementById("topRole").textContent = admin.role;
+            }
+          }
+
+          // 2. Load Applications with Filter
+          let query = supabaseClient
             .from("members")
             .select("*")
             .order("created_at", { ascending: false });
 
+          if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+            query = query.eq("district", currentAdminDistrict);
+          }
+
+          const { data, error } = await query;
           if (error) throw error;
 
           allMembers = data || [];
           const pending = allMembers.filter((m) => m.status === "Pending");
           document.getElementById("pendingCount").textContent = pending.length;
-          const badge = document.getElementById("appBadge");
-          if (badge) badge.textContent = pending.length;
 
           loadingState.style.display = "none";
           renderApplications();
@@ -286,13 +391,17 @@
           .map((m) => {
             const initial = (m.name || "M").charAt(0).toUpperCase();
             const gender = (m.gender || "").toLowerCase();
-            const avatarClass = gender === "female" ? "female" : "";
+            const avatarStyle =
+              gender === "female"
+                ? "background:linear-gradient(135deg,#ec4899,#be185d)"
+                : "background:linear-gradient(135deg,var(--accent),var(--accent-dark))";
+
             const statusClass =
               m.status === "Active"
-                ? "approved"
+                ? "status-badge-active"
                 : m.status === "Rejected"
-                  ? "rejected"
-                  : "pending";
+                  ? "status-badge-inactive"
+                  : "status-badge-pending";
             const statusText =
               m.status === "Active"
                 ? "Approved"
@@ -303,96 +412,97 @@
               ? new Date(m.created_at).toLocaleDateString()
               : "N/A";
 
+            // CNIC MASKING LOGIC
+            let maskedCnic = "-";
+            if (m.cnic_masked) {
+              maskedCnic = m.cnic_masked;
+            } else if (m.cnic) {
+              maskedCnic = m.cnic.replace(
+                /^(\d{5})\d{7}(\d)$/,
+                "$1-XXXXXXX-$2",
+              );
+            }
+
             const actions =
               m.status === "Pending"
-                ? `<button class="btn-approve-app" data-id="${m.id}" data-action="approve">✓ Approve</button>
-                       <button class="btn-reject-app" data-id="${m.id}" data-action="reject">✕ Reject</button>
-                       <button class="btn-view-app" data-id="${m.id}" data-action="view">👁️ View</button>`
-                : `<button class="btn-view-app" data-id="${m.id}" data-action="view">👁️ View</button>`;
+                ? `<button class="btn-approve-app" onclick="handleAction('${m.id}', 'approve')" style="padding:8px; border-radius:8px; background:rgba(26,188,156,0.15); color:#1abc9c; border:1px solid #1abc9c; font-weight:600; cursor:pointer;">✓ Approve</button>
+                   <button class="btn-reject-app" onclick="handleAction('${m.id}', 'reject')" style="padding:8px; border-radius:8px; background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid #ef4444; font-weight:600; cursor:pointer;">✕ Reject</button>`
+                : `<span style="font-size:11px; color:var(--text-muted); padding:8px;">No actions available</span>`;
 
             return `
-                <div class="glass-card application-card" data-id="${m.id}">
-                    <div class="application-header">
-                        <div class="app-avatar ${avatarClass}">${initial}</div>
-                        <div class="app-header-info">
-                            <h3>${m.name || "Unknown"}</h3>
-                            <p>Applied: ${date}</p>
+                <div class="glass-card application-card" data-id="${m.id}" style="padding:20px; display:flex; flex-direction:column; gap:15px;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div style="width:45px; height:45px; border-radius:12px; ${avatarStyle}; color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px;">${initial}</div>
+                        <div style="flex:1;">
+                            <h3 style="color:var(--text-primary); font-size:15px; margin-bottom:2px;">${m.name || "Unknown"}</h3>
+                            <p style="color:var(--text-muted); font-size:11px;">Applied: ${date}</p>
                         </div>
-                        <span class="app-status ${statusClass}">${statusText}</span>
+                        <span class="${statusClass}">${statusText}</span>
                     </div>
-                    <div class="application-details">
-                        <div class="detail-row"><span class="detail-label">📧 Email</span><span class="detail-value">${m.email || "-"}</span></div>
-                        <div class="detail-row"><span class="detail-label">📱 Phone</span><span class="detail-value">${m.phone || "-"}</span></div>
-                        <div class="detail-row"><span class="detail-label">🆔 CNIC</span><span class="detail-value">${m.cnic || "-"}</span></div>
-                        <div class="detail-row"><span class="detail-label">🎂 DOB</span><span class="detail-value">${m.dob || "-"}</span></div>
-                        <div class="detail-row"><span class="detail-label">⚧ Gender</span><span class="detail-value">${m.gender || "-"}</span></div>
-                        <div class="detail-row"><span class="detail-label">📍 Location</span><span class="detail-value">${m.district || "-"}, ${m.tehsil || "-"}</span></div>
-                        <div class="detail-row"><span class="detail-label">👨 Father</span><span class="detail-value">${m.father_name || "-"}</span></div>
-                        <div class="detail-row"><span class="detail-label">🆔 UID</span><span class="detail-value">${m.uid || "-"}</span></div>
+                    <div style="display:flex; flex-direction:column; gap:8px; font-size:12px;">
+                        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">📧 Email</span><span style="color:var(--text-primary);">${m.email || "-"}</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">📱 Phone</span><span style="color:var(--text-primary);">${m.phone || "-"}</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">🆔 CNIC</span><span style="color:var(--text-primary);">${maskedCnic}</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">⚧ Gender</span><span style="color:var(--text-primary);">${m.gender || "-"}</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">📍 Location</span><span style="color:var(--text-primary);">${m.district || "-"}, ${m.tehsil || "-"}</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">🆔 UID</span><span style="color:var(--text-primary);">${m.uid || "-"}</span></div>
                     </div>
-                    <div class="application-actions">${actions}</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; border-top:1px solid var(--card-border); padding-top:15px; margin-top:auto;">
+                        ${actions}
+                    </div>
                 </div>`;
           })
           .join("");
-
-        grid.querySelectorAll("button[data-action]").forEach((btn) => {
-          btn.addEventListener("click", handleAction);
-        });
       }
 
-      async function handleAction(e) {
-        const id = this.getAttribute("data-id");
-        const action = this.getAttribute("data-action");
-
-        if (action === "view") {
-          alert("Full details view coming soon.");
-          return;
-        }
-
+      window.handleAction = function (id, action) {
         const member = allMembers.find((m) => String(m.id) === String(id));
         if (!member) return;
 
         if (action === "approve") {
-          if (
-            !confirm(
-              "Approve " + member.name + "?\n\nAn account will be activated.",
-            )
-          )
-            return;
-          const { error } = await supabaseClient
-            .from("members")
-            .update({ status: "Active" })
-            .eq("id", id);
-          if (error) {
-            alert("❌ Error: " + error.message);
-            return;
-          }
-          alert("✅ " + member.name + " approved!");
-          loadApplications();
-        } else if (action === "reject") {
-          const reason = prompt(
-            "Reject " + member.name + "?\nReason (optional):",
+          window.syfConfirm(
+            "Approve " + member.name + "?\nAn account will be activated.",
+            async (confirmed) => {
+              if (!confirmed) return;
+              const { error } = await supabaseClient
+                .from("members")
+                .update({ status: "Active" })
+                .eq("id", id);
+              if (error) return window.syfError("Error: " + error.message);
+              window.syfSuccess(member.name + " approved!");
+              loadApplications();
+            },
           );
-          if (reason === null) return;
-          const { error } = await supabaseClient
-            .from("members")
-            .update({ status: "Rejected" })
-            .eq("id", id);
-          if (error) {
-            alert("❌ Error: " + error.message);
-            return;
-          }
-          alert("❌ " + member.name + " rejected.");
-          loadApplications();
+        } else if (action === "reject") {
+          window.syfConfirm(
+            "Reject " + member.name + "?",
+            async (confirmed) => {
+              if (!confirmed) return;
+              const { error } = await supabaseClient
+                .from("members")
+                .update({ status: "Rejected" })
+                .eq("id", id);
+              if (error) return window.syfError("Error: " + error.message);
+              window.syfError(member.name + " rejected."); // Using error toast for visual distinction
+              loadApplications();
+            },
+          );
         }
-      }
+      };
 
       document.querySelectorAll(".btn-filter-type").forEach((btn) => {
         btn.addEventListener("click", function () {
-          document
-            .querySelectorAll(".btn-filter-type")
-            .forEach((b) => b.classList.remove("active"));
+          document.querySelectorAll(".btn-filter-type").forEach((b) => {
+            b.style.background = "var(--input-bg)";
+            b.style.color = "var(--text-secondary)";
+            b.style.border = "1px solid var(--card-border)";
+            b.classList.remove("active");
+          });
+          this.style.background = "var(--accent)";
+          this.style.color = "white";
+          this.style.border = "none";
           this.classList.add("active");
+
           currentFilter = this.getAttribute("data-type");
           renderApplications();
         });
@@ -405,6 +515,5 @@
         setTimeout(loadApplications, 500);
       });
     </script>
-    <script src="js/admin-data.js"></script>
   </body>
 </html>

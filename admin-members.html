@@ -33,8 +33,8 @@
         display: flex;
       }
       .modal-box {
-        background: linear-gradient(135deg, #1a2f3a, #0f2027);
-        border: 1px solid rgba(26, 188, 156, 0.3);
+        background: var(--bg-base);
+        border: 1px solid var(--card-border);
         border-radius: 20px;
         padding: 35px;
         max-width: 600px;
@@ -58,7 +58,7 @@
         font-size: 18px;
       }
       .modal-box h2 {
-        color: #1abc9c;
+        color: var(--accent);
         margin-bottom: 25px;
         font-size: 22px;
       }
@@ -73,7 +73,7 @@
       .form-group label {
         display: block;
         font-size: 12px;
-        color: white;
+        color: var(--text-primary);
         opacity: 0.85;
         margin-bottom: 6px;
         font-weight: 500;
@@ -83,21 +83,22 @@
       .form-group textarea {
         width: 100%;
         padding: 11px 14px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
         border-radius: 10px;
-        color: white;
+        color: var(--text-primary);
         font-family: "Poppins", sans-serif;
         font-size: 13px;
         outline: none;
       }
       .form-group input:focus,
       .form-group select:focus {
-        border-color: #1abc9c;
-        background: rgba(26, 188, 156, 0.08);
+        border-color: var(--accent);
+        background: var(--input-focus-bg);
       }
       .form-group select option {
-        background: #203a43;
+        background: var(--bg-base);
+        color: var(--text-primary);
       }
       .modal-actions {
         display: flex;
@@ -115,41 +116,31 @@
         cursor: pointer;
       }
       .btn-cancel {
-        background: rgba(255, 255, 255, 0.08);
-        color: white;
+        background: var(--input-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--card-border);
       }
       .btn-save-modal {
-        background: linear-gradient(135deg, #1abc9c, #16a085);
+        background: var(--accent);
         color: white;
       }
       .view-row {
         padding: 12px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid var(--card-border);
         display: flex;
         justify-content: space-between;
         font-size: 13px;
       }
       .view-row span:first-child {
-        color: white;
-        opacity: 0.7;
+        color: var(--text-muted);
       }
       .view-row span:last-child {
-        color: white;
+        color: var(--text-primary);
         font-weight: 600;
       }
       .view-row:last-child {
         border-bottom: none;
       }
-      .btn-view-detail {
-        background: rgba(59, 130, 246, 0.12);
-        border-color: rgba(59, 130, 246, 0.3);
-      }
-      .btn-edit-detail {
-        background: rgba(245, 158, 11, 0.12);
-        border-color: rgba(245, 158, 11, 0.3);
-      }
-
-      /* SCORE BADGE */
       .score-badge {
         display: inline-flex;
         align-items: center;
@@ -174,7 +165,6 @@
         color: #d1d5db;
         border: 1px solid rgba(107, 114, 128, 0.3);
       }
-
       .badge-mini {
         display: inline-block;
         padding: 3px 8px;
@@ -205,7 +195,7 @@
       }
     </style>
   </head>
-  <body class="dashboard-body">
+  <body class="dashboard-body admin-body">
     <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">
@@ -232,8 +222,7 @@
           </li>
           <li>
             <a href="admin-applications.html"
-              ><span class="nav-icon">📝</span><span>Applications</span
-              ><span class="badge" id="appBadge">0</span></a
+              ><span class="nav-icon">📝</span><span>Applications</span></a
             >
           </li>
           <li>
@@ -242,9 +231,13 @@
             >
           </li>
           <li>
+            <a href="admin-issue-reports.html"
+              ><span class="nav-icon">🚨</span><span>Issue Reports</span></a
+            >
+          </li>
+          <li>
             <a href="admin-proposals.html"
-              ><span class="nav-icon">💡</span><span>Proposals</span
-              ><span class="badge" id="propBadge">0</span></a
+              ><span class="nav-icon">💡</span><span>Proposals</span></a
             >
           </li>
           <li>
@@ -328,26 +321,6 @@
           </li>
         </ul>
       </nav>
-      <div class="sidebar-footer">
-        <a
-          href="index.html"
-          style="
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            border-radius: 10px;
-            color: #93c5fd;
-            text-decoration: none;
-            font-size: 14px;
-            background: rgba(59, 130, 246, 0.08);
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            margin-bottom: 8px;
-          "
-          ><span>🌐</span><span>Back to Website</span></a
-        >
-        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
-      </div>
     </aside>
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -364,7 +337,7 @@
             <div class="user-avatar admin-avatar" id="topAvatar">A</div>
             <div class="user-info">
               <span class="user-name">Admin</span
-              ><span class="user-uid">Super Admin</span>
+              ><span class="user-uid" id="topRole">Super Admin</span>
             </div>
           </div>
         </div>
@@ -383,8 +356,8 @@
           "
         >
           <div class="page-header-info">
-            <h1 style="color: white">👥 Members Directory</h1>
-            <p style="color: white; opacity: 0.75">
+            <h1 style="color: var(--text-primary)">👥 Members Directory</h1>
+            <p style="color: var(--text-secondary); opacity: 0.75">
               Total <strong id="totalMembers">0</strong> members
             </p>
           </div>
@@ -396,9 +369,9 @@
                 align-items: center;
                 gap: 8px;
                 padding: 12px 22px;
-                background: rgba(245, 158, 11, 0.15);
-                color: #fbbf24;
-                border: 1px solid rgba(245, 158, 11, 0.35);
+                background: var(--warm-soft);
+                color: var(--warm);
+                border: 1px solid var(--warm);
                 border-radius: 12px;
                 font-family: Poppins;
                 font-size: 13px;
@@ -410,14 +383,12 @@
             </button>
             <button
               id="addMemberBtn"
+              class="btn-primary"
               style="
                 display: flex;
                 align-items: center;
                 gap: 8px;
                 padding: 12px 24px;
-                background: linear-gradient(135deg, #1abc9c, #16a085);
-                color: white;
-                border: none;
                 border-radius: 12px;
                 font-family: Poppins;
                 font-size: 14px;
@@ -438,8 +409,6 @@
             gap: 15px;
             flex-wrap: wrap;
             margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
           "
         >
           <div style="flex: 1; min-width: 250px; position: relative">
@@ -460,10 +429,10 @@
               style="
                 width: 100%;
                 padding: 12px 15px 12px 45px;
-                background: rgba(255, 255, 255, 0.08);
-                border: 1px solid rgba(255, 255, 255, 0.15);
+                background: var(--input-bg);
+                border: 1px solid var(--input-border);
                 border-radius: 10px;
-                color: white;
+                color: var(--text-primary);
                 font-family: Poppins;
                 font-size: 13px;
                 outline: none;
@@ -474,10 +443,10 @@
             id="filterStatus"
             style="
               padding: 11px 15px;
-              background: rgba(255, 255, 255, 0.08);
-              border: 1px solid rgba(255, 255, 255, 0.15);
+              background: var(--input-bg);
+              border: 1px solid var(--input-border);
               border-radius: 10px;
-              color: white;
+              color: var(--text-primary);
               font-family: Poppins;
               font-size: 13px;
               outline: none;
@@ -494,10 +463,10 @@
             id="filterSort"
             style="
               padding: 11px 15px;
-              background: rgba(255, 255, 255, 0.08);
-              border: 1px solid rgba(255, 255, 255, 0.15);
+              background: var(--input-bg);
+              border: 1px solid var(--input-border);
               border-radius: 10px;
-              color: white;
+              color: var(--text-primary);
               font-family: Poppins;
               font-size: 13px;
               outline: none;
@@ -520,13 +489,13 @@
               style="width: 100%; border-collapse: collapse; min-width: 1000px"
             >
               <thead>
-                <tr>
+                <tr style="background: var(--input-bg)">
                   <th
                     style="
                       text-align: left;
                       padding: 18px 15px;
                       font-size: 12px;
-                      color: #1abc9c;
+                      color: var(--text-primary);
                     "
                   >
                     Member
@@ -536,7 +505,7 @@
                       text-align: left;
                       padding: 18px 15px;
                       font-size: 12px;
-                      color: #1abc9c;
+                      color: var(--text-primary);
                     "
                   >
                     UID
@@ -546,7 +515,7 @@
                       text-align: left;
                       padding: 18px 15px;
                       font-size: 12px;
-                      color: #1abc9c;
+                      color: var(--text-primary);
                     "
                   >
                     District
@@ -556,7 +525,7 @@
                       text-align: left;
                       padding: 18px 15px;
                       font-size: 12px;
-                      color: #1abc9c;
+                      color: var(--text-primary);
                     "
                   >
                     Role
@@ -566,7 +535,7 @@
                       text-align: left;
                       padding: 18px 15px;
                       font-size: 12px;
-                      color: #1abc9c;
+                      color: var(--text-primary);
                     "
                   >
                     Phone
@@ -576,7 +545,7 @@
                       text-align: center;
                       padding: 18px 15px;
                       font-size: 12px;
-                      color: #1abc9c;
+                      color: var(--text-primary);
                     "
                   >
                     Score
@@ -586,7 +555,7 @@
                       text-align: center;
                       padding: 18px 15px;
                       font-size: 12px;
-                      color: #1abc9c;
+                      color: var(--text-primary);
                     "
                   >
                     Badges
@@ -596,7 +565,7 @@
                       text-align: left;
                       padding: 18px 15px;
                       font-size: 12px;
-                      color: #1abc9c;
+                      color: var(--text-primary);
                     "
                   >
                     Status
@@ -606,7 +575,7 @@
                       text-align: right;
                       padding: 18px 15px;
                       font-size: 12px;
-                      color: #1abc9c;
+                      color: var(--text-primary);
                     "
                   >
                     Actions
@@ -620,8 +589,7 @@
                     style="
                       text-align: center;
                       padding: 40px;
-                      color: white;
-                      opacity: 0.7;
+                      color: var(--text-muted);
                     "
                   >
                     Loading...
@@ -637,13 +605,12 @@
               justify-content: space-between;
               align-items: center;
               padding: 18px 22px;
-              background: rgba(255, 255, 255, 0.03);
-              border-top: 1px solid rgba(255, 255, 255, 0.08);
+              border-top: 1px solid var(--card-border);
             "
           >
-            <div style="font-size: 13px; color: white; opacity: 0.8">
+            <div style="font-size: 13px; color: var(--text-secondary)">
               Showing
-              <strong id="showingCount" style="color: #1abc9c">0</strong>
+              <strong id="showingCount" style="color: var(--accent)">0</strong>
               members
             </div>
           </div>
@@ -712,6 +679,8 @@
               <label>Role</label>
               <select id="amRole">
                 <option>Member</option>
+                <option>District Admin</option>
+                <!-- NAYA ROLE -->
                 <option>President</option>
                 <option>Senior Vice President</option>
                 <option>Vice President</option>
@@ -816,6 +785,8 @@
               <label>Role</label>
               <select id="emRole">
                 <option>Member</option>
+                <option>District Admin</option>
+                <!-- NAYA ROLE -->
                 <option>President</option>
                 <option>Senior Vice President</option>
                 <option>Vice President</option>
@@ -858,6 +829,8 @@
     <script>
       let allMembers = [];
       let currentUser = null;
+      let currentAdminRole = "";
+      let currentAdminDistrict = "";
 
       window.closeModal = function (id) {
         document.getElementById(id).classList.remove("active");
@@ -886,10 +859,13 @@
 
           const { data: admin } = await supabaseClient
             .from("members")
-            .select("name, role")
+            .select("name, role, district")
             .eq("email", session.user.email)
             .single();
           if (admin) {
+            currentAdminRole = admin.role;
+            currentAdminDistrict = admin.district;
+
             document.getElementById("topAvatar").textContent = (
               admin.name || "A"
             )
@@ -904,7 +880,6 @@
           }
 
           await loadMembers();
-          await updateBadges();
           attachEvents();
         } catch (err) {
           console.error(err);
@@ -912,41 +887,22 @@
       });
 
       async function loadMembers() {
-        const { data, error } = await supabaseClient
+        let query = supabaseClient
           .from("members")
           .select("*")
           .order("created_at", { ascending: false });
-        if (error) {
-          console.error(error);
-          return;
+
+        // DISTRICT ADMIN FILTER
+        if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+          query = query.eq("district", currentAdminDistrict);
         }
+
+        const { data, error } = await query;
+        if (error) return;
+
         allMembers = data || [];
         document.getElementById("totalMembers").textContent = allMembers.length;
         renderMembers();
-      }
-
-      async function updateBadges() {
-        const pending = allMembers.filter((m) => m.status === "Pending").length;
-        const appBadge = document.getElementById("appBadge");
-        if (appBadge) {
-          appBadge.textContent = pending;
-          appBadge.style.display = pending > 0 ? "inline-block" : "none";
-        }
-
-        try {
-          const { data: proposals } = await supabaseClient
-            .from("proposals")
-            .select("status");
-          const pendingProps = (proposals || []).filter(
-            (p) => p.status === "Pending",
-          ).length;
-          const propBadge = document.getElementById("propBadge");
-          if (propBadge) {
-            propBadge.textContent = pendingProps;
-            propBadge.style.display =
-              pendingProps > 0 ? "inline-block" : "none";
-          }
-        } catch (e) {}
       }
 
       function renderMembers() {
@@ -972,18 +928,16 @@
           return matchSearch && matchStatus;
         });
 
-        // Sort
-        if (sortBy === "score") {
+        if (sortBy === "score")
           filtered.sort(
             (a, b) => (b.engagement_score || 0) - (a.engagement_score || 0),
           );
-        } else if (sortBy === "name") {
+        else if (sortBy === "name")
           filtered.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-        }
 
         if (filtered.length === 0) {
           tbody.innerHTML =
-            '<tr><td colspan="9" style="text-align:center;padding:40px;color:white;opacity:0.7;">No members found</td></tr>';
+            '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted);">No members found</td></tr>';
           document.getElementById("showingCount").textContent = "0";
           return;
         }
@@ -1000,13 +954,9 @@
                   : m.status === "Rejected"
                     ? "status-badge-inactive"
                     : "status-badge-pending";
-
-            // Score badge
             const score = m.engagement_score || 0;
             const scoreClass =
               score >= 60 ? "high" : score >= 30 ? "medium" : "low";
-
-            // Badges
             const badgeMap = {
               "New Member": { icon: "🌟", class: "new" },
               Active: { icon: "🔥", class: "active" },
@@ -1020,30 +970,30 @@
                   return `<span class="badge-mini ${info.class}">${info.icon} ${b}</span>`;
                 })
                 .join("") ||
-              '<span style="opacity:0.5;font-size:10px;color:white;">-</span>';
+              '<span style="opacity:0.5;font-size:10px;">-</span>';
 
             return `
-                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+                <tr style="border-bottom:1px solid var(--card-border);">
                     <td style="padding:15px;">
                         <div style="display:flex;align-items:center;gap:12px;">
-                            <div style="width:40px;height:40px;border-radius:12px;background:${isFemale ? "linear-gradient(135deg,#ec4899,#be185d)" : "linear-gradient(135deg,#1abc9c,#16a085)"};display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">${initial}</div>
-                            <div><h4 style="color:white;font-size:14px;font-weight:600;margin-bottom:3px;">${m.name || "-"}</h4><p style="color:white;font-size:11px;opacity:0.65;">${m.email || "-"}</p></div>
+                            <div style="width:40px;height:40px;border-radius:12px;background:${isFemale ? "linear-gradient(135deg,#ec4899,#be185d)" : "linear-gradient(135deg,var(--accent),var(--accent-dark))"};display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">${initial}</div>
+                            <div><h4 style="color:var(--text-primary);font-size:14px;font-weight:600;margin-bottom:3px;">${m.name || "-"}</h4><p style="color:var(--text-muted);font-size:11px;">${m.email || "-"}</p></div>
                         </div>
                     </td>
-                    <td style="padding:15px;"><span style="background:rgba(59,130,246,0.15);color:#93c5fd;padding:4px 10px;border-radius:8px;font-size:11px;font-family:monospace;">${m.uid || "-"}</span></td>
-                    <td style="padding:15px;color:white;">${m.district || "-"}</td>
-                    <td style="padding:15px;color:white;">${m.role || "Member"}</td>
-                    <td style="padding:15px;color:white;">${m.phone || "-"}</td>
+                    <td style="padding:15px;"><span style="background:var(--accent-soft);color:var(--accent);padding:4px 10px;border-radius:8px;font-size:11px;font-family:monospace;">${m.uid || "-"}</span></td>
+                    <td style="padding:15px;color:var(--text-secondary);">${m.district || "-"}</td>
+                    <td style="padding:15px;color:var(--text-secondary);">${m.role || "Member"}</td>
+                    <td style="padding:15px;color:var(--text-secondary);">${m.phone || "-"}</td>
                     <td style="padding:15px;text-align:center;"><span class="score-badge ${scoreClass}">📊 ${score}</span></td>
                     <td style="padding:15px;text-align:center;max-width:150px;">${badgesHTML}</td>
                     <td style="padding:15px;"><span class="${sc}">${m.status || "Pending"}</span></td>
                     <td style="padding:15px;text-align:right;">
                         <div style="display:flex;gap:6px;justify-content:flex-end;">
-                            <button onclick="viewMember(${m.id})" title="View" style="width:34px;height:34px;border-radius:8px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:white;cursor:pointer;">👁️</button>
-                            <button onclick="editMember(${m.id})" title="Edit" style="width:34px;height:34px;border-radius:8px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:white;cursor:pointer;">✏️</button>
-                            ${m.status === "Active" ? `<button onclick="suspendMember(${m.id})" title="Suspend" style="width:34px;height:34px;border-radius:8px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:white;cursor:pointer;">⏸️</button>` : ""}
-                            ${m.status !== "Active" ? `<button onclick="activateMember(${m.id})" title="Activate" style="width:34px;height:34px;border-radius:8px;background:rgba(26,188,156,0.15);border:1px solid rgba(26,188,156,0.4);color:white;cursor:pointer;">✅</button>` : ""}
-                            <button onclick="deleteMember(${m.id})" title="Delete" style="width:34px;height:34px;border-radius:8px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:white;cursor:pointer;">🗑️</button>
+                            <button onclick="viewMember('${m.id}')" title="View" style="width:34px;height:34px;border-radius:8px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:var(--text-primary);cursor:pointer;">👁️</button>
+                            <button onclick="editMember('${m.id}')" title="Edit" style="width:34px;height:34px;border-radius:8px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--text-primary);cursor:pointer;">✏️</button>
+                            ${m.status === "Active" ? `<button onclick="suspendMember('${m.id}')" title="Suspend" style="width:34px;height:34px;border-radius:8px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:var(--text-primary);cursor:pointer;">⏸️</button>` : ""}
+                            ${m.status !== "Active" ? `<button onclick="activateMember('${m.id}')" title="Activate" style="width:34px;height:34px;border-radius:8px;background:rgba(26,188,156,0.15);border:1px solid rgba(26,188,156,0.4);color:var(--text-primary);cursor:pointer;">✅</button>` : ""}
+                            <button onclick="deleteMember('${m.id}')" title="Delete" style="width:34px;height:34px;border-radius:8px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);color:var(--text-primary);cursor:pointer;">🗑️</button>
                         </div>
                     </td>
                 </tr>`;
@@ -1069,87 +1019,77 @@
             document.getElementById("addModal").classList.add("active"),
           );
 
-        // Recalculate scores button
         document
           .getElementById("recalcScoresBtn")
           .addEventListener("click", async function () {
-            if (
-              !confirm(
-                "Recalculate engagement scores for all members?\n\nThis may take a moment.",
-              )
-            )
-              return;
+            window.syfConfirm(
+              "Recalculate engagement scores for all members?\nThis may take a moment.",
+              async (confirmed) => {
+                if (!confirmed) return;
+                const btn = this;
+                btn.disabled = true;
+                btn.innerHTML = "⏳ Calculating...";
 
-            const btn = this;
-            btn.disabled = true;
-            btn.innerHTML = "⏳ Calculating...";
+                let sa = 0;
+                while (
+                  typeof window.calculateMemberScore === "undefined" &&
+                  sa < 30
+                ) {
+                  await new Promise((r) => setTimeout(r, 100));
+                  sa++;
+                }
 
-            let sa = 0;
-            while (
-              typeof window.calculateMemberScore === "undefined" &&
-              sa < 30
-            ) {
-              await new Promise((r) => setTimeout(r, 100));
-              sa++;
-            }
+                if (typeof window.calculateMemberScore === "undefined") {
+                  window.syfError("Score service not loaded. Please refresh.");
+                  btn.disabled = false;
+                  btn.innerHTML = "🔄 Recalculate Scores";
+                  return;
+                }
 
-            if (typeof window.calculateMemberScore === "undefined") {
-              alert("❌ Score service not loaded. Please refresh.");
-              btn.disabled = false;
-              btn.innerHTML = "🔄 Recalculate Scores";
-              return;
-            }
+                let successCount = 0;
+                for (const m of allMembers) {
+                  try {
+                    await window.calculateMemberScore(m);
+                    successCount++;
+                  } catch (e) {}
+                }
 
-            let successCount = 0;
-            for (const m of allMembers) {
-              try {
-                await window.calculateMemberScore(m);
-                successCount++;
-              } catch (e) {
-                console.log("Error for:", m.name, e);
-              }
-            }
-
-            alert("✅ Scores recalculated for " + successCount + " members!");
-            btn.disabled = false;
-            btn.innerHTML = "🔄 Recalculate Scores";
-            await loadMembers();
+                window.syfSuccess(
+                  "Scores recalculated for " + successCount + " members!",
+                );
+                btn.disabled = false;
+                btn.innerHTML = "🔄 Recalculate Scores";
+                await loadMembers();
+              },
+            );
           });
 
-        // Add Member form
         document
           .getElementById("addMemberForm")
           .addEventListener("submit", async function (e) {
             e.preventDefault();
-            const name = document.getElementById("amName").value.trim();
-            const email = document.getElementById("amEmail").value.trim();
             const password = document.getElementById("amPassword").value;
-
-            if (password.length < 8) {
-              alert("❌ Password must be at least 8 characters");
-              return;
-            }
+            if (password.length < 8)
+              return window.syfError("Password must be at least 8 characters");
 
             try {
               const uid = "SYDF-" + String(Date.now()).slice(-6);
               const { error: authError } = await supabaseClient.auth.signUp({
-                email,
+                email: document.getElementById("amEmail").value.trim(),
                 password,
               });
-              if (authError && authError.message.indexOf("already") === -1) {
-                alert("❌ " + authError.message);
-                return;
-              }
+              if (authError && authError.message.indexOf("already") === -1)
+                return window.syfError(authError.message);
 
               const { error: dbError } = await supabaseClient
                 .from("members")
                 .insert([
                   {
                     uid: uid,
-                    name: name,
+                    name: document.getElementById("amName").value.trim(),
                     father_name:
                       document.getElementById("amFather").value.trim() || null,
-                    email: email,
+                    email: document.getElementById("amEmail").value.trim(),
                     phone: document.getElementById("amPhone").value.trim(),
                     cnic:
                       document.getElementById("amCnic").value.trim() || null,
@@ -1164,25 +1104,20 @@
                   },
                 ]);
 
-              if (dbError) {
-                alert("❌ " + dbError.message);
-                return;
-              }
-              alert("✅ Member added successfully!");
+              if (dbError) return window.syfError(dbError.message);
+              window.syfSuccess("Member added successfully!");
               closeModal("addModal");
               this.reset();
               await loadMembers();
             } catch (err) {
-              alert("❌ " + err.message);
+              window.syfError(err.message);
             }
           });
 
-        // Edit Member form
         document
           .getElementById("editMemberForm")
           .addEventListener("submit", async function (e) {
             e.preventDefault();
-            const id = document.getElementById("emId").value;
             const updates = {
               name: document.getElementById("emName").value.trim(),
               father_name:
@@ -1197,23 +1132,17 @@
             const { error } = await supabaseClient
               .from("members")
               .update(updates)
-              .eq("id", id);
-            if (error) {
-              alert("❌ " + error.message);
-              return;
-            }
-            alert("✅ Member updated!");
+              .eq("id", document.getElementById("emId").value);
+            if (error) return window.syfError(error.message);
+            window.syfSuccess("Member updated!");
             closeModal("editModal");
             await loadMembers();
           });
       }
 
       window.viewMember = function (id) {
-        const m = allMembers.find((x) => x.id === id);
+        const m = allMembers.find((x) => String(x.id) === String(id));
         if (!m) return;
-
-        const badgesList = (m.badges || []).join(", ") || "None";
-
         document.getElementById("viewTitle").textContent = "👤 " + m.name;
         document.getElementById("viewContent").innerHTML = `
                 <div class="view-row"><span>UID</span><span>${m.uid || "-"}</span></div>
@@ -1221,17 +1150,12 @@
                 <div class="view-row"><span>Father's Name</span><span>${m.father_name || "-"}</span></div>
                 <div class="view-row"><span>Email</span><span>${m.email || "-"}</span></div>
                 <div class="view-row"><span>Phone</span><span>${m.phone || "-"}</span></div>
-                <div class="view-row"><span>CNIC (Full)</span><span>${m.cnic || "-"}</span></div>
-                <div class="view-row"><span>CNIC (Masked)</span><span>${m.cnic_masked || "-"}</span></div>
+                <div class="view-row"><span>CNIC</span><span>${m.cnic_masked || (m.cnic ? m.cnic.replace(/^(\d{5})\d{7}(\d)$/, "$1-XXXXXXX-$2") : "-")}</span></div>
                 <div class="view-row"><span>Gender</span><span>${m.gender || "-"}</span></div>
-                <div class="view-row"><span>DOB</span><span>${m.dob || "-"}</span></div>
-                <div class="view-row"><span>Blood Group</span><span>${m.blood_group || "-"}</span></div>
                 <div class="view-row"><span>District</span><span>${m.district || "-"}</span></div>
-                <div class="view-row"><span>Tehsil</span><span>${m.tehsil || "-"}</span></div>
                 <div class="view-row"><span>Role</span><span>${m.role || "-"}</span></div>
                 <div class="view-row"><span>Status</span><span>${m.status || "-"}</span></div>
-                <div class="view-row"><span>Engagement Score</span><span style="color:#1abc9c;">📊 ${m.engagement_score || 0} / 100</span></div>
-                <div class="view-row"><span>Badges</span><span>${badgesList}</span></div>
+                <div class="view-row"><span>Engagement Score</span><span style="color:var(--accent);">📊 ${m.engagement_score || 0} / 100</span></div>
                 <div class="view-row"><span>Joined</span><span>${m.created_at ? new Date(m.created_at).toLocaleDateString("en-PK") : "-"}</span></div>
                 ${m.suspended_reason ? `<div class="view-row"><span>Suspended Reason</span><span style="color:#fca5a5;">${m.suspended_reason}</span></div>` : ""}
             `;
@@ -1239,7 +1163,7 @@
       };
 
       window.editMember = function (id) {
-        const m = allMembers.find((x) => x.id === id);
+        const m = allMembers.find((x) => String(x.id) === String(id));
         if (!m) return;
         document.getElementById("emId").value = m.id;
         document.getElementById("emName").value = m.name || "";
@@ -1253,59 +1177,59 @@
         document.getElementById("editModal").classList.add("active");
       };
 
-      window.suspendMember = async function (id) {
-        const m = allMembers.find((x) => x.id === id);
-        const reason = prompt(`Suspend ${m.name}?\n\nReason (required):`);
-        if (!reason) return;
-        const { error } = await supabaseClient
-          .from("members")
-          .update({
-            status: "Suspended",
-            suspended_reason: reason,
-            suspended_at: new Date().toISOString(),
-          })
-          .eq("id", id);
-        if (error) {
-          alert("❌ " + error.message);
-          return;
-        }
-        alert("⏸️ Member suspended");
-        await loadMembers();
+      window.suspendMember = function (id) {
+        const m = allMembers.find((x) => String(x.id) === String(id));
+        window.syfConfirm(`Suspend ${m.name}?`, async (confirmed) => {
+          if (!confirmed) return;
+          const reason = prompt(`Suspend ${m.name}?\n\nReason (required):`);
+          if (!reason) return;
+          const { error } = await supabaseClient
+            .from("members")
+            .update({
+              status: "Suspended",
+              suspended_reason: reason,
+              suspended_at: new Date().toISOString(),
+            })
+            .eq("id", id);
+          if (error) return window.syfError(error.message);
+          window.syfSuccess("Member suspended");
+          await loadMembers();
+        });
       };
 
-      window.activateMember = async function (id) {
-        const m = allMembers.find((x) => x.id === id);
-        if (!confirm("Activate " + m.name + "?")) return;
-        const { error } = await supabaseClient
-          .from("members")
-          .update({
-            status: "Active",
-            suspended_reason: null,
-            suspended_at: null,
-          })
-          .eq("id", id);
-        if (error) {
-          alert("❌ " + error.message);
-          return;
-        }
-        alert("✅ Member activated");
-        await loadMembers();
+      window.activateMember = function (id) {
+        const m = allMembers.find((x) => String(x.id) === String(id));
+        window.syfConfirm("Activate " + m.name + "?", async (confirmed) => {
+          if (!confirmed) return;
+          const { error } = await supabaseClient
+            .from("members")
+            .update({
+              status: "Active",
+              suspended_reason: null,
+              suspended_at: null,
+            })
+            .eq("id", id);
+          if (error) return window.syfError(error.message);
+          window.syfSuccess("Member activated");
+          await loadMembers();
+        });
       };
 
-      window.deleteMember = async function (id) {
-        const m = allMembers.find((x) => x.id === id);
-        if (!confirm("⚠️ DELETE " + m.name + " permanently?")) return;
-        if (!confirm("This cannot be undone. Are you sure?")) return;
-        const { error } = await supabaseClient
-          .from("members")
-          .delete()
-          .eq("id", id);
-        if (error) {
-          alert("❌ " + error.message);
-          return;
-        }
-        alert("🗑️ Member deleted");
-        await loadMembers();
+      window.deleteMember = function (id) {
+        const m = allMembers.find((x) => String(x.id) === String(id));
+        window.syfConfirm(
+          "⚠️ DELETE " + m.name + " permanently? This cannot be undone.",
+          async (confirmed) => {
+            if (!confirmed) return;
+            const { error } = await supabaseClient
+              .from("members")
+              .delete()
+              .eq("id", id);
+            if (error) return window.syfError(error.message);
+            window.syfSuccess("Member deleted");
+            await loadMembers();
+          },
+        );
       };
     </script>
   </body>

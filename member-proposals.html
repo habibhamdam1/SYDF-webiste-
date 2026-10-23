@@ -13,518 +13,181 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      .page-intro {
+      .page-header-flex {
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 20px;
         flex-wrap: wrap;
-        margin-bottom: 22px;
+        margin-bottom: 24px;
       }
-      .page-intro h1 {
-        color: white;
+      .page-header-flex h1 {
+        color: var(--text-primary);
         font-size: 24px;
-        font-weight: 700;
         margin-bottom: 5px;
       }
-      .page-intro p {
-        color: white;
+      .page-header-flex p {
+        color: var(--text-secondary);
         font-size: 14px;
-        opacity: 0.7;
-      }
-      .btn-primary {
-        padding: 13px 28px;
-        background: linear-gradient(135deg, #1abc9c, #16a085);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-family: "Poppins", sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.3s;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 30px rgba(26, 188, 156, 0.4);
       }
 
       .info-banner {
-        padding: 18px 22px;
-        background: linear-gradient(
-          135deg,
-          rgba(59, 130, 246, 0.1),
-          rgba(59, 130, 246, 0.02)
-        );
-        border: 1px solid rgba(59, 130, 246, 0.25);
-        border-left: 4px solid #3b82f6;
-        border-radius: 16px;
+        background: var(--accent-soft);
+        border: 1px solid var(--accent);
+        border-radius: var(--r-md);
+        padding: 20px;
         display: flex;
-        gap: 18px;
-        align-items: center;
-        margin-bottom: 25px;
-        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-start;
+        margin-bottom: 24px;
       }
-      .info-banner .ico {
-        font-size: 32px;
-        flex-shrink: 0;
+      .info-banner .icon {
+        font-size: 28px;
       }
       .info-banner h4 {
-        color: #93c5fd;
-        font-size: 14px;
-        font-weight: 600;
+        color: var(--accent);
+        font-size: 15px;
         margin-bottom: 4px;
       }
       .info-banner p {
-        color: white;
+        color: var(--text-secondary);
         font-size: 13px;
         line-height: 1.6;
-        opacity: 0.9;
-      }
-      .info-banner strong {
-        color: #93c5fd;
       }
 
       .stats-row {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        margin-bottom: 25px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
       }
-      .stat-pill {
-        padding: 18px 20px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 16px;
+      .stat-box {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-md);
+        padding: 20px;
         display: flex;
         align-items: center;
         gap: 15px;
+        backdrop-filter: blur(10px);
       }
-      .stat-pill .ico {
+      .stat-box .icon {
+        font-size: 24px;
         width: 45px;
         height: 45px;
-        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 22px;
-        flex-shrink: 0;
+        border-radius: 12px;
       }
-      .stat-pill .ico.total {
-        background: rgba(26, 188, 156, 0.15);
-      }
-      .stat-pill .ico.pending {
-        background: rgba(245, 158, 11, 0.15);
-      }
-      .stat-pill .ico.approved {
-        background: rgba(26, 188, 156, 0.15);
-      }
-      .stat-pill .ico.rejected {
-        background: rgba(239, 68, 68, 0.15);
-      }
-      .stat-pill h3 {
-        color: white;
+      .stat-box h3 {
+        color: var(--text-primary);
         font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 3px;
+        margin-bottom: 2px;
       }
-      .stat-pill p {
-        color: white;
-        font-size: 11px;
-        opacity: 0.7;
+      .stat-box p {
+        color: var(--text-muted);
+        font-size: 12px;
+        font-weight: 500;
       }
 
       .proposals-list {
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 16px;
       }
       .proposal-card {
-        padding: 22px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-md);
+        padding: 20px;
+        backdrop-filter: blur(10px);
         transition: 0.3s;
-        position: relative;
-        overflow: hidden;
-      }
-      .proposal-card::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-      }
-      .proposal-card.pending::before {
-        background: #f59e0b;
-      }
-      .proposal-card.approved::before {
-        background: #1abc9c;
-      }
-      .proposal-card.rejected::before {
-        background: #ef4444;
       }
       .proposal-card:hover {
-        background: rgba(26, 188, 156, 0.06);
-        border-color: rgba(26, 188, 156, 0.25);
+        border-color: var(--card-border-hover);
+        transform: translateY(-2px);
       }
-
-      .proposal-top {
+      .proposal-header {
         display: flex;
         justify-content: space-between;
-        gap: 15px;
-        margin-bottom: 10px;
-        flex-wrap: wrap;
         align-items: flex-start;
+        margin-bottom: 10px;
+        gap: 10px;
       }
       .proposal-title {
-        color: white;
+        color: var(--text-primary);
         font-size: 16px;
         font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
       }
-      .type-badge {
-        padding: 4px 12px;
-        border-radius: 15px;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .type-badge.activity {
-        background: rgba(59, 130, 246, 0.2);
-        color: #93c5fd;
-      }
-      .type-badge.proposal {
-        background: rgba(26, 188, 156, 0.2);
-        color: #1abc9c;
-      }
-      .type-badge.sponsor {
-        background: rgba(245, 158, 11, 0.2);
-        color: #fbbf24;
-      }
-      .type-badge.feedback {
-        background: rgba(236, 72, 153, 0.2);
-        color: #f9a8d4;
-      }
-
       .status-badge {
-        padding: 5px 14px;
+        padding: 4px 12px;
         border-radius: 20px;
         font-size: 11px;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        white-space: nowrap;
       }
-      .status-badge.pending {
+      .status-pending {
         background: rgba(245, 158, 11, 0.15);
-        color: #fbbf24;
+        color: #f59e0b;
         border: 1px solid rgba(245, 158, 11, 0.3);
       }
-      .status-badge.approved {
+      .status-approved {
         background: rgba(26, 188, 156, 0.15);
         color: #1abc9c;
         border: 1px solid rgba(26, 188, 156, 0.3);
       }
-      .status-badge.rejected {
+      .status-rejected {
         background: rgba(239, 68, 68, 0.15);
-        color: #fca5a5;
+        color: #ef4444;
         border: 1px solid rgba(239, 68, 68, 0.3);
       }
-
       .proposal-desc {
-        color: white;
+        color: var(--text-secondary);
         font-size: 13px;
-        line-height: 1.7;
-        opacity: 0.85;
-        margin-bottom: 12px;
+        line-height: 1.6;
+        margin-bottom: 15px;
       }
-      .proposal-meta {
+      .proposal-footer {
         display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        font-size: 11px;
-        color: white;
-        opacity: 0.7;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--card-border);
         padding-top: 12px;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .admin-response {
-        padding: 14px 16px;
-        background: rgba(26, 188, 156, 0.08);
-        border: 1px solid rgba(26, 188, 156, 0.2);
-        border-left: 3px solid #1abc9c;
-        border-radius: 10px;
-        margin-top: 12px;
-      }
-      .admin-response h5 {
-        color: #1abc9c;
         font-size: 12px;
-        font-weight: 700;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .admin-response p {
-        color: white;
-        font-size: 13px;
-        line-height: 1.7;
-        opacity: 0.9;
+        color: var(--text-muted);
       }
 
-      .empty-box {
-        text-align: center;
-        padding: 70px 30px;
-        background: rgba(255, 255, 255, 0.04);
-        border-radius: 18px;
-        border: 1px dashed rgba(255, 255, 255, 0.12);
-      }
-      .empty-box .ico {
-        font-size: 64px;
-        opacity: 0.5;
-        margin-bottom: 18px;
-        display: block;
-      }
-      .empty-box h3 {
-        color: white;
-        font-size: 18px;
-        margin-bottom: 8px;
-      }
-      .empty-box p {
-        color: white;
-        font-size: 13px;
-        opacity: 0.65;
-      }
-
-      /* MODAL */
+      /* Modal */
       .modal-overlay {
-        display: none;
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(8px);
-        z-index: 9999;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
         justify-content: center;
-        align-items: flex-start;
-        padding: 40px 20px;
-        overflow-y: auto;
-      }
-      .modal-overlay.active {
-        display: flex;
+        z-index: 9999;
       }
       .modal-box {
-        background: linear-gradient(160deg, #1a2f3a 0%, #0f2027 100%);
-        border: 1px solid rgba(26, 188, 156, 0.25);
-        border-radius: 24px;
-        max-width: 650px;
-        width: 100%;
-        position: relative;
-        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
-        overflow: hidden;
+        background: var(--bg-base);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-lg);
+        padding: 30px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
       }
-      .modal-header {
-        padding: 28px 32px 20px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: linear-gradient(
-          135deg,
-          rgba(26, 188, 156, 0.12),
-          transparent
-        );
-        position: relative;
-      }
-      .modal-header h2 {
-        color: white;
-        font-size: 22px;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-      .modal-header p {
-        color: white;
-        font-size: 13px;
-        opacity: 0.65;
-        margin-top: 6px;
-      }
-      .modal-close {
-        position: absolute;
-        top: 22px;
-        right: 22px;
-        background: rgba(239, 68, 68, 0.15);
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #fca5a5;
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
-        cursor: pointer;
-        font-size: 18px;
-        transition: 0.3s;
-      }
-      .modal-close:hover {
-        background: #ef4444;
-        color: white;
-        transform: rotate(90deg);
-      }
-      .modal-body {
-        padding: 30px 32px;
-        max-height: 65vh;
-        overflow-y: auto;
-      }
-      .modal-footer {
-        padding: 20px 32px 28px;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        display: flex;
-        gap: 12px;
-        justify-content: flex-end;
-        background: rgba(0, 0, 0, 0.15);
-      }
-
-      .form-group {
-        margin-bottom: 22px;
-      }
-      .form-group:last-child {
-        margin-bottom: 0;
-      }
-      .form-group label {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        color: white;
-        font-weight: 600;
-        margin-bottom: 10px;
-      }
-      .form-group label .req {
-        color: #ef4444;
-      }
-      .field-input,
-      .field-select,
-      .field-textarea {
-        width: 100%;
-        padding: 14px 18px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1.5px solid rgba(255, 255, 255, 0.12);
-        border-radius: 12px;
-        color: white;
-        font-family: "Poppins", sans-serif;
-        font-size: 13.5px;
-        outline: none;
-        transition: 0.3s;
-      }
-      .field-input::placeholder,
-      .field-textarea::placeholder {
-        color: rgba(255, 255, 255, 0.4);
-      }
-      .field-input:focus,
-      .field-select:focus,
-      .field-textarea:focus {
-        border-color: #1abc9c;
-        background: rgba(26, 188, 156, 0.06);
-        box-shadow: 0 0 0 4px rgba(26, 188, 156, 0.12);
-      }
-      .field-select {
-        cursor: pointer;
-        appearance: none;
-        padding-right: 45px;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231abc9c' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 18px center;
-      }
-      .field-select option {
-        background: #203a43;
-      }
-      .field-textarea {
-        resize: vertical;
-        min-height: 130px;
-      }
-
-      .type-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-      .type-card {
-        cursor: pointer;
-      }
-      .type-card input {
-        display: none;
-      }
-      .type-card-inner {
-        padding: 18px 14px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 2px solid rgba(255, 255, 255, 0.1);
-        border-radius: 14px;
-        text-align: center;
-        transition: 0.3s;
-      }
-      .type-card-inner .emoji {
-        font-size: 26px;
-        display: block;
-        margin-bottom: 8px;
-      }
-      .type-card-inner .lbl {
-        font-size: 12px;
-        font-weight: 600;
-        color: white;
-        opacity: 0.8;
-      }
-      .type-card input:checked + .type-card-inner {
-        border-color: #1abc9c;
-        background: rgba(26, 188, 156, 0.12);
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(26, 188, 156, 0.25);
-      }
-
-      .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-      }
-
-      .btn-secondary {
-        padding: 13px 28px;
-        background: rgba(255, 255, 255, 0.06);
-        color: white;
-        border: 1.5px solid rgba(255, 255, 255, 0.15);
-        border-radius: 12px;
-        font-family: "Poppins", sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.3s;
-      }
-      .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.12);
-      }
-
-      @media (max-width: 768px) {
-        .stats-row {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .type-grid {
-          grid-template-columns: 1fr;
-        }
-        .form-row {
-          grid-template-columns: 1fr;
-        }
-        .modal-header,
-        .modal-body,
-        .modal-footer {
-          padding-left: 22px;
-          padding-right: 22px;
-        }
+      .modal-box h2 {
+        color: var(--text-primary);
+        font-size: 20px;
+        margin-bottom: 20px;
       }
     </style>
   </head>
   <body class="dashboard-body">
+    <!-- SIDEBAR -->
+    <!-- SIDEBAR (MEMBER PANEL) -->
     <aside class="dashboard-sidebar" id="dashboardSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">
@@ -533,6 +196,7 @@
         </div>
         <button class="sidebar-close" id="sidebarClose">✕</button>
       </div>
+
       <nav class="sidebar-nav">
         <ul>
           <li>
@@ -556,12 +220,12 @@
             >
           </li>
           <li>
-            <a href="activities.html"
-              ><span class="nav-icon">🎯</span><span>Activities</span></a
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
             >
           </li>
           <li>
-            <a href="member-proposals.html" class="active"
+            <a href="member-proposals.html"
               ><span class="nav-icon">💡</span><span>My Proposals</span></a
             >
           </li>
@@ -576,6 +240,11 @@
             >
           </li>
           <li>
+            <a href="member-reports.html"
+              ><span class="nav-icon">🚨</span><span>Report Issue</span></a
+            >
+          </li>
+          <li>
             <a href="notifications.html"
               ><span class="nav-icon">🔔</span><span>Notifications</span></a
             >
@@ -585,15 +254,29 @@
               ><span class="nav-icon">⚙️</span><span>Settings</span></a
             >
           </li>
+
+          <!-- DIVIDER -->
+          <div class="sidebar-divider"></div>
+
+          <!-- BACK TO WEBSITE & LOGOUT (Scrollable) -->
+          <li>
+            <a href="index.html" class="back-to-site-btn">
+              <span class="nav-icon">🌐</span>
+              <span>Back to Website</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="logout-btn">
+              <span class="nav-icon">🚪</span>
+              <span>Logout</span>
+            </a>
+          </li>
         </ul>
       </nav>
-      <div class="sidebar-footer">
-        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
-      </div>
     </aside>
-
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
+    <!-- MAIN CONTENT -->
     <main class="dashboard-main">
       <div class="dashboard-topbar">
         <button class="menu-toggle" id="menuToggle">☰</button>
@@ -613,53 +296,70 @@
       </div>
 
       <div class="dashboard-content">
-        <div class="page-intro">
+        <div class="page-header-flex">
           <div>
             <h1>💡 My Proposals & Suggestions</h1>
             <p>Share your ideas with SYDF leadership</p>
           </div>
-          <button class="btn-primary" id="newProposalBtn">
-            <span>＋</span> New Proposal
-          </button>
+          <button class="btn-primary" id="btnOpenModal">+ New Proposal</button>
         </div>
 
         <div class="info-banner">
-          <div class="ico">💡</div>
+          <span class="icon">📢</span>
           <div>
             <h4>Your Voice Matters!</h4>
             <p>
-              Submit your <strong>activity suggestions</strong>,
-              <strong>project proposals</strong>,
-              <strong>sponsor ideas</strong>, or <strong>feedback</strong>.
-              Admin team will review and respond.
+              Submit your activity suggestions, project proposals, sponsor
+              ideas, or feedback. Admin team will review and respond.
             </p>
           </div>
         </div>
 
+        <!-- Stats -->
         <div class="stats-row">
-          <div class="stat-pill">
-            <div class="ico total">📋</div>
+          <div class="stat-box">
+            <div
+              class="icon"
+              style="background: rgba(59, 130, 246, 0.15); color: #3b82f6"
+            >
+              📋
+            </div>
             <div>
               <h3 id="statTotal">0</h3>
               <p>Total</p>
             </div>
           </div>
-          <div class="stat-pill">
-            <div class="ico pending">⏳</div>
+          <div class="stat-box">
+            <div
+              class="icon"
+              style="background: rgba(245, 158, 11, 0.15); color: #f59e0b"
+            >
+              ⏳
+            </div>
             <div>
               <h3 id="statPending">0</h3>
               <p>Pending</p>
             </div>
           </div>
-          <div class="stat-pill">
-            <div class="ico approved">✅</div>
+          <div class="stat-box">
+            <div
+              class="icon"
+              style="background: rgba(26, 188, 156, 0.15); color: #1abc9c"
+            >
+              ✅
+            </div>
             <div>
               <h3 id="statApproved">0</h3>
               <p>Approved</p>
             </div>
           </div>
-          <div class="stat-pill">
-            <div class="ico rejected">❌</div>
+          <div class="stat-box">
+            <div
+              class="icon"
+              style="background: rgba(239, 68, 68, 0.15); color: #ef4444"
+            >
+              ❌
+            </div>
             <div>
               <h3 id="statRejected">0</h3>
               <p>Rejected</p>
@@ -667,114 +367,56 @@
           </div>
         </div>
 
+        <!-- Proposals List -->
         <div class="proposals-list" id="proposalsList">
-          <div class="empty-box">
-            <span class="ico">⏳</span>
-            <h3>Loading...</h3>
+          <div
+            style="text-align: center; padding: 40px; color: var(--text-muted)"
+          >
+            Loading proposals...
           </div>
         </div>
       </div>
     </main>
 
-    <!-- NEW PROPOSAL MODAL -->
+    <!-- Modal for New Proposal -->
     <div class="modal-overlay" id="proposalModal">
       <div class="modal-box">
-        <div class="modal-header">
-          <h2>💡 Submit New Proposal</h2>
-          <p>Fill the form below and admin will review your proposal</p>
-          <button class="modal-close" onclick="closeModal()">✕</button>
-        </div>
-
+        <h2>Create New Proposal</h2>
         <form id="proposalForm">
-          <div class="modal-body">
-            <div class="form-group">
-              <label>🎯 Proposal Type <span class="req">*</span></label>
-              <div class="type-grid">
-                <label class="type-card">
-                  <input
-                    type="radio"
-                    name="pType"
-                    value="Activity Suggestion"
-                    checked
-                  />
-                  <div class="type-card-inner">
-                    <span class="emoji">🎯</span>
-                    <span class="lbl">Activity Suggestion</span>
-                  </div>
-                </label>
-                <label class="type-card">
-                  <input type="radio" name="pType" value="Project Proposal" />
-                  <div class="type-card-inner">
-                    <span class="emoji">📋</span>
-                    <span class="lbl">Project Proposal</span>
-                  </div>
-                </label>
-                <label class="type-card">
-                  <input type="radio" name="pType" value="Sponsor Suggestion" />
-                  <div class="type-card-inner">
-                    <span class="emoji">🤝</span>
-                    <span class="lbl">Sponsor Suggestion</span>
-                  </div>
-                </label>
-                <label class="type-card">
-                  <input type="radio" name="pType" value="Feedback" />
-                  <div class="type-card-inner">
-                    <span class="emoji">💬</span>
-                    <span class="lbl">Feedback / Idea</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>📝 Title <span class="req">*</span></label>
-              <input
-                type="text"
-                id="pTitle"
-                class="field-input"
-                placeholder="Give your proposal a title"
-                required
-              />
-            </div>
-
-            <div class="form-group">
-              <label>💬 Description <span class="req">*</span></label>
-              <textarea
-                id="pDescription"
-                class="field-textarea"
-                placeholder="Explain your proposal in detail..."
-                required
-              ></textarea>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label>💰 Expected Budget (Rs.)</label>
-                <input
-                  type="number"
-                  id="pBudget"
-                  class="field-input"
-                  placeholder="0"
-                  value="0"
-                />
-              </div>
-              <div class="form-group">
-                <label>📊 Priority</label>
-                <select id="pPriority" class="field-select">
-                  <option>Normal</option>
-                  <option>High</option>
-                  <option>Low</option>
-                </select>
-              </div>
-            </div>
+          <div class="form-group">
+            <label>Proposal Title *</label>
+            <input
+              type="text"
+              id="propTitle"
+              placeholder="e.g., Inter-College Sports Gala"
+              required
+            />
           </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn-secondary" onclick="closeModal()">
+          <div class="form-group">
+            <label>Details / Description *</label>
+            <textarea
+              id="propDesc"
+              rows="5"
+              placeholder="Explain your idea in detail..."
+              required
+            ></textarea>
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 20px">
+            <button
+              type="button"
+              class="btn-secondary"
+              id="btnCloseModal"
+              style="flex: 1"
+            >
               Cancel
             </button>
-            <button type="submit" class="btn-primary">
-              <span>📤</span> Submit Proposal
+            <button
+              type="submit"
+              class="btn-primary"
+              id="btnSubmitProposal"
+              style="flex: 1"
+            >
+              Submit
             </button>
           </div>
         </form>
@@ -783,13 +425,8 @@
 
     <script src="js/main.js"></script>
     <script>
-      let allProposals = [];
       let currentEmail = null;
-      let currentMember = null;
-
-      window.closeModal = function () {
-        document.getElementById("proposalModal").classList.remove("active");
-      };
+      let currentName = null;
 
       window.addEventListener("load", async function () {
         let attempts = 0;
@@ -802,163 +439,156 @@
         }
         if (!supabaseClient) return;
 
-        try {
-          const {
-            data: { session },
-          } = await supabaseClient.auth.getSession();
-          if (!session) {
-            window.location.href = "login.html";
-            return;
-          }
-          currentEmail = session.user.email;
+        // Auth Check
+        const { data: sessionData } = await supabaseClient.auth.getSession();
+        const session = sessionData ? sessionData.session : null;
 
-          const { data: member } = await supabaseClient
-            .from("members")
-            .select("name, uid")
-            .eq("email", currentEmail)
-            .single();
-          currentMember = member;
-          if (member) {
-            document.getElementById("topAvatar").textContent = (
-              member.name || "M"
-            )
-              .charAt(0)
-              .toUpperCase();
-            document
-              .querySelectorAll(".user-name")
-              .forEach((el) => (el.textContent = member.name));
-            document
-              .querySelectorAll(".user-uid")
-              .forEach((el) => (el.textContent = member.uid));
-          }
+        if (!session || !session.user) {
+          window.location.href = "login.html";
+          return;
+        }
 
-          await loadProposals();
+        currentEmail = session.user.email;
+        const { data: member } = await supabaseClient
+          .from("members")
+          .select("name, uid")
+          .eq("email", currentEmail)
+          .maybeSingle();
 
+        if (member) {
+          currentName = member.name;
+          document.getElementById("topAvatar").textContent = (
+            member.name || "M"
+          )
+            .charAt(0)
+            .toUpperCase();
           document
-            .getElementById("newProposalBtn")
-            .addEventListener("click", () => {
-              document.getElementById("proposalModal").classList.add("active");
-            });
-
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = member.name || "Member"));
           document
-            .getElementById("proposalForm")
-            .addEventListener("submit", async function (e) {
-              e.preventDefault();
-              const type = document.querySelector(
-                'input[name="pType"]:checked',
-              ).value;
-              const btn = this.querySelector('button[type="submit"]');
-              const orig = btn.innerHTML;
-              btn.disabled = true;
-              btn.innerHTML = "⏳ Submitting...";
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = member.uid || "-"));
+        }
 
+        loadProposals();
+
+        // Modal Logic
+        const modal = document.getElementById("proposalModal");
+        document
+          .getElementById("btnOpenModal")
+          .addEventListener("click", () => (modal.style.display = "flex"));
+        document
+          .getElementById("btnCloseModal")
+          .addEventListener("click", () => (modal.style.display = "none"));
+
+        // Form Submit
+        document
+          .getElementById("proposalForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const btn = document.getElementById("btnSubmitProposal");
+            const title = document.getElementById("propTitle").value.trim();
+            const desc = document.getElementById("propDesc").value.trim();
+
+            btn.disabled = true;
+            btn.textContent = "Submitting...";
+
+            try {
               const { error } = await supabaseClient.from("proposals").insert([
                 {
                   member_email: currentEmail,
-                  member_name: currentMember ? currentMember.name : "Member",
-                  member_uid: currentMember ? currentMember.uid : null,
-                  proposal_type: type,
-                  title: document.getElementById("pTitle").value.trim(),
-                  description: document
-                    .getElementById("pDescription")
-                    .value.trim(),
-                  expected_budget:
-                    document.getElementById("pBudget").value || 0,
-                  priority: document.getElementById("pPriority").value,
+                  member_name: currentName,
+                  title: title,
+                  description: desc,
                   status: "Pending",
                 },
               ]);
 
-              btn.disabled = false;
-              btn.innerHTML = orig;
+              if (error) throw error;
 
-              if (error) {
-                alert("❌ " + error.message);
-                return;
-              }
-              alert(
-                "✅ Proposal submitted successfully!\n\nAdmin will review it soon.",
-              );
-              closeModal();
+              window.syfSuccess("✅ Proposal submitted successfully!");
               this.reset();
-              await loadProposals();
-            });
-        } catch (err) {
-          console.error(err);
-        }
+              modal.style.display = "none";
+              loadProposals();
+            } catch (err) {
+              window.syfError("❌ Failed: " + err.message);
+            } finally {
+              btn.disabled = false;
+              btn.textContent = "Submit";
+            }
+          });
       });
 
       async function loadProposals() {
-        const { data } = await supabaseClient
-          .from("proposals")
-          .select("*")
-          .eq("member_email", currentEmail)
-          .order("created_at", { ascending: false });
-
-        allProposals = data || [];
-
-        document.getElementById("statTotal").textContent = allProposals.length;
-        document.getElementById("statPending").textContent =
-          allProposals.filter((p) => p.status === "Pending").length;
-        document.getElementById("statApproved").textContent =
-          allProposals.filter((p) => p.status === "Approved").length;
-        document.getElementById("statRejected").textContent =
-          allProposals.filter((p) => p.status === "Rejected").length;
-
         const list = document.getElementById("proposalsList");
-        if (allProposals.length === 0) {
-          list.innerHTML =
-            '<div class="empty-box"><span class="ico">💡</span><h3>No Proposals Yet</h3><p>Click "New Proposal" to share your first idea.</p></div>';
-          return;
+        try {
+          const { data, error } = await supabaseClient
+            .from("proposals")
+            .select("*")
+            .eq("member_email", currentEmail)
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+
+          // Update Stats
+          const total = data.length;
+          const pending = data.filter((p) => p.status === "Pending").length;
+          const approved = data.filter((p) => p.status === "Approved").length;
+          const rejected = data.filter((p) => p.status === "Rejected").length;
+
+          document.getElementById("statTotal").textContent = total;
+          document.getElementById("statPending").textContent = pending;
+          document.getElementById("statApproved").textContent = approved;
+          document.getElementById("statRejected").textContent = rejected;
+
+          if (total === 0) {
+            list.innerHTML = `<div style="text-align:center; padding: 40px; background: var(--card-bg); border-radius: var(--r-md); border: 1px dashed var(--card-border); color: var(--text-muted);"><div style="font-size:32px; margin-bottom:10px;">💡</div>You haven't submitted any proposals yet.</div>`;
+            return;
+          }
+
+          list.innerHTML = data
+            .map((p) => {
+              const date = new Date(p.created_at).toLocaleDateString("en-PK", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              });
+              let statusClass = "status-pending";
+              if (p.status === "Approved") statusClass = "status-approved";
+              if (p.status === "Rejected") statusClass = "status-rejected";
+
+              return `
+              <div class="proposal-card">
+                <div class="proposal-header">
+                  <div class="proposal-title">${escapeHtml(p.title)}</div>
+                  <span class="status-badge ${statusClass}">${p.status}</span>
+                </div>
+                <p class="proposal-desc">${escapeHtml(p.description)}</p>
+                <div class="proposal-footer">
+                  <span>📅 ${date}</span>
+                  ${p.admin_remarks ? `<span style="color:var(--accent);">💬 Admin: ${escapeHtml(p.admin_remarks)}</span>` : ""}
+                </div>
+              </div>
+            `;
+            })
+            .join("");
+        } catch (err) {
+          list.innerHTML = `<div style="text-align:center; color:#ef4444;">Failed to load proposals.</div>`;
         }
+      }
 
-        list.innerHTML = allProposals
-          .map((p) => {
-            const status = (p.status || "Pending").toLowerCase();
-            const type = (p.proposal_type || "activity")
-              .split(" ")[0]
-              .toLowerCase();
-            const typeClass = type.includes("activity")
-              ? "activity"
-              : type.includes("project")
-                ? "proposal"
-                : type.includes("sponsor")
-                  ? "sponsor"
-                  : "feedback";
-            const date = new Date(p.created_at).toLocaleDateString("en-PK", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            });
-
-            return `
-                <div class="proposal-card ${status}">
-                    <div class="proposal-top">
-                        <div class="proposal-title">
-                            <span class="type-badge ${typeClass}">${p.proposal_type}</span>
-                            ${p.title}
-                        </div>
-                        <span class="status-badge ${status}">${p.status === "Pending" ? "⏳" : p.status === "Approved" ? "✅" : "❌"} ${p.status}</span>
-                    </div>
-                    <p class="proposal-desc">${p.description}</p>
-                    <div class="proposal-meta">
-                        <span>📅 ${date}</span>
-                        <span>💰 Rs. ${Number(p.expected_budget || 0).toLocaleString()}</span>
-                        <span>📊 ${p.priority || "Normal"} Priority</span>
-                    </div>
-                    ${
-                      p.admin_response
-                        ? `
-                        <div class="admin-response">
-                            <h5>📢 Admin Response ${p.reviewed_at ? "(" + new Date(p.reviewed_at).toLocaleDateString("en-PK", { day: "numeric", month: "short" }) + ")" : ""}</h5>
-                            <p>${p.admin_response}</p>
-                        </div>
-                    `
-                        : ""
-                    }
-                </div>`;
-          })
-          .join("");
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
       }
     </script>
   </body>

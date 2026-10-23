@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Issue Reports - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .reports-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .report-item {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-md);
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        flex-wrap: wrap;
+        transition: 0.3s;
+      }
+      .report-item:hover {
+        border-color: var(--card-border-hover);
+        transform: translateX(5px);
+      }
+
+      .report-info {
+        flex: 1;
+        min-width: 250px;
+      }
+      .report-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+      }
+      .report-title {
+        color: var(--text-primary);
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .status-pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+      .status-resolved {
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+      .status-rejected {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+
+      .report-desc {
+        color: var(--text-secondary);
+        font-size: 13px;
+        line-height: 1.6;
+        margin-bottom: 12px;
+        background: var(--input-bg);
+        padding: 12px;
+        border-radius: var(--r-sm);
+        border: 1px solid var(--card-border);
+      }
+
+      .report-meta {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .report-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      .btn-resolve {
+        padding: 8px 16px;
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid #1abc9c;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .btn-resolve:hover {
+        background: #1abc9c;
+        color: white;
+      }
+      .btn-reject {
+        padding: 8px 16px;
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border: 1px solid #ef4444;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .btn-reject:hover {
+        background: #ef4444;
+        color: white;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+        background: var(--card-bg);
+        border: 1px dashed var(--card-border);
+        border-radius: var(--r-lg);
+      }
+    </style>
+  </head>
+  <body class="dashboard-body admin-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Admin Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul>
+          <li>
+            <a href="admin.html"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Members</div>
+        <ul>
+          <li>
+            <a href="admin-members.html"
+              ><span class="nav-icon">👥</span><span>All Members</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-applications.html"
+              ><span class="nav-icon">📝</span><span>Applications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-waitlist.html"
+              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
+          </li>
+
+          <!-- Yeh link hum manually bhi daal rahe hain taaki crash na ho -->
+          <li>
+            <a href="admin-issue-reports.html" class="active"
+              ><span class="nav-icon">🚨</span><span>Issue Reports</span></a
+            >
+          </li>
+
+          <li>
+            <a href="admin-proposals.html"
+              ><span class="nav-icon">💡</span><span>Proposals</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-cabinet.html"
+              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-districts.html"
+              ><span class="nav-icon">🗺️</span><span>Districts</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Content</div>
+        <ul>
+          <li>
+            <a href="admin-activities.html"
+              ><span class="nav-icon">🎯</span><span>Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-news.html"
+              ><span class="nav-icon">📰</span><span>News</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-gallery.html"
+              ><span class="nav-icon">🖼️</span><span>Gallery</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Finance</div>
+        <ul>
+          <li>
+            <a href="admin-finance.html"
+              ><span class="nav-icon">💰</span><span>Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-expenses.html"
+              ><span class="nav-icon">💸</span><span>Expenses</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-donations.html"
+              ><span class="nav-icon">🎁</span><span>Donations</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-sponsorships.html"
+              ><span class="nav-icon">🤝</span><span>Sponsorships</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">System</div>
+        <ul>
+          <li>
+            <a href="admin-notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-email.html"
+              ><span class="nav-icon">📧</span><span>Email</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-reports.html"
+              ><span class="nav-icon">📈</span><span>PDF Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Issue Reports</h2>
+          <p>Manage member complaints & issues</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar admin-avatar" id="topAvatar">A</div>
+            <div class="user-info">
+              <span class="user-name">Admin</span
+              ><span class="user-uid">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="page-header-block" style="margin-bottom: 24px">
+          <div class="page-header-info">
+            <h1 style="color: var(--text-primary); font-size: 24px">
+              🚨 Member Issue Reports
+            </h1>
+            <p style="color: var(--text-secondary); font-size: 14px">
+              Review and resolve issues reported by members.
+            </p>
+          </div>
+        </div>
+
+        <div
+          style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap"
+        >
+          <button
+            class="filter-btn active"
+            data-filter="Pending"
+            style="
+              padding: 10px 20px;
+              border-radius: 20px;
+              background: var(--accent);
+              color: white;
+              border: none;
+              cursor: pointer;
+            "
+          >
+            Pending
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="Resolved"
+            style="
+              padding: 10px 20px;
+              border-radius: 20px;
+              background: var(--input-bg);
+              color: var(--text-secondary);
+              border: 1px solid var(--card-border);
+              cursor: pointer;
+            "
+          >
+            Resolved
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="Rejected"
+            style="
+              padding: 10px 20px;
+              border-radius: 20px;
+              background: var(--input-bg);
+              color: var(--text-secondary);
+              border: 1px solid var(--card-border);
+              cursor: pointer;
+            "
+          >
+            Rejected
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="All"
+            style="
+              padding: 10px 20px;
+              border-radius: 20px;
+              background: var(--input-bg);
+              color: var(--text-secondary);
+              border: 1px solid var(--card-border);
+              cursor: pointer;
+            "
+          >
+            All
+          </button>
+        </div>
+
+        <div class="reports-container" id="reportsContainer">
+          <div
+            style="text-align: center; padding: 40px; color: var(--text-muted)"
+          >
+            Loading reports...
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allReports = [];
+      let currentFilter = "Pending";
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        try {
+          const { data: sessionData } = await supabaseClient.auth.getSession();
+          const session = sessionData ? sessionData.session : null;
+          if (!session || !session.user) {
+            window.location.href = "admin-login.html";
+            return;
+          }
+
+          const { data: admin } = await supabaseClient
+            .from("members")
+            .select("name")
+            .eq("email", session.user.email)
+            .maybeSingle();
+          if (admin) {
+            document.getElementById("topAvatar").textContent = (
+              admin.name || "A"
+            )
+              .charAt(0)
+              .toUpperCase();
+            document
+              .querySelectorAll(".user-name")
+              .forEach((el) => (el.textContent = admin.name));
+          }
+
+          loadReports();
+        } catch (err) {
+          console.error(err);
+        }
+
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            document.querySelectorAll(".filter-btn").forEach((b) => {
+              b.style.background = "var(--input-bg)";
+              b.style.color = "var(--text-secondary)";
+              b.style.border = "1px solid var(--card-border)";
+              b.classList.remove("active");
+            });
+            this.style.background = "var(--accent)";
+            this.style.color = "white";
+            this.style.border = "none";
+            this.classList.add("active");
+
+            currentFilter = this.getAttribute("data-filter");
+            renderReports();
+          });
+        });
+      });
+
+      async function loadReports() {
+        try {
+          const { data, error } = await supabaseClient
+            .from("reports")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+
+          allReports = data || [];
+          renderReports();
+        } catch (err) {
+          document.getElementById("reportsContainer").innerHTML =
+            `<div class="empty-state" style="color:#ef4444;">Failed to load reports. Make sure 'reports' table exists in Supabase.</div>`;
+        }
+      }
+
+      function renderReports() {
+        const container = document.getElementById("reportsContainer");
+
+        let filtered = allReports;
+        if (currentFilter !== "All") {
+          filtered = allReports.filter(
+            (r) => (r.status || "Pending") === currentFilter,
+          );
+        }
+
+        if (filtered.length === 0) {
+          container.innerHTML = `<div class="empty-state">No ${currentFilter.toLowerCase()} reports found.</div>`;
+          return;
+        }
+
+        container.innerHTML = filtered
+          .map((r) => {
+            const date = new Date(r.created_at).toLocaleDateString("en-PK", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            });
+
+            let statusClass = "status-pending";
+            if (r.status === "Resolved") statusClass = "status-resolved";
+            if (r.status === "Rejected") statusClass = "status-rejected";
+
+            let actionButtons = "";
+            if (r.status === "Pending" || !r.status) {
+              actionButtons = `
+              <button class="btn-resolve" onclick="updateReportStatus(${r.id}, 'Resolved')">✓ Resolve</button>
+              <button class="btn-reject" onclick="updateReportStatus(${r.id}, 'Rejected')">✕ Reject</button>
+            `;
+            }
+
+            return `
+            <div class="report-item">
+              <div class="report-info">
+                <div class="report-header">
+                  <div class="report-title">${escapeHtml(r.category)}</div>
+                  <span class="status-badge ${statusClass}">${r.status || "Pending"}</span>
+                </div>
+                <div class="report-desc">"${escapeHtml(r.description)}"</div>
+                <div class="report-meta">
+                  <span>👤 <strong>Reporter:</strong> ${escapeHtml(r.reporter_name || r.reporter_email)}</span>
+                  ${r.target_name ? `<span>🎯 <strong>Against:</strong> ${escapeHtml(r.target_name)}</span>` : ""}
+                  <span>📅 ${date}</span>
+                </div>
+              </div>
+              <div class="report-actions">${actionButtons}</div>
+            </div>
+          `;
+          })
+          .join("");
+      }
+
+      window.updateReportStatus = async function (id, newStatus) {
+        window.syfConfirm(
+          `Mark this report as ${newStatus}?`,
+          async (confirmed) => {
+            if (!confirmed) return;
+            const { error } = await supabaseClient
+              .from("reports")
+              .update({ status: newStatus })
+              .eq("id", id);
+            if (error) return window.syfError("Error: " + error.message);
+            window.syfSuccess(`Report marked as ${newStatus}!`);
+            loadReports();
+          },
+        );
+      };
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+    </script>
+  </body>
+</html>

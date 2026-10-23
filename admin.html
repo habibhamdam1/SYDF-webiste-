@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Panel - SYDF</title>
     <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/pages/dashboard.css">
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
     <link rel="stylesheet" href="css/pages/admin.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
   </head>
   <body class="dashboard-body admin-body">
-    <!-- Sidebar -->
+    <!-- SIDEBAR -->
     <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">
@@ -27,175 +29,171 @@
         <div class="nav-section-title">Main</div>
         <ul>
           <li>
-            <a href="admin.html" class="active">
-              <span class="nav-icon">📊</span>
-              <span>Dashboard</span>
-            </a>
+            <a href="admin.html" class="active"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
           </li>
         </ul>
 
         <div class="nav-section-title">Members</div>
         <ul>
           <li>
-            <a href="admin-members.html">
-              <span class="nav-icon">👥</span>
-              <span>All Members</span>
-            </a>
+            <a href="admin-members.html"
+              ><span class="nav-icon">👥</span><span>All Members</span></a
+            >
           </li>
           <li>
-            <a href="admin-applications.html">
-              <span class="nav-icon">📝</span>
-              <span>Applications</span>
-              <span class="badge">5</span>
-            </a>
+            <a href="admin-applications.html"
+              ><span class="nav-icon">📝</span><span>Applications</span
+              ><span class="badge" id="sidebarAppBadge" style="display: none"
+                >0</span
+              ></a
+            >
           </li>
           <li>
-            <a href="admin-waitlist.html">
-              <span class="nav-icon">⏳</span>
-              <span>Waitlist</span>
-              <span class="badge">12</span>
-            </a>
+            <a href="admin-waitlist.html"
+              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
           </li>
           <li>
-            <a href="admin-cabinet.html">
-              <span class="nav-icon">🏛️</span>
-              <span>Cabinet</span>
-            </a>
+            <a href="admin-proposals.html"
+              ><span class="nav-icon">💡</span><span>Proposals</span
+              ><span class="badge" id="sidebarPropBadge" style="display: none"
+                >0</span
+              ></a
+            >
           </li>
           <li>
-            <a href="admin-districts.html">
-              <span class="nav-icon">🗺️</span>
-              <span>Districts & Tehsils</span>
-            </a>
+            <a href="admin-cabinet.html"
+              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-districts.html"
+              ><span class="nav-icon">🗺️</span
+              ><span>Districts & Tehsils</span></a
+            >
           </li>
         </ul>
 
         <div class="nav-section-title">Content</div>
         <ul>
           <li>
-            <a href="admin-activities.html">
-              <span class="nav-icon">🎯</span>
-              <span>Activities</span>
-            </a>
+            <a href="admin-activities.html"
+              ><span class="nav-icon">🎯</span><span>Activities</span></a
+            >
           </li>
           <li>
-            <a href="admin-news.html">
-              <span class="nav-icon">📰</span>
-              <span>News & Blog</span>
-            </a>
+            <a href="admin-news.html"
+              ><span class="nav-icon">📰</span><span>News & Blog</span></a
+            >
           </li>
           <li>
-            <a href="admin-gallery.html">
-              <span class="nav-icon">🖼️</span>
-              <span>Gallery</span>
-            </a>
+            <a href="admin-gallery.html"
+              ><span class="nav-icon">🖼️</span><span>Gallery</span></a
+            >
           </li>
           <li>
-            <a href="admin-documents.html">
-              <span class="nav-icon">📄</span>
-              <span>Documents</span>
-            </a>
+            <a href="admin-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
           </li>
         </ul>
 
         <div class="nav-section-title">Finance</div>
         <ul>
           <li>
-            <a href="admin-finance.html">
-              <span class="nav-icon">💰</span>
-              <span>Payments</span>
-            </a>
+            <a href="admin-finance.html"
+              ><span class="nav-icon">💰</span><span>Payments</span></a
+            >
           </li>
           <li>
-            <a href="admin-expenses.html">
-              <span class="nav-icon">💸</span>
-              <span>Expenses</span>
-            </a>
+            <a href="admin-expenses.html"
+              ><span class="nav-icon">💸</span><span>Expenses</span></a
+            >
           </li>
           <li>
-            <a href="admin-donations.html">
-              <span class="nav-icon">🎁</span>
-              <span>Donations</span>
-            </a>
+            <a href="admin-donations.html"
+              ><span class="nav-icon">🎁</span><span>Donations</span></a
+            >
           </li>
           <li>
-            <a href="admin-sponsorships.html">
-              <span class="nav-icon">🤝</span>
-              <span>Sponsorships</span>
-            </a>
+            <a href="admin-sponsorships.html"
+              ><span class="nav-icon">🤝</span><span>Sponsorships</span></a
+            >
           </li>
         </ul>
 
         <div class="nav-section-title">System</div>
         <ul>
           <li>
-            <a href="admin-notifications.html">
-              <span class="nav-icon">🔔</span>
-              <span>Notifications</span>
+            <a href="admin-notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-email.html"
+              ><span class="nav-icon">📧</span><span>Email System</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-reports.html"
+              ><span class="nav-icon">📈</span><span>Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+
+        <!-- BACK TO WEBSITE & LOGOUT (SCROLLABLE) -->
+        <ul
+          style="
+            margin-top: 10px;
+            border-top: 1px solid var(--card-border);
+            padding-top: 10px;
+          "
+        >
+          <li>
+            <a href="index.html" style="color: var(--accent)">
+              <span class="nav-icon">🌐</span>
+              <span>Back to Website</span>
             </a>
           </li>
           <li>
-            <a href="admin-email.html">
-              <span class="nav-icon">📧</span>
-              <span>Email System</span>
-            </a>
-          </li>
-          <li>
-            <a href="admin-reports.html">
-              <span class="nav-icon">📈</span>
-              <span>Reports</span>
-            </a>
-          </li>
-          <li>
-            <a href="admin-settings.html">
-              <span class="nav-icon">⚙️</span>
-              <span>Settings</span>
+            <a href="#" class="logout-btn" style="color: #ef4444">
+              <span class="nav-icon">🚪</span>
+              <span>Logout</span>
             </a>
           </li>
         </ul>
       </nav>
-
-      <div class="sidebar-footer">
-        <a href="login.html" class="logout-btn">
-          <span>🚪</span>
-          <span>Logout</span>
-        </a>
-      </div>
     </aside>
 
-    <!-- Overlay for mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Main Content -->
+    <!-- MAIN CONTENT -->
     <main class="dashboard-main">
-      <!-- Topbar -->
       <div class="dashboard-topbar">
         <button class="menu-toggle" id="menuToggle">☰</button>
-
         <div class="topbar-title">
           <h2>Admin Dashboard</h2>
           <p>Welcome back, Admin</p>
         </div>
-
         <div class="topbar-actions">
-          <button class="topbar-btn" title="Search">🔍</button>
-          <button class="topbar-btn" title="Notifications">
-            🔔
-            <span class="notif-dot"></span>
-          </button>
           <div class="topbar-user">
-            <div class="user-avatar admin-avatar">A</div>
+            <div class="user-avatar admin-avatar" id="topAvatar">A</div>
             <div class="user-info">
-              <span class="user-name">Admin User</span>
-              <span class="user-uid">Super Admin</span>
+              <span class="user-name" id="topName">Admin</span>
+              <span class="user-uid" id="topRole">Super Admin</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Dashboard Content -->
       <div class="dashboard-content">
-        <!-- Welcome Card -->
         <div class="glass-card welcome-card admin-welcome">
           <div class="welcome-text">
             <h1>Admin Control Center 🛡️</h1>
@@ -207,11 +205,11 @@
           </div>
           <div class="welcome-badge admin-badge">
             <span class="badge-icon">👑</span>
-            <span>Super Admin</span>
+            <span id="welcomeRole">Super Admin</span>
           </div>
         </div>
 
-        <!-- Stats Cards -->
+        <!-- STATS -->
         <div class="stats-row">
           <div class="glass-card dash-stat-card">
             <div
@@ -221,7 +219,7 @@
               👥
             </div>
             <div class="dash-stat-info">
-              <h3>50</h3>
+              <h3 id="statMembers">0</h3>
               <p>Total Members</p>
             </div>
           </div>
@@ -233,7 +231,7 @@
               📝
             </div>
             <div class="dash-stat-info">
-              <h3>5</h3>
+              <h3 id="statPending">0</h3>
               <p>Pending Apps</p>
             </div>
           </div>
@@ -245,7 +243,7 @@
               💰
             </div>
             <div class="dash-stat-info">
-              <h3>Rs. 15K</h3>
+              <h3 id="statFund">Rs. 0</h3>
               <p>Monthly Fund</p>
             </div>
           </div>
@@ -257,17 +255,15 @@
               🎯
             </div>
             <div class="dash-stat-info">
-              <h3>25</h3>
+              <h3 id="statActivities">0</h3>
               <p>Activities</p>
             </div>
           </div>
         </div>
 
-        <!-- Two Column Layout -->
         <div class="dashboard-grid">
-          <!-- Left Column -->
           <div class="dashboard-col">
-            <!-- Pending Applications -->
+            <!-- PENDING APPLICATIONS -->
             <div class="glass-card content-card">
               <div class="card-header">
                 <h3>📝 Pending Applications</h3>
@@ -275,184 +271,128 @@
                   >View All →</a
                 >
               </div>
-              <div class="admin-list">
-                <div class="admin-list-item">
-                  <div class="admin-item-avatar">AK</div>
-                  <div class="admin-item-info">
-                    <h4>Ali Khan</h4>
-                    <p>Swat • Applied 2 days ago</p>
-                  </div>
-                  <div class="admin-item-actions">
-                    <button class="btn-approve" title="Approve">✓</button>
-                    <button class="btn-reject" title="Reject">✕</button>
-                  </div>
-                </div>
-                <div class="admin-list-item">
-                  <div class="admin-item-avatar">FA</div>
-                  <div class="admin-item-info">
-                    <h4>Fatima Ahmed</h4>
-                    <p>Dir • Applied 3 days ago</p>
-                  </div>
-                  <div class="admin-item-actions">
-                    <button class="btn-approve" title="Approve">✓</button>
-                    <button class="btn-reject" title="Reject">✕</button>
-                  </div>
-                </div>
-                <div class="admin-list-item">
-                  <div class="admin-item-avatar">MK</div>
-                  <div class="admin-item-info">
-                    <h4>Muhammad Kamran</h4>
-                    <p>Buner • Applied 5 days ago</p>
-                  </div>
-                  <div class="admin-item-actions">
-                    <button class="btn-approve" title="Approve">✓</button>
-                    <button class="btn-reject" title="Reject">✕</button>
-                  </div>
+              <div class="admin-list" id="pendingAppsList">
+                <div
+                  style="
+                    text-align: center;
+                    padding: 30px;
+                    color: var(--text-muted);
+                    font-size: 13px;
+                  "
+                >
+                  Loading...
                 </div>
               </div>
             </div>
 
-            <!-- Recent Payments -->
+            <!-- RECENT PAYMENTS -->
             <div class="glass-card content-card">
               <div class="card-header">
                 <h3>💰 Recent Payments</h3>
                 <a href="admin-finance.html" class="card-link">View All →</a>
               </div>
-              <div class="admin-list">
-                <div class="admin-list-item">
-                  <div class="admin-item-avatar paid">✓</div>
-                  <div class="admin-item-info">
-                    <h4>Moiz Azam</h4>
-                    <p>SYDF-001 • Today</p>
-                  </div>
-                  <div class="admin-item-amount">Rs. 300</div>
-                </div>
-                <div class="admin-list-item">
-                  <div class="admin-item-avatar paid">✓</div>
-                  <div class="admin-item-info">
-                    <h4>Habib Ur Rahman</h4>
-                    <p>SYDF-002 • Today</p>
-                  </div>
-                  <div class="admin-item-amount">Rs. 300</div>
-                </div>
-                <div class="admin-list-item">
-                  <div class="admin-item-avatar paid">✓</div>
-                  <div class="admin-item-info">
-                    <h4>Zainab Shahab</h4>
-                    <p>SYDF-005 • Yesterday</p>
-                  </div>
-                  <div class="admin-item-amount">Rs. 300</div>
+              <div class="admin-list" id="recentPaymentsList">
+                <div
+                  style="
+                    text-align: center;
+                    padding: 30px;
+                    color: var(--text-muted);
+                    font-size: 13px;
+                  "
+                >
+                  Loading...
                 </div>
               </div>
             </div>
 
-            <!-- Membership Status Toggle -->
+            <!-- MEMBERSHIP TOGGLE -->
             <div class="glass-card content-card">
               <div class="card-header">
                 <h3>⚙️ Membership Status</h3>
               </div>
-              <div class="membership-toggle-block">
-                <div class="toggle-status">
-                  <span class="status-indicator closed"></span>
-                  <div>
-                    <h4>Currently Closed</h4>
-                    <p>Membership applications are not being accepted</p>
-                  </div>
+              <div class="membership-toggle-block" id="membershipToggleBlock">
+                <div
+                  style="
+                    text-align: center;
+                    padding: 20px;
+                    color: var(--text-muted);
+                    font-size: 13px;
+                  "
+                >
+                  Loading...
                 </div>
-                <button class="btn-toggle-open">Open Membership</button>
               </div>
             </div>
           </div>
 
-          <!-- Right Column -->
           <div class="dashboard-col">
-            <!-- Quick Actions -->
+            <!-- QUICK ACTIONS -->
             <div class="glass-card content-card">
               <div class="card-header">
                 <h3>⚡ Quick Actions</h3>
               </div>
               <div class="quick-actions admin-quick">
-                <a href="admin-members.html" class="quick-action">
-                  <span>👥</span>
-                  <p>Add Member</p>
-                </a>
-                <a href="admin-finance.html" class="quick-action">
-                  <span>💰</span>
-                  <p>Add Payment</p>
-                </a>
-                <a href="admin-activities.html" class="quick-action">
-                  <span>🎯</span>
-                  <p>New Activity</p>
-                </a>
-                <a href="admin-documents.html" class="quick-action">
-                  <span>📄</span>
-                  <p>Upload Doc</p>
-                </a>
-                <a href="admin-notifications.html" class="quick-action">
-                  <span>🔔</span>
-                  <p>Notify All</p>
-                </a>
-                <a href="admin-reports.html" class="quick-action">
-                  <span>📈</span>
-                  <p>Reports</p>
-                </a>
+                <a href="admin-members.html" class="quick-action"
+                  ><span>👥</span>
+                  <p>Add Member</p></a
+                >
+                <a href="admin-finance.html" class="quick-action"
+                  ><span>💰</span>
+                  <p>Add Payment</p></a
+                >
+                <a href="admin-activities.html" class="quick-action"
+                  ><span>🎯</span>
+                  <p>New Activity</p></a
+                >
+                <a href="admin-documents.html" class="quick-action"
+                  ><span>📄</span>
+                  <p>Upload Doc</p></a
+                >
+                <a href="admin-notifications.html" class="quick-action"
+                  ><span>🔔</span>
+                  <p>Notify All</p></a
+                >
+                <a href="admin-reports.html" class="quick-action"
+                  ><span>📈</span>
+                  <p>Reports</p></a
+                >
               </div>
             </div>
 
-            <!-- System Status -->
+            <!-- SYSTEM STATUS -->
             <div class="glass-card content-card">
               <div class="card-header">
                 <h3>📊 System Status</h3>
               </div>
-              <div class="status-list">
-                <div class="status-item">
-                  <span>Membership Portal</span>
-                  <span class="status-pill closed">Closed</span>
-                </div>
-                <div class="status-item">
-                  <span>Donation Portal</span>
-                  <span class="status-pill open">Active</span>
-                </div>
-                <div class="status-item">
-                  <span>Sponsorship Portal</span>
-                  <span class="status-pill open">Active</span>
-                </div>
-                <div class="status-item">
-                  <span>Website</span>
-                  <span class="status-pill open">Online</span>
+              <div class="status-list" id="systemStatus">
+                <div
+                  style="
+                    text-align: center;
+                    padding: 20px;
+                    color: var(--text-muted);
+                    font-size: 13px;
+                  "
+                >
+                  Loading...
                 </div>
               </div>
             </div>
 
-            <!-- Recent Activity Log -->
+            <!-- RECENT ACTIVITY -->
             <div class="glass-card content-card">
               <div class="card-header">
-                <h3>📜 Recent Activity Log</h3>
+                <h3>📜 Recent Activity</h3>
               </div>
-              <div class="timeline-mini">
-                <div class="timeline-mini-item">
-                  <div class="timeline-dot"></div>
-                  <div class="timeline-content">
-                    <h4>Member Added</h4>
-                    <p>Ali Khan was approved</p>
-                    <span>2 hours ago</span>
-                  </div>
-                </div>
-                <div class="timeline-mini-item">
-                  <div class="timeline-dot"></div>
-                  <div class="timeline-content">
-                    <h4>Document Uploaded</h4>
-                    <p>Bylaws v2 added</p>
-                    <span>5 hours ago</span>
-                  </div>
-                </div>
-                <div class="timeline-mini-item">
-                  <div class="timeline-dot"></div>
-                  <div class="timeline-content">
-                    <h4>Payment Recorded</h4>
-                    <p>Rs. 300 from Moiz Azam</p>
-                    <span>1 day ago</span>
-                  </div>
+              <div class="timeline-mini" id="recentActivityList">
+                <div
+                  style="
+                    text-align: center;
+                    padding: 20px;
+                    color: var(--text-muted);
+                    font-size: 13px;
+                  "
+                >
+                  Loading...
                 </div>
               </div>
             </div>
@@ -460,13 +400,416 @@
         </div>
       </div>
     </main>
-        </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-config.js"></script>
     <script src="js/main.js"></script>
+    <script>
+      // ==========================================
+      // ADMIN DASHBOARD — DYNAMIC DATA & CLEAN UI
+      // ==========================================
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        // AUTH CHECK
+        const { data: sessionData } = await supabaseClient.auth.getSession();
+        const session = sessionData ? sessionData.session : null;
+        if (!session || !session.user) {
+          window.location.href = "admin-login.html";
+          return;
+        }
+
+        const { data: adminMember } = await supabaseClient
+          .from("members")
+          .select("name, role")
+          .eq("email", session.user.email)
+          .single();
+
+        if (adminMember) {
+          document.getElementById("topAvatar").textContent = (
+            adminMember.name || "A"
+          )
+            .charAt(0)
+            .toUpperCase();
+          document.getElementById("topName").textContent =
+            adminMember.name || "Admin";
+          document.getElementById("topRole").textContent =
+            adminMember.role || "Admin";
+          document.getElementById("welcomeRole").textContent =
+            adminMember.role || "Admin";
+        }
+
+        // LOAD DATA
+        await Promise.all([
+          loadStats(),
+          loadPendingApps(),
+          loadRecentPayments(),
+          loadMembershipStatus(),
+          loadSystemStatus(),
+          loadRecentActivity(),
+          loadSidebarBadges(),
+        ]);
+
+        // Logout Logic with Toast
+        document.querySelectorAll(".logout-btn").forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            window.syfConfirm("Logout from admin panel?", async (confirmed) => {
+              if (!confirmed) return;
+              await supabaseClient.auth.signOut();
+              window.location.href = "admin-login.html";
+            });
+          });
+        });
+      });
+
+      // ==========================================
+      // STATS
+      // ==========================================
+      async function loadStats() {
+        try {
+          const [membersRes, paymentsRes, activitiesRes] = await Promise.all([
+            supabaseClient.from("members").select("status"),
+            supabaseClient
+              .from("payments")
+              .select("amount, payment_date, status"),
+            supabaseClient.from("activities").select("id"),
+          ]);
+
+          const members = membersRes.data || [];
+          const payments = paymentsRes.data || [];
+          const activities = activitiesRes.data || [];
+
+          const totalMembers = members.length;
+          const pendingApps = members.filter(
+            (m) => m.status === "Pending",
+          ).length;
+
+          const now = new Date();
+          const thisMonthFund = payments
+            .filter(
+              (p) =>
+                p.status === "Paid" &&
+                new Date(p.payment_date).getMonth() === now.getMonth() &&
+                new Date(p.payment_date).getFullYear() === now.getFullYear(),
+            )
+            .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+
+          document.getElementById("statMembers").textContent = totalMembers;
+          document.getElementById("statPending").textContent = pendingApps;
+          document.getElementById("statFund").textContent =
+            "Rs. " + thisMonthFund.toLocaleString();
+          document.getElementById("statActivities").textContent =
+            activities.length;
+        } catch (err) {
+          console.error("Stats error:", err);
+        }
+      }
+
+      // ==========================================
+      // PENDING APPLICATIONS
+      // ==========================================
+      async function loadPendingApps() {
+        const list = document.getElementById("pendingAppsList");
+        try {
+          const { data } = await supabaseClient
+            .from("members")
+            .select("id, name, district, created_at, gender")
+            .eq("status", "Pending")
+            .order("created_at", { ascending: false })
+            .limit(3);
+
+          if (!data || data.length === 0) {
+            list.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-muted);font-size:13px;">No pending applications 🎉</div>`;
+            return;
+          }
+
+          list.innerHTML = data
+            .map((m) => {
+              const initial = (m.name || "M").charAt(0).toUpperCase();
+              const genderClass =
+                (m.gender || "").toLowerCase() === "female" ? "female" : "";
+              return `
+                <div class="admin-list-item">
+                  <div class="admin-item-avatar ${genderClass}">${initial}</div>
+                  <div class="admin-item-info">
+                    <h4>${escapeHtml(m.name)}</h4>
+                    <p>${escapeHtml(m.district || "-")} • ${getDaysAgo(m.created_at)}</p>
+                  </div>
+                  <div class="admin-item-actions">
+                    <button class="btn-approve" onclick="quickApprove('${m.id}')" title="Approve">✓</button>
+                    <button class="btn-reject" onclick="quickReject('${m.id}')" title="Reject">✕</button>
+                  </div>
+                </div>`;
+            })
+            .join("");
+        } catch (err) {
+          list.innerHTML = `<div style="text-align:center;padding:30px;color:#fca5a5;font-size:13px;">Failed to load</div>`;
+        }
+      }
+
+      // ==========================================
+      // RECENT PAYMENTS
+      // ==========================================
+      async function loadRecentPayments() {
+        const list = document.getElementById("recentPaymentsList");
+        try {
+          const { data } = await supabaseClient
+            .from("payments")
+            .select("id, member_name, uid, amount, payment_date, status")
+            .order("payment_date", { ascending: false })
+            .limit(3);
+
+          if (!data || data.length === 0) {
+            list.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-muted);font-size:13px;">No payments recorded yet</div>`;
+            return;
+          }
+
+          list.innerHTML = data
+            .map((p) => {
+              const isPaid = p.status === "Paid";
+              return `
+                <div class="admin-list-item">
+                  <div class="admin-item-avatar ${isPaid ? "paid" : ""}">${isPaid ? "✓" : "⏳"}</div>
+                  <div class="admin-item-info">
+                    <h4>${escapeHtml(p.member_name || "Unknown")}</h4>
+                    <p>${escapeHtml(p.uid || "-")} • ${getDaysAgo(p.payment_date)}</p>
+                  </div>
+                  <div class="admin-item-amount">Rs. ${Number(p.amount || 0).toLocaleString()}</div>
+                </div>`;
+            })
+            .join("");
+        } catch (err) {
+          list.innerHTML = `<div style="text-align:center;padding:30px;color:#fca5a5;font-size:13px;">Failed to load</div>`;
+        }
+      }
+
+      // ==========================================
+      // MEMBERSHIP TOGGLE (With Toast)
+      // ==========================================
+      async function loadMembershipStatus() {
+        const block = document.getElementById("membershipToggleBlock");
+        try {
+          const { data } = await supabaseClient
+            .from("settings")
+            .select("value")
+            .eq("key", "membership_open")
+            .maybeSingle();
+          const isOpen = data && data.value === "true";
+
+          block.innerHTML = `
+            <div class="toggle-status">
+              <span class="status-indicator ${isOpen ? "open" : "closed"}" style="background: ${isOpen ? "var(--accent)" : "#ef4444"};"></span>
+              <div>
+                <h4>Currently ${isOpen ? "Open" : "Closed"}</h4>
+                <p>Membership applications are ${isOpen ? "being accepted" : "not being accepted"}</p>
+              </div>
+            </div>
+            <button class="btn-toggle-open" id="btnToggleMembership">
+              ${isOpen ? "Close Membership" : "Open Membership"}
+            </button>
+          `;
+
+          document
+            .getElementById("btnToggleMembership")
+            .addEventListener("click", function () {
+              const newValue = isOpen ? "false" : "true";
+              window.syfConfirm(
+                `Are you sure you want to ${isOpen ? "Close" : "Open"} membership?`,
+                async (confirmed) => {
+                  if (!confirmed) return;
+                  const { error } = await supabaseClient
+                    .from("settings")
+                    .upsert(
+                      {
+                        key: "membership_open",
+                        value: newValue,
+                        updated_at: new Date().toISOString(),
+                      },
+                      { onConflict: "key" },
+                    );
+                  if (error) return window.syfError("Failed: " + error.message);
+
+                  window.syfSuccess(
+                    `Membership is now ${newValue === "true" ? "OPEN" : "CLOSED"}`,
+                  );
+                  loadMembershipStatus();
+                  loadSystemStatus();
+                },
+              );
+            });
+        } catch (err) {
+          block.innerHTML = `<div style="text-align:center;padding:20px;color:#fca5a5;font-size:13px;">Failed to load</div>`;
+        }
+      }
+
+      // ==========================================
+      // SYSTEM STATUS
+      // ==========================================
+      async function loadSystemStatus() {
+        const list = document.getElementById("systemStatus");
+        try {
+          const [membershipRes, siteRes] = await Promise.all([
+            supabaseClient
+              .from("settings")
+              .select("value")
+              .eq("key", "membership_open")
+              .maybeSingle(),
+            supabaseClient
+              .from("settings")
+              .select("value")
+              .eq("key", "site_online")
+              .maybeSingle(),
+          ]);
+          const membershipOpen = membershipRes.data?.value === "true";
+          const siteOnline = siteRes.data?.value !== "false";
+
+          list.innerHTML = `
+            <div class="status-item"><span>Membership Portal</span><span class="status-pill ${membershipOpen ? "open" : "closed"}">${membershipOpen ? "Open" : "Closed"}</span></div>
+            <div class="status-item"><span>Website</span><span class="status-pill ${siteOnline ? "open" : "closed"}">${siteOnline ? "Online" : "Offline"}</span></div>
+          `;
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      // ==========================================
+      // RECENT ACTIVITY
+      // ==========================================
+      async function loadRecentActivity() {
+        const list = document.getElementById("recentActivityList");
+        try {
+          const { data } = await supabaseClient
+            .from("members")
+            .select("id, name, status, created_at")
+            .order("created_at", { ascending: false })
+            .limit(3);
+          if (!data || data.length === 0) {
+            list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px;">No recent activity</div>`;
+            return;
+          }
+          list.innerHTML = data
+            .map((m) => {
+              const statusEmoji =
+                m.status === "Active"
+                  ? "✅"
+                  : m.status === "Pending"
+                    ? "⏳"
+                    : "❌";
+              const actionText =
+                m.status === "Active"
+                  ? "became a member"
+                  : m.status === "Pending"
+                    ? "applied for membership"
+                    : "was rejected";
+              return `
+                <div class="timeline-mini-item">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-content">
+                    <h4>${statusEmoji} ${escapeHtml(m.name || "Unknown")}</h4>
+                    <p>${actionText}</p>
+                    <span>${getDaysAgo(m.created_at)}</span>
+                  </div>
+                </div>`;
+            })
+            .join("");
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      // ==========================================
+      // SIDEBAR BADGES
+      // ==========================================
+      async function loadSidebarBadges() {
+        try {
+          const { data } = await supabaseClient
+            .from("members")
+            .select("status");
+          const pendingApps = (data || []).filter(
+            (m) => m.status === "Pending",
+          ).length;
+          const appBadge = document.getElementById("sidebarAppBadge");
+          if (appBadge) {
+            appBadge.textContent = pendingApps;
+            appBadge.style.display = pendingApps > 0 ? "inline-block" : "none";
+          }
+        } catch (err) {}
+      }
+
+      // ==========================================
+      // QUICK APPROVE / REJECT (With Toasts)
+      // ==========================================
+      window.quickApprove = async function (id) {
+        window.syfConfirm("Approve this member?", async (confirmed) => {
+          if (!confirmed) return;
+          const { error } = await supabaseClient
+            .from("members")
+            .update({ status: "Active" })
+            .eq("id", id);
+          if (error) return window.syfError("Error: " + error.message);
+
+          window.syfSuccess("✅ Member Approved!");
+          loadPendingApps();
+          loadStats();
+          loadSidebarBadges();
+          loadRecentActivity();
+        });
+      };
+
+      window.quickReject = async function (id) {
+        window.syfConfirm("Reject this member?", async (confirmed) => {
+          if (!confirmed) return;
+          const { error } = await supabaseClient
+            .from("members")
+            .update({ status: "Rejected" })
+            .eq("id", id);
+          if (error) return window.syfError("Error: " + error.message);
+
+          window.syfError("❌ Member Rejected");
+          loadPendingApps();
+          loadStats();
+          loadSidebarBadges();
+          loadRecentActivity();
+        });
+      };
+
+      // ==========================================
+      // HELPERS
+      // ==========================================
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function getDaysAgo(dateStr) {
+        if (!dateStr) return "-";
+        try {
+          const diff = Date.now() - new Date(dateStr).getTime();
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          if (days === 0) return "Today";
+          if (days === 1) return "Yesterday";
+          return days + " days ago";
+        } catch {
+          return "-";
+        }
+      }
+    </script>
     <script src="js/admin-data.js"></script>
-</body>
-</html>
   </body>
 </html>
