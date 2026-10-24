@@ -12,8 +12,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      /* Sirf register page ki zaroori layout CSS */
+      .auth-page {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
       .auth-section {
+        flex: 1;
         display: grid;
         grid-template-columns: 1fr 1.5fr;
         gap: 30px;
@@ -119,12 +124,6 @@
         border-radius: 10px;
         margin-bottom: 16px;
       }
-      .privacy-notice-box p {
-        font-size: 12px;
-        color: #f9a8d4;
-        line-height: 1.7;
-        margin: 0;
-      }
       .password-wrapper {
         position: relative;
       }
@@ -174,7 +173,6 @@
         border: 1px solid var(--accent);
         color: var(--accent);
       }
-
       .back-to-site {
         position: fixed;
         top: 90px;
@@ -199,7 +197,6 @@
         color: var(--accent);
         border-color: var(--accent);
       }
-
       @media (max-width: 900px) {
         .auth-section {
           grid-template-columns: 1fr;
@@ -218,9 +215,7 @@
     </style>
   </head>
   <body class="auth-page">
-    <!-- Back to Website Button -->
     <a href="index.html" class="back-to-site">← Back to Website</a>
-
     <header class="glass-header">
       <div class="logo">
         <h1>SYDF</h1>
@@ -274,16 +269,14 @@
       <div class="auth-form-block glass-card">
         <h2>Member Registration</h2>
         <p class="form-subtitle">Fill in your details to create an account</p>
-
         <div class="message-box" id="messageBox"></div>
 
         <form id="registerForm">
           <div class="form-section-title">Personal Information</div>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="regName">Full Name *</label>
-              <input
+              <label>Full Name *</label
+              ><input
                 type="text"
                 id="regName"
                 placeholder="Enter your full name"
@@ -291,8 +284,8 @@
               />
             </div>
             <div class="form-group">
-              <label for="regFather">Father's Name *</label>
-              <input
+              <label>Father's Name *</label
+              ><input
                 type="text"
                 id="regFather"
                 placeholder="Father's name"
@@ -300,11 +293,10 @@
               />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="regCnic">CNIC *</label>
-              <input
+              <label>CNIC *</label
+              ><input
                 type="text"
                 id="regCnic"
                 placeholder="XXXXX-XXXXXXX-X"
@@ -312,23 +304,22 @@
               />
             </div>
             <div class="form-group">
-              <label for="regDob">Date of Birth *</label>
-              <input type="date" id="regDob" required />
+              <label>Date of Birth *</label
+              ><input type="date" id="regDob" required />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="regGender">Gender *</label>
-              <select id="regGender" required>
+              <label>Gender *</label
+              ><select id="regGender" required>
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="regBlood">Blood Group</label>
-              <select id="regBlood">
+              <label>Blood Group</label
+              ><select id="regBlood">
                 <option value="">Select</option>
                 <option>A+</option>
                 <option>A-</option>
@@ -341,32 +332,24 @@
               </select>
             </div>
           </div>
-
           <div class="privacy-notice-box" id="privacyNotice">
             <p>
               🔒 <strong>Privacy Notice for Female Members:</strong><br />Your
               photo will be <strong>private by default</strong>.
             </p>
           </div>
-
           <div class="form-group">
-            <label for="regPhoto">Profile Photo * (Required for ID Card)</label>
+            <label>Profile Photo * (Required for ID Card)</label>
             <input type="file" id="regPhoto" accept="image/*" required />
-            <small class="form-hint"
-              >Please upload a clear photo. This will be used on your ID
-              card.</small
-            >
             <div class="photo-preview-box" id="photoPreview">
               <img id="previewImg" src="" alt="Preview" />
             </div>
           </div>
-
           <div class="form-section-title">Contact Information</div>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="regEmail">Email *</label>
-              <input
+              <label>Email *</label
+              ><input
                 type="email"
                 id="regEmail"
                 placeholder="example@email.com"
@@ -374,8 +357,8 @@
               />
             </div>
             <div class="form-group">
-              <label for="regPhone">Mobile Number *</label>
-              <input
+              <label>Mobile Number *</label
+              ><input
                 type="tel"
                 id="regPhone"
                 placeholder="+92 3XX XXXXXXX"
@@ -383,26 +366,25 @@
               />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="regDistrict">District *</label>
-              <select id="regDistrict" required>
+              <label>District *</label
+              ><select id="regDistrict" required>
                 <option value="">Select District</option>
-                <option value="Swat">Swat</option>
-                <option value="Shangla">Shangla</option>
-                <option value="Buner">Buner</option>
-                <option value="Malakand">Malakand</option>
-                <option value="Upper Dir">Upper Dir</option>
-                <option value="Lower Dir">Lower Dir</option>
-                <option value="Upper Chitral">Upper Chitral</option>
-                <option value="Lower Chitral">Lower Chitral</option>
-                <option value="Bajaur">Bajaur</option>
+                <option>Swat</option>
+                <option>Shangla</option>
+                <option>Buner</option>
+                <option>Malakand</option>
+                <option>Upper Dir</option>
+                <option>Lower Dir</option>
+                <option>Upper Chitral</option>
+                <option>Lower Chitral</option>
+                <option>Bajaur</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="regTehsil">Tehsil *</label>
-              <input
+              <label>Tehsil *</label
+              ><input
                 type="text"
                 id="regTehsil"
                 placeholder="Enter tehsil"
@@ -410,20 +392,17 @@
               />
             </div>
           </div>
-
           <div class="form-section-title">Account Security</div>
-
           <div class="form-row">
             <div class="form-group">
-              <label for="regPassword">Password *</label>
+              <label>Password *</label>
               <div class="password-wrapper">
                 <input
                   type="password"
                   id="regPassword"
                   placeholder="Min 8 characters"
                   required
-                />
-                <button
+                /><button
                   type="button"
                   class="toggle-password"
                   data-target="regPassword"
@@ -433,15 +412,14 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="regConfirmPassword">Confirm Password *</label>
+              <label>Confirm Password *</label>
               <div class="password-wrapper">
                 <input
                   type="password"
                   id="regConfirmPassword"
                   placeholder="Re-enter password"
                   required
-                />
-                <button
+                /><button
                   type="button"
                   class="toggle-password"
                   data-target="regConfirmPassword"
@@ -451,25 +429,20 @@
               </div>
             </div>
           </div>
-
           <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="regTerms" required />
-              <span
+            <label class="checkbox-label"
+              ><input type="checkbox" id="regTerms" required /><span
                 >I agree to the
-                <a href="terms.html" target="_blank">Terms & Conditions</a> and
-                <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
-                of SYDF</span
-              >
-            </label>
+                <a href="terms.html" target="_blank">Terms</a> and
+                <a href="privacy-policy.html" target="_blank"
+                  >Privacy Policy</a
+                ></span
+              ></label
+            >
           </div>
-
           <button type="submit" class="btn-primary btn-full" id="registerBtn">
             Create Account
           </button>
-          <p class="form-note">
-            Your account will be activated after admin approval.
-          </p>
         </form>
       </div>
     </section>
@@ -480,7 +453,6 @@
         const registerForm = document.getElementById("registerForm");
         const messageBox = document.getElementById("messageBox");
         const registerBtn = document.getElementById("registerBtn");
-
         function showMessage(text, type) {
           messageBox.innerHTML = text.replace(/\n/g, "<br>");
           messageBox.className = "message-box " + type;
@@ -515,7 +487,6 @@
         const regPhoto = document.getElementById("regPhoto");
         const photoPreview = document.getElementById("photoPreview");
         const previewImg = document.getElementById("previewImg");
-
         regPhoto.addEventListener("change", function (e) {
           const file = e.target.files[0];
           if (file) {
@@ -535,7 +506,7 @@
         });
 
         if (typeof supabaseClient === "undefined" || !supabaseClient) {
-          showMessage("⚠️ System not ready. Please refresh the page.", "error");
+          showMessage("⚠️ System not ready.", "error");
           return;
         }
 
@@ -573,13 +544,8 @@
           registerBtn.disabled = true;
 
           try {
-            // Step 1: Auth User
             const { data: authData, error: authError } =
-              await supabaseClient.auth.signUp({
-                email: email,
-                password: password,
-              });
-
+              await supabaseClient.auth.signUp({ email, password });
             if (authError) {
               showMessage("❌ " + authError.message, "error");
               registerBtn.textContent = originalText;
@@ -587,11 +553,11 @@
               return;
             }
 
-            // Step 2: Upload Photo
+            const uid = "SYDF-" + String(Date.now()).slice(-6);
             registerBtn.textContent = "Uploading photo...";
             let photoUrl = null;
             const fileExt = photoFile.name.split(".").pop();
-            const fileName = "SYDF-" + Date.now() + "." + fileExt;
+            const fileName = uid + "-" + Date.now() + "." + fileExt;
 
             const { error: uploadError } = await supabaseClient.storage
               .from("member-photos")
@@ -599,8 +565,6 @@
                 cacheControl: "3600",
                 upsert: false,
               });
-
-            if (uploadError) console.error("Photo upload error:", uploadError);
             if (!uploadError) {
               const { data: urlData } = supabaseClient.storage
                 .from("member-photos")
@@ -608,14 +572,18 @@
               photoUrl = urlData.publicUrl;
             }
 
-            // Step 3: Save Member
             registerBtn.textContent = "Saving profile...";
-            const uid = "SYDF-" + String(Date.now()).slice(-6);
+
+            // YAHAN FIX HUA HAI: user_id add kiya aur error log kiya
+            if (!authData || !authData.user) {
+              throw new Error("Auth user creation failed.");
+            }
 
             const { error: dbError } = await supabaseClient
               .from("members")
               .insert([
                 {
+                  user_id: authData.user.id, // <--- ZAROORI HAI
                   uid: uid,
                   name: name,
                   father_name: fatherName,
@@ -635,10 +603,9 @@
               ]);
 
             if (dbError) {
+              console.error("Database Insert Error:", dbError); // F12 console mein error dekho
               showMessage(
-                "⚠️ Account created but profile save failed: " +
-                  dbError.message +
-                  "\n\nPlease contact admin.",
+                "⚠️ Profile save failed: " + dbError.message,
                 "error",
               );
               registerBtn.textContent = originalText;
@@ -646,7 +613,6 @@
               return;
             }
 
-            // Step 4: Success
             showMessage(
               "✅ Registration successful!\n\nYour account is pending admin approval.\n\nYour UID: " +
                 uid,
@@ -655,7 +621,6 @@
             registerForm.reset();
             photoPreview.style.display = "none";
             if (privacyNotice) privacyNotice.style.display = "none";
-
             setTimeout(() => {
               window.location.replace("login.html");
             }, 4000);

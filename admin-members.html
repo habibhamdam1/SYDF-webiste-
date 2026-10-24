@@ -915,9 +915,11 @@
       });
 
       async function loadMembers() {
+        // Yahan .neq("status", "Deleted") lagaya hai taaki soft-deleted members table mein na aayein
         let query = supabaseClient
           .from("members")
           .select("*")
+          .neq("status", "Deleted")
           .order("created_at", { ascending: false });
 
         // DISTRICT ADMIN FILTER
@@ -1057,7 +1059,6 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: "landscape" });
 
-            // PDF Header
             const pageWidth = doc.internal.pageSize.getWidth();
             doc.setFillColor(26, 188, 156);
             doc.rect(0, 0, pageWidth, 25, "F");
@@ -1075,7 +1076,6 @@
               { align: "right" },
             );
 
-            // Table
             doc.autoTable({
               head: [
                 ["Name", "UID", "District", "Role", "Phone", "Status", "Score"],
@@ -1298,37 +1298,28 @@
         });
       };
 
+      // SOFT DELETE FIXED
       window.deleteMember = function (id) {
         const m = allMembers.find((x) => String(x.id) === String(id));
         window.syfConfirm(
-          "⚠️ DELETE " + m.name + " permanently? This cannot be undone.",
+          "⚠️ REMOVE " +
+            m.name +
+            "? (They will be removed from all lists and cannot login)",
           async (confirmed) => {
             if (!confirmed) return;
 
             try {
-              // Pehle check karo ke koi data toh nahi juda hua
-              const { count: payments } = await supabaseClient
-                .from("payments")
-                .select("*", { count: "exact", head: true })
-                .eq("member_email", m.email);
-              const { count: activities } = await supabaseClient
-                .from("activity_participants")
-                .select("*", { count: "exact", head: true })
-                .eq("member_email", m.email);
-
-              if (payments > 0 || activities > 0) {
-                return window.syfError(
-                  `❌ Cannot delete ${m.name}. They have linked payments or activities in the system. Try 'Suspending' them instead.`,
-                );
-              }
-
               const { error } = await supabaseClient
                 .from("members")
-                .delete()
+                .update({
+                  status: "Deleted",
+                  is_active: false,
+                })
                 .eq("id", id);
+
               if (error) throw error;
 
-              window.syfSuccess("✅ Member deleted successfully.");
+              window.syfSuccess("✅ Member removed successfully.");
               await loadMembers();
             } catch (err) {
               window.syfError("❌ Error: " + err.message);

@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (FINAL & CLEAN)
+// SYDF - MAIN JAVASCRIPT (FINAL & BUG-FREE)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -40,12 +40,16 @@ document.querySelectorAll(".glass-card").forEach((card) => {
 });
 
 // ==========================================
-// SMOOTH SCROLL
+// SMOOTH SCROLL (FIXED: '# ' Error Solved)
 // ==========================================
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
+    const href = this.getAttribute("href");
+    // Agar sirf '#' hai ya khali hai, toh error mat do, skip karo
+    if (!href || href === "#") return;
+
     e.preventDefault();
-    const target = document.querySelector(this.getAttribute("href"));
+    const target = document.querySelector(href);
     if (target) target.scrollIntoView({ behavior: "smooth" });
   });
 });
@@ -214,7 +218,7 @@ backToTopBtn.addEventListener("click", function () {
 })();
 
 // ==========================================
-// AUTHENTICATION & LOGOUT
+// AUTHENTICATION & LOGOUT (BULLETPROOF)
 // ==========================================
 async function getCurrentUser() {
   let attempts = 0;
@@ -256,20 +260,30 @@ async function updateNavButton() {
 }
 
 async function logoutUser() {
-  // Wapas syfConfirm use kar rahe hain, kyunki toast.js fix ho gaya hai
-  window.syfConfirm("Are you sure you want to logout?", async (confirmed) => {
-    if (!confirmed) return;
-
+  const doLogout = async () => {
     try {
       if (typeof supabaseClient !== "undefined" && supabaseClient) {
         await supabaseClient.auth.signOut();
       }
     } catch (err) {
-      console.error(err);
+      console.error("Supabase logout error:", err);
     }
     localStorage.clear();
-    window.location.href = "login.html";
-  });
+    sessionStorage.clear();
+    window.location.replace("login.html");
+  };
+
+  // Pehle custom popup try karega
+  if (typeof window.syfConfirm === "function") {
+    window.syfConfirm("Are you sure you want to logout?", (confirmed) => {
+      if (confirmed) doLogout();
+    });
+  } else {
+    // Agar toast.js load nahi hua toh browser ka popup
+    if (confirm("Are you sure you want to logout?")) {
+      doLogout();
+    }
+  }
 }
 
 // GLOBAL LOGOUT LISTENER
@@ -492,7 +506,7 @@ function addBottomButtons(sidebarNav) {
 }
 
 // ==========================================
-// SECTION CONTROLS & RBAC (Kept for completeness)
+// SECTION CONTROLS & RBAC
 // ==========================================
 async function applySectionControls() {
   let attempts = 0;
@@ -661,121 +675,6 @@ async function initFloatingContactButton() {
     console.error("Floating button error:", err);
   }
 }
-
-// ACTIVITIES, GALLERY, FAQ FILTERS
-const activityFilterBtns = document.querySelectorAll(".filter-btn");
-const activityCards = document.querySelectorAll(".activity-card");
-if (activityFilterBtns.length > 0 && activityCards.length > 0) {
-  activityFilterBtns.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      activityFilterBtns.forEach((b) => b.classList.remove("active"));
-      this.classList.add("active");
-      const filter = this.getAttribute("data-filter");
-      activityCards.forEach((card) => {
-        if (filter === "all" || card.getAttribute("data-status") === filter) {
-          card.classList.remove("hidden");
-          card.style.animation = "fadeIn 0.5s ease";
-        } else card.classList.add("hidden");
-      });
-    });
-  });
-}
-
-const galleryFilterBtns = document.querySelectorAll(".filter-btn");
-const galleryItems = document.querySelectorAll(".gallery-item");
-if (galleryFilterBtns.length > 0 && galleryItems.length > 0) {
-  galleryFilterBtns.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const filter = this.getAttribute("data-filter");
-      if (!filter) return;
-      galleryFilterBtns.forEach((b) => b.classList.remove("active"));
-      this.classList.add("active");
-      galleryItems.forEach((item) => {
-        if (filter === "all" || item.getAttribute("data-category") === filter)
-          item.classList.remove("hidden");
-        else item.classList.add("hidden");
-      });
-    });
-  });
-}
-
-document.querySelectorAll(".faq-item").forEach((item) => {
-  const question = item.querySelector(".faq-question");
-  if (question)
-    question.addEventListener("click", function () {
-      item.classList.toggle("open");
-    });
-});
-
-const faqSearch = document.getElementById("faqSearch");
-if (faqSearch) {
-  faqSearch.addEventListener("input", function () {
-    const search = this.value.toLowerCase();
-    document.querySelectorAll(".faq-item").forEach((item) => {
-      const text = item.textContent.toLowerCase();
-      item.style.display = text.includes(search) ? "block" : "none";
-    });
-  });
-}
-
-const memberSearch = document.getElementById("memberSearch");
-const memberDistrict = document.getElementById("memberDistrict");
-const memberRole = document.getElementById("memberRole");
-function filterMembers() {
-  const search = memberSearch ? memberSearch.value.toLowerCase() : "";
-  const district = memberDistrict ? memberDistrict.value : "";
-  const role = memberRole ? memberRole.value : "";
-  document.querySelectorAll(".member-card").forEach((card) => {
-    const text = card.textContent.toLowerCase();
-    const cDistrict = card.getAttribute("data-district") || "";
-    const cRole = card.getAttribute("data-role") || "";
-    const matchSearch = !search || text.includes(search);
-    const matchDistrict = !district || cDistrict === district;
-    const matchRole = !role || cRole === role;
-    card.style.display =
-      matchSearch && matchDistrict && matchRole ? "block" : "none";
-  });
-}
-if (memberSearch) memberSearch.addEventListener("input", filterMembers);
-if (memberDistrict) memberDistrict.addEventListener("change", filterMembers);
-if (memberRole) memberRole.addEventListener("change", filterMembers);
-
-const volunteerForm = document.getElementById("volunteerForm");
-if (volunteerForm) {
-  volunteerForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    window.syfSuccess(
-      "Thank you for applying as a volunteer! We will contact you soon.",
-    );
-    this.reset();
-  });
-}
-const feedbackForm = document.getElementById("feedbackForm");
-if (feedbackForm) {
-  feedbackForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    window.syfSuccess("Thank you for your feedback!");
-    this.reset();
-  });
-}
-const sponsorForm = document.getElementById("sponsorForm");
-if (sponsorForm) {
-  sponsorForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    window.syfSuccess(
-      "Thank you for your sponsorship interest! Our team will contact you within 24-48 hours.",
-    );
-    this.reset();
-  });
-}
-document.querySelectorAll(".newsletter-form").forEach((form) => {
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    const email = form.querySelector('input[type="email"]')?.value || "";
-    window.syfSuccess("Subscribed! " + email + " added to our newsletter.");
-    form.reset();
-  });
-});
 
 // ==========================================
 // INITIALIZE ALL

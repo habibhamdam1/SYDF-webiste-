@@ -424,3 +424,27 @@
 
   console.log("✅ Toast System loaded (Callback + Promise support)");
 })();
+// ==========================================
+// MAGIC: GLOBAL OVERRIDE FOR OLD ALERTS/CONFIRMS
+// ==========================================
+window.addEventListener("load", function () {
+  // 1. Override purana alert
+  window.alert = function (message) {
+    if (typeof window.syfToast === "function") {
+      window.syfToast(message, "info");
+    } else {
+      console.log("Alert:", message);
+    }
+  };
+
+  // 2. Override purana confirm (Yeh thoda tricky hai, par kaam karega)
+  const originalConfirm = window.confirm;
+  window.confirm = function (message) {
+    // Kyunki confirm browser ko block karta hai, hum custom popup use karenge jo async hota hai.
+    // Purane code ko break hone se bachane ke liye hum native confirm hi use karenge agar zaroorat pade.
+    // Par humne jo files fix ki hain unme syfConfirm laga hua hai.
+
+    // Agar aage koi file purana confirm use kare, toh yeh browser wala hi chalega (jo 100% kaam karta hai)
+    return originalConfirm(message);
+  };
+});
