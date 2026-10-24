@@ -475,7 +475,11 @@
       async function loadStats() {
         try {
           const [membersRes, paymentsRes, activitiesRes] = await Promise.all([
-            supabaseClient.from("members").select("status"),
+            // YAHAN FIX: .neq("status", "Deleted") add kiya hai
+            supabaseClient
+              .from("members")
+              .select("status, created_at")
+              .neq("status", "Deleted"),
             supabaseClient
               .from("payments")
               .select("amount, payment_date, status"),
@@ -486,6 +490,7 @@
           const payments = paymentsRes.data || [];
           const activities = activitiesRes.data || [];
 
+          // Ab total members sirf wo count honge jo delete nahi hue
           const totalMembers = members.length;
           const pendingApps = members.filter(
             (m) => m.status === "Pending",
