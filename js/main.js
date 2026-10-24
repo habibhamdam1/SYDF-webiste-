@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (COMPLETE & FINAL)
+// SYDF - MAIN JAVASCRIPT (FINAL & BUG-FREE)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -40,12 +40,16 @@ document.querySelectorAll(".glass-card").forEach((card) => {
 });
 
 // ==========================================
-// SMOOTH SCROLL
+// SMOOTH SCROLL (FIXED: '# ' Error Solved)
 // ==========================================
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
+    const href = this.getAttribute("href");
+    // Agar sirf '#' hai ya khali hai, toh error mat do, skip karo
+    if (!href || href === "#") return;
+
     e.preventDefault();
-    const target = document.querySelector(this.getAttribute("href"));
+    const target = document.querySelector(href);
     if (target) target.scrollIntoView({ behavior: "smooth" });
   });
 });
@@ -97,7 +101,7 @@ backToTopBtn.addEventListener("click", function () {
   const existingNav = document.querySelector(".glass-header nav");
   if (existingNav) existingNav.innerHTML = navHTML;
 
-  // ✅ NAYA FIX: Add Hamburger Menu for Mobile
+  // ✅ Add Hamburger Menu for Mobile
   const headerDiv = document.querySelector(".glass-header");
   if (headerDiv && !document.getElementById("mobileMenuBtn")) {
     const btn = document.createElement("button");
@@ -214,7 +218,7 @@ backToTopBtn.addEventListener("click", function () {
 })();
 
 // ==========================================
-// AUTHENTICATION
+// AUTHENTICATION & LOGOUT (BULLETPROOF)
 // ==========================================
 async function getCurrentUser() {
   let attempts = 0;
@@ -255,7 +259,42 @@ async function updateNavButton() {
   }
 }
 
-// ✅ YEH MISSING THA: Dashboard Protection & User Info
+async function logoutUser() {
+  const doLogout = async () => {
+    try {
+      if (typeof supabaseClient !== "undefined" && supabaseClient) {
+        await supabaseClient.auth.signOut();
+      }
+    } catch (err) {
+      console.error("Supabase logout error:", err);
+    }
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace("login.html");
+  };
+
+  // Pehle custom popup try karega
+  if (typeof window.syfConfirm === "function") {
+    window.syfConfirm("Are you sure you want to logout?", (confirmed) => {
+      if (confirmed) doLogout();
+    });
+  } else {
+    // Agar toast.js load nahi hua toh browser ka popup
+    if (confirm("Are you sure you want to logout?")) {
+      doLogout();
+    }
+  }
+}
+
+// GLOBAL LOGOUT LISTENER
+document.addEventListener("click", function (e) {
+  const logoutBtn = e.target.closest(".logout-btn");
+  if (logoutBtn) {
+    e.preventDefault();
+    logoutUser();
+  }
+});
+
 async function protectDashboard() {
   const path = window.location.pathname;
   const protectedPages = [
@@ -343,32 +382,8 @@ function updateUserInfo(user) {
   });
 }
 
-async function logoutUser() {
-  window.syfConfirm("Are you sure you want to logout?", async (confirmed) => {
-    if (!confirmed) return;
-    try {
-      if (typeof supabaseClient !== "undefined" && supabaseClient) {
-        await supabaseClient.auth.signOut();
-      }
-    } catch (err) {
-      console.error(err);
-    }
-    localStorage.clear();
-    window.location.href = "login.html";
-  });
-}
-
-function attachLogoutHandlers() {
-  document.querySelectorAll(".logout-btn").forEach((btn) => {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      logoutUser();
-    });
-  });
-}
-
 // ==========================================
-// DASHBOARD SIDEBAR TOGGLE (Mobile)
+// SIDEBAR TOGGLE & INJECTIONS
 // ==========================================
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("dashboardSidebar");
@@ -394,165 +409,18 @@ if (sidebarOverlay) {
   });
 }
 
-// ==========================================
-// SECTION CONTROLS: BLOCK PAGES & HIDE LINKS
-// ==========================================
-async function applySectionControls() {
-  let attempts = 0;
-  while (
-    (typeof supabaseClient === "undefined" || !supabaseClient) &&
-    attempts < 30
-  ) {
-    await new Promise((r) => setTimeout(r, 100));
-    attempts++;
-  }
-  if (!supabaseClient) return;
-
-  const currentPage = window.location.pathname
-    .split("/")
-    .pop()
-    .replace(".html", "");
-  const protectedPages = [
-    "activities",
-    "news",
-    "gallery",
-    "donate",
-    "events",
-    "leadership",
-    "membership",
-    "contact",
-    "volunteer",
-    "sponsor",
-    "partners",
-  ];
-
-  try {
-    const { data } = await supabaseClient
-      .from("settings")
-      .select("key, value")
-      .like("key", "section_%");
-    const settingsMap = {};
-    if (data) {
-      data.forEach((d) => {
-        settingsMap[d.key] = d.value === "true";
-      });
-    }
-
-    document.querySelectorAll(".glass-header nav ul li a").forEach((a) => {
-      const href = a.getAttribute("href");
-      if (href && href.endsWith(".html")) {
-        const pageName = href.replace(".html", "");
-        const key = `section_${pageName}`;
-        if (settingsMap[key] === false) {
-          a.parentElement.style.display = "none";
-        }
-      }
-    });
-
-    if (protectedPages.includes(currentPage)) {
-      const key = `section_${currentPage}`;
-      if (settingsMap[key] === false) {
-        const overlay = document.createElement("div");
-        overlay.style.cssText =
-          "position:fixed; inset:0; z-index:99999; background:var(--bg-base); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;";
-        overlay.innerHTML = `
-          <div style="font-size:80px; margin-bottom:20px;">🚧</div>
-          <h2 style="color:var(--text-primary); font-size:32px; margin-bottom:15px; font-family:'Poppins', sans-serif;">Section Temporarily Closed</h2>
-          <p style="color:var(--text-secondary); max-width:500px; margin-bottom:30px; font-size:16px; font-family:'Poppins', sans-serif;">This section is currently closed by the administration. Please check back later.</p>
-          <a href="index.html" class="btn-primary" style="text-decoration:none; padding:12px 30px; border-radius:10px; font-family:'Poppins', sans-serif; background:var(--accent); color:white; font-weight:600;">Return to Homepage</a>
-        `;
-        document.body.appendChild(overlay);
-      }
-    }
-  } catch (err) {
-    console.error("Section controls error:", err);
-  }
-}
-
-// ==========================================
-// SMART ROLE-BASED ACCESS CONTROL (RBAC)
-// ==========================================
-async function enforceAdminPermissions() {
-  if (!window.location.pathname.includes("admin")) return;
-
-  let attempts = 0;
-  while (
-    (typeof supabaseClient === "undefined" || !supabaseClient) &&
-    attempts < 30
-  ) {
-    await new Promise((r) => setTimeout(r, 100));
-    attempts++;
-  }
-  if (!supabaseClient) return;
-
-  const {
-    data: { session },
-  } = await supabaseClient.auth.getSession();
-  if (!session) return;
-
-  const { data: admin } = await supabaseClient
-    .from("members")
-    .select("role, district")
-    .eq("email", session.user.email)
-    .maybeSingle();
-  if (!admin) return;
-
-  window.currentAdminRole = admin.role;
-  window.currentAdminDistrict = admin.district;
-
-  if (admin.role === "District Admin") {
-    const restrictedHrefs = [
-      "admin-settings.html",
-      "admin-districts.html",
-      "admin-cabinet.html",
-      "admin-section-controls.html",
-      "admin-reports.html",
-      "admin-email.html",
-    ];
-
-    document.querySelectorAll(".sidebar-nav a").forEach((a) => {
-      if (
-        restrictedHrefs.some((href) => a.getAttribute("href").includes(href))
-      ) {
-        a.parentElement.style.display = "none";
-      }
-    });
-
-    document.querySelectorAll(".nav-section-title").forEach((title) => {
-      let nextEl = title.nextElementSibling;
-      if (nextEl && nextEl.tagName === "UL") {
-        let visibleLinks = Array.from(nextEl.querySelectorAll("li")).filter(
-          (li) => li.style.display !== "none",
-        );
-        if (visibleLinks.length === 0) title.style.display = "none";
-      }
-    });
-
-    document.querySelectorAll(".user-uid").forEach((el) => {
-      el.textContent = `District Admin (${admin.district || "Unassigned"})`;
-    });
-  }
-}
-
-// ==========================================
-// SIDEBAR BUTTONS & INJECTION (MEMBER & ADMIN)
-// ==========================================
 document.addEventListener("DOMContentLoaded", function () {
   const sidebarNav = document.querySelector(".dashboard-sidebar .sidebar-nav");
   if (!sidebarNav) return;
 
-  // 1. Auto-Highlight
   const currentPage =
     window.location.pathname.split("/").pop() || "dashboard.html";
   sidebarNav.querySelectorAll("a").forEach((link) => {
     link.classList.remove("active");
     const href = link.getAttribute("href");
-    if (href && href === currentPage) {
-      link.classList.add("active");
-    }
+    if (href && href === currentPage) link.classList.add("active");
   });
 
-  // 2. Smart Injection
   const isAdminPanel =
     document.querySelector(".admin-sidebar") !== null ||
     window.location.pathname.includes("admin");
@@ -563,7 +431,6 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     if (wrongBtn) wrongBtn.parentElement.remove();
 
-    // Issue Reports link
     const hasIssueReportBtn = Array.from(sidebarNav.querySelectorAll("a")).some(
       (a) => a.href.includes("admin-issue-reports.html"),
     );
@@ -578,28 +445,19 @@ document.addEventListener("DOMContentLoaded", function () {
       else sidebarNav.appendChild(newLi);
     }
 
-    // Contact Messages Link
     const hasMsgBtn = Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
       a.href.includes("admin-messages.html"),
     );
     if (!hasMsgBtn) {
       const newMsgLi = document.createElement("li");
-      newMsgLi.innerHTML = `
-        <a href="admin-messages.html">
-          <span class="nav-icon">📩</span>
-          <span>Messages</span>
-        </a>
-      `;
+      newMsgLi.innerHTML = `<a href="admin-messages.html"><span class="nav-icon">📩</span><span>Messages</span></a>`;
       const notifLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) =>
         a.href.includes("admin-notifications.html"),
       );
-      if (notifLink) {
+      if (notifLink)
         notifLink.parentElement.insertAdjacentElement("beforebegin", newMsgLi);
-      } else {
-        sidebarNav.appendChild(newMsgLi);
-      }
+      else sidebarNav.appendChild(newMsgLi);
     }
-
     addBottomButtons(sidebarNav);
   } else {
     const hasReportBtn = Array.from(sidebarNav.querySelectorAll("a")).some(
@@ -643,24 +501,143 @@ function addBottomButtons(sidebarNav) {
       const logoutLi = document.createElement("li");
       logoutLi.innerHTML = `<a href="#" class="logout-btn" style="color: #ef4444;"><span class="nav-icon">🚪</span><span>Logout</span></a>`;
       sidebarNav.appendChild(logoutLi);
-      logoutLi.querySelector("a").addEventListener("click", function (e) {
-        e.preventDefault();
-        if (window.logoutUser) window.logoutUser();
-      });
     }
   }
 }
 
 // ==========================================
-// DYNAMIC FLOATING WHATSAPP BUTTON
+// SECTION CONTROLS & RBAC
 // ==========================================
+async function applySectionControls() {
+  let attempts = 0;
+  while (
+    (typeof supabaseClient === "undefined" || !supabaseClient) &&
+    attempts < 30
+  ) {
+    await new Promise((r) => setTimeout(r, 100));
+    attempts++;
+  }
+  if (!supabaseClient) return;
+
+  const currentPage = window.location.pathname
+    .split("/")
+    .pop()
+    .replace(".html", "");
+  const protectedPages = [
+    "activities",
+    "news",
+    "gallery",
+    "donate",
+    "events",
+    "leadership",
+    "membership",
+    "contact",
+    "volunteer",
+    "sponsor",
+    "partners",
+  ];
+
+  try {
+    const { data } = await supabaseClient
+      .from("settings")
+      .select("key, value")
+      .like("key", "section_%");
+    const settingsMap = {};
+    if (data)
+      data.forEach((d) => {
+        settingsMap[d.key] = d.value === "true";
+      });
+
+    document.querySelectorAll(".glass-header nav ul li a").forEach((a) => {
+      const href = a.getAttribute("href");
+      if (href && href.endsWith(".html")) {
+        const pageName = href.replace(".html", "");
+        const key = `section_${pageName}`;
+        if (settingsMap[key] === false) a.parentElement.style.display = "none";
+      }
+    });
+
+    if (protectedPages.includes(currentPage)) {
+      const key = `section_${currentPage}`;
+      if (settingsMap[key] === false) {
+        const overlay = document.createElement("div");
+        overlay.style.cssText =
+          "position:fixed; inset:0; z-index:99999; background:var(--bg-base); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;";
+        overlay.innerHTML = `
+          <div style="font-size:80px; margin-bottom:20px;">🚧</div>
+          <h2 style="color:var(--text-primary); font-size:32px; margin-bottom:15px; font-family:'Poppins', sans-serif;">Section Temporarily Closed</h2>
+          <p style="color:var(--text-secondary); max-width:500px; margin-bottom:30px; font-size:16px; font-family:'Poppins', sans-serif;">This section is currently closed by the administration. Please check back later.</p>
+          <a href="index.html" class="btn-primary" style="text-decoration:none; padding:12px 30px; border-radius:10px; font-family:'Poppins', sans-serif; background:var(--accent); color:white; font-weight:600;">Return to Homepage</a>
+        `;
+        document.body.appendChild(overlay);
+      }
+    }
+  } catch (err) {
+    console.error("Section controls error:", err);
+  }
+}
+
+async function enforceAdminPermissions() {
+  if (!window.location.pathname.includes("admin")) return;
+  let attempts = 0;
+  while (
+    (typeof supabaseClient === "undefined" || !supabaseClient) &&
+    attempts < 30
+  ) {
+    await new Promise((r) => setTimeout(r, 100));
+    attempts++;
+  }
+  if (!supabaseClient) return;
+
+  const {
+    data: { session },
+  } = await supabaseClient.auth.getSession();
+  if (!session) return;
+
+  const { data: admin } = await supabaseClient
+    .from("members")
+    .select("role, district")
+    .eq("email", session.user.email)
+    .maybeSingle();
+  if (!admin) return;
+
+  window.currentAdminRole = admin.role;
+  window.currentAdminDistrict = admin.district;
+
+  if (admin.role === "District Admin") {
+    const restrictedHrefs = [
+      "admin-settings.html",
+      "admin-districts.html",
+      "admin-cabinet.html",
+      "admin-section-controls.html",
+      "admin-reports.html",
+      "admin-email.html",
+    ];
+    document.querySelectorAll(".sidebar-nav a").forEach((a) => {
+      if (restrictedHrefs.some((href) => a.getAttribute("href").includes(href)))
+        a.parentElement.style.display = "none";
+    });
+    document.querySelectorAll(".nav-section-title").forEach((title) => {
+      let nextEl = title.nextElementSibling;
+      if (nextEl && nextEl.tagName === "UL") {
+        let visibleLinks = Array.from(nextEl.querySelectorAll("li")).filter(
+          (li) => li.style.display !== "none",
+        );
+        if (visibleLinks.length === 0) title.style.display = "none";
+      }
+    });
+    document.querySelectorAll(".user-uid").forEach((el) => {
+      el.textContent = `District Admin (${admin.district || "Unassigned"})`;
+    });
+  }
+}
+
 async function initFloatingContactButton() {
   const isDashboard =
     window.location.pathname.includes("dashboard") ||
     window.location.pathname.includes("admin") ||
     document.body.classList.contains("dashboard-body");
   if (isDashboard) return;
-
   if (document.querySelector(".whatsapp-fab")) return;
 
   let attempts = 0;
@@ -679,13 +656,11 @@ async function initFloatingContactButton() {
       .select("key, value")
       .in("key", ["whatsapp", "phone"]);
     let whatsappNumber = "";
-
     if (data) {
       const settings = {};
       data.forEach((d) => (settings[d.key] = d.value));
       whatsappNumber = settings["whatsapp"] || settings["phone"] || "";
     }
-
     if (!whatsappNumber) return;
     whatsappNumber = whatsappNumber.replace(/[^0-9]/g, "");
 
@@ -695,7 +670,6 @@ async function initFloatingContactButton() {
     waBtn.target = "_blank";
     waBtn.title = "Chat on WhatsApp";
     waBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>`;
-
     document.body.appendChild(waBtn);
   } catch (err) {
     console.error("Floating button error:", err);
@@ -703,141 +677,13 @@ async function initFloatingContactButton() {
 }
 
 // ==========================================
-// ACTIVITIES FILTER, GALLERY, FAQ, MEMBERS
-// ==========================================
-const activityFilterBtns = document.querySelectorAll(".filter-btn");
-const activityCards = document.querySelectorAll(".activity-card");
-if (activityFilterBtns.length > 0 && activityCards.length > 0) {
-  activityFilterBtns.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      activityFilterBtns.forEach((b) => b.classList.remove("active"));
-      this.classList.add("active");
-      const filter = this.getAttribute("data-filter");
-      activityCards.forEach((card) => {
-        if (filter === "all" || card.getAttribute("data-status") === filter) {
-          card.classList.remove("hidden");
-          card.style.animation = "fadeIn 0.5s ease";
-        } else {
-          card.classList.add("hidden");
-        }
-      });
-    });
-  });
-}
-
-const galleryFilterBtns = document.querySelectorAll(".filter-btn");
-const galleryItems = document.querySelectorAll(".gallery-item");
-if (galleryFilterBtns.length > 0 && galleryItems.length > 0) {
-  galleryFilterBtns.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const filter = this.getAttribute("data-filter");
-      if (!filter) return;
-      galleryFilterBtns.forEach((b) => b.classList.remove("active"));
-      this.classList.add("active");
-      galleryItems.forEach((item) => {
-        if (filter === "all" || item.getAttribute("data-category") === filter) {
-          item.classList.remove("hidden");
-        } else {
-          item.classList.add("hidden");
-        }
-      });
-    });
-  });
-}
-
-document.querySelectorAll(".faq-item").forEach((item) => {
-  const question = item.querySelector(".faq-question");
-  if (question) {
-    question.addEventListener("click", function () {
-      item.classList.toggle("open");
-    });
-  }
-});
-
-const faqSearch = document.getElementById("faqSearch");
-if (faqSearch) {
-  faqSearch.addEventListener("input", function () {
-    const search = this.value.toLowerCase();
-    document.querySelectorAll(".faq-item").forEach((item) => {
-      const text = item.textContent.toLowerCase();
-      item.style.display = text.includes(search) ? "block" : "none";
-    });
-  });
-}
-
-const memberSearch = document.getElementById("memberSearch");
-const memberDistrict = document.getElementById("memberDistrict");
-const memberRole = document.getElementById("memberRole");
-function filterMembers() {
-  const search = memberSearch ? memberSearch.value.toLowerCase() : "";
-  const district = memberDistrict ? memberDistrict.value : "";
-  const role = memberRole ? memberRole.value : "";
-  document.querySelectorAll(".member-card").forEach((card) => {
-    const text = card.textContent.toLowerCase();
-    const cDistrict = card.getAttribute("data-district") || "";
-    const cRole = card.getAttribute("data-role") || "";
-    const matchSearch = !search || text.includes(search);
-    const matchDistrict = !district || cDistrict === district;
-    const matchRole = !role || cRole === role;
-    card.style.display =
-      matchSearch && matchDistrict && matchRole ? "block" : "none";
-  });
-}
-if (memberSearch) memberSearch.addEventListener("input", filterMembers);
-if (memberDistrict) memberDistrict.addEventListener("change", filterMembers);
-if (memberRole) memberRole.addEventListener("change", filterMembers);
-
-const volunteerForm = document.getElementById("volunteerForm");
-if (volunteerForm) {
-  volunteerForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    window.syfSuccess(
-      "Thank you for applying as a volunteer! We will contact you soon.",
-    );
-    this.reset();
-  });
-}
-
-const feedbackForm = document.getElementById("feedbackForm");
-if (feedbackForm) {
-  feedbackForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    window.syfSuccess("Thank you for your feedback!");
-    this.reset();
-  });
-}
-
-const sponsorForm = document.getElementById("sponsorForm");
-if (sponsorForm) {
-  sponsorForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    window.syfSuccess(
-      "Thank you for your sponsorship interest! Our team will contact you within 24-48 hours.",
-    );
-    this.reset();
-  });
-}
-
-document.querySelectorAll(".newsletter-form").forEach((form) => {
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    const email = form.querySelector('input[type="email"]')?.value || "";
-    window.syfSuccess("Subscribed! " + email + " added to our newsletter.");
-    form.reset();
-  });
-});
-
-// ==========================================
 // INITIALIZE ALL
 // ==========================================
 window.addEventListener("load", async function () {
   setTimeout(updateNavButton, 500);
-  attachLogoutHandlers();
   await enforceAdminPermissions();
   await applySectionControls();
   await initFloatingContactButton();
-
-  // YEH MISSING THA: Dashboard Protection Check
   const user = await protectDashboard();
   if (user) updateUserInfo(user);
 });

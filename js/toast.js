@@ -1,6 +1,5 @@
 // ==========================================
-// SYDF - TOAST NOTIFICATION SYSTEM
-// Replaces ugly browser alerts with clean toasts
+// SYDF - TOAST NOTIFICATION SYSTEM & CONFIRM (FIXED)
 // ==========================================
 (function () {
   "use strict";
@@ -258,12 +257,7 @@
     return container;
   }
 
-  const ICONS = {
-    success: "✓",
-    error: "✕",
-    warning: "!",
-    info: "i",
-  };
+  const ICONS = { success: "✓", error: "✕", warning: "!", info: "i" };
   const TITLES = {
     success: "Success",
     error: "Error",
@@ -279,7 +273,6 @@
     type = type || "info";
     duration = typeof duration === "number" ? duration : 3500;
 
-    // Clean leading emojis from message
     let msg = String(message).trim();
     msg = msg
       .replace(
@@ -302,7 +295,6 @@
     toast.querySelector(".syf-toast-message").textContent = msg;
 
     getContainer().appendChild(toast);
-
     requestAnimationFrame(() => toast.classList.add("show"));
 
     const closeToast = () => {
@@ -315,15 +307,26 @@
     toast
       .querySelector(".syf-toast-close")
       .addEventListener("click", closeToast);
-
     if (duration > 0) setTimeout(closeToast, duration);
   }
 
   // ==========================================
-  // SHOW CONFIRM (Promise-based)
+  // SHOW CONFIRM (FIXED: Promise + Callback Support)
   // ==========================================
-  function showConfirm(message, options) {
-    options = options || {};
+  function showConfirm(message, optionsOrCallback) {
+    let options = {};
+    let callback = null;
+
+    // Check if second argument is a function (Callback)
+    if (typeof optionsOrCallback === "function") {
+      callback = optionsOrCallback;
+    } else if (
+      typeof optionsOrCallback === "object" &&
+      optionsOrCallback !== null
+    ) {
+      options = optionsOrCallback;
+    }
+
     const type = options.type || "warning";
     const title =
       options.title || (type === "danger" ? "Confirm" : "Are you sure?");
@@ -360,7 +363,12 @@
         setTimeout(() => {
           if (overlay.parentNode) overlay.remove();
         }, 250);
+
+        // YAHAN MASLA HAL HUA HAI: Callback ko call karo
         resolve(result);
+        if (typeof callback === "function") {
+          callback(result);
+        }
       };
 
       overlay
@@ -372,6 +380,7 @@
       overlay.addEventListener("click", (e) => {
         if (e.target === overlay) close(false);
       });
+
       document.addEventListener("keydown", function esc(e) {
         if (e.key === "Escape") {
           close(false);
@@ -405,9 +414,7 @@
     showToast(msg, type);
   };
 
-  // ==========================================
   // Expose API
-  // ==========================================
   window.syfToast = showToast;
   window.syfSuccess = (msg, dur) => showToast(msg, "success", dur);
   window.syfError = (msg, dur) => showToast(msg, "error", dur || 4000);
@@ -415,5 +422,29 @@
   window.syfInfo = (msg, dur) => showToast(msg, "info", dur);
   window.syfConfirm = showConfirm;
 
-  console.log("✅ Toast System loaded");
+  console.log("✅ Toast System loaded (Callback + Promise support)");
 })();
+// ==========================================
+// MAGIC: GLOBAL OVERRIDE FOR OLD ALERTS/CONFIRMS
+// ==========================================
+window.addEventListener("load", function () {
+  // 1. Override purana alert
+  window.alert = function (message) {
+    if (typeof window.syfToast === "function") {
+      window.syfToast(message, "info");
+    } else {
+      console.log("Alert:", message);
+    }
+  };
+
+  // 2. Override purana confirm (Yeh thoda tricky hai, par kaam karega)
+  const originalConfirm = window.confirm;
+  window.confirm = function (message) {
+    // Kyunki confirm browser ko block karta hai, hum custom popup use karenge jo async hota hai.
+    // Purane code ko break hone se bachane ke liye hum native confirm hi use karenge agar zaroorat pade.
+    // Par humne jo files fix ki hain unme syfConfirm laga hua hai.
+
+    // Agar aage koi file purana confirm use kare, toh yeh browser wala hi chalega (jo 100% kaam karta hai)
+    return originalConfirm(message);
+  };
+});
