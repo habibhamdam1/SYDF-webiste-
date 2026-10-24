@@ -11,8 +11,14 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- PDF Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
+
     <style>
       .modal-overlay {
         display: none;
@@ -300,6 +306,11 @@
         <div class="nav-section-title">System</div>
         <ul>
           <li>
+            <a href="admin-messages.html"
+              ><span class="nav-icon">📩</span><span>Messages</span></a
+            >
+          </li>
+          <li>
             <a href="admin-notifications.html"
               ><span class="nav-icon">🔔</span><span>Notifications</span></a
             >
@@ -361,7 +372,26 @@
               Total <strong id="totalMembers">0</strong> members
             </p>
           </div>
-          <div style="display: flex; gap: 10px">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap">
+            <button
+              id="pdfBtn"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 12px 22px;
+                background: var(--input-bg);
+                color: var(--text-primary);
+                border: 1px solid var(--card-border);
+                border-radius: 12px;
+                font-family: Poppins;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+              "
+            >
+              📥 Export PDF
+            </button>
             <button
               id="recalcScoresBtn"
               style="
@@ -680,7 +710,6 @@
               <select id="amRole">
                 <option>Member</option>
                 <option>District Admin</option>
-                <!-- NAYA ROLE -->
                 <option>President</option>
                 <option>Senior Vice President</option>
                 <option>Vice President</option>
@@ -786,7 +815,6 @@
               <select id="emRole">
                 <option>Member</option>
                 <option>District Admin</option>
-                <!-- NAYA ROLE -->
                 <option>President</option>
                 <option>Senior Vice President</option>
                 <option>Vice President</option>
@@ -1019,6 +1047,61 @@
             document.getElementById("addModal").classList.add("active"),
           );
 
+        // PDF DOWNLOAD LOGIC
+        document
+          .getElementById("pdfBtn")
+          .addEventListener("click", function () {
+            if (allMembers.length === 0)
+              return window.syfError("No members to export.");
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: "landscape" });
+
+            // PDF Header
+            const pageWidth = doc.internal.pageSize.getWidth();
+            doc.setFillColor(26, 188, 156);
+            doc.rect(0, 0, pageWidth, 25, "F");
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.setFont("helvetica", "bold");
+            doc.text("SYDF - Members Directory", 14, 16);
+
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text(
+              "Generated on: " + new Date().toLocaleDateString("en-PK"),
+              pageWidth - 14,
+              16,
+              { align: "right" },
+            );
+
+            // Table
+            doc.autoTable({
+              head: [
+                ["Name", "UID", "District", "Role", "Phone", "Status", "Score"],
+              ],
+              body: allMembers.map((m) => [
+                m.name || "-",
+                m.uid || "-",
+                m.district || "-",
+                m.role || "Member",
+                m.phone || "-",
+                m.status || "Pending",
+                m.engagement_score || 0,
+              ]),
+              startY: 30,
+              theme: "grid",
+              styles: { font: "helvetica", fontSize: 9, cellPadding: 3 },
+              headStyles: {
+                fillColor: [26, 188, 156],
+                textColor: [255, 255, 255],
+              },
+              alternateRowStyles: { fillColor: [245, 250, 249] },
+            });
+
+            doc.save("SYDF-Members-List.pdf");
+          });
+
         document
           .getElementById("recalcScoresBtn")
           .addEventListener("click", async function () {
@@ -1221,13 +1304,35 @@
           "⚠️ DELETE " + m.name + " permanently? This cannot be undone.",
           async (confirmed) => {
             if (!confirmed) return;
-            const { error } = await supabaseClient
-              .from("members")
-              .delete()
-              .eq("id", id);
-            if (error) return window.syfError(error.message);
-            window.syfSuccess("Member deleted");
-            await loadMembers();
+
+            try {
+              // Pehle check karo ke koi data toh nahi juda hua
+              const { count: payments } = await supabaseClient
+                .from("payments")
+                .select("*", { count: "exact", head: true })
+                .eq("member_email", m.email);
+              const { count: activities } = await supabaseClient
+                .from("activity_participants")
+                .select("*", { count: "exact", head: true })
+                .eq("member_email", m.email);
+
+              if (payments > 0 || activities > 0) {
+                return window.syfError(
+                  `❌ Cannot delete ${m.name}. They have linked payments or activities in the system. Try 'Suspending' them instead.`,
+                );
+              }
+
+              const { error } = await supabaseClient
+                .from("members")
+                .delete()
+                .eq("id", id);
+              if (error) throw error;
+
+              window.syfSuccess("✅ Member deleted successfully.");
+              await loadMembers();
+            } catch (err) {
+              window.syfError("❌ Error: " + err.message);
+            }
           },
         );
       };
