@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (FINAL & BUG-FREE)
+// SYDF - MAIN JAVASCRIPT (100% COMPLETE & FINAL)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -45,9 +45,7 @@ document.querySelectorAll(".glass-card").forEach((card) => {
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
     const href = this.getAttribute("href");
-    // Agar sirf '#' hai ya khali hai, toh error mat do, skip karo
     if (!href || href === "#") return;
-
     e.preventDefault();
     const target = document.querySelector(href);
     if (target) target.scrollIntoView({ behavior: "smooth" });
@@ -95,13 +93,17 @@ backToTopBtn.addEventListener("click", function () {
     const active = currentPage === link.href ? ' class="active"' : "";
     navHTML += `<li><a href="${link.href}"${active}>${link.label}</a></li>`;
   });
+
+  const isPublicReport =
+    currentPage === "public-report.html" ? ' class="active"' : "";
+  navHTML += `<li><a href="public-report.html"${isPublicReport} style="color: var(--warm); font-weight: 600;">🛡️ Grievance</a></li>`;
+
   navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li>`;
   navHTML += "</ul>";
 
   const existingNav = document.querySelector(".glass-header nav");
   if (existingNav) existingNav.innerHTML = navHTML;
 
-  // ✅ Add Hamburger Menu for Mobile
   const headerDiv = document.querySelector(".glass-header");
   if (headerDiv && !document.getElementById("mobileMenuBtn")) {
     const btn = document.createElement("button");
@@ -116,14 +118,13 @@ backToTopBtn.addEventListener("click", function () {
     });
   }
 
-  // ✅ Add logo image in header
   const logoDiv = document.querySelector(".glass-header .logo");
   if (logoDiv && !logoDiv.querySelector("img")) {
     const img = document.createElement("img");
     img.src = "images/logo.png";
     img.alt = "SYDF Logo";
     img.style.cssText =
-      "width:45px;height:45px;border-radius:50%;object-fit:contain;background:rgba(255,255,255,0.95);padding:3px;margin-right:12px;flex-shrink:0;box-shadow:0 3px 12px rgba(26,188,156,0.3);";
+      "width:40px;height:40px;border-radius:50%;object-fit:contain;background:rgba(255,255,255,0.95);padding:2px;margin-right:8px;flex-shrink:0;box-shadow:0 3px 12px rgba(26,188,156,0.3);";
     img.onerror = function () {
       this.remove();
     };
@@ -183,6 +184,7 @@ backToTopBtn.addEventListener("click", function () {
                 <h4>Support & Legal</h4>
                 <ul>
                     <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="public-report.html" style="color: var(--warm); font-weight: 600;">🛡️ Public Grievances</a></li>
                     <li><a href="faq.html">FAQ</a></li>
                     <li><a href="feedback.html">Send Feedback</a></li>
                     <li><a href="privacy-policy.html">Privacy Policy</a></li>
@@ -273,13 +275,11 @@ async function logoutUser() {
     window.location.replace("login.html");
   };
 
-  // Pehle custom popup try karega
   if (typeof window.syfConfirm === "function") {
     window.syfConfirm("Are you sure you want to logout?", (confirmed) => {
       if (confirmed) doLogout();
     });
   } else {
-    // Agar toast.js load nahi hua toh browser ka popup
     if (confirm("Are you sure you want to logout?")) {
       doLogout();
     }
@@ -307,6 +307,7 @@ async function protectDashboard() {
     "my-activities.html",
     "member-proposals.html",
     "member-reports.html",
+    "member-elections.html",
     "notifications.html",
     "settings.html",
   ];
@@ -436,12 +437,26 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     if (!hasIssueReportBtn) {
       const newLi = document.createElement("li");
-      newLi.innerHTML = `<a href="admin-issue-reports.html"><span class="nav-icon">🚨</span><span>Issue Reports</span></a>`;
+      newLi.innerHTML = `<a href="admin-issue-reports.html"><span class="nav-icon">🚨</span><span>Member Reports</span></a>`;
       const waitlistLink = Array.from(sidebarNav.querySelectorAll("a")).find(
         (a) => a.href.includes("admin-waitlist.html"),
       );
       if (waitlistLink)
         waitlistLink.parentElement.insertAdjacentElement("afterend", newLi);
+      else sidebarNav.appendChild(newLi);
+    }
+
+    const hasPublicGrievanceBtn = Array.from(
+      sidebarNav.querySelectorAll("a"),
+    ).some((a) => a.href.includes("admin-public-issues.html"));
+    if (!hasPublicGrievanceBtn) {
+      const newLi = document.createElement("li");
+      newLi.innerHTML = `<a href="admin-public-issues.html"><span class="nav-icon">🛡️</span><span>Public Grievances</span></a>`;
+      const issueReportLink = Array.from(sidebarNav.querySelectorAll("a")).find(
+        (a) => a.href.includes("admin-issue-reports.html"),
+      );
+      if (issueReportLink)
+        issueReportLink.parentElement.insertAdjacentElement("afterend", newLi);
       else sidebarNav.appendChild(newLi);
     }
 
@@ -458,6 +473,21 @@ document.addEventListener("DOMContentLoaded", function () {
         notifLink.parentElement.insertAdjacentElement("beforebegin", newMsgLi);
       else sidebarNav.appendChild(newMsgLi);
     }
+
+    const hasElectionBtn = Array.from(sidebarNav.querySelectorAll("a")).some(
+      (a) => a.href.includes("admin-elections.html"),
+    );
+    if (!hasElectionBtn) {
+      const newElLi = document.createElement("li");
+      newElLi.innerHTML = `<a href="admin-elections.html"><span class="nav-icon">🗳️</span><span>Elections</span></a>`;
+      const appLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) =>
+        a.href.includes("admin-proposals.html"),
+      );
+      if (appLink)
+        appLink.parentElement.insertAdjacentElement("afterend", newElLi);
+      else sidebarNav.appendChild(newElLi);
+    }
+
     addBottomButtons(sidebarNav);
   } else {
     const hasReportBtn = Array.from(sidebarNav.querySelectorAll("a")).some(
@@ -473,6 +503,21 @@ document.addEventListener("DOMContentLoaded", function () {
         idCardLink.parentElement.insertAdjacentElement("afterend", newLi);
       else sidebarNav.appendChild(newLi);
     }
+
+    const hasMemberElectionBtn = Array.from(
+      sidebarNav.querySelectorAll("a"),
+    ).some((a) => a.href.includes("member-elections.html"));
+    if (!hasMemberElectionBtn) {
+      const newElLi = document.createElement("li");
+      newElLi.innerHTML = `<a href="member-elections.html"><span class="nav-icon">🗳️</span><span>Elections</span></a>`;
+      const propLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) =>
+        a.href.includes("member-proposals.html"),
+      );
+      if (propLink)
+        propLink.parentElement.insertAdjacentElement("afterend", newElLi);
+      else sidebarNav.appendChild(newElLi);
+    }
+
     addBottomButtons(sidebarNav);
   }
 });
@@ -506,7 +551,7 @@ function addBottomButtons(sidebarNav) {
 }
 
 // ==========================================
-// SECTION CONTROLS & RBAC
+// SECTION CONTROLS & RBAC (FULL LOGIC)
 // ==========================================
 async function applySectionControls() {
   let attempts = 0;
