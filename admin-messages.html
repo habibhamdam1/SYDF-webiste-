@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Messages - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .messages-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .msg-card {
+        padding: 20px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-md);
+        backdrop-filter: blur(10px);
+        transition: 0.3s;
+      }
+      .msg-card:hover {
+        border-color: var(--card-border-hover);
+        transform: translateX(5px);
+      }
+      .msg-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+      .msg-title {
+        font-size: 16px;
+        color: var(--text-primary);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .msg-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .msg-body {
+        padding: 15px;
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-sm);
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+      .msg-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .status-unread {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+      .status-read {
+        background: var(--accent-soft);
+        color: var(--accent);
+        border: 1px solid var(--accent);
+      }
+
+      .btn-mark {
+        padding: 8px 16px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .btn-mark:hover {
+        background: var(--accent);
+        color: white;
+      }
+      .btn-del {
+        padding: 8px 16px;
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid #ef4444;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .btn-del:hover {
+        background: #ef4444;
+        color: white;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-muted);
+        font-size: 14px;
+        background: var(--input-bg);
+        border-radius: var(--r-lg);
+        border: 1px dashed var(--card-border);
+      }
+    </style>
+  </head>
+  <body class="dashboard-body admin-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Admin Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul>
+          <li>
+            <a href="admin.html"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Members</div>
+        <ul>
+          <li>
+            <a href="admin-members.html"
+              ><span class="nav-icon">👥</span><span>All Members</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-applications.html"
+              ><span class="nav-icon">📝</span><span>Applications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-waitlist.html"
+              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-issue-reports.html"
+              ><span class="nav-icon">🚨</span><span>Issue Reports</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Finance</div>
+        <ul>
+          <li>
+            <a href="admin-finance.html"
+              ><span class="nav-icon">💰</span><span>Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-expenses.html"
+              ><span class="nav-icon">💸</span><span>Expenses</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-donations.html"
+              ><span class="nav-icon">🎁</span><span>Donations</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">System</div>
+        <ul>
+          <!-- YEH NAYA LINK HAI -->
+          <li>
+            <a href="admin-messages.html" class="active"
+              ><span class="nav-icon">📩</span><span>Messages</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Contact Messages</h2>
+          <p>Inquiries from public contact form</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar admin-avatar" id="topAvatar">A</div>
+            <div class="user-info">
+              <span class="user-name">Admin</span
+              ><span class="user-uid" id="topRole">Super Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="page-header-block" style="margin-bottom: 24px">
+          <h1 style="color: var(--text-primary); font-size: 24px">📩 Inbox</h1>
+          <p style="color: var(--text-secondary); font-size: 14px">
+            Manage messages submitted through the website contact form.
+          </p>
+        </div>
+
+        <div class="messages-grid" id="messagesList">
+          <div class="empty-state">Loading messages...</div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allMessages = [];
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        const {
+          data: { session },
+        } = await supabaseClient.auth.getSession();
+        if (!session) {
+          window.location.href = "admin-login.html";
+          return;
+        }
+
+        const { data: admin } = await supabaseClient
+          .from("members")
+          .select("name, role")
+          .eq("email", session.user.email)
+          .single();
+        if (admin) {
+          document.getElementById("topAvatar").textContent = (admin.name || "A")
+            .charAt(0)
+            .toUpperCase();
+          document
+            .querySelectorAll(".user-name")
+            .forEach((el) => (el.textContent = admin.name));
+          document
+            .querySelectorAll(".user-uid")
+            .forEach((el) => (el.textContent = admin.role));
+        }
+
+        await loadMessages();
+      });
+
+      async function loadMessages() {
+        const list = document.getElementById("messagesList");
+        try {
+          const { data, error } = await supabaseClient
+            .from("contact_messages")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+          if (error) throw error;
+
+          allMessages = data || [];
+
+          if (allMessages.length === 0) {
+            list.innerHTML = `<div class="empty-state">No messages received yet. Check back later.</div>`;
+            return;
+          }
+
+          list.innerHTML = allMessages
+            .map((m) => {
+              const date = new Date(m.created_at).toLocaleDateString("en-PK", {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              const isUnread = m.status === "Unread" || !m.status;
+
+              return `
+              <div class="msg-card" style="${isUnread ? "border-left: 4px solid #ef4444;" : ""}">
+                <div class="msg-header">
+                  <div class="msg-title">
+                    ${isUnread ? "🔴" : "📖"} ${escapeHtml(m.subject)}
+                  </div>
+                  <span class="status-badge ${isUnread ? "status-unread" : "status-read"}">${m.status || "Unread"}</span>
+                </div>
+                
+                <div class="msg-meta">
+                  <span>👤 <strong>${escapeHtml(m.name)}</strong></span>
+                  <span>📧 ${escapeHtml(m.email)}</span>
+                  ${m.phone ? `<span>📱 ${escapeHtml(m.phone)}</span>` : ""}
+                  <span>📅 ${date}</span>
+                </div>
+
+                <div class="msg-body">
+                  "${escapeHtml(m.message)}"
+                </div>
+
+                <div class="msg-actions">
+                  ${isUnread ? `<button class="btn-mark" onclick="markAsRead(${m.id})">✓ Mark as Read</button>` : ""}
+                  <button class="btn-del" onclick="deleteMessage(${m.id})">🗑️ Delete</button>
+                </div>
+              </div>
+            `;
+            })
+            .join("");
+        } catch (err) {
+          list.innerHTML = `<div class="empty-state" style="color:#ef4444;">❌ Failed to load messages. Database error.</div>`;
+        }
+      }
+
+      window.markAsRead = async function (id) {
+        const { error } = await supabaseClient
+          .from("contact_messages")
+          .update({ status: "Read" })
+          .eq("id", id);
+        if (error) return window.syfError("Error: " + error.message);
+        window.syfSuccess("Message marked as read.");
+        await loadMessages();
+      };
+
+      window.deleteMessage = function (id) {
+        window.syfConfirm(
+          "Are you sure you want to delete this message?",
+          async (confirmed) => {
+            if (!confirmed) return;
+            const { error } = await supabaseClient
+              .from("contact_messages")
+              .delete()
+              .eq("id", id);
+            if (error) return window.syfError("Error: " + error.message);
+            window.syfSuccess("Message deleted.");
+            await loadMessages();
+          },
+        );
+      };
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+    </script>
+  </body>
+</html>

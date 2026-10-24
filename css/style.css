@@ -1889,3 +1889,196 @@ textarea {
 .sidebar-footer {
   display: none !important;
 }
+/* ============================================================
+   MOBILE HEADER FIX (HAMBURGER MENU)
+   ============================================================ */
+
+/* Desktop par Hamburger button chupao */
+.mobile-menu-btn {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  /* Header ko ek line mein rakho: Logo left, Button right */
+  .glass-header {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: 75px !important;
+    padding: 10px 20px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Hamburger button ko show karo */
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 1001;
+  }
+
+  /* Navigation ko dropdown banao */
+  .glass-header nav {
+    position: absolute;
+    top: 75px;
+    left: 0;
+    width: 100%;
+    background: var(--header-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--header-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: none !important; /* Default mein chupao */
+    max-height: calc(100vh - 75px);
+    overflow-y: auto;
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  /* Jab button dabaye toh show ho */
+  .glass-header nav.active {
+    display: flex !important;
+  }
+
+  /* Tabs ko vertically set karo */
+  .glass-header nav ul {
+    flex-direction: column !important;
+    width: 100%;
+    gap: 8px !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .glass-header nav ul li {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Har link ko full width button banao */
+  .glass-header nav ul li a {
+    display: block;
+    width: 100%;
+    padding: 12px 15px !important;
+    font-size: 15px !important;
+    border-radius: 10px !important;
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+  }
+
+  .glass-header nav ul li a:hover,
+  .glass-header nav ul li a.active {
+    background: var(--accent);
+    color: white !important;
+    border-color: var(--accent);
+  }
+
+  /* Login button ko thoda alag style do */
+  .glass-header nav ul li a.btn-login {
+    margin-top: 10px;
+    background: var(--accent);
+    color: white !important;
+  }
+}
+/* ============================================================
+   MOBILE PERFORMANCE BOOST (Fixes Lag & Scroll Jitter)
+   ============================================================ */
+
+@media (max-width: 900px) {
+  /* 1. Background ki saari heavy animations band karo */
+  html::after,
+  body::before,
+  body::after {
+    animation: none !important;
+    opacity: 0.4 !important; /* Halka kar do taaki RAM bache */
+  }
+
+  /* 2. Blur (Backdrop-filter) ko mobile par band karo */
+  /* Mobile GPU blur handle nahi kar pata, isliye ise hata rahe hain */
+  .glass-header,
+  .glass-card,
+  .content-card,
+  .auth-welcome,
+  .auth-form-block,
+  .dashboard-sidebar,
+  .dashboard-topbar,
+  .topbar-user,
+  .sidebar-nav,
+  .stat-card,
+  .benefit-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    /* Solid background taaki text saaf padha ja sake */
+    background: rgba(15, 32, 39, 0.95) !important;
+  }
+
+  [data-theme="light"] .glass-header,
+  [data-theme="light"] .glass-card,
+  [data-theme="light"] .content-card,
+  [data-theme="light"] .auth-welcome,
+  [data-theme="light"] .auth-form-block,
+  [data-theme="light"] .dashboard-sidebar,
+  [data-theme="light"] .dashboard-topbar,
+  [data-theme="light"] .topbar-user {
+    background: #ffffff !important;
+  }
+
+  /* 3. Smooth Scrolling enable karo */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+/* ============================================================
+   FLOATING WHATSAPP BUTTON
+   ============================================================ */
+.whatsapp-fab {
+  position: fixed;
+  bottom: 90px; /* Back to top button se thoda upar */
+  right: 30px;
+  width: 52px;
+  height: 52px;
+  background-color: #25d366;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+  z-index: 999;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  text-decoration: none;
+}
+
+.whatsapp-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+  color: white;
+}
+
+.whatsapp-fab svg {
+  width: 28px;
+  height: 28px;
+  fill: white;
+}
+
+@media (max-width: 768px) {
+  .whatsapp-fab {
+    bottom: 85px;
+    right: 25px;
+    width: 48px;
+    height: 48px;
+  }
+  .whatsapp-fab svg {
+    width: 24px;
+    height: 24px;
+  }
+}

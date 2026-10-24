@@ -11,6 +11,8 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
   </head>
   <body>
     <header class="glass-header">
@@ -40,7 +42,6 @@
       </div>
     </section>
 
-    <!-- Intro -->
     <section class="contact-intro">
       <div class="glass-card intro-block">
         <h2>Get in Touch</h2>
@@ -52,7 +53,6 @@
       </div>
     </section>
 
-    <!-- Contact Cards -->
     <section class="contact-cards-section">
       <div class="contact-cards-grid">
         <div class="glass-card contact-card">
@@ -76,10 +76,8 @@
       </div>
     </section>
 
-    <!-- Contact Form + Info -->
     <section class="contact-main">
       <div class="contact-main-grid">
-        <!-- Form -->
         <div class="glass-card contact-form-block">
           <h2>Send Us a Message</h2>
           <p class="form-intro">
@@ -94,7 +92,6 @@
                 <input
                   type="text"
                   id="contactName"
-                  name="name"
                   placeholder="Enter your name"
                   required
                 />
@@ -104,7 +101,6 @@
                 <input
                   type="email"
                   id="contactEmail"
-                  name="email"
                   placeholder="example@email.com"
                   required
                 />
@@ -117,13 +113,12 @@
                 <input
                   type="tel"
                   id="contactPhone"
-                  name="phone"
                   placeholder="+92 3XX XXXXXXX"
                 />
               </div>
               <div class="form-group">
                 <label for="contactSubject">Subject *</label>
-                <select id="contactSubject" name="subject" required>
+                <select id="contactSubject" required>
                   <option value="">Select Subject</option>
                   <option value="General Inquiry">General Inquiry</option>
                   <option value="Membership">Membership</option>
@@ -140,22 +135,23 @@
               <label for="contactMessage">Your Message *</label>
               <textarea
                 id="contactMessage"
-                name="message"
                 rows="5"
                 placeholder="Write your message here..."
                 required
               ></textarea>
             </div>
 
-            <button type="submit" class="btn-primary btn-full">
+            <button
+              type="submit"
+              class="btn-primary btn-full"
+              id="btnSubmitContact"
+            >
               Send Message
             </button>
-
             <p class="form-note">We usually respond within 24-48 hours.</p>
           </form>
         </div>
 
-        <!-- Info Side -->
         <div class="contact-info-side">
           <div class="glass-card info-side-block">
             <h3>Office Hours</h3>
@@ -165,18 +161,16 @@
               <li><span>Sunday</span> <span>Closed</span></li>
             </ul>
           </div>
-
           <div class="glass-card info-side-block">
             <h3>Follow Us</h3>
             <div class="social-links">
-              <a href="#" class="social-link"> <span>📘</span> Facebook </a>
-              <a href="#" class="social-link"> <span>📷</span> Instagram </a>
-              <a href="#" class="social-link"> <span>🐦</span> Twitter / X </a>
-              <a href="#" class="social-link"> <span>▶️</span> YouTube </a>
-              <a href="#" class="social-link"> <span>💬</span> WhatsApp </a>
+              <a href="#" class="social-link"><span>📘</span> Facebook</a>
+              <a href="#" class="social-link"><span>📷</span> Instagram</a>
+              <a href="#" class="social-link"><span>🐦</span> Twitter / X</a>
+              <a href="#" class="social-link"><span>▶️</span> YouTube</a>
+              <a href="#" class="social-link"><span>💬</span> WhatsApp</a>
             </div>
           </div>
-
           <div class="glass-card info-side-block">
             <h3>Quick Response</h3>
             <p class="quick-desc">
@@ -191,7 +185,6 @@
       </div>
     </section>
 
-    <!-- Map Placeholder -->
     <section class="map-section">
       <div class="glass-card map-block">
         <h2>Find Us</h2>
@@ -204,46 +197,58 @@
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="glass-footer">
-      <div class="footer-content">
-        <div class="footer-col">
-          <h3>SYDF</h3>
-          <p>SWAT Youth Development Forum</p>
-          <p>Empowering Youth, Building Future</p>
-        </div>
-        <div class="footer-col">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="leadership.html">Leadership</a></li>
-            <li><a href="activities.html">Activities</a></li>
-            <li><a href="contact.html">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Get Involved</h4>
-          <ul>
-            <li><a href="membership.html">Membership</a></li>
-            <li><a href="donate.html">Donate</a></li>
-            <li><a href="sponsor.html">Sponsor</a></li>
-            <li><a href="volunteer.html">Volunteer</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <p>Swat, Malakand Division</p>
-          <p>Khyber Pakhtunkhwa, Pakistan</p>
-          <p>info@SYDF.org</p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>
-          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
-        </p>
-      </div>
-    </footer>
+    <footer class="glass-footer"></footer>
 
     <script src="js/main.js"></script>
+    <script>
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const btn = document.getElementById("btnSubmitContact");
+          const originalText = btn.textContent;
+          btn.disabled = true;
+          btn.textContent = "Sending...";
+
+          const name = document.getElementById("contactName").value.trim();
+          const email = document.getElementById("contactEmail").value.trim();
+          const phone = document.getElementById("contactPhone").value.trim();
+          const subject = document.getElementById("contactSubject").value;
+          const message = document
+            .getElementById("contactMessage")
+            .value.trim();
+
+          try {
+            if (typeof supabaseClient === "undefined" || !supabaseClient) {
+              throw new Error("Database connection not ready. Please refresh.");
+            }
+
+            const { error } = await supabaseClient
+              .from("contact_messages")
+              .insert([
+                {
+                  name: name,
+                  email: email,
+                  phone: phone || null,
+                  subject: subject,
+                  message: message,
+                },
+              ]);
+
+            if (error) throw error;
+
+            window.syfSuccess(
+              "✅ Message sent successfully! We will reply soon.",
+            );
+            this.reset();
+          } catch (err) {
+            console.error(err);
+            window.syfError("❌ Error: " + err.message);
+          } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+          }
+        });
+    </script>
   </body>
 </html>

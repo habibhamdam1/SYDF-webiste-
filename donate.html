@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Donate - SYDF</title>
@@ -11,6 +10,8 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
     <style>
       .page-hero {
         min-height: 40vh;
@@ -22,21 +23,20 @@
       .page-hero-content {
         text-align: center;
         padding: 40px 60px;
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--card-bg);
         backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid var(--card-border);
         border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        box-shadow: var(--card-shadow);
       }
       .page-hero-content h1 {
         font-size: 44px;
-        color: #1abc9c;
+        color: var(--accent);
         margin-bottom: 10px;
       }
       .page-hero-content p {
         font-size: 14px;
-        opacity: 0.8;
-        color: white;
+        color: var(--text-secondary);
       }
       .donate-section {
         padding: 40px;
@@ -47,26 +47,25 @@
         gap: 25px;
       }
       .glass-block {
-        background: rgba(255, 255, 255, 0.08);
+        background: var(--card-bg);
         backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid var(--card-border);
         border-radius: 20px;
         padding: 40px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        box-shadow: var(--card-shadow);
       }
       .intro-block {
         text-align: center;
       }
       .intro-block h2 {
         font-size: 30px;
-        color: #1abc9c;
+        color: var(--accent);
         margin-bottom: 20px;
       }
       .intro-block p {
         font-size: 16px;
         line-height: 1.9;
-        opacity: 0.9;
-        color: white;
+        color: var(--text-secondary);
       }
       .amounts-grid {
         display: grid;
@@ -76,8 +75,8 @@
       }
       .amount-card {
         padding: 25px 15px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 2px solid rgba(255, 255, 255, 0.12);
+        background: var(--input-bg);
+        border: 2px solid var(--card-border);
         border-radius: 15px;
         text-align: center;
         cursor: pointer;
@@ -85,24 +84,23 @@
       }
       .amount-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(26, 188, 156, 0.4);
+        border-color: var(--accent);
       }
       .amount-card.active {
-        background: rgba(26, 188, 156, 0.15);
-        border-color: #1abc9c;
+        background: var(--accent-soft);
+        border-color: var(--accent);
         transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(26, 188, 156, 0.3);
+        box-shadow: 0 10px 30px var(--accent-glow);
       }
       .amount-card h3 {
         font-size: 26px;
         font-weight: 700;
-        color: #1abc9c;
+        color: var(--accent);
         margin-bottom: 5px;
       }
       .amount-card p {
         font-size: 12px;
-        opacity: 0.75;
-        color: white;
+        color: var(--text-secondary);
       }
       .custom-amount {
         margin-bottom: 25px;
@@ -111,23 +109,18 @@
         display: block;
         font-size: 13px;
         margin-bottom: 8px;
-        opacity: 0.9;
-        color: white;
+        color: var(--text-primary);
       }
       .custom-amount input {
         width: 100%;
         padding: 15px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
         border-radius: 10px;
-        color: white;
+        color: var(--text-primary);
         font-family: "Poppins", sans-serif;
         font-size: 14px;
         outline: none;
-      }
-      .custom-amount input:focus {
-        border-color: #1abc9c;
-        background: rgba(26, 188, 156, 0.08);
       }
       .form-group {
         margin-bottom: 20px;
@@ -137,35 +130,27 @@
         font-size: 13px;
         font-weight: 500;
         margin-bottom: 8px;
-        opacity: 0.9;
-        color: white;
+        color: var(--text-primary);
       }
       .form-group input,
       .form-group textarea,
       .form-group select {
         width: 100%;
         padding: 13px 15px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
         border-radius: 10px;
-        color: white;
+        color: var(--text-primary);
         font-family: "Poppins", sans-serif;
         font-size: 13px;
         outline: none;
         transition: 0.3s;
       }
-      .form-group input::placeholder,
-      .form-group textarea::placeholder {
-        color: rgba(255, 255, 255, 0.5);
-      }
       .form-group input:focus,
       .form-group textarea:focus,
       .form-group select:focus {
-        border-color: #1abc9c;
-        background: rgba(26, 188, 156, 0.08);
-      }
-      .form-group select option {
-        background: #203a43;
+        border-color: var(--accent);
+        background: var(--input-focus-bg);
       }
       .form-row {
         display: grid;
@@ -178,17 +163,17 @@
         gap: 10px;
         cursor: pointer;
         font-size: 13px;
-        color: white;
+        color: var(--text-primary);
         margin-bottom: 20px;
       }
       .checkbox-label input {
         width: auto;
-        accent-color: #1abc9c;
+        accent-color: var(--accent);
       }
       .btn-donate {
         width: 100%;
         padding: 16px;
-        background: linear-gradient(135deg, #1abc9c, #16a085);
+        background: var(--accent);
         color: white;
         border: none;
         border-radius: 12px;
@@ -200,7 +185,7 @@
       }
       .btn-donate:hover {
         transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(26, 188, 156, 0.4);
+        box-shadow: 0 15px 35px var(--accent-glow);
       }
       .payment-methods {
         display: grid;
@@ -210,14 +195,14 @@
       }
       .pay-method-card {
         padding: 20px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
         border-radius: 14px;
         text-align: center;
         transition: 0.3s;
       }
       .pay-method-card:hover {
-        border-color: rgba(26, 188, 156, 0.3);
+        border-color: var(--accent);
         transform: translateY(-3px);
       }
       .pay-method-icon {
@@ -243,18 +228,17 @@
         font-size: 14px;
         font-weight: 600;
         margin-bottom: 8px;
-        color: white;
+        color: var(--text-primary);
       }
       .pay-method-card p {
         font-size: 13px;
-        color: #1abc9c;
+        color: var(--accent);
         font-weight: 700;
         font-family: "Courier New", monospace;
       }
       .pay-method-card small {
         font-size: 11px;
-        opacity: 0.7;
-        color: white;
+        color: var(--text-muted);
       }
       .impact-grid {
         display: grid;
@@ -265,8 +249,8 @@
       .impact-card {
         padding: 25px 20px;
         text-align: center;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
         border-radius: 14px;
       }
       .impact-card .icon {
@@ -276,14 +260,13 @@
       }
       .impact-card h4 {
         font-size: 15px;
-        color: #1abc9c;
+        color: var(--accent);
         margin-bottom: 8px;
       }
       .impact-card p {
         font-size: 12px;
-        opacity: 0.8;
+        color: var(--text-secondary);
         line-height: 1.6;
-        color: white;
       }
       .top-donors {
         display: grid;
@@ -293,8 +276,8 @@
       }
       .donor-item {
         padding: 18px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
         border-radius: 12px;
         text-align: center;
       }
@@ -302,7 +285,7 @@
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        background: linear-gradient(135deg, var(--warm), #f59e0b);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -314,11 +297,11 @@
       .donor-item h4 {
         font-size: 13px;
         margin-bottom: 4px;
-        color: white;
+        color: var(--text-primary);
       }
       .donor-item p {
         font-size: 12px;
-        color: #1abc9c;
+        color: var(--accent);
         font-weight: 700;
       }
       @media (max-width: 768px) {
@@ -385,7 +368,7 @@
       <div class="glass-block">
         <h3
           style="
-            color: #1abc9c;
+            color: var(--accent);
             font-size: 20px;
             margin-bottom: 20px;
             font-weight: 600;
@@ -393,7 +376,6 @@
         >
           💰 Choose Donation Amount
         </h3>
-
         <div class="amounts-grid">
           <div class="amount-card" data-amount="500">
             <h3>Rs. 500</h3>
@@ -412,7 +394,6 @@
             <p>Patron</p>
           </div>
         </div>
-
         <div class="custom-amount">
           <label>Or Enter Custom Amount</label>
           <input
@@ -420,6 +401,7 @@
             id="customAmount"
             placeholder="Enter amount in Rs."
             min="100"
+            value="1000"
           />
         </div>
       </div>
@@ -427,7 +409,7 @@
       <div class="glass-block">
         <h3
           style="
-            color: #1abc9c;
+            color: var(--accent);
             font-size: 20px;
             margin-bottom: 20px;
             font-weight: 600;
@@ -435,7 +417,6 @@
         >
           📝 Donor Information
         </h3>
-
         <form id="donateForm">
           <div class="form-row">
             <div class="form-group">
@@ -457,7 +438,6 @@
               />
             </div>
           </div>
-
           <div class="form-row">
             <div class="form-group">
               <label>Phone Number</label>
@@ -473,7 +453,6 @@
               </select>
             </div>
           </div>
-
           <div class="form-group">
             <label>Purpose (Optional)</label>
             <select id="donationPurpose">
@@ -484,7 +463,6 @@
               <option value="Zakat">Zakat</option>
             </select>
           </div>
-
           <div class="form-group">
             <label>Message (Optional)</label>
             <textarea
@@ -493,18 +471,15 @@
               placeholder="Any message you'd like to share..."
             ></textarea>
           </div>
-
           <label class="checkbox-label">
             <input type="checkbox" id="anonymous" />
             <span>Make this donation anonymous</span>
           </label>
-
           <label class="checkbox-label">
             <input type="checkbox" id="termsAgree" required />
             <span>I agree to the terms and conditions *</span>
           </label>
-
-          <button type="submit" class="btn-donate">
+          <button type="submit" class="btn-donate" id="btnDonate">
             💝 Proceed to Payment
           </button>
         </form>
@@ -513,7 +488,7 @@
       <div class="glass-block">
         <h3
           style="
-            color: #1abc9c;
+            color: var(--accent);
             font-size: 20px;
             margin-bottom: 20px;
             font-weight: 600;
@@ -547,7 +522,7 @@
       <div class="glass-block">
         <h3
           style="
-            color: #1abc9c;
+            color: var(--accent);
             font-size: 20px;
             margin-bottom: 20px;
             font-weight: 600;
@@ -583,7 +558,7 @@
       <div class="glass-block">
         <h3
           style="
-            color: #1abc9c;
+            color: var(--accent);
             font-size: 20px;
             margin-bottom: 20px;
             font-weight: 600;
@@ -592,72 +567,26 @@
         >
           🏆 Top Donors
         </h3>
-        <div class="top-donors">
-          <div class="donor-item">
-            <div class="donor-avatar">AK</div>
-            <h4>Ahmed Khan</h4>
-            <p>Rs. 25,000</p>
-          </div>
-          <div class="donor-item">
-            <div class="donor-avatar">?</div>
-            <h4>Anonymous</h4>
-            <p>Rs. 15,000</p>
-          </div>
-          <div class="donor-item">
-            <div class="donor-avatar">SK</div>
-            <h4>Sara Khan</h4>
-            <p>Rs. 10,000</p>
-          </div>
-          <div class="donor-item">
-            <div class="donor-avatar">MK</div>
-            <h4>Malik Karim</h4>
-            <p>Rs. 10,000</p>
+        <div class="top-donors" id="topDonorsList">
+          <div
+            style="
+              text-align: center;
+              width: 100%;
+              color: var(--text-muted);
+              font-size: 13px;
+            "
+          >
+            Loading top donors...
           </div>
         </div>
       </div>
     </section>
 
-    <footer class="glass-footer">
-      <div class="footer-content">
-        <div class="footer-col">
-          <h3>SYDF</h3>
-          <p>SWAT Youth Development Forum</p>
-          <p>Empowering Youth, Building Future</p>
-        </div>
-        <div class="footer-col">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="leadership.html">Leadership</a></li>
-            <li><a href="activities.html">Activities</a></li>
-            <li><a href="contact.html">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Get Involved</h4>
-          <ul>
-            <li><a href="membership.html">Membership</a></li>
-            <li><a href="donate.html">Donate</a></li>
-            <li><a href="sponsor.html">Sponsor</a></li>
-            <li><a href="volunteer.html">Volunteer</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <p>Swat, Malakand Division</p>
-          <p>Khyber Pakhtunkhwa, Pakistan</p>
-          <p>info@SYDF.org</p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>
-          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
-        </p>
-      </div>
-    </footer>
+    <footer class="glass-footer"></footer>
 
     <script src="js/main.js"></script>
     <script>
+      // Amount Selection Logic
       document.querySelectorAll(".amount-card").forEach((card) => {
         card.addEventListener("click", function () {
           document
@@ -669,21 +598,119 @@
         });
       });
 
+      // Load Top Donors
+      async function loadTopDonors() {
+        const list = document.getElementById("topDonorsList");
+        try {
+          if (typeof supabaseClient === "undefined" || !supabaseClient) return;
+
+          const { data, error } = await supabaseClient
+            .from("donations")
+            .select("donor_name, amount, is_anonymous")
+            .order("amount", { ascending: false })
+            .limit(4);
+
+          if (error) throw error;
+
+          if (!data || data.length === 0) {
+            list.innerHTML = `<div style="text-align: center; width: 100%; color: var(--text-muted); font-size: 13px;">Be the first to donate!</div>`;
+            return;
+          }
+
+          list.innerHTML = data
+            .map((d) => {
+              let displayName = d.donor_name || "Unknown";
+              let initial = displayName.charAt(0).toUpperCase();
+
+              if (d.is_anonymous) {
+                displayName = "Anonymous";
+                initial = "?";
+              }
+
+              return `
+              <div class="donor-item">
+                <div class="donor-avatar">${initial}</div>
+                <h4>${displayName}</h4>
+                <p>Rs. ${Number(d.amount).toLocaleString()}</p>
+              </div>
+            `;
+            })
+            .join("");
+        } catch (err) {
+          console.error("Top donors error:", err);
+          list.innerHTML = `<div style="text-align: center; width: 100%; color: var(--text-muted); font-size: 13px;">Failed to load donors.</div>`;
+        }
+      }
+
+      // Submit Donation Form
       document
         .getElementById("donateForm")
-        .addEventListener("submit", function (e) {
+        .addEventListener("submit", async function (e) {
           e.preventDefault();
           const amount = document.getElementById("customAmount").value;
           if (!amount || amount < 100) {
-            alert("Please select or enter a donation amount (min Rs. 100).");
-            return;
+            return window.syfError(
+              "Please select or enter a donation amount (min Rs. 100).",
+            );
           }
-          alert(
-            "✅ Thank you for your generosity!\n\nDonation: Rs. " +
-              amount +
-              "\n\nYou will be redirected to the payment portal after Supabase setup.",
-          );
+
+          const btn = document.getElementById("btnDonate");
+          const originalText = btn.textContent;
+          btn.disabled = true;
+          btn.textContent = "Processing...";
+
+          const receiptNo = "SYDF-DON-" + String(Date.now()).slice(-6);
+
+          const donationData = {
+            receipt_no: receiptNo,
+            donor_name: document.getElementById("donorName").value.trim(),
+            donor_email: document.getElementById("donorEmail").value.trim(),
+            donor_phone:
+              document.getElementById("donorPhone").value.trim() || null,
+            amount: Number(amount),
+            method: document.getElementById("paymentMethod").value,
+            purpose: document.getElementById("donationPurpose").value,
+            message:
+              document.getElementById("donorMessage").value.trim() || null,
+            is_anonymous: document.getElementById("anonymous").checked,
+            status: "Pending",
+          };
+
+          try {
+            if (typeof supabaseClient === "undefined" || !supabaseClient) {
+              throw new Error("Database connection not ready.");
+            }
+
+            const { error } = await supabaseClient
+              .from("donations")
+              .insert([donationData]);
+            if (error) throw error;
+
+            window.syfSuccess(
+              `✅ Thank you! Donation of Rs. ${amount} recorded. Receipt: ${receiptNo}. Please transfer the amount using the details above.`,
+            );
+            this.reset();
+            document.getElementById("customAmount").value = "1000";
+            document
+              .querySelectorAll(".amount-card")
+              .forEach((c) => c.classList.remove("active"));
+            document
+              .querySelector('.amount-card[data-amount="1000"]')
+              .classList.add("active");
+            loadTopDonors();
+          } catch (err) {
+            console.error(err);
+            window.syfError("❌ Error: " + err.message);
+          } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+          }
         });
+
+      // Load on start
+      window.addEventListener("load", () => {
+        setTimeout(loadTopDonors, 1000);
+      });
     </script>
   </body>
 </html>
