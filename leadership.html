@@ -11,6 +11,35 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      /* EXTRA LINES FIX: Is page par titles ke neeche/upar wali line hata di hai */
+      .section-title::after,
+      .section-subtitle::after {
+        display: none !important;
+      }
+      .section-subtitle {
+        margin-bottom: 40px !important;
+      }
+
+      /* Loading animation for names */
+      .member-name.loading {
+        opacity: 0.5;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0.5;
+        }
+      }
+    </style>
   </head>
   <body>
     <!-- Header -->
@@ -53,15 +82,21 @@
       <div class="leadership-row top-leadership">
         <div class="glass-card position-card featured">
           <div class="position-badge">Chairman & President</div>
-          <h3>Moiz Azam</h3>
+          <h3 class="member-name loading" data-role="Chairman & President">
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card featured">
           <div class="position-badge">Senior Vice President</div>
-          <h3>Habib Ur Rahman</h3>
+          <h3 class="member-name loading" data-role="Senior Vice President">
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card featured">
           <div class="position-badge">Vice President</div>
-          <h3>Matiullah</h3>
+          <h3 class="member-name loading" data-role="Vice President">
+            Loading...
+          </h3>
         </div>
       </div>
 
@@ -69,15 +104,24 @@
       <div class="leadership-row">
         <div class="glass-card position-card">
           <div class="position-badge">Secretary General</div>
-          <h3>M Darnish Gul</h3>
+          <h3 class="member-name loading" data-role="Secretary General">
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card">
           <div class="position-badge">Deputy Secretary General</div>
-          <h3>Zainab Shahab</h3>
+          <h3 class="member-name loading" data-role="Deputy Secretary General">
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card">
           <div class="position-badge">Additional Secretary General</div>
-          <h3>Javria Hussain</h3>
+          <h3
+            class="member-name loading"
+            data-role="Additional Secretary General"
+          >
+            Loading...
+          </h3>
         </div>
       </div>
 
@@ -85,7 +129,9 @@
       <div class="leadership-row">
         <div class="glass-card position-card featured-female">
           <div class="position-badge">Head of Females SYDF</div>
-          <h3>Shakeela Ismail</h3>
+          <h3 class="member-name loading" data-role="Head of Females SYDF">
+            Loading...
+          </h3>
           <p class="position-note">Women Youth Rights Coordinator</p>
         </div>
       </div>
@@ -94,34 +140,52 @@
       <div class="leadership-row">
         <div class="glass-card position-card">
           <div class="position-badge">Information Secretary</div>
-          <h3>Kaleemullah</h3>
+          <h3 class="member-name loading" data-role="Information Secretary">
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card">
           <div class="position-badge">Joint Secretary</div>
-          <h3>Sayed Ubaid Iqbal</h3>
+          <h3 class="member-name loading" data-role="Joint Secretary">
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card">
           <div class="position-badge">Financial Secretary</div>
-          <h3>Muhammad Atif</h3>
+          <h3 class="member-name loading" data-role="Financial Secretary">
+            Loading...
+          </h3>
         </div>
       </div>
 
       <div class="leadership-row">
         <div class="glass-card position-card">
           <div class="position-badge">Media Secretary</div>
-          <h3>Syed Farhan Uddin</h3>
+          <h3 class="member-name loading" data-role="Media Secretary">
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card">
           <div class="position-badge">Discipline Committee Chairman</div>
-          <h3>Khowaja Laiba Nabi</h3>
+          <h3
+            class="member-name loading"
+            data-role="Discipline Committee Chairman"
+          >
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card">
           <div class="position-badge">Discipline Committee Deputy Chairman</div>
-          <h3>Syed Israr Ali</h3>
+          <h3
+            class="member-name loading"
+            data-role="Discipline Committee Deputy Chairman"
+          >
+            Loading...
+          </h3>
         </div>
       </div>
 
-      <!-- Discipline Committee Members -->
+      <!-- Discipline Committee Members (Yeh list filhal hardcoded hai, isko waise hi rehne dein) -->
       <div class="committee-section">
         <h3 class="committee-title">Discipline Committee Members</h3>
         <div class="committee-grid">
@@ -141,22 +205,33 @@
       <div class="leadership-row">
         <div class="glass-card position-card">
           <div class="position-badge">Event Planning Management Director</div>
-          <h3>Suliman Khan</h3>
+          <h3
+            class="member-name loading"
+            data-role="Event Planning Management Director"
+          >
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card">
           <div class="position-badge">Spokesperson</div>
-          <h3>Kamran Khan</h3>
+          <h3 class="member-name loading" data-role="Spokesperson">
+            Loading...
+          </h3>
         </div>
       </div>
 
       <div class="leadership-row">
         <div class="glass-card position-card">
           <div class="position-badge">Special Advisor</div>
-          <h3>Miftah Ud Din</h3>
+          <h3 class="member-name loading" data-role="Special Advisor">
+            Loading...
+          </h3>
         </div>
         <div class="glass-card position-card">
           <div class="position-badge">Legal Advisor</div>
-          <h3>Shehzad Saleem</h3>
+          <h3 class="member-name loading" data-role="Legal Advisor">
+            Loading...
+          </h3>
         </div>
       </div>
     </section>
@@ -199,45 +274,61 @@
     </section>
 
     <!-- Footer -->
-    <footer class="glass-footer">
-      <div class="footer-content">
-        <div class="footer-col">
-          <h3>SYDF</h3>
-          <p>SWAT Youth Development Forum</p>
-          <p>Empowering Youth, Building Future</p>
-        </div>
-        <div class="footer-col">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="leadership.html">Leadership</a></li>
-            <li><a href="activities.html">Activities</a></li>
-            <li><a href="contact.html">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Get Involved</h4>
-          <ul>
-            <li><a href="membership.html">Membership</a></li>
-            <li><a href="donate.html">Donate</a></li>
-            <li><a href="sponsor.html">Sponsor</a></li>
-            <li><a href="volunteer.html">Volunteer</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <p>Swat, Malakand Division</p>
-          <p>Khyber Pakhtunkhwa, Pakistan</p>
-          <p>info@SYDF.org</p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>
-          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
-        </p>
-      </div>
-    </footer>
+    <footer class="glass-footer"></footer>
 
     <script src="js/main.js"></script>
+    <script>
+      // ==========================================
+      // DYNAMIC LEADERSHIP FETCHING
+      // ==========================================
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        try {
+          // Database se un members ko fetch karo jinka role 'Member' nahi hai
+          const { data: members, error } = await supabaseClient
+            .from("members")
+            .select("name, role")
+            .eq("status", "Active")
+            .neq("role", "Member")
+            .neq("role", "District Admin")
+            .neq("role", "Deleted");
+
+          if (error) throw error;
+
+          // Har role ke naam ko database wale naam se replace karo
+          members.forEach((m) => {
+            const el = document.querySelector(
+              `.member-name[data-role="${m.role}"]`,
+            );
+            if (el) {
+              el.textContent = m.name;
+              el.classList.remove("loading");
+            }
+          });
+
+          // Agar kisi role ka banda database mein nahi mila, toh "Vacant" likh do
+          document.querySelectorAll(".member-name.loading").forEach((el) => {
+            el.textContent = "Vacant";
+            el.classList.remove("loading");
+          });
+        } catch (err) {
+          console.error("Error loading leadership:", err);
+          // Agar error aaye toh fallback dikhado
+          document.querySelectorAll(".member-name.loading").forEach((el) => {
+            el.textContent = "N/A";
+            el.classList.remove("loading");
+          });
+        }
+      });
+    </script>
   </body>
 </html>
