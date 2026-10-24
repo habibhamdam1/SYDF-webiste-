@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elections - SYDF Member</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .election-block {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-lg);
+        padding: 25px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(20px);
+      }
+      .candidate-card {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-md);
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .candidate-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+      .candidate-card.selected {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+        box-shadow: 0 4px 15px var(--accent-glow);
+      }
+      .candidate-radio {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--accent);
+        cursor: pointer;
+      }
+      .nominate-input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 10px;
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        color: var(--text-primary);
+        outline: none;
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Member Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <a href="dashboard.html"
+              ><span class="nav-icon">📊</span><span>Overview</span></a
+            >
+          </li>
+          <li>
+            <a href="profile.html"
+              ><span class="nav-icon">👤</span><span>My Profile</span></a
+            >
+          </li>
+          <li>
+            <a href="my-payments.html"
+              ><span class="nav-icon">💰</span><span>My Payments</span></a
+            >
+          </li>
+          <li>
+            <a href="my-documents.html"
+              ><span class="nav-icon">📄</span><span>Documents</span></a
+            >
+          </li>
+          <li>
+            <a href="my-activities.html"
+              ><span class="nav-icon">🎯</span><span>My Activities</span></a
+            >
+          </li>
+          <li>
+            <a href="member-proposals.html"
+              ><span class="nav-icon">💡</span><span>My Proposals</span></a
+            >
+          </li>
+          <li>
+            <a href="my-certificate.html"
+              ><span class="nav-icon">📜</span><span>Certificate</span></a
+            >
+          </li>
+          <li>
+            <a href="my-id-card.html"
+              ><span class="nav-icon">🆔</span><span>ID Card</span></a
+            >
+          </li>
+          <li>
+            <a href="member-reports.html"
+              ><span class="nav-icon">🚨</span><span>Report Issue</span></a
+            >
+          </li>
+          <li>
+            <a href="notifications.html"
+              ><span class="nav-icon">🔔</span><span>Notifications</span></a
+            >
+          </li>
+          <li>
+            <a href="settings.html"
+              ><span class="nav-icon">⚙️</span><span>Settings</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>SYDF Elections</h2>
+          <p>Nominate & Vote</p>
+        </div>
+        <div class="topbar-actions">
+          <div class="topbar-user">
+            <div class="user-avatar" id="topAvatar">M</div>
+            <div class="user-info">
+              <span class="user-name">Loading...</span
+              ><span class="user-uid">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div id="electionContainer">
+          <div
+            style="text-align: center; padding: 40px; color: var(--text-muted)"
+          >
+            Authenticating...
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      let currentMember = null;
+      let activeElection = null;
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        const {
+          data: { session },
+        } = await supabaseClient.auth.getSession();
+        if (!session) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const { data: member } = await supabaseClient
+          .from("members")
+          .select("name, email, status, uid")
+          .eq("email", session.user.email)
+          .single();
+
+        if (!member || member.status !== "Active") {
+          document.getElementById("electionContainer").innerHTML =
+            `<div style="text-align: center; padding: 40px; color: var(--text-muted); background: var(--card-bg); border-radius: 12px;">⛔ Your account is not active. Elections are only for active members.</div>`;
+          return;
+        }
+        currentMember = member;
+
+        document.getElementById("topAvatar").textContent = (member.name || "M")
+          .charAt(0)
+          .toUpperCase();
+        document
+          .querySelectorAll(".user-name")
+          .forEach((el) => (el.textContent = member.name || "Member"));
+        document
+          .querySelectorAll(".user-uid")
+          .forEach((el) => (el.textContent = member.uid || "-"));
+
+        await loadActiveElection();
+        await loadPastResults();
+      });
+
+      async function loadActiveElection() {
+        const container = document.getElementById("electionContainer");
+        const { data: elections } = await supabaseClient
+          .from("elections")
+          .select("*")
+          .eq("status", "Active")
+          .limit(1);
+
+        if (!elections || elections.length === 0) {
+          container.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted); background: var(--card-bg); border-radius: 12px; margin-bottom: 20px;">🗳️ No active elections right now. Check back later!</div>`;
+          return;
+        }
+
+        activeElection = elections[0];
+        await renderElectionUI();
+      }
+
+      async function renderElectionUI() {
+        const container = document.getElementById("electionContainer");
+        let positions = activeElection.positions || [
+          "Senior Vice President",
+          "Vice President",
+          "Secretary General",
+          "Deputy Secretary General",
+          "Information Secretary",
+          "Joint Secretary",
+          "Financial Secretary",
+          "Media Secretary",
+        ];
+
+        const { data: myVotes } = await supabaseClient
+          .from("election_votes")
+          .select("position")
+          .eq("election_id", activeElection.id)
+          .eq("voter_email", currentMember.email);
+        const votedPositions = myVotes.map((v) => v.position);
+
+        let html = `
+          <div class="election-block">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <h2 style="color: var(--text-primary); margin-bottom: 5px;">${activeElection.title}</h2>
+                    <p style="color: var(--text-secondary); font-size: 14px;">Voter: <strong>${currentMember.name}</strong> (${currentMember.uid})</p>
+                </div>
+                <span style="background: rgba(26, 188, 156, 0.15); color: #1abc9c; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid #1abc9c;">ACTIVE</span>
+            </div>
+            
+            <h3 style="color: var(--warm); margin-bottom: 15px; font-size: 16px; border-top: 1px solid var(--card-border); padding-top: 20px;">1. Nominate Yourself (Admin Approval Required)</h3>
+            <form id="nominateForm" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 30px; max-width: 500px;">
+              <select id="nomPosition" required style="padding: 12px; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-primary); outline: none;">
+                <option value="">Select Position to Nominate</option>
+                ${positions.map((p) => `<option value="${p}">${p}</option>`).join("")}
+              </select>
+              <input type="text" id="nomManifesto" placeholder="Why should people vote for you? (Manifesto)" required class="nominate-input" />
+              <button type="submit" class="btn-primary" style="padding: 12px 25px; border-radius: 8px;">Apply for Nomination</button>
+            </form>
+        `;
+
+        // Fetch only APPROVED candidates for voting
+        const { data: candidates } = await supabaseClient
+          .from("election_candidates")
+          .select("*")
+          .eq("election_id", activeElection.id)
+          .eq("status", "Approved");
+
+        positions.forEach((pos) => {
+          const posCandidates = candidates.filter((c) => c.position === pos);
+          if (posCandidates.length === 0) return;
+
+          const hasVoted = votedPositions.includes(pos);
+
+          html += `<div style="margin-bottom: 30px;">
+            <h4 style="color: var(--text-primary); margin-bottom: 15px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; font-size: 15px;">${pos}</h4>
+            ${
+              hasVoted
+                ? '<p style="color: var(--accent); font-size: 14px; background: var(--accent-soft); padding: 10px; border-radius: 8px;">✅ Aap is position par apna vote de chuke hain.</p>'
+                : `<form class="voteForm" data-position="${pos}">
+                ${posCandidates
+                  .map(
+                    (c) => `
+                  <label class="candidate-card">
+                    <input type="radio" name="candidate_${pos}" value="${c.id}" class="candidate-radio" required>
+                    <div style="flex: 1;">
+                      <div style="color: var(--text-primary); font-weight: 600; font-size: 15px;">${c.member_name}</div>
+                      <div style="color: var(--text-muted); font-size: 12px;">Manifesto: ${c.manifesto || "No manifesto provided"}</div>
+                    </div>
+                  </label>
+                `,
+                  )
+                  .join("")}
+                <button type="submit" class="btn-primary" style="padding: 10px 20px; border-radius: 8px; margin-top: 10px; font-size: 13px;">Submit Vote for ${pos}</button>
+              </form>`
+            }
+          </div>`;
+        });
+
+        html += `</div>`;
+        container.innerHTML = html;
+
+        document
+          .getElementById("nominateForm")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const pos = document.getElementById("nomPosition").value;
+            const manifesto = document
+              .getElementById("nomManifesto")
+              .value.trim();
+            if (!pos || !manifesto) return;
+
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = "Submitting...";
+
+            // INSERT WITH STATUS 'Pending'
+            const { error } = await supabaseClient
+              .from("election_candidates")
+              .insert([
+                {
+                  election_id: activeElection.id,
+                  member_email: currentMember.email,
+                  member_name: currentMember.name,
+                  position: pos,
+                  manifesto: manifesto,
+                  status: "Pending", // Default but explicit
+                },
+              ]);
+
+            if (error) {
+              if (error.code === "23505")
+                window.syfError(
+                  "Aap is position ke liye pehle hi nominate ho chuke hain!",
+                );
+              else window.syfError("Error: " + error.message);
+              btn.disabled = false;
+              btn.textContent = "Apply for Nomination";
+            } else {
+              window.syfSuccess(
+                "Nomination submitted! Admin will review it soon.",
+              );
+              renderElectionUI();
+            }
+          });
+
+        document.querySelectorAll(".voteForm").forEach((form) => {
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const pos = form.getAttribute("data-position");
+            const candidateId = form.querySelector(
+              `input[name="candidate_${pos}"]:checked`,
+            ).value;
+
+            const btn = form.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = "Casting Vote...";
+
+            const { error } = await supabaseClient
+              .from("election_votes")
+              .insert([
+                {
+                  election_id: activeElection.id,
+                  voter_email: currentMember.email,
+                  candidate_id: candidateId,
+                  position: pos,
+                },
+              ]);
+
+            if (error) {
+              if (error.code === "23505")
+                window.syfError(
+                  "Aap is position par pehle hi vote de chuke hain!",
+                );
+              else window.syfError("Error: " + error.message);
+              btn.disabled = false;
+              btn.textContent = `Submit Vote for ${pos}`;
+            } else {
+              window.syfSuccess(`Vote submitted for ${pos}!`);
+              renderElectionUI();
+            }
+          });
+        });
+      }
+
+      async function loadPastResults() {
+        const container = document.getElementById("electionContainer");
+        const { data: setting } = await supabaseClient
+          .from("settings")
+          .select("value")
+          .eq("key", "publish_results")
+          .maybeSingle();
+        if (!setting || setting.value !== "true") return;
+
+        const { data: pastElections } = await supabaseClient
+          .from("elections")
+          .select("*")
+          .eq("status", "Completed")
+          .order("created_at", { ascending: false })
+          .limit(1);
+        if (!pastElections || pastElections.length === 0) return;
+
+        const pastEl = pastElections[0];
+        const { data: candidates } = await supabaseClient
+          .from("election_candidates")
+          .select("*")
+          .eq("election_id", pastEl.id)
+          .eq("status", "Approved");
+        const { data: votes } = await supabaseClient
+          .from("election_votes")
+          .select("*")
+          .eq("election_id", pastEl.id);
+
+        const positions = [...new Set(candidates.map((c) => c.position))];
+        let winnersHTML = "";
+
+        positions.forEach((pos) => {
+          const posCandidates = candidates.filter((c) => c.position === pos);
+          let winner = null;
+          let maxVotes = -1;
+          posCandidates.forEach((c) => {
+            const vCount = votes.filter((v) => v.candidate_id === c.id).length;
+            if (vCount > maxVotes) {
+              maxVotes = vCount;
+              winner = c;
+            }
+          });
+          if (winner && maxVotes > 0) {
+            winnersHTML += `
+              <div style="display:flex; justify-content:space-between; padding: 12px; background: var(--input-bg); border-radius: 8px; margin-bottom: 8px;">
+                <span style="color: var(--text-primary); font-weight: 600;">${pos}</span>
+                <span style="color: var(--accent); font-weight: 700;">🏆 ${winner.member_name}</span>
+              </div>
+            `;
+          }
+        });
+
+        if (winnersHTML) {
+          container.innerHTML += `
+            <div class="election-block" style="margin-top: 30px; border-color: var(--warm);">
+              <h2 style="color: var(--warm); margin-bottom: 5px;">🏆 Past Election Results</h2>
+              <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">${pastEl.title} (Completed)</p>
+              ${winnersHTML}
+            </div>
+          `;
+        }
+      }
+    </script>
+  </body>
+</html>

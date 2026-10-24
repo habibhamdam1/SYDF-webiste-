@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Public Grievances - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .issue-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: var(--r-md);
+        padding: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+        transition: 0.3s;
+      }
+      .issue-card:hover {
+        border-color: var(--card-border-hover);
+        transform: translateX(5px);
+      }
+      .issue-info {
+        flex: 1;
+        min-width: 250px;
+      }
+      .issue-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .issue-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .issue-desc {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 15px;
+        background: var(--input-bg);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--card-border);
+      }
+      .issue-meta {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .status-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .status-pending {
+        background: rgba(245, 158, 11, 0.15);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+      .status-inprogress {
+        background: rgba(59, 130, 246, 0.15);
+        color: #3b82f6;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+      .status-resolved {
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+      }
+
+      .issue-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex-shrink: 0;
+        justify-content: center;
+      }
+      .btn-action {
+        padding: 8px 15px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn-wa {
+        background: rgba(37, 211, 102, 0.15);
+        color: #25d366;
+        border: 1px solid #25d366;
+      }
+      .btn-wa:hover {
+        background: #25d366;
+        color: white;
+      }
+    </style>
+  </head>
+  <body class="dashboard-body admin-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Admin Panel</p>
+        </div>
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul>
+          <li>
+            <a href="admin.html"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Members</div>
+        <ul>
+          <li>
+            <a href="admin-members.html"
+              ><span class="nav-icon">👥</span><span>All Members</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-applications.html"
+              ><span class="nav-icon">📝</span><span>Applications</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-waitlist.html"
+              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-issue-reports.html"
+              ><span class="nav-icon">🚨</span><span>Member Reports</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-public-issues.html" class="active"
+              ><span class="nav-icon">🛡️</span><span>Public Grievances</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-elections.html"
+              ><span class="nav-icon">🗳️</span><span>Elections</span></a
+            >
+          </li>
+          <li>
+            <a href="admin-cabinet.html"
+              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="topbar-title">
+          <h2>Public Grievances</h2>
+          <p>Manage issues reported by the public</p>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="page-header-block" style="margin-bottom: 24px">
+          <h1 style="color: var(--text-primary); font-size: 24px">
+            🛡️ Public Grievance Portal
+          </h1>
+          <p style="color: var(--text-secondary); font-size: 14px">
+            Review and resolve serious issues reported by citizens.
+          </p>
+        </div>
+
+        <div
+          style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap"
+        >
+          <button
+            class="filter-btn active"
+            data-filter="Pending"
+            style="
+              padding: 10px 20px;
+              border-radius: 20px;
+              background: var(--accent);
+              color: white;
+              border: none;
+              cursor: pointer;
+            "
+          >
+            Pending
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="In Progress"
+            style="
+              padding: 10px 20px;
+              border-radius: 20px;
+              background: var(--input-bg);
+              color: var(--text-secondary);
+              border: 1px solid var(--card-border);
+              cursor: pointer;
+            "
+          >
+            In Progress
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="Resolved"
+            style="
+              padding: 10px 20px;
+              border-radius: 20px;
+              background: var(--input-bg);
+              color: var(--text-secondary);
+              border: 1px solid var(--card-border);
+              cursor: pointer;
+            "
+          >
+            Resolved
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="All"
+            style="
+              padding: 10px 20px;
+              border-radius: 20px;
+              background: var(--input-bg);
+              color: var(--text-secondary);
+              border: 1px solid var(--card-border);
+              cursor: pointer;
+            "
+          >
+            All
+          </button>
+        </div>
+
+        <div id="publicIssuesList">
+          <div
+            style="text-align: center; padding: 40px; color: var(--text-muted)"
+          >
+            Loading reports...
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script>
+      let allIssues = [];
+      let currentFilter = "Pending";
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        const {
+          data: { session },
+        } = await supabaseClient.auth.getSession();
+        if (!session) {
+          window.location.href = "admin-login.html";
+          return;
+        }
+
+        loadIssues();
+
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            document.querySelectorAll(".filter-btn").forEach((b) => {
+              b.style.background = "var(--input-bg)";
+              b.style.color = "var(--text-secondary)";
+              b.style.border = "1px solid var(--card-border)";
+              b.classList.remove("active");
+            });
+            this.style.background = "var(--accent)";
+            this.style.color = "white";
+            this.style.border = "none";
+            this.classList.add("active");
+
+            currentFilter = this.getAttribute("data-filter");
+            renderIssues();
+          });
+        });
+      });
+
+      async function loadIssues() {
+        const { data, error } = await supabaseClient
+          .from("public_issues")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (error) return;
+        allIssues = data || [];
+        renderIssues();
+      }
+
+      function renderIssues() {
+        const container = document.getElementById("publicIssuesList");
+
+        let filtered = allIssues;
+        if (currentFilter !== "All") {
+          filtered = allIssues.filter((r) => r.status === currentFilter);
+        }
+
+        if (filtered.length === 0) {
+          container.innerHTML = `<div style="text-align:center; padding: 40px; background: var(--input-bg); border-radius: 12px; color: var(--text-muted);">No ${currentFilter.toLowerCase()} reports found.</div>`;
+          return;
+        }
+
+        container.innerHTML = filtered
+          .map((r) => {
+            const date = new Date(r.created_at).toLocaleDateString("en-PK", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            let statusClass = "status-pending";
+            if (r.status === "In Progress") statusClass = "status-inprogress";
+            if (r.status === "Resolved") statusClass = "status-resolved";
+
+            let actionButtons = "";
+            if (r.status === "Pending") {
+              actionButtons = `<button class="btn-action" style="background:rgba(59,130,246,0.15); color:#3b82f6; border:1px solid #3b82f6;" onclick="updateStatus(${r.id}, 'In Progress')">▶ Mark In Progress</button>`;
+            } else if (r.status === "In Progress") {
+              actionButtons = `<button class="btn-action" style="background:rgba(26,188,156,0.15); color:#1abc9c; border:1px solid #1abc9c;" onclick="updateStatus(${r.id}, 'Resolved')">✅ Mark Resolved</button>`;
+            }
+
+            return `
+            <div class="issue-card">
+              <div class="issue-info">
+                <div class="issue-header">
+                  <div class="issue-title">${escapeHtml(r.category)}</div>
+                  <span class="status-badge ${statusClass}">${r.status}</span>
+                  <span style="background:var(--card-border); color:var(--text-primary); padding:2px 8px; border-radius:10px; font-size:11px; font-family:monospace;">${r.tracking_id}</span>
+                </div>
+                <div class="issue-desc">
+                  "${escapeHtml(r.description)}"
+                </div>
+                <div class="issue-meta">
+                  <span>👤 <strong>Reporter:</strong> ${escapeHtml(r.name)}</span>
+                  <span>📱 <strong>Phone:</strong> ${escapeHtml(r.phone)}</span>
+                  <span>📅 ${date}</span>
+                </div>
+              </div>
+              <div class="issue-actions">
+                ${actionButtons}
+                <a href="https://wa.me/${r.phone.replace(/[^0-9]/g, "")}?text=Assalam%20o%20Alaikum%20${escapeHtml(r.name)}%2C%20we%20are%20reviewing%20your%20report%20(${r.tracking_id})." target="_blank" class="btn-action btn-wa">💬 Contact on WhatsApp</a>
+              </div>
+            </div>
+          `;
+          })
+          .join("");
+      }
+
+      window.updateStatus = async function (id, newStatus) {
+        window.syfConfirm(
+          `Mark this report as ${newStatus}?`,
+          async (confirmed) => {
+            if (!confirmed) return;
+            const { error } = await supabaseClient
+              .from("public_issues")
+              .update({ status: newStatus })
+              .eq("id", id);
+            if (error) return window.syfError(error.message);
+            window.syfSuccess(`Report marked as ${newStatus}`);
+            loadIssues();
+          },
+        );
+      };
+
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+    </script>
+  </body>
+</html>

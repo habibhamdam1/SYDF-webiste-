@@ -14,13 +14,32 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      /* EXTRA LINES FIX: Is page par titles ke neeche/upar wali line hata di hai */
-      .section-title::after,
-      .section-subtitle::after {
-        display: none !important;
+      /* ✅ SPACING FIX: Title aur Subtitle ke darmiyan space aur line wapas */
+      .section-title {
+        margin-bottom: 15px !important;
+      }
+      .section-title::after {
+        display: block !important;
+        content: "";
+        width: 80px;
+        height: 3px;
+        margin: 15px auto 25px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--warm),
+          var(--accent),
+          transparent
+        );
+        background-size: 200% 100%;
+        border-radius: 3px;
+        box-shadow: 0 0 12px var(--warm-glow);
+        animation: shimmerLine 3s linear infinite;
       }
       .section-subtitle {
-        margin-bottom: 40px !important;
+        margin-top: 0 !important;
+        margin-bottom: 50px !important;
+        font-size: 15px;
       }
 
       /* Loading animation for names */
@@ -78,7 +97,7 @@
         Meet the dedicated team leading SYDF towards a brighter future
       </p>
 
-      <!-- Top Leadership (President, Senior VP, VP) -->
+      <!-- Top Leadership -->
       <div class="leadership-row top-leadership">
         <div class="glass-card position-card featured">
           <div class="position-badge">Chairman & President</div>
@@ -185,7 +204,7 @@
         </div>
       </div>
 
-      <!-- Discipline Committee Members (Yeh list filhal hardcoded hai, isko waise hi rehne dein) -->
+      <!-- Discipline Committee Members (Static) -->
       <div class="committee-section">
         <h3 class="committee-title">Discipline Committee Members</h3>
         <div class="committee-grid">
@@ -279,7 +298,7 @@
     <script src="js/main.js"></script>
     <script>
       // ==========================================
-      // DYNAMIC LEADERSHIP FETCHING
+      // DYNAMIC LEADERSHIP FETCHING (FIXED)
       // ==========================================
       window.addEventListener("load", async function () {
         let attempts = 0;
@@ -293,38 +312,37 @@
         if (!supabaseClient) return;
 
         try {
-          // Database se un members ko fetch karo jinka role 'Member' nahi hai
-          const { data: members, error } = await supabaseClient
-            .from("members")
-            .select("name, role")
-            .eq("status", "Active")
-            .neq("role", "Member")
-            .neq("role", "District Admin")
-            .neq("role", "Deleted");
+          // ✅ FIX: Ab hum 'members' table ki jagah 'cabinet_positions' se data utha rahe hain
+          const { data: positions, error } = await supabaseClient
+            .from("cabinet_positions")
+            .select("title, assigned_to_name");
 
           if (error) throw error;
 
-          // Har role ke naam ko database wale naam se replace karo
-          members.forEach((m) => {
+          // Har position ke naam ko update karo
+          positions.forEach((p) => {
             const el = document.querySelector(
-              `.member-name[data-role="${m.role}"]`,
+              `.member-name[data-role="${p.title}"]`,
             );
             if (el) {
-              el.textContent = m.name;
+              if (p.assigned_to_name) {
+                el.textContent = p.assigned_to_name;
+              } else {
+                el.textContent = "Vacant"; // Agar assigned nahi hai
+              }
               el.classList.remove("loading");
             }
           });
 
-          // Agar kisi role ka banda database mein nahi mila, toh "Vacant" likh do
+          // Agar koi position database mein nahi mili, toh default "Vacant" dikhao
           document.querySelectorAll(".member-name.loading").forEach((el) => {
             el.textContent = "Vacant";
             el.classList.remove("loading");
           });
         } catch (err) {
           console.error("Error loading leadership:", err);
-          // Agar error aaye toh fallback dikhado
           document.querySelectorAll(".member-name.loading").forEach((el) => {
-            el.textContent = "N/A";
+            el.textContent = "Vacant";
             el.classList.remove("loading");
           });
         }
