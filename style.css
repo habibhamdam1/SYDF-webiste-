@@ -1,75 +1,167 @@
 /* ============================================================
-   SYDF — COMPLETE STYLESHEET
-   DEFAULT = LIGHT (ROSE) | DARK = STARRY NIGHT SKY (ORIGINAL)
+   SYDF — COMPLETE STYLESHEET (v3)
+   DEFAULT = LIGHT (ROSE) | DARK = STARRY NIGHT SKY
+   Both themes feature floating "lightning" stars.
    ============================================================ */
 
 /* ============================================================
-   1. THEME TOKENS — LIGHT MODE (ROSE) = DEFAULT
+   1. THEME TOKENS — LIGHT MODE (ROSE) — DEFAULT
    ============================================================ */
 :root,
 html {
+  /* Sky */
   --sky-top: #fff1f2;
   --sky-mid: #ffe4e6;
   --sky-bottom: #fecdd3;
+  --sky-gradient: linear-gradient(
+    180deg,
+    #fff1f2 0%,
+    #ffe4e6 40%,
+    #fecdd3 100%
+  );
+
+  /* Text */
   --text-primary: #4c0519;
   --text-secondary: #881337;
   --text-muted: #9f1239;
+
+  /* Accent */
   --accent: #e11d48;
   --accent-dark: #be123c;
+  --accent-light: #fb7185;
   --accent-soft: rgba(225, 29, 72, 0.08);
   --accent-glow: rgba(225, 29, 72, 0.2);
+  --accent-contrast: #ffffff;
+
+  /* Warm */
   --warm: #f59e0b;
+  --warm-text: #b45309;
   --warm-soft: rgba(245, 158, 11, 0.1);
   --warm-glow: rgba(245, 158, 11, 0.2);
+
+  /* Cards */
   --card-bg: #ffffff;
   --card-bg-hover: #ffffff;
   --card-border: rgba(225, 29, 72, 0.15);
   --card-border-hover: rgba(225, 29, 72, 0.3);
   --card-shadow: 0 4px 22px rgba(76, 5, 25, 0.06);
   --card-shadow-hover: 0 18px 40px rgba(225, 29, 72, 0.14);
+
+  /* Header / Footer */
   --header-bg: rgba(255, 241, 242, 0.85);
   --header-border: rgba(225, 29, 72, 0.1);
+  --footer-bg: rgba(255, 241, 242, 0.6);
+  --footer-border: rgba(225, 29, 72, 0.1);
+
+  /* Inputs */
   --input-bg: #ffffff;
   --input-border: rgba(225, 29, 72, 0.2);
   --input-focus-bg: #ffffff;
-  --footer-bg: rgba(255, 241, 242, 0.6);
-  --footer-border: rgba(225, 29, 72, 0.1);
+
+  /* Feedback */
+  --error: #b91c1c;
+  --error-bg: rgba(185, 28, 28, 0.08);
+  --error-border: rgba(185, 28, 28, 0.3);
+  --success: #047857;
+  --success-bg: rgba(4, 120, 87, 0.08);
+  --success-border: rgba(4, 120, 87, 0.3);
+
+  /* Specialty */
+  --female-accent: #ec4899;
+  --female-soft: rgba(236, 72, 153, 0.1);
+  --female-border: rgba(236, 72, 153, 0.35);
+
+  /* Radii */
   --r-sm: 10px;
   --r-md: 14px;
   --r-lg: 20px;
   --r-xl: 26px;
+
+  /* Typography */
+  --ff-main:
+    "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --fw-body: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --ls-tight: -0.01em;
+  --ls-tighter: -0.02em;
+
+  /* Star colors — LIGHT THEME (rose gold stardust) */
+  --star-white: #ffffff;
+  --star-rose: #fb7185;
+  --star-deep-rose: #f43f5e;
+  --star-amber: #fbbf24;
+  --star-gold: #f59e0b;
+  --star-soft: #fda4af;
 }
 
 /* ============================================================
-   2. THEME TOKENS — DARK MODE (STARRY NIGHT SKY) — ORIGINAL
+   2. THEME TOKENS — DARK MODE (STARRY NIGHT SKY)
    ============================================================ */
-[data-theme="dark"] {
+html[data-theme="dark"] {
   --sky-top: #05101c;
   --sky-mid: #0a1d33;
   --sky-bottom: #0d2d4a;
+  --sky-gradient: linear-gradient(
+    180deg,
+    #040b15 0%,
+    #071527 25%,
+    #0a1f38 55%,
+    #0d2d4a 80%,
+    #0f3355 100%
+  );
+
   --text-primary: #f0f6ff;
-  --text-secondary: rgba(240, 246, 255, 0.82);
-  --text-muted: rgba(240, 246, 255, 0.55);
+  --text-secondary: rgba(240, 246, 255, 0.88);
+  --text-muted: rgba(240, 246, 255, 0.62);
+
   --accent: #5eead4;
   --accent-dark: #2dd4bf;
+  --accent-light: #99f6e4;
   --accent-soft: rgba(94, 234, 212, 0.12);
   --accent-glow: rgba(94, 234, 212, 0.3);
+  --accent-contrast: #05101c;
+
   --warm: #fbbf24;
+  --warm-text: #fbbf24;
   --warm-soft: rgba(251, 191, 36, 0.14);
   --warm-glow: rgba(251, 191, 36, 0.35);
+
   --card-bg: rgba(12, 24, 42, 0.6);
   --card-bg-hover: rgba(18, 34, 58, 0.75);
   --card-border: rgba(140, 200, 220, 0.1);
   --card-border-hover: rgba(94, 234, 212, 0.35);
   --card-shadow: 0 6px 32px rgba(0, 0, 0, 0.45);
   --card-shadow-hover: 0 20px 50px rgba(94, 234, 212, 0.15);
+
   --header-bg: rgba(5, 16, 28, 0.72);
   --header-border: rgba(140, 200, 220, 0.08);
+  --footer-bg: rgba(5, 16, 28, 0.75);
+  --footer-border: rgba(140, 200, 220, 0.06);
+
   --input-bg: rgba(12, 24, 42, 0.6);
   --input-border: rgba(140, 200, 220, 0.15);
   --input-focus-bg: rgba(94, 234, 212, 0.06);
-  --footer-bg: rgba(5, 16, 28, 0.75);
-  --footer-border: rgba(140, 200, 220, 0.06);
+
+  --error: #fca5a5;
+  --error-bg: rgba(239, 68, 68, 0.12);
+  --error-border: rgba(239, 68, 68, 0.35);
+  --success: #5eead4;
+  --success-bg: rgba(94, 234, 212, 0.1);
+  --success-border: rgba(94, 234, 212, 0.35);
+
+  --female-accent: #818cf8;
+  --female-soft: rgba(129, 140, 248, 0.12);
+  --female-border: rgba(129, 140, 248, 0.38);
+
+  /* Star colors — DARK THEME (cool night sky + warm fireflies) */
+  --star-white: #ffffff;
+  --star-rose: #a5f3fc;
+  --star-deep-rose: #67e8f9;
+  --star-amber: #fef3c7;
+  --star-gold: #fbbf24;
+  --star-soft: #c7d2fe;
 }
 
 /* ============================================================
@@ -91,12 +183,8 @@ html {
 }
 
 body {
-  font-family:
-    "Poppins",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  font-family: var(--ff-main);
+  font-weight: var(--fw-body);
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
@@ -104,104 +192,241 @@ body {
   background: transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   transition: color 0.4s ease;
   overflow-x: hidden;
 }
 
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
 /* ============================================================
-   4. BACKGROUNDS — LIGHT (ROSE)
+   4. BACKGROUNDS — LIGHT (ROSE) — FLOATING LIGHTNING STARS
    ============================================================ */
+
+/* Layer 1: Sky gradient */
 html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -6;
+  pointer-events: none;
+  background: var(--sky-gradient);
+  transition: opacity 0.4s ease;
+}
+
+/* Layer 2: Horizon glow + soft nebula (LIGHT: rose/warm tones) */
+html::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -5;
   pointer-events: none;
-  background: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 40%, #fecdd3 100%);
-  transition: background 0.5s ease;
-}
-
-html::after {
-  content: "";
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 55vh;
-  z-index: -4;
-  pointer-events: none;
   background:
     radial-gradient(
       90% 100% at 50% 100%,
-      rgba(251, 113, 133, 0.15) 0%,
-      rgba(225, 29, 72, 0.05) 30%,
+      rgba(251, 113, 133, 0.22) 0%,
+      rgba(225, 29, 72, 0.08) 30%,
       transparent 70%
     ),
     radial-gradient(
       60% 80% at 50% 100%,
-      rgba(254, 205, 211, 0.2) 0%,
+      rgba(254, 205, 211, 0.28) 0%,
       transparent 60%
-    );
-  opacity: 0.8;
-  animation: horizonPulse 8s ease-in-out infinite;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -3;
-  pointer-events: none;
-  background-image:
-    radial-gradient(1.4px 1.4px at 20px 30px, #e11d48, transparent 90%),
-    radial-gradient(1px 1px at 60px 90px, rgba(225, 29, 72, 0.8), transparent),
-    radial-gradient(1.8px 1.8px at 130px 40px, #e11d48, transparent 90%);
-  background-size: 400px 400px;
-  background-repeat: repeat;
-  animation:
-    twinkle 6s ease-in-out infinite,
-    floatStars 60s linear infinite;
-  opacity: 0.5;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: -15%;
-  z-index: -2;
-  pointer-events: none;
-  background:
+    ),
     radial-gradient(
       680px 620px at 20% 25%,
-      rgba(251, 113, 133, 0.15) 0%,
+      rgba(251, 113, 133, 0.18) 0%,
       transparent 55%
     ),
     radial-gradient(
       600px 560px at 80% 30%,
-      rgba(244, 63, 94, 0.1) 0%,
+      rgba(244, 63, 94, 0.12) 0%,
       transparent 55%
+    ),
+    radial-gradient(
+      820px 660px at 50% 8%,
+      rgba(253, 164, 175, 0.14) 0%,
+      transparent 60%
     );
-  opacity: 0.8;
+  opacity: 0.9;
   animation:
-    nebulaShift 14s ease-in-out infinite alternate,
-    nebulaFloat 22s ease-in-out infinite;
+    nebulaPulse 14s ease-in-out infinite alternate,
+    nebulaFloat 24s ease-in-out infinite;
+}
+
+/* Layer 3: Stars — SMALL dense layer (fast twinkle, slow downward drift) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  z-index: -4;
+  pointer-events: none;
+  background-image:
+    /* Pure white sparkle stars */
+    radial-gradient(
+      circle 1.5px at 25px 45px,
+      var(--star-white) 0%,
+      var(--star-white) 30%,
+      rgba(255, 255, 255, 0.55) 65%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.2px at 75px 90px,
+      var(--star-white) 0%,
+      rgba(255, 255, 255, 0.88) 40%,
+      rgba(255, 255, 255, 0.3) 72%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.7px at 130px 40px,
+      var(--star-white) 0%,
+      var(--star-white) 28%,
+      rgba(255, 255, 255, 0.6) 60%,
+      transparent 100%
+    ),
+    /* Rose-gold stars */
+    radial-gradient(
+        circle 1.6px at 200px 120px,
+        var(--star-rose) 0%,
+        var(--star-rose) 35%,
+        rgba(251, 113, 133, 0.5) 70%,
+        transparent 100%
+      ),
+    radial-gradient(
+      circle 1.4px at 320px 85px,
+      var(--star-deep-rose) 0%,
+      rgba(244, 63, 94, 0.82) 45%,
+      rgba(244, 63, 94, 0.25) 78%,
+      transparent 100%
+    ),
+    /* Warm amber sparkles */
+    radial-gradient(
+        circle 1.8px at 95px 220px,
+        var(--star-amber) 0%,
+        var(--star-amber) 32%,
+        rgba(251, 191, 36, 0.6) 68%,
+        transparent 100%
+      ),
+    radial-gradient(
+      circle 1.3px at 275px 260px,
+      var(--star-gold) 0%,
+      rgba(245, 158, 11, 0.85) 42%,
+      rgba(245, 158, 11, 0.2) 75%,
+      transparent 100%
+    ),
+    /* Extra white sparkles */
+    radial-gradient(
+        circle 1.4px at 360px 340px,
+        var(--star-white) 0%,
+        rgba(255, 255, 255, 0.78) 45%,
+        transparent 100%
+      ),
+    radial-gradient(
+      circle 1.5px at 180px 315px,
+      var(--star-soft) 0%,
+      rgba(253, 164, 175, 0.7) 48%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.2px at 40px 355px,
+      var(--star-white) 0%,
+      rgba(255, 255, 255, 0.82) 45%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.6px at 240px 180px,
+      var(--star-amber) 0%,
+      rgba(251, 191, 36, 0.7) 42%,
+      transparent 100%
+    );
+  background-size: 400px 400px;
+  background-repeat: repeat;
+  animation:
+    twinkleStarsFast 4.5s ease-in-out infinite,
+    floatStarsDown 90s linear infinite;
+  opacity: 0.9;
+  will-change: opacity, background-position;
+}
+
+/* Layer 4: Stars — LARGE glowing layer (slow twinkle, opposite drift) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -15%;
+  z-index: -3;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      circle 2.6px at 120px 180px,
+      var(--star-white) 0%,
+      var(--star-white) 25%,
+      rgba(251, 191, 36, 0.6) 55%,
+      rgba(251, 191, 36, 0.15) 82%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.3px at 380px 80px,
+      var(--star-white) 0%,
+      var(--star-white) 22%,
+      rgba(251, 113, 133, 0.72) 48%,
+      rgba(251, 113, 133, 0.18) 78%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 3px at 500px 400px,
+      var(--star-white) 0%,
+      var(--star-white) 28%,
+      rgba(255, 255, 255, 0.42) 62%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.5px at 200px 520px,
+      var(--star-amber) 0%,
+      rgba(251, 191, 36, 0.72) 42%,
+      rgba(251, 191, 36, 0.2) 75%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.8px at 680px 220px,
+      var(--star-white) 0%,
+      rgba(244, 63, 94, 0.65) 38%,
+      rgba(244, 63, 94, 0.15) 75%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.4px at 450px 620px,
+      var(--star-soft) 0%,
+      rgba(253, 164, 175, 0.7) 42%,
+      transparent 100%
+    );
+  background-size: 800px 800px;
+  background-repeat: repeat;
+  animation:
+    twinkleStarsSlow 8s ease-in-out infinite,
+    floatStarsUp 130s linear infinite;
+  opacity: 1;
+  will-change: opacity, background-position;
 }
 
 /* ============================================================
-   5. BACKGROUNDS — DARK (STARRY NIGHT SKY) — ORIGINAL
+   5. BACKGROUNDS — DARK (STARRY NIGHT SKY) — FLOATING STARS
    ============================================================ */
-[data-theme="dark"] html::before {
-  background: linear-gradient(
-    180deg,
-    #040b15 0%,
-    #071527 25%,
-    #0a1f38 55%,
-    #0d2d4a 80%,
-    #0f3355 100%
-  );
-}
 
-[data-theme="dark"] html::after {
+/* Layer 2 override: Horizon glow + nebula (DARK: teal/indigo/amber) */
+html[data-theme="dark"]::after {
   background:
     radial-gradient(
       90% 100% at 50% 100%,
@@ -214,25 +439,7 @@ body::after {
       60% 80% at 50% 100%,
       rgba(254, 243, 199, 0.18) 0%,
       transparent 60%
-    );
-  opacity: 1;
-}
-
-[data-theme="dark"] body::before {
-  background-image:
-    radial-gradient(1.4px 1.4px at 20px 30px, #ffffff, transparent 90%),
-    radial-gradient(
-      1px 1px at 60px 90px,
-      rgba(255, 255, 255, 0.9),
-      transparent
     ),
-    radial-gradient(1.8px 1.8px at 130px 40px, #ffffff, transparent 90%),
-    radial-gradient(1.5px 1.5px at 80px 130px, #fef3c7, transparent 90%);
-  opacity: 0.95;
-}
-
-[data-theme="dark"] body::after {
-  background:
     radial-gradient(
       680px 620px at 20% 25%,
       rgba(94, 234, 212, 0.28) 0%,
@@ -251,25 +458,199 @@ body::after {
   opacity: 1;
 }
 
-@keyframes horizonPulse {
+/* Layer 3 override: small stars (cool cyan/white) */
+html[data-theme="dark"] body::before {
+  background-image:
+    radial-gradient(
+      circle 1.5px at 25px 45px,
+      var(--star-white) 0%,
+      var(--star-white) 30%,
+      rgba(255, 255, 255, 0.55) 65%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.2px at 75px 90px,
+      var(--star-white) 0%,
+      rgba(255, 255, 255, 0.9) 40%,
+      rgba(255, 255, 255, 0.3) 72%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.7px at 130px 40px,
+      var(--star-white) 0%,
+      var(--star-white) 28%,
+      rgba(255, 255, 255, 0.6) 60%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.6px at 200px 120px,
+      var(--star-rose) 0%,
+      var(--star-rose) 35%,
+      rgba(165, 243, 252, 0.5) 70%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.4px at 320px 85px,
+      var(--star-deep-rose) 0%,
+      rgba(103, 232, 249, 0.82) 45%,
+      rgba(103, 232, 249, 0.25) 78%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.8px at 95px 220px,
+      var(--star-amber) 0%,
+      var(--star-amber) 32%,
+      rgba(254, 243, 199, 0.6) 68%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.3px at 275px 260px,
+      var(--star-gold) 0%,
+      rgba(251, 191, 36, 0.85) 42%,
+      rgba(251, 191, 36, 0.2) 75%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.4px at 360px 340px,
+      var(--star-white) 0%,
+      rgba(255, 255, 255, 0.78) 45%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.5px at 180px 315px,
+      var(--star-soft) 0%,
+      rgba(199, 210, 254, 0.7) 48%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.2px at 40px 355px,
+      var(--star-white) 0%,
+      rgba(255, 255, 255, 0.82) 45%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 1.6px at 240px 180px,
+      var(--star-amber) 0%,
+      rgba(254, 243, 199, 0.7) 42%,
+      transparent 100%
+    );
+}
+
+/* Layer 4 override: large stars (warm gold + pure white + cyan glow) */
+html[data-theme="dark"] body::after {
+  background-image:
+    radial-gradient(
+      circle 2.6px at 120px 180px,
+      var(--star-white) 0%,
+      var(--star-white) 25%,
+      rgba(251, 191, 36, 0.65) 55%,
+      rgba(251, 191, 36, 0.15) 82%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.3px at 380px 80px,
+      var(--star-white) 0%,
+      var(--star-white) 22%,
+      rgba(165, 243, 252, 0.7) 48%,
+      rgba(165, 243, 252, 0.18) 78%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 3px at 500px 400px,
+      var(--star-white) 0%,
+      var(--star-white) 28%,
+      rgba(255, 255, 255, 0.42) 62%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.5px at 200px 520px,
+      var(--star-amber) 0%,
+      rgba(254, 243, 199, 0.75) 42%,
+      rgba(254, 243, 199, 0.2) 75%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.8px at 680px 220px,
+      var(--star-white) 0%,
+      rgba(94, 234, 212, 0.6) 38%,
+      rgba(94, 234, 212, 0.15) 75%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.4px at 450px 620px,
+      var(--star-soft) 0%,
+      rgba(199, 210, 254, 0.7) 42%,
+      transparent 100%
+    );
+}
+
+/* ============================================================
+   6. KEYFRAMES — LIGHTNING / FLICKER / FLOAT
+   ============================================================ */
+
+/* Aggressive flicker — sharp peaks = "lightning" sparkle feel */
+@keyframes twinkleStarsFast {
   0%,
   100% {
+    opacity: 0.55;
+  }
+  8% {
+    opacity: 1;
+  }
+  14% {
+    opacity: 0.65;
+  }
+  28% {
+    opacity: 0.85;
+  }
+  34% {
+    opacity: 1;
+  }
+  42% {
+    opacity: 0.6;
+  }
+  58% {
+    opacity: 0.78;
+  }
+  66% {
+    opacity: 1;
+  }
+  74% {
+    opacity: 0.68;
+  }
+  88% {
     opacity: 0.9;
   }
-  50% {
+  94% {
     opacity: 1;
   }
 }
-@keyframes twinkle {
+
+/* Gentler flicker for large stars */
+@keyframes twinkleStarsSlow {
   0%,
   100% {
+    opacity: 0.7;
+  }
+  15% {
+    opacity: 1;
+  }
+  35% {
     opacity: 0.75;
   }
   50% {
+    opacity: 0.95;
+  }
+  70% {
+    opacity: 0.65;
+  }
+  85% {
     opacity: 1;
   }
 }
-@keyframes floatStars {
+
+/* Drift down-right (small stars) */
+@keyframes floatStarsDown {
   0% {
     background-position: 0 0;
   }
@@ -277,9 +658,21 @@ body::after {
     background-position: 400px 400px;
   }
 }
-@keyframes nebulaShift {
+
+/* Drift up-left (large stars — creates parallax) */
+@keyframes floatStarsUp {
   0% {
-    opacity: 0.7;
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -800px -800px;
+  }
+}
+
+/* Nebula breathing */
+@keyframes nebulaPulse {
+  0% {
+    opacity: 0.75;
   }
   100% {
     opacity: 1;
@@ -295,8 +688,18 @@ body::after {
   }
 }
 
+/* Animated underline shimmer */
+@keyframes shimmerLine {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
 /* ============================================================
-   6. TYPOGRAPHY
+   7. TYPOGRAPHY — theme-aware
    ============================================================ */
 h1,
 h2,
@@ -305,9 +708,9 @@ h4,
 h5,
 h6 {
   color: var(--text-primary);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   line-height: 1.25;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--ls-tight);
 }
 p {
   color: var(--text-secondary);
@@ -317,7 +720,12 @@ a {
   transition: color 0.2s ease;
 }
 
-/* Animated underline */
+/* Dark mode: slightly tighter tracking on large headings for "premium" feel */
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2 {
+  letter-spacing: -0.02em;
+}
+
 .section-title::after,
 .page-hero-content h1::after,
 .about-content h2::after,
@@ -343,20 +751,23 @@ a {
 hr {
   display: none !important;
 }
-@keyframes shimmerLine {
-  0% {
-    background-position: 100% 0;
-  }
-  100% {
-    background-position: -100% 0;
-  }
+
+.section-title {
+  text-align: center;
+  font-size: 34px;
+  font-weight: var(--fw-bold);
+  margin-bottom: 14px;
+  letter-spacing: var(--ls-tighter);
 }
 .section-subtitle {
-  margin-bottom: 50px;
+  text-align: center;
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 40px;
 }
 
 /* ============================================================
-   7. HEADER — COMPACT FIX
+   8. HEADER
    ============================================================ */
 .glass-header {
   position: fixed;
@@ -389,10 +800,10 @@ hr {
   height: 40px;
   border-radius: 50%;
   object-fit: contain;
-  background: #fff;
+  background: var(--card-bg);
   padding: 2px;
   margin-right: 8px;
-  box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+  box-shadow: 0 0 15px var(--warm-glow);
 }
 .logo-text {
   display: flex;
@@ -401,15 +812,15 @@ hr {
 }
 .logo h1 {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--accent) !important;
   letter-spacing: 0.02em;
 }
 .logo p {
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.05em;
   color: var(--text-muted) !important;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   text-transform: uppercase;
 }
 
@@ -429,12 +840,11 @@ hr {
   justify-content: center;
   padding: 0 5px;
 }
-
 .glass-header nav ul li a {
   text-decoration: none;
   color: var(--text-secondary) !important;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   padding: 6px 8px;
   border-radius: 999px;
   border: 1px solid transparent;
@@ -450,7 +860,7 @@ hr {
   color: var(--accent) !important;
   background: var(--accent-soft);
   border-color: var(--accent-soft);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 
 .btn-login {
@@ -459,10 +869,10 @@ hr {
     var(--accent),
     var(--accent-dark)
   ) !important;
-  color: #fff !important;
+  color: var(--accent-contrast) !important;
   padding: 6px 14px !important;
   border-radius: 999px !important;
-  font-weight: 700 !important;
+  font-weight: var(--fw-bold) !important;
   box-shadow: 0 4px 15px var(--accent-glow);
   transition: all 0.2s ease !important;
   white-space: nowrap;
@@ -484,10 +894,15 @@ hr {
   cursor: pointer;
   color: var(--text-primary);
   font-size: 18px;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+.theme-toggle-btn:hover {
+  background: var(--accent-soft);
 }
 
 /* ============================================================
-   8. CARDS & BUTTONS
+   9. CARDS & BUTTONS
    ============================================================ */
 .glass-card,
 .page-hero-content,
@@ -525,7 +940,7 @@ hr {
   text-decoration: none;
   padding: 12px 28px;
   border-radius: 999px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   font-size: 14px;
   display: inline-flex;
   align-items: center;
@@ -542,8 +957,8 @@ hr {
 }
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: #ffffff !important;
-  font-weight: 700;
+  color: var(--accent-contrast) !important;
+  font-weight: var(--fw-bold);
   box-shadow: 0 6px 20px var(--accent-glow);
 }
 .btn-primary:hover {
@@ -562,7 +977,7 @@ hr {
 }
 
 /* ============================================================
-   9. HERO & SECTIONS
+   10. HERO & SECTIONS
    ============================================================ */
 .hero {
   min-height: 100vh;
@@ -579,7 +994,7 @@ hr {
 }
 .hero-content h2 {
   font-size: 48px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   margin-bottom: 20px;
   line-height: 1.1;
   letter-spacing: -0.03em;
@@ -621,20 +1036,6 @@ hr {
   font-size: 14px;
 }
 
-.section-title {
-  text-align: center;
-  font-size: 34px;
-  font-weight: 700;
-  margin-bottom: 14px;
-  letter-spacing: -0.02em;
-}
-.section-subtitle {
-  text-align: center;
-  font-size: 15px;
-  color: var(--text-muted);
-  margin-bottom: 40px;
-}
-
 .stats-section {
   padding: 70px 40px;
   text-align: center;
@@ -656,15 +1057,15 @@ hr {
 }
 .stat-card h3 {
   font-size: 38px;
-  font-weight: 700;
-  color: var(--warm) !important;
+  font-weight: var(--fw-bold);
+  color: var(--warm-text) !important;
   margin-bottom: 8px;
   letter-spacing: -0.02em;
   text-shadow: 0 0 30px var(--warm-glow);
 }
 .stat-card p {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
 }
 
 .about-preview,
@@ -683,7 +1084,7 @@ hr {
 .about-content h2,
 .cta-content h2 {
   font-size: 32px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   margin-bottom: 20px;
   letter-spacing: -0.02em;
   color: var(--accent);
@@ -696,11 +1097,12 @@ hr {
 }
 
 /* ============================================================
-   10. FOOTER
+   11. FOOTER
    ============================================================ */
 .glass-footer {
   background: var(--footer-bg);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--footer-border);
   padding: 60px 40px 20px;
   margin-top: 60px;
@@ -716,14 +1118,14 @@ hr {
   font-size: 22px;
   color: var(--accent) !important;
   margin-bottom: 12px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   text-shadow: 0 0 20px var(--accent-glow);
 }
 .footer-col h4 {
   font-size: 15px;
   margin-bottom: 16px;
   color: var(--text-primary) !important;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 .footer-col p {
   font-size: 13px;
@@ -757,7 +1159,7 @@ hr {
 }
 
 /* ============================================================
-   11. FORMS & INPUTS — THEME-AWARE DROPDOWNS
+   12. FORMS & INPUTS
    ============================================================ */
 input,
 select,
@@ -771,7 +1173,7 @@ textarea {
 .form-label {
   display: block;
   font-size: 12.5px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   margin-bottom: 7px;
   color: var(--text-secondary);
 }
@@ -798,26 +1200,26 @@ textarea {
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
+  background: var(--input-focus-bg);
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
-/* Dropdown options — theme aware */
 select option {
   background-color: var(--card-bg) !important;
   color: var(--text-primary) !important;
 }
-[data-theme="light"] select option {
-  background-color: #ffffff !important;
-  color: #4c0519 !important;
-}
-[data-theme="dark"] select option {
+html[data-theme="dark"] select option {
   background-color: #0a1d33 !important;
   color: #f0f6ff !important;
 }
+html:not([data-theme="dark"]) select option {
+  background-color: #ffffff !important;
+  color: #4c0519 !important;
+}
 
 /* ============================================================
-   12. AUTH PAGES
+   13. AUTH PAGES
    ============================================================ */
 .auth-page {
   display: flex;
@@ -842,12 +1244,13 @@ select option {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
   box-shadow: var(--card-shadow);
 }
 .welcome-logo {
   display: inline-block;
   font-size: 26px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--accent) !important;
   padding: 10px 24px;
   background: var(--accent-soft);
@@ -858,7 +1261,7 @@ select option {
 }
 .welcome-content h1 {
   font-size: 32px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   margin-bottom: 14px;
   line-height: 1.2;
 }
@@ -892,7 +1295,7 @@ select option {
 }
 .info-title {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   color: var(--accent);
   margin-bottom: 5px;
 }
@@ -909,7 +1312,7 @@ select option {
 .auth-form-block h2 {
   font-size: 26px;
   margin-bottom: 6px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--text-primary);
 }
 .form-subtitle {
@@ -919,7 +1322,7 @@ select option {
 }
 .form-section-title {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   color: var(--accent);
   margin: 22px 0 15px;
   padding-bottom: 8px;
@@ -962,6 +1365,11 @@ select option {
   cursor: pointer;
   opacity: 0.65;
   padding: 5px;
+  color: var(--text-secondary);
+  transition: opacity 0.2s ease;
+}
+.toggle-password:hover {
+  opacity: 1;
 }
 .checkbox-group {
   margin: 18px 0;
@@ -984,7 +1392,7 @@ select option {
 .checkbox-label a {
   color: var(--accent) !important;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
 }
 .photo-preview-box {
   margin-top: 12px;
@@ -1001,9 +1409,9 @@ select option {
 .privacy-notice-box {
   display: none;
   padding: 14px 16px;
-  background: rgba(236, 72, 153, 0.08);
-  border: 1px solid rgba(236, 72, 153, 0.2);
-  border-left: 3px solid #ec4899;
+  background: var(--female-soft);
+  border: 1px solid var(--female-border);
+  border-left: 3px solid var(--female-accent);
   border-radius: var(--r-sm);
   margin-bottom: 16px;
 }
@@ -1022,15 +1430,15 @@ select option {
 }
 .message-box.error {
   display: block;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #f87171;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  color: var(--error);
 }
 .message-box.success {
   display: block;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent);
-  color: var(--accent);
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  color: var(--success);
 }
 .auth-footer {
   text-align: center;
@@ -1040,7 +1448,7 @@ select option {
 }
 
 /* ============================================================
-   13. DASHBOARD & ADMIN
+   14. DASHBOARD & ADMIN
    ============================================================ */
 .dashboard-body {
   background: transparent !important;
@@ -1054,6 +1462,7 @@ select option {
   height: 100vh;
   background: var(--header-bg);
   backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
   border-right: 1px solid var(--card-border);
   display: flex;
   flex-direction: column;
@@ -1082,6 +1491,7 @@ select option {
   gap: 20px;
   background: var(--header-bg);
   backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
   border-bottom: 1px solid var(--card-border);
 }
 .dashboard-content {
@@ -1090,6 +1500,20 @@ select option {
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 99;
+  transition: opacity 0.3s ease;
+}
+.sidebar-overlay.active {
+  display: block;
 }
 
 .sidebar-header {
@@ -1101,7 +1525,7 @@ select option {
 }
 .sidebar-logo h1 {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--accent) !important;
   letter-spacing: 0.02em;
   text-shadow: 0 0 20px var(--accent-glow);
@@ -1123,7 +1547,6 @@ select option {
   padding: 6px 10px;
   border-radius: 8px;
 }
-
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
@@ -1144,7 +1567,7 @@ select option {
   color: var(--text-secondary) !important;
   text-decoration: none;
   font-size: 13.5px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   transition:
     background 0.2s ease,
     color 0.2s ease;
@@ -1156,7 +1579,7 @@ select option {
 .sidebar-nav li a.active {
   background: var(--accent-soft);
   color: var(--accent) !important;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 .nav-icon {
   font-size: 16px;
@@ -1166,7 +1589,7 @@ select option {
 }
 .nav-section-title {
   font-size: 10.5px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   color: var(--text-muted) !important;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -1175,15 +1598,14 @@ select option {
 .sidebar-nav .badge {
   margin-left: auto;
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-contrast);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   padding: 2px 8px;
   border-radius: 10px;
   min-width: 20px;
   text-align: center;
 }
-
 .menu-toggle {
   display: none;
   background: transparent;
@@ -1196,7 +1618,7 @@ select option {
 }
 .topbar-title h2 {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--text-primary) !important;
   letter-spacing: -0.01em;
 }
@@ -1218,17 +1640,18 @@ select option {
   border: 1px solid var(--card-border);
   border-radius: 30px;
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .user-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: #fff;
+  color: var(--accent-contrast);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   font-size: 16px;
   flex-shrink: 0;
   box-shadow: 0 4px 14px var(--accent-glow);
@@ -1240,7 +1663,7 @@ select option {
 }
 .user-name {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   color: var(--text-primary) !important;
 }
 .user-uid {
@@ -1255,11 +1678,12 @@ select option {
   padding: 24px;
   box-shadow: var(--card-shadow);
   backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
 }
 .content-card h3 {
   color: var(--text-primary) !important;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   margin-bottom: 18px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--card-border);
@@ -1271,7 +1695,7 @@ select option {
   color: var(--accent) !important;
   font-size: 12px;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
 }
 
 .quick-actions {
@@ -1307,7 +1731,7 @@ select option {
 }
 .quick-action .q-label {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   color: var(--text-secondary) !important;
 }
 
@@ -1333,7 +1757,7 @@ select option {
 .activity-item h4 {
   color: var(--text-primary) !important;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   margin-bottom: 3px;
 }
 .activity-item p {
@@ -1353,7 +1777,7 @@ select option {
 }
 .data-table thead th {
   color: var(--text-primary) !important;
-  font-weight: 700 !important;
+  font-weight: var(--fw-bold) !important;
   border-bottom: 2px solid var(--card-border) !important;
   padding: 15px;
   text-align: left;
@@ -1365,7 +1789,7 @@ select option {
 }
 
 /* ============================================================
-   14. SIDEBAR FOOTER BUTTONS (Scrollable)
+   15. SIDEBAR FOOTER BUTTONS
    ============================================================ */
 .sidebar-nav ul li a.back-to-site-btn,
 .sidebar-nav ul li a.logout-btn {
@@ -1377,7 +1801,7 @@ select option {
   color: var(--text-secondary) !important;
   text-decoration: none;
   font-size: 13.5px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   transition: all 0.2s ease;
   margin-top: 5px;
 }
@@ -1386,7 +1810,7 @@ select option {
   color: var(--accent) !important;
 }
 .sidebar-nav ul li a.logout-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.12);
   color: #ef4444 !important;
 }
 .sidebar-divider {
@@ -1399,7 +1823,7 @@ select option {
 }
 
 /* ============================================================
-   15. PAGE-SPECIFIC STYLES (About, Activities, etc.)
+   16. PAGE-SPECIFIC STYLES
    ============================================================ */
 
 /* --- ABOUT PAGE --- */
@@ -1555,9 +1979,9 @@ select option {
   border: 1px solid var(--card-border);
   color: var(--text-secondary);
   border-radius: 30px;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--ff-main);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   cursor: pointer;
   transition: 0.3s;
 }
@@ -1568,9 +1992,9 @@ select option {
 }
 .filter-btn.active {
   background: var(--accent);
-  color: #fff;
+  color: var(--accent-contrast);
   border-color: var(--accent);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 .activities-section {
   padding: 30px 40px 60px;
@@ -1593,7 +2017,7 @@ select option {
 }
 .activity-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--card-shadow-hover);
 }
 .activity-image {
   position: relative;
@@ -1619,21 +2043,22 @@ select option {
   padding: 5px 14px;
   border-radius: 20px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   text-transform: uppercase;
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 .activity-status-badge.upcoming {
-  background: rgba(59, 130, 246, 0.85);
-  color: white;
+  background: rgba(59, 130, 246, 0.9);
+  color: #fff;
 }
 .activity-status-badge.ongoing {
-  background: rgba(245, 158, 11, 0.85);
-  color: white;
+  background: rgba(245, 158, 11, 0.95);
+  color: #1c1917;
 }
 .activity-status-badge.completed {
-  background: rgba(26, 188, 156, 0.85);
-  color: white;
+  background: rgba(26, 188, 156, 0.9);
+  color: #fff;
 }
 .activity-body {
   padding: 22px;
@@ -1654,7 +2079,7 @@ select option {
   color: var(--text-primary);
   margin-bottom: 12px;
   line-height: 1.4;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 .activity-body > p {
   font-size: 14px;
@@ -1681,7 +2106,7 @@ select option {
   font-size: 13px;
   color: var(--accent);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 .activity-link:hover {
   color: var(--accent-dark);
@@ -1734,7 +2159,7 @@ select option {
   font-size: 19px;
   color: var(--accent);
   margin-bottom: 15px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 .contact-card p {
   font-size: 14px;
@@ -1777,7 +2202,7 @@ select option {
   font-size: 18px;
   color: var(--accent);
   margin-bottom: 18px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 .hours-list {
   list-style: none;
@@ -1797,7 +2222,7 @@ select option {
 }
 .hours-list li span:last-child {
   color: var(--accent);
-  font-weight: 500;
+  font-weight: var(--fw-medium);
 }
 .social-links {
   display: flex;
@@ -1834,10 +2259,10 @@ select option {
 }
 .quick-contacts strong {
   color: var(--accent);
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
 }
 
-/* --- DASHBOARD/ADMIN PAGES --- */
+/* --- DASHBOARD STATS --- */
 .stats-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1865,7 +2290,7 @@ select option {
 }
 .dash-stat-info h3 {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
   color: var(--text-primary);
   margin-bottom: 3px;
 }
@@ -1928,7 +2353,7 @@ select option {
   padding: 6px 14px;
   border-radius: 20px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   letter-spacing: 0.5px;
   text-transform: uppercase;
   margin-bottom: 15px;
@@ -1936,7 +2361,7 @@ select option {
 }
 .position-card h3 {
   font-size: 19px;
-  font-weight: 600;
+  font-weight: var(--fw-semibold);
   color: var(--text-primary);
   line-height: 1.4;
 }
@@ -1950,8 +2375,8 @@ select option {
   font-size: 22px;
 }
 .position-card.featured-female {
-  background: rgba(236, 72, 153, 0.1);
-  border: 1px solid rgba(236, 72, 153, 0.35);
+  background: var(--female-soft);
+  border: 1px solid var(--female-border);
   max-width: 400px;
   margin: 0 auto;
   grid-column: 1/-1;
@@ -1965,7 +2390,7 @@ select option {
 }
 
 /* ============================================================
-   16. RESPONSIVE
+   17. RESPONSIVE
    ============================================================ */
 .mobile-menu-btn {
   display: none;
@@ -2001,6 +2426,7 @@ select option {
     width: 100%;
     background: var(--header-bg);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--header-border);
     display: none !important;
     max-height: calc(100vh - 70px);
@@ -2032,7 +2458,7 @@ select option {
   .glass-header nav ul li a:hover,
   .glass-header nav ul li a.active {
     background: var(--accent);
-    color: white !important;
+    color: var(--accent-contrast) !important;
     border-color: var(--accent);
   }
 }
@@ -2073,11 +2499,12 @@ select option {
 }
 
 @media (max-width: 900px) {
+  /* Mobile: keep stars but reduce animation cost + preserve visibility */
   html::after,
   body::before,
   body::after {
     animation: none !important;
-    opacity: 0.4 !important;
+    opacity: 0.6 !important;
   }
   .glass-header,
   .glass-card,
@@ -2130,8 +2557,22 @@ select option {
   }
 }
 
+/* Reduced motion — accessibility */
+@media (prefers-reduced-motion: reduce) {
+  html::after,
+  body::before,
+  body::after,
+  .section-title::after,
+  .page-hero-content h1::after,
+  .about-content h2::after,
+  .cta-content h2::after,
+  .section-subtitle::after {
+    animation: none !important;
+  }
+}
+
 /* ============================================================
-   17. SCROLLBAR & UTILITY
+   18. SCROLLBAR & UTILITY
    ============================================================ */
 ::-webkit-scrollbar {
   width: 10px;
@@ -2160,13 +2601,16 @@ select option {
   height: 46px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  color: #fff;
+  color: var(--accent-contrast);
   border: none;
   font-size: 20px;
   cursor: pointer;
   display: none;
   z-index: 999;
   box-shadow: 0 8px 26px var(--accent-glow);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .back-to-top:hover {
   transform: translateY(-3px);
@@ -2188,9 +2632,13 @@ select option {
   box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
   z-index: 999;
   text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .whatsapp-fab:hover {
   transform: scale(1.1);
+  box-shadow: 0 8px 22px rgba(37, 211, 102, 0.55);
 }
 .whatsapp-fab svg {
   width: 28px;
@@ -2211,7 +2659,28 @@ select option {
   }
 }
 
+/* ============================================================
+   19. PRINT — WORKS FROM DARK MODE TOO
+   ============================================================ */
 @media print {
+  * {
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  html::before,
+  html::after,
+  body::before,
+  body::after {
+    display: none !important;
+  }
   .glass-header,
   .glass-footer,
   .dashboard-sidebar,
@@ -2223,8 +2692,9 @@ select option {
   .dashboard-main {
     margin-left: 0;
   }
-  body {
-    background: #fff;
-    color: #000;
+  a,
+  a:visited {
+    color: #000 !important;
+    text-decoration: underline;
   }
 }

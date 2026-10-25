@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - TOAST NOTIFICATION SYSTEM & CONFIRM (FIXED)
+// SYDF - TOAST NOTIFICATION SYSTEM & CONFIRM (THEME AWARE)
 // ==========================================
 (function () {
   "use strict";
@@ -8,7 +8,7 @@
   window.__syfToastLoaded = true;
 
   // ==========================================
-  // INJECT STYLES
+  // INJECT STYLES — all theme-aware
   // ==========================================
   const style = document.createElement("style");
   style.textContent = `
@@ -37,12 +37,12 @@
       align-items: flex-start;
       gap: 14px;
       padding: 16px 18px;
-      background: rgba(15, 32, 39, 0.98);
+      background: var(--card-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 14px;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
-      color: white;
+      box-shadow: var(--card-shadow-hover);
+      color: var(--text-primary);
       font-family: 'Poppins', sans-serif;
       font-size: 14px;
       line-height: 1.5;
@@ -52,7 +52,7 @@
       transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
     }
     .syf-toast.show { transform: translateX(0); opacity: 1; }
     .syf-toast.hide { transform: translateX(450px); opacity: 0; }
@@ -62,14 +62,14 @@
       left: 0; top: 0; bottom: 0;
       width: 4px;
     }
-    .syf-toast.success::before { background: #1abc9c; }
+    .syf-toast.success::before { background: var(--success); }
     .syf-toast.error::before { background: #ef4444; }
-    .syf-toast.warning::before { background: #f59e0b; }
-    .syf-toast.info::before { background: #3b82f6; }
-    .syf-toast.success { border-color: rgba(26, 188, 156, 0.35); }
-    .syf-toast.error { border-color: rgba(239, 68, 68, 0.35); }
-    .syf-toast.warning { border-color: rgba(245, 158, 11, 0.35); }
-    .syf-toast.info { border-color: rgba(59, 130, 246, 0.35); }
+    .syf-toast.warning::before { background: var(--warm); }
+    .syf-toast.info::before { background: var(--accent); }
+    .syf-toast.success { border-color: var(--success-border); }
+    .syf-toast.error { border-color: var(--error-border); }
+    .syf-toast.warning { border-color: var(--card-border-hover); }
+    .syf-toast.info { border-color: var(--accent); }
 
     .syf-toast-icon {
       width: 34px;
@@ -82,32 +82,33 @@
       font-weight: 700;
       flex-shrink: 0;
     }
-    .syf-toast.success .syf-toast-icon { background: rgba(26, 188, 156, 0.2); color: #1abc9c; }
-    .syf-toast.error .syf-toast-icon { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
-    .syf-toast.warning .syf-toast-icon { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-    .syf-toast.info .syf-toast-icon { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+    .syf-toast.success .syf-toast-icon { background: var(--success-bg); color: var(--success); }
+    .syf-toast.error .syf-toast-icon { background: var(--error-bg); color: var(--error); }
+    .syf-toast.warning .syf-toast-icon { background: var(--warm-soft); color: var(--warm-text); }
+    .syf-toast.info .syf-toast-icon { background: var(--accent-soft); color: var(--accent); }
 
     .syf-toast-body { flex: 1; min-width: 0; padding-top: 1px; }
     .syf-toast-title {
       font-weight: 600;
       margin-bottom: 2px;
       font-size: 14px;
+      color: var(--text-primary);
     }
-    .syf-toast.success .syf-toast-title { color: #1abc9c; }
-    .syf-toast.error .syf-toast-title { color: #fca5a5; }
-    .syf-toast.warning .syf-toast-title { color: #fbbf24; }
-    .syf-toast.info .syf-toast-title { color: #93c5fd; }
+    .syf-toast.success .syf-toast-title { color: var(--success); }
+    .syf-toast.error .syf-toast-title { color: var(--error); }
+    .syf-toast.warning .syf-toast-title { color: var(--warm-text); }
+    .syf-toast.info .syf-toast-title { color: var(--accent); }
 
     .syf-toast-message {
       font-size: 13px;
-      opacity: 0.9;
+      color: var(--text-secondary);
       word-break: break-word;
     }
 
     .syf-toast-close {
       background: transparent;
       border: none;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--text-muted);
       font-size: 16px;
       cursor: pointer;
       padding: 2px 4px;
@@ -115,13 +116,13 @@
       transition: 0.2s;
       flex-shrink: 0;
     }
-    .syf-toast-close:hover { color: white; }
+    .syf-toast-close:hover { color: var(--text-primary); }
 
     /* Confirm Modal */
     .syf-confirm-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       z-index: 999998;
@@ -135,15 +136,15 @@
     .syf-confirm-overlay.show { opacity: 1; }
 
     .syf-confirm {
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border-hover);
       border-radius: 20px;
       padding: 32px 30px 24px;
       max-width: 440px;
       width: 100%;
-      color: white;
+      color: var(--text-primary);
       font-family: 'Poppins', sans-serif;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      box-shadow: var(--card-shadow-hover);
       transform: scale(0.92);
       transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
       position: relative;
@@ -155,7 +156,7 @@
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 4px;
-      background: linear-gradient(90deg, #1abc9c, #fbbf24, #1abc9c);
+      background: linear-gradient(90deg, var(--accent), var(--warm), var(--accent));
       background-size: 200% 100%;
       animation: syfSlideGrad 3s linear infinite;
     }
@@ -174,32 +175,32 @@
       font-size: 28px;
     }
     .syf-confirm-icon.warning {
-      background: rgba(245, 158, 11, 0.15);
-      border: 2px solid rgba(245, 158, 11, 0.4);
-      color: #fbbf24;
+      background: var(--warm-soft);
+      border: 2px solid var(--warm);
+      color: var(--warm-text);
     }
     .syf-confirm-icon.danger {
-      background: rgba(239, 68, 68, 0.15);
-      border: 2px solid rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
+      background: var(--error-bg);
+      border: 2px solid var(--error-border);
+      color: var(--error);
     }
     .syf-confirm-icon.info {
-      background: rgba(59, 130, 246, 0.15);
-      border: 2px solid rgba(59, 130, 246, 0.4);
-      color: #93c5fd;
+      background: var(--accent-soft);
+      border: 2px solid var(--card-border-hover);
+      color: var(--accent);
     }
     .syf-confirm-title {
       font-size: 20px;
       font-weight: 700;
       text-align: center;
       margin-bottom: 10px;
-      color: white;
+      color: var(--text-primary);
     }
     .syf-confirm-message {
       font-size: 14px;
       text-align: center;
       line-height: 1.6;
-      opacity: 0.85;
+      color: var(--text-secondary);
       margin-bottom: 24px;
       white-space: pre-line;
     }
@@ -222,21 +223,22 @@
       flex: 1;
     }
     .syf-confirm-btn.cancel {
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: var(--card-bg-hover);
+      color: var(--text-primary);
+      border: 1px solid var(--card-border);
     }
-    .syf-confirm-btn.cancel:hover { background: rgba(255, 255, 255, 0.15); }
+    .syf-confirm-btn.cancel:hover { background: var(--accent-soft); }
     .syf-confirm-btn.confirm {
-      background: linear-gradient(135deg, #1abc9c, #16a085);
-      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: var(--accent-contrast);
     }
     .syf-confirm-btn.confirm:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(26, 188, 156, 0.4);
+      box-shadow: 0 8px 25px var(--accent-glow);
     }
     .syf-confirm-btn.confirm.danger {
       background: linear-gradient(135deg, #ef4444, #b91c1c);
+      color: #ffffff;
     }
     .syf-confirm-btn.confirm.danger:hover {
       box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
@@ -311,13 +313,12 @@
   }
 
   // ==========================================
-  // SHOW CONFIRM (FIXED: Promise + Callback Support)
+  // SHOW CONFIRM
   // ==========================================
   function showConfirm(message, optionsOrCallback) {
     let options = {};
     let callback = null;
 
-    // Check if second argument is a function (Callback)
     if (typeof optionsOrCallback === "function") {
       callback = optionsOrCallback;
     } else if (
@@ -364,7 +365,6 @@
           if (overlay.parentNode) overlay.remove();
         }, 250);
 
-        // YAHAN MASLA HAL HUA HAI: Callback ko call karo
         resolve(result);
         if (typeof callback === "function") {
           callback(result);
@@ -391,7 +391,7 @@
   }
 
   // ==========================================
-  // OVERRIDE alert() — Replace with toast
+  // OVERRIDE alert() — toast
   // ==========================================
   window.alert = function (message) {
     const msg = String(message || "");
@@ -414,7 +414,6 @@
     showToast(msg, type);
   };
 
-  // Expose API
   window.syfToast = showToast;
   window.syfSuccess = (msg, dur) => showToast(msg, "success", dur);
   window.syfError = (msg, dur) => showToast(msg, "error", dur || 4000);
@@ -422,29 +421,5 @@
   window.syfInfo = (msg, dur) => showToast(msg, "info", dur);
   window.syfConfirm = showConfirm;
 
-  console.log("✅ Toast System loaded (Callback + Promise support)");
+  console.log("✅ Toast System loaded (theme-aware)");
 })();
-// ==========================================
-// MAGIC: GLOBAL OVERRIDE FOR OLD ALERTS/CONFIRMS
-// ==========================================
-window.addEventListener("load", function () {
-  // 1. Override purana alert
-  window.alert = function (message) {
-    if (typeof window.syfToast === "function") {
-      window.syfToast(message, "info");
-    } else {
-      console.log("Alert:", message);
-    }
-  };
-
-  // 2. Override purana confirm (Yeh thoda tricky hai, par kaam karega)
-  const originalConfirm = window.confirm;
-  window.confirm = function (message) {
-    // Kyunki confirm browser ko block karta hai, hum custom popup use karenge jo async hota hai.
-    // Purane code ko break hone se bachane ke liye hum native confirm hi use karenge agar zaroorat pade.
-    // Par humne jo files fix ki hain unme syfConfirm laga hua hai.
-
-    // Agar aage koi file purana confirm use kare, toh yeh browser wala hi chalega (jo 100% kaam karta hai)
-    return originalConfirm(message);
-  };
-});

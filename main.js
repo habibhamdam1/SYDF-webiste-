@@ -1,5 +1,14 @@
+// Automatically load theme-overrides.css without editing 63 HTML files
+(function () {
+  if (!document.querySelector('link[href*="theme-overrides.css"]')) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "css/theme-overrides.css"; // Aapki file css folder ke andar hai
+    document.head.appendChild(link);
+  }
+})();
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (100% COMPLETE & FINAL)
+// SYDF - MAIN JAVASCRIPT (v3 - THEME AWARE)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -12,10 +21,10 @@ window.addEventListener("scroll", function () {
   if (!header) return;
   if (window.scrollY > 50) {
     header.style.background = "var(--header-bg)";
-    header.style.boxShadow = "0 4px 30px rgba(0, 0, 0, 0.3)";
+    header.style.boxShadow = "0 4px 30px rgba(0, 0, 0, 0.15)";
   } else {
     header.style.background = "var(--header-bg)";
-    header.style.boxShadow = "0 4px 30px rgba(0, 0, 0, 0.1)";
+    header.style.boxShadow = "0 4px 30px rgba(0, 0, 0, 0.05)";
   }
 });
 
@@ -40,7 +49,7 @@ document.querySelectorAll(".glass-card").forEach((card) => {
 });
 
 // ==========================================
-// SMOOTH SCROLL (FIXED: '# ' Error Solved)
+// SMOOTH SCROLL
 // ==========================================
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
@@ -53,12 +62,12 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 });
 
 // ==========================================
-// BACK TO TOP BUTTON
+// BACK TO TOP BUTTON — FIX #2: theme-aware color
 // ==========================================
 const backToTopBtn = document.createElement("button");
 backToTopBtn.innerHTML = "↑";
 backToTopBtn.className = "back-to-top";
-backToTopBtn.style.cssText = `position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: var(--accent); color: white; border: 1px solid rgba(255, 255, 255, 0.3); font-size: 22px; cursor: pointer; display: none; z-index: 999; backdrop-filter: blur(10px); transition: 0.3s;`;
+backToTopBtn.style.cssText = `position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; border-radius: 50%; background: var(--accent); color: var(--accent-contrast); border: 1px solid var(--card-border-hover); font-size: 22px; cursor: pointer; display: none; z-index: 999; backdrop-filter: blur(10px); transition: 0.3s;`;
 document.body.appendChild(backToTopBtn);
 
 window.addEventListener("scroll", function () {
@@ -96,7 +105,7 @@ backToTopBtn.addEventListener("click", function () {
 
   const isPublicReport =
     currentPage === "public-report.html" ? ' class="active"' : "";
-  navHTML += `<li><a href="public-report.html"${isPublicReport} style="color: var(--warm); font-weight: 600;">🛡️ Grievance</a></li>`;
+  navHTML += `<li><a href="public-report.html"${isPublicReport} style="color: var(--warm-text); font-weight: 600;">🛡️ Grievance</a></li>`;
 
   navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li>`;
   navHTML += "</ul>";
@@ -118,13 +127,14 @@ backToTopBtn.addEventListener("click", function () {
     });
   }
 
+  // FIX #3: logo bg from theme vars
   const logoDiv = document.querySelector(".glass-header .logo");
   if (logoDiv && !logoDiv.querySelector("img")) {
     const img = document.createElement("img");
     img.src = "images/logo.png";
     img.alt = "SYDF Logo";
     img.style.cssText =
-      "width:40px;height:40px;border-radius:50%;object-fit:contain;background:rgba(255,255,255,0.95);padding:2px;margin-right:8px;flex-shrink:0;box-shadow:0 3px 12px rgba(26,188,156,0.3);";
+      "width:40px;height:40px;border-radius:50%;object-fit:contain;background:var(--card-bg);padding:2px;margin-right:8px;flex-shrink:0;box-shadow:0 3px 12px var(--accent-glow);";
     img.onerror = function () {
       this.remove();
     };
@@ -150,10 +160,10 @@ backToTopBtn.addEventListener("click", function () {
                 <p>Swat Youth Development Forum</p>
                 <p>Empowering Youth, Building Future</p>
                 <div style="margin-top: 15px; display: flex; gap: 10px;">
-                    <a href="#" title="Facebook" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">📘</a>
-                    <a href="#" title="Instagram" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">📷</a>
-                    <a href="#" title="YouTube" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">▶️</a>
-                    <a href="#" title="WhatsApp" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">💬</a>
+                    <a href="#" title="Facebook" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">📘</a>
+                    <a href="#" title="Instagram" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">📷</a>
+                    <a href="#" title="YouTube" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">▶️</a>
+                    <a href="#" title="WhatsApp" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">💬</a>
                 </div>
             </div>
             <div class="footer-col">
@@ -184,7 +194,7 @@ backToTopBtn.addEventListener("click", function () {
                 <h4>Support & Legal</h4>
                 <ul>
                     <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="public-report.html" style="color: var(--warm); font-weight: 600;">🛡️ Public Grievances</a></li>
+                    <li><a href="public-report.html" style="color: var(--warm-text); font-weight: 600;">🛡️ Public Grievances</a></li>
                     <li><a href="faq.html">FAQ</a></li>
                     <li><a href="feedback.html">Send Feedback</a></li>
                     <li><a href="privacy-policy.html">Privacy Policy</a></li>
@@ -331,16 +341,17 @@ async function protectDashboard() {
   return null;
 }
 
+// FIX #4: Loading overlay theme-aware
 function showLoadingOverlay() {
   if (document.getElementById("authLoadingOverlay")) return;
   const overlay = document.createElement("div");
   overlay.id = "authLoadingOverlay";
-  overlay.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; color: white; font-family: 'Poppins', sans-serif;`;
+  overlay.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--sky-top), var(--sky-mid), var(--sky-bottom)); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999999; color: var(--text-primary); font-family: 'Poppins', sans-serif;`;
   overlay.innerHTML = `
         <div style="text-align: center;">
-            <div style="font-size: 42px; font-weight: 700; color: #1abc9c; letter-spacing: 3px; margin-bottom: 25px;">SYDF</div>
-            <div style="width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.15); border-top-color: #1abc9c; border-radius: 50%; animation: pydfSpin 1s linear infinite; margin: 0 auto 20px;"></div>
-            <div style="font-size: 14px; opacity: 0.85;">Verifying access...</div>
+            <div style="font-size: 42px; font-weight: 700; color: var(--accent); letter-spacing: 3px; margin-bottom: 25px;">SYDF</div>
+            <div style="width: 50px; height: 50px; border: 4px solid var(--card-border); border-top-color: var(--accent); border-radius: 50%; animation: pydfSpin 1s linear infinite; margin: 0 auto 20px;"></div>
+            <div style="font-size: 14px; color: var(--text-secondary);">Verifying access...</div>
             <style>@keyframes pydfSpin { to { transform: rotate(360deg); } }</style>
         </div>`;
   document.body.appendChild(overlay);
@@ -551,7 +562,7 @@ function addBottomButtons(sidebarNav) {
 }
 
 // ==========================================
-// SECTION CONTROLS & RBAC (FULL LOGIC)
+// SECTION CONTROLS & RBAC
 // ==========================================
 async function applySectionControls() {
   let attempts = 0;
@@ -607,12 +618,12 @@ async function applySectionControls() {
       if (settingsMap[key] === false) {
         const overlay = document.createElement("div");
         overlay.style.cssText =
-          "position:fixed; inset:0; z-index:99999; background:var(--bg-base); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;";
+          "position:fixed; inset:0; z-index:99999; background: var(--sky-top); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; text-align:center;";
         overlay.innerHTML = `
           <div style="font-size:80px; margin-bottom:20px;">🚧</div>
           <h2 style="color:var(--text-primary); font-size:32px; margin-bottom:15px; font-family:'Poppins', sans-serif;">Section Temporarily Closed</h2>
           <p style="color:var(--text-secondary); max-width:500px; margin-bottom:30px; font-size:16px; font-family:'Poppins', sans-serif;">This section is currently closed by the administration. Please check back later.</p>
-          <a href="index.html" class="btn-primary" style="text-decoration:none; padding:12px 30px; border-radius:10px; font-family:'Poppins', sans-serif; background:var(--accent); color:white; font-weight:600;">Return to Homepage</a>
+          <a href="index.html" class="btn-primary" style="text-decoration:none; padding:12px 30px; border-radius:10px; font-family:'Poppins', sans-serif; background:var(--accent); color:var(--accent-contrast); font-weight:600;">Return to Homepage</a>
         `;
         document.body.appendChild(overlay);
       }
@@ -765,28 +776,60 @@ window.logoutUser = logoutUser;
     document.head.appendChild(script);
   }
 })();
+
 // ==========================================
-// AUTO-CACHE KILLER (Permanent Fix for Updates)
+// AUTO-CACHE KILLER (service workers only)
 // ==========================================
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.getRegistrations().then(function (registrations) {
     for (let registration of registrations) {
-      // Purane service worker ko unregister karo taaki nayi files foran load hon
       registration.unregister();
       console.log("✅ Old Service Worker Unregistered");
     }
   });
 }
+
 // ==========================================
-// MAGIC FIX: PURANI CSS FILES KO BAND KARO
+// 🚫 REMOVED: CSS cache killer block that disabled admin.css
 // ==========================================
-document.addEventListener("DOMContentLoaded", function () {
-  // Saari link tags dhoondo
-  document.querySelectorAll('link[rel="stylesheet"]').forEach(function (link) {
-    // Agar link ke andar "css/pages/" ya "admin.css" likha hai, toh usko band kar do
-    if (link.href.includes("css/pages/") || link.href.includes("admin.css")) {
-      link.disabled = true; // Is line se wo file load hona band ho jayegi
-      console.log("✅ Purani CSS disabled:", link.href);
-    }
+// ==========================================
+// THEME AUTO-FIXER (Cleans up inline styles)
+// ==========================================
+(function () {
+  // 1. Automatically load theme-overrides.css
+  if (!document.querySelector('link[href*="theme-overrides.css"]')) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "css/theme-overrides.css";
+    document.head.appendChild(link);
+  }
+
+  // 2. Remove hardcoded inline colors that break the theme
+  window.addEventListener("DOMContentLoaded", () => {
+    // Find all elements with inline styles
+    const allElements = document.querySelectorAll("[style]");
+
+    allElements.forEach((el) => {
+      const style = el.getAttribute("style");
+      if (!style) return;
+
+      // Agar kisi element mein inline color white hai, toh usko remove kar do
+      if (
+        style.includes("color: white") ||
+        style.includes("color: #fff") ||
+        style.includes("color: rgba(255")
+      ) {
+        el.style.color = ""; // CSS variable ko kaam karne do
+      }
+
+      // Agar background dark hai, toh usko remove kar do
+      if (
+        style.includes("background: #0f2027") ||
+        style.includes("background: #203a43") ||
+        style.includes("background: rgba(15, 32, 39")
+      ) {
+        el.style.background = ""; // CSS variable ko kaam karne do
+      }
+    });
   });
-});
+})();
