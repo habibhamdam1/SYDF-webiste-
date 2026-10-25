@@ -661,20 +661,6 @@
 
           const receiptNo = "SYDF-DON-" + String(Date.now()).slice(-6);
 
-          const donationData = {
-            receipt_no: receiptNo,
-            donor_name: document.getElementById("donorName").value.trim(),
-            donor_email: document.getElementById("donorEmail").value.trim(),
-            donor_phone:
-              document.getElementById("donorPhone").value.trim() || null,
-            amount: Number(amount),
-            method: document.getElementById("paymentMethod").value,
-            purpose: document.getElementById("donationPurpose").value,
-            message:
-              document.getElementById("donorMessage").value.trim() || null,
-            is_anonymous: document.getElementById("anonymous").checked,
-            status: "Pending",
-          };
 
           try {
             if (typeof supabaseClient === "undefined" || !supabaseClient) {
