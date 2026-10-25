@@ -1508,3 +1508,44 @@ html[data-theme="dark"] .auth-form-block {
     background: rgba(255, 255, 255, 0.95) !important;
   }
 }
+/* ============================================================
+   🔥 FINAL FIX: WHITE TEXT ON LIGHT THEME
+   ============================================================ */
+
+/* 1. Leadership Page: Discipline Committee Names */
+.committee-card h4,
+.committee-card p,
+.member-name,
+.position-card h3 {
+  color: var(--text-primary) !important;
+}
+
+/* 2. Homepage: Member of the Month (Habibur Rahman) */
+/* Ye us card ka naam hai jo homepage pe dikhta hai */
+.motm-name,
+.member-name-large,
+.profile-card h2,
+.hero-content h2 {
+  color: var(--text-primary) !important;
+}
+
+/* 3. Login/Register Page: Feature List (View Your Profile, etc.) */
+.feature-item,
+.feature-item span,
+.feature-item p,
+.feature-item strong,
+.welcome-features div {
+  color: var(--text-secondary) !important;
+}
+
+/* Features ke chhote boxes ka background bhi theme ke hisaab se */
+.feature-item {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* 4. Committee Section Background */
+.committee-section {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}

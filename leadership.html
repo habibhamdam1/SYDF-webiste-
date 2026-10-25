@@ -42,6 +42,16 @@
         font-size: 15px;
       }
 
+      /* ✅ TEXT COLOR FIX (Taake light mode mein white text na ho) */
+      .member-name,
+      .position-card h3,
+      .committee-card h4,
+      .committee-title,
+      .info-item h3,
+      .info-item p {
+        color: var(--text-primary) !important;
+      }
+
       /* Loading animation for names */
       .member-name.loading {
         opacity: 0.5;
@@ -204,19 +214,21 @@
         </div>
       </div>
 
-      <!-- Discipline Committee Members (Static) -->
+      <!-- ✅ DISCIPLINE COMMITTEE MEMBERS (DYNAMIC FROM ADMIN PANEL) -->
       <div class="committee-section">
         <h3 class="committee-title">Discipline Committee Members</h3>
-        <div class="committee-grid">
-          <div class="glass-card committee-card"><h4>Suleman Khan</h4></div>
-          <div class="glass-card committee-card"><h4>Kamran Khan</h4></div>
-          <div class="glass-card committee-card"><h4>Syed Idress Khan</h4></div>
-          <div class="glass-card committee-card">
-            <h4>Syed Farhan Uddin</h4>
-          </div>
-          <div class="glass-card committee-card">
-            <h4>Akhtar Ali Mughal</h4>
-          </div>
+        <div class="committee-grid" id="disciplineCommitteeGrid">
+          <!-- Yahan data admin panel se automatically aayega -->
+          <p
+            style="
+              text-align: center;
+              width: 100%;
+              opacity: 0.6;
+              color: var(--text-primary);
+            "
+          >
+            Loading members...
+          </p>
         </div>
       </div>
 
@@ -298,7 +310,7 @@
     <script src="js/main.js"></script>
     <script>
       // ==========================================
-      // DYNAMIC LEADERSHIP FETCHING (FIXED)
+      // DYNAMIC LEADERSHIP FETCHING
       // ==========================================
       window.addEventListener("load", async function () {
         let attempts = 0;
@@ -312,39 +324,64 @@
         if (!supabaseClient) return;
 
         try {
-          // ✅ FIX: Ab hum 'members' table ki jagah 'cabinet_positions' se data utha rahe hain
+          // 1. CABINET POSITIONS FETCH
           const { data: positions, error } = await supabaseClient
             .from("cabinet_positions")
             .select("title, assigned_to_name");
 
           if (error) throw error;
 
-          // Har position ke naam ko update karo
           positions.forEach((p) => {
             const el = document.querySelector(
               `.member-name[data-role="${p.title}"]`,
             );
             if (el) {
-              if (p.assigned_to_name) {
-                el.textContent = p.assigned_to_name;
-              } else {
-                el.textContent = "Vacant"; // Agar assigned nahi hai
-              }
+              el.textContent = p.assigned_to_name
+                ? p.assigned_to_name
+                : "Vacant";
               el.classList.remove("loading");
             }
           });
 
-          // Agar koi position database mein nahi mili, toh default "Vacant" dikhao
           document.querySelectorAll(".member-name.loading").forEach((el) => {
             el.textContent = "Vacant";
             el.classList.remove("loading");
           });
+
+          // 2. DISCIPLINE COMMITTEE MEMBERS FETCH (Admin Panel se)
+          // Hum un members ko dhoond rahe hain jinka role "Discipline Committee Member" hai
+          const { data: committeeMembers, error: commError } =
+            await supabaseClient
+              .from("members")
+              .select("name, gender")
+              .eq("role", "Discipline Committee Member")
+              .eq("status", "Active");
+
+          const grid = document.getElementById("disciplineCommitteeGrid");
+
+          if (committeeMembers && committeeMembers.length > 0) {
+            grid.innerHTML = committeeMembers
+              .map(
+                (m) => `
+              <div class="glass-card committee-card">
+                <h4 style="color: var(--text-primary);">${m.name || "Unknown"}</h4>
+              </div>
+            `,
+              )
+              .join("");
+          } else {
+            // Agar admin panel mein koi member add nahi hai
+            grid.innerHTML = `<p style="text-align: center; width: 100%; opacity: 0.6; color: var(--text-primary);">No members assigned yet.</p>`;
+          }
         } catch (err) {
           console.error("Error loading leadership:", err);
           document.querySelectorAll(".member-name.loading").forEach((el) => {
             el.textContent = "Vacant";
             el.classList.remove("loading");
           });
+          const grid = document.getElementById("disciplineCommitteeGrid");
+          if (grid)
+            grid.innerHTML = `<p style="text-align: center; width: 100%; color: var(--text-primary);">Failed to load members.</p>`;
         }
       });
     </script>
