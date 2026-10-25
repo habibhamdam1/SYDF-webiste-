@@ -5,7 +5,8 @@
   "use strict";
 
   const STORAGE_KEY = "syf_theme";
-  const DEFAULT_THEME = "dark";
+  
+  const DEFAULT_THEME = "light";
 
   function getSavedTheme() {
     return localStorage.getItem(STORAGE_KEY) || DEFAULT_THEME;

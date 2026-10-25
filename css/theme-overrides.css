@@ -1,0 +1,2004 @@
+/* ============================================================
+   SYDF — THEME OVERRIDES (BRIDGE FILE)
+   Bridges ALL hardcoded dark-theme page CSS to the theme system.
+   ============================================================ */
+
+/* 1. DASHBOARD BODY BACKGROUND */
+.dashboard-body {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* 2. ALL FORM INPUTS */
+.form-group input,
+.form-group select,
+.form-group textarea,
+.search-box input,
+.filter-select,
+.email-compose-card input,
+.email-compose-card select,
+.email-compose-card textarea,
+.email-settings-card input,
+.email-settings-card textarea,
+.settings-card input[type="text"],
+.settings-card input[type="email"],
+.settings-card input[type="tel"],
+.settings-card input[type="url"],
+.settings-card input[type="number"],
+.settings-card select,
+.settings-card textarea,
+.social-setting-input input,
+.payment-details input,
+.profile-form input,
+.profile-form select,
+.profile-form textarea,
+.custom-report-form .filter-select,
+.color-text {
+  background: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--input-border) !important;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.search-box input::placeholder,
+.email-compose-card input::placeholder,
+.profile-form input::placeholder,
+.profile-form textarea::placeholder,
+.settings-card input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.search-box input:focus,
+.filter-select:focus,
+.email-compose-card input:focus,
+.email-compose-card select:focus,
+.email-compose-card textarea:focus,
+.settings-card input:focus,
+.settings-card select:focus,
+.settings-card textarea:focus,
+.profile-form input:focus,
+.profile-form select:focus,
+.profile-form textarea:focus,
+.social-setting-input input:focus,
+.payment-details input:focus {
+  border-color: var(--accent) !important;
+  background: var(--input-focus-bg) !important;
+  box-shadow: 0 0 0 3px var(--accent-soft) !important;
+}
+
+.form-group input:disabled,
+.profile-form input:disabled {
+  opacity: 0.6 !important;
+  background: var(--card-bg-hover) !important;
+}
+
+/* 3. SELECT DROPDOWN OPTIONS */
+html[data-theme="dark"] select option,
+html[data-theme="dark"] .form-group select option,
+html[data-theme="dark"] .settings-card select option,
+html[data-theme="dark"] .profile-form select option,
+html[data-theme="dark"] .filter-select option {
+  background: #0a1d33 !important;
+  color: #f0f6ff !important;
+}
+
+html:not([data-theme="dark"]) select option,
+html:not([data-theme="dark"]) .form-group select option,
+html:not([data-theme="dark"]) .settings-card select option,
+html:not([data-theme="dark"]) .profile-form select option,
+html:not([data-theme="dark"]) .filter-select option {
+  background: #ffffff !important;
+  color: #4c0519 !important;
+}
+
+/* 4. FILTER BUTTONS / TABS */
+.filter-btn,
+.btn-filter-type,
+.settings-tab,
+.cabinet-tab {
+  background: var(--card-bg) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--card-border) !important;
+}
+.filter-btn:hover,
+.btn-filter-type:hover,
+.settings-tab:hover,
+.cabinet-tab:hover {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+.filter-btn.active,
+.btn-filter-type.active,
+.settings-tab.active,
+.cabinet-tab.active {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  border-color: var(--accent) !important;
+  font-weight: 600 !important;
+}
+
+/* 5. HEADINGS */
+.activity-body h3,
+.app-header-info h3,
+.topbar-title h2,
+.page-header-info h1,
+.welcome-text h1,
+.card-header h3,
+.dash-stat-info h3,
+.member-info h4,
+.coord-member h5,
+.position-member h5,
+.district-admin-info h3,
+.archive-header h3,
+.template-header h4,
+.chart-header h3,
+.income-breakdown-card h3,
+.templates-card h3,
+.preview-header h3,
+.sponsor-info h3,
+.report-info h4,
+.admin-item-info h4,
+.session-info h5,
+.security-section h4,
+.setting-toggle-row h4,
+.advanced-action h4,
+.toggle-status h4,
+.overview-value,
+.fin-stat-value,
+.summary-value,
+.donut-total,
+.empty-card h3,
+.map-placeholder h3,
+.waitlist-block h2,
+.apply-block h2,
+.status-item strong,
+.admin-list-item h4,
+.notif-item-header h4,
+.notif-info h4,
+.activity-info h4,
+.contact-card h3 {
+  color: var(--text-primary) !important;
+}
+
+/* 6. BODY TEXT */
+.detail-value,
+.preview-content,
+.preview-body,
+.preview-signature,
+.activity-body > p,
+.activity-meta,
+.activity-organizer,
+.app-header-info p,
+.topbar-title p,
+.page-header-info p,
+.member-info p,
+.admin-item-info p,
+.coord-member p,
+.position-member p,
+.district-admin-info p,
+.report-info p,
+.overview-label,
+.fin-stat-label,
+.summary-label,
+.summary-sub,
+.template-header p,
+.form-intro,
+.form-note,
+.form-hint,
+.intro-block p,
+.contact-card p,
+.user-uid,
+.sidebar-logo p,
+.empty-card p,
+.map-placeholder p,
+.waitlist-block > p,
+.apply-block > p,
+.fee-desc,
+.toggle-status p,
+.session-info p,
+.setting-toggle-row p,
+.advanced-action p,
+.notif-item-body > p,
+.notif-item-meta,
+.notif-info p,
+.activity-info p,
+.activity-admin-desc,
+.activity-admin-meta,
+.income-source .source-name,
+.status-item,
+.sponsor-details .detail-value {
+  color: var(--text-secondary) !important;
+}
+
+/* 7. TOPBAR & SIDEBAR */
+.dashboard-topbar {
+  background: var(--header-bg) !important;
+  border-bottom-color: var(--card-border) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+}
+.dashboard-sidebar {
+  background: var(--header-bg) !important;
+  border-right-color: var(--card-border) !important;
+}
+.sidebar-header {
+  border-bottom-color: var(--card-border) !important;
+}
+.sidebar-footer {
+  background: var(--header-bg) !important;
+  border-top-color: var(--card-border) !important;
+}
+.topbar-btn {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+  color: var(--text-primary) !important;
+}
+.topbar-btn:hover {
+  background: var(--accent-soft) !important;
+  border-color: var(--accent) !important;
+}
+.topbar-user {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+.user-avatar {
+  color: var(--accent-contrast) !important;
+}
+.user-name {
+  color: var(--text-primary) !important;
+}
+.sidebar-nav li a {
+  color: var(--text-secondary) !important;
+}
+.sidebar-nav li a:hover {
+  background: var(--accent-soft) !important;
+  color: var(--text-primary) !important;
+}
+.sidebar-nav li a.active {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.sidebar-logo h1 {
+  color: var(--accent) !important;
+}
+.logout-btn {
+  color: var(--error) !important;
+  background: var(--error-bg) !important;
+  border-color: var(--error-border) !important;
+}
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.18) !important;
+}
+
+/* 8. TABLES */
+.data-table thead {
+  background: var(--accent-soft) !important;
+  border-bottom-color: var(--card-border) !important;
+}
+.data-table th {
+  color: var(--accent) !important;
+}
+.data-table tbody tr {
+  border-bottom-color: var(--card-border) !important;
+}
+.data-table tbody tr:hover {
+  background: var(--accent-soft) !important;
+}
+.data-table td {
+  color: var(--text-primary) !important;
+}
+.table-info {
+  color: var(--text-secondary) !important;
+}
+.table-info strong {
+  color: var(--accent) !important;
+}
+
+/* 9. SMALL CARDS / LIST ITEMS */
+.admin-list-item,
+.status-item,
+.report-item,
+.notification-item,
+.application-reason,
+.session-item,
+.payment-method-card,
+.social-setting-item,
+.coord-member,
+.position-member,
+.notif-item,
+.tehsil-tag-admin,
+.archive-member-tag,
+.activity-item,
+.hours-list li,
+.email-preview,
+.email-preview .preview-top,
+.email-preview .preview-signature,
+.tehsil-list span {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+  color: var(--text-primary) !important;
+}
+.admin-list-item:hover,
+.report-item:hover,
+.notification-item:hover,
+.social-setting-item:hover,
+.payment-method-card:hover {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.hours-list li span:first-child {
+  color: var(--text-secondary) !important;
+}
+.hours-list li span:last-child {
+  color: var(--accent) !important;
+}
+.activity-item h4,
+.session-info h5,
+.notif-item-header h4 {
+  color: var(--text-primary) !important;
+}
+.activity-item p,
+.session-info p,
+.notif-item-body > p,
+.notif-item-time,
+.notif-item-meta {
+  color: var(--text-secondary) !important;
+}
+.hours-list li {
+  border-bottom-color: var(--card-border) !important;
+}
+
+/* 10. WELCOME CARD & PROGRESS */
+.welcome-card {
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    var(--card-bg)
+  ) !important;
+  border-color: var(--card-border) !important;
+}
+.welcome-badge {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+  color: var(--accent) !important;
+}
+.progress-circle::before {
+  background: var(--card-bg) !important;
+}
+.progress-value {
+  color: var(--accent) !important;
+}
+.progress-text {
+  color: var(--text-secondary) !important;
+}
+
+/* 11. SETTINGS & LOGO */
+.logo img {
+  background: var(--card-bg) !important;
+  box-shadow: 0 3px 12px var(--accent-glow) !important;
+}
+.settings-save-bar {
+  background: var(--header-bg) !important;
+  border-color: var(--card-border-hover) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+}
+.save-bar-message {
+  color: var(--warm-text) !important;
+}
+
+/* 12. ACCENT HEADINGS */
+.page-hero-content h1,
+.intro-block h2,
+.about-block h2,
+.mv-card h2,
+.value-card h3,
+.objectives-block h2,
+.timeline-item h3,
+.district-header h3,
+.roadmap-card h3,
+.committee-title,
+.info-block h2,
+.info-item h3,
+.fee-block h2,
+.send-notification-card h2,
+.email-compose-card h3,
+.email-settings-card h3,
+.settings-card h3,
+.templates-card h3,
+.available-reports-card h3,
+.custom-report-card h3,
+.section-title,
+.report-info h4,
+.form-section-title,
+.application-reason h4,
+.preview-subject,
+.preview-logo h1,
+.position-title,
+.position-badge,
+.coord-label,
+.roadmap-badge,
+.quick-contacts strong,
+.district-footer em,
+.intro-block strong,
+.contact-info-block h2,
+.commission-title {
+  color: var(--accent) !important;
+}
+
+/* 13. BORDERS */
+.admin-list-item,
+.status-item,
+.report-item,
+.notification-item,
+.application-header,
+.application-details,
+.application-reason,
+.session-item,
+.payment-method-card,
+.social-setting-item,
+.coord-member,
+.tehsil-tag-admin,
+.archive-member-tag,
+.tehsil-list span,
+.position-member,
+.notif-item,
+.email-preview,
+.email-preview .preview-top,
+.email-preview .preview-signature,
+.email-preview .preview-logo,
+.card-header,
+.preview-header,
+.objectives-list li,
+.hours-list li,
+.archive-member-tag,
+.settings-description {
+  border-color: var(--card-border) !important;
+}
+
+/* 14. WHITE-BG BUTTONS */
+.btn-export,
+.btn-bulk,
+.btn-action,
+.page-btn,
+.template-btn,
+.btn-use-template,
+.btn-view-app,
+.card-link-btn,
+.btn-test-email,
+.btn-upload,
+.btn-advanced {
+  background: var(--card-bg) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--card-border) !important;
+}
+.btn-export:hover,
+.btn-bulk:hover,
+.btn-action:hover,
+.page-btn:hover:not(:disabled):not(.active),
+.template-btn:hover,
+.btn-use-template:hover,
+.btn-view-app:hover,
+.btn-test-email:hover,
+.btn-upload:hover,
+.btn-advanced:hover {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+.page-btn.active {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  border-color: var(--accent) !important;
+}
+
+/* 15. FORM LABELS */
+.form-group label,
+.form-label,
+.email-compose-card label,
+.email-settings-card label,
+.settings-card label,
+.profile-form label,
+.custom-report-form .form-group label,
+.payment-method-card label,
+.social-setting-input label,
+.form-check .checkbox-label,
+.checkbox-label,
+.remember-me {
+  color: var(--text-secondary) !important;
+  opacity: 1 !important;
+}
+
+/* 16. TOAST & CONFIRM (JS-injected, safety net) */
+.syf-toast {
+  background: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+.syf-toast-title {
+  color: var(--text-primary) !important;
+}
+.syf-toast.success .syf-toast-title {
+  color: var(--success) !important;
+}
+.syf-toast.error .syf-toast-title {
+  color: var(--error) !important;
+}
+.syf-toast.warning .syf-toast-title {
+  color: var(--warm-text) !important;
+}
+.syf-toast.info .syf-toast-title {
+  color: var(--accent) !important;
+}
+.syf-toast-message {
+  color: var(--text-secondary) !important;
+}
+.syf-toast-close {
+  color: var(--text-muted) !important;
+}
+.syf-toast-close:hover {
+  color: var(--text-primary) !important;
+}
+.syf-confirm {
+  background: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--card-border-hover) !important;
+  box-shadow: var(--card-shadow-hover) !important;
+}
+.syf-confirm-title {
+  color: var(--text-primary) !important;
+}
+.syf-confirm-message {
+  color: var(--text-secondary) !important;
+}
+.syf-confirm-btn.cancel {
+  background: var(--card-bg-hover) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--card-border) !important;
+}
+.syf-confirm-btn.cancel:hover {
+  background: var(--accent-soft) !important;
+}
+
+/* 17. PAGE HERO */
+.page-hero-content {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: var(--card-shadow) !important;
+}
+.page-hero-content h1 {
+  color: var(--accent) !important;
+}
+.page-hero-content p {
+  color: var(--text-secondary) !important;
+}
+
+/* 18. STATUS BADGES */
+.activity-status-badge.ongoing {
+  color: #1c1917 !important;
+}
+.activity-status-badge.upcoming {
+  color: #ffffff !important;
+}
+.activity-status-badge.completed {
+  color: #ffffff !important;
+}
+
+/* 19. AUTH PAGES */
+.auth-form-block h2,
+.register-form-block h2,
+.welcome-content h1 {
+  color: var(--text-primary) !important;
+}
+.form-subtitle,
+.welcome-content > p,
+.welcome-note,
+.form-note,
+.admin-note,
+.register-note {
+  color: var(--text-secondary) !important;
+}
+.forgot-link,
+.register-note a,
+.admin-note a {
+  color: var(--accent) !important;
+}
+.info-title {
+  color: var(--accent) !important;
+}
+.info-text {
+  color: var(--text-secondary) !important;
+}
+.info-box {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.divider::before,
+.divider::after {
+  background: var(--card-border) !important;
+}
+
+/* 20. MEMBERSHIP / FEE BLOCK */
+.currency,
+.fee-amount .currency,
+.period {
+  color: var(--accent) !important;
+}
+.amount {
+  color: var(--text-primary) !important;
+}
+.fee-desc,
+.status-badge {
+  color: var(--text-secondary) !important;
+}
+
+/* 21. LEADERSHIP PAGE */
+.position-card h3 {
+  color: var(--text-primary) !important;
+}
+.position-card::before {
+  background: linear-gradient(
+    90deg,
+    var(--accent),
+    var(--accent-dark)
+  ) !important;
+}
+.position-card.featured {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.position-card.featured-female {
+  background: var(--female-soft) !important;
+  border-color: var(--female-border) !important;
+}
+.position-card.featured-female::before {
+  background: linear-gradient(
+    90deg,
+    var(--female-accent),
+    var(--female-accent)
+  ) !important;
+}
+.position-card.featured-female .position-badge {
+  background: var(--female-soft) !important;
+  color: var(--female-accent) !important;
+  border-color: var(--female-border) !important;
+}
+.position-note {
+  color: var(--text-muted) !important;
+}
+
+/* 22. DISTRICTS PAGE */
+.district-card::before {
+  background: linear-gradient(
+    90deg,
+    var(--accent),
+    var(--accent-dark)
+  ) !important;
+}
+.district-header h3 {
+  color: var(--accent) !important;
+}
+.district-info {
+  color: var(--text-muted) !important;
+  border-bottom-color: var(--card-border) !important;
+}
+.district-footer {
+  border-top-color: var(--card-border) !important;
+}
+.district-footer p {
+  color: var(--text-secondary) !important;
+}
+.roadmap-card.active {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.roadmap-badge {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.roadmap-desc {
+  color: var(--text-secondary) !important;
+}
+
+/* 23. GALLERY PAGE */
+.gallery-item:hover {
+  box-shadow: var(--card-shadow-hover) !important;
+}
+.gallery-overlay h3 {
+  color: var(--accent) !important;
+}
+.gallery-overlay p {
+  color: #ffffff !important;
+}
+
+/* 24. PROFILE PAGE */
+.profile-avatar-big {
+  color: var(--accent-contrast) !important;
+  border-color: var(--card-bg) !important;
+}
+.avatar-upload-btn {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+  border-color: var(--card-bg) !important;
+}
+.profile-header-info h1 {
+  color: var(--text-primary) !important;
+}
+.profile-role {
+  color: var(--accent) !important;
+}
+.profile-completion strong {
+  color: var(--warm-text) !important;
+}
+.form-card-header h3 {
+  color: var(--accent) !important;
+}
+.form-card-header p {
+  color: var(--text-secondary) !important;
+}
+.form-card-header {
+  border-bottom-color: var(--card-border) !important;
+}
+.interest-item {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+  color: var(--text-secondary) !important;
+}
+.interest-item:hover {
+  background: var(--accent-soft) !important;
+  border-color: var(--accent) !important;
+}
+.interest-item:has(input:checked) {
+  background: var(--accent-soft) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+.security-section h4 {
+  color: var(--text-primary) !important;
+}
+.security-section > p {
+  color: var(--text-secondary) !important;
+}
+.session-current {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.privacy-notice strong {
+  color: var(--accent) !important;
+}
+
+/* 25. MY PAYMENTS / FINANCE */
+.summary-card.total .summary-value {
+  color: var(--accent) !important;
+}
+.summary-card.current .summary-value {
+  color: var(--accent) !important;
+}
+.summary-card.due .summary-value {
+  color: var(--warm-text) !important;
+}
+.summary-card.streak .summary-value {
+  color: var(--female-accent) !important;
+}
+.pay-method-card {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+.pay-method-card h4 {
+  color: var(--text-primary) !important;
+}
+.pm-account {
+  color: var(--accent) !important;
+}
+.pm-account-title {
+  color: var(--text-muted) !important;
+}
+.alert-success {
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    transparent
+  ) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.alert-content h4 {
+  color: var(--accent) !important;
+}
+.alert-content p {
+  color: var(--text-secondary) !important;
+}
+.receipt-id {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.amount-green {
+  color: var(--success) !important;
+}
+.amount-orange {
+  color: var(--warm-text) !important;
+}
+.amount-red {
+  color: #dc2626 !important;
+}
+
+/* 26. ADMIN QUICK ACTIONS / STATUS PILLS */
+.quick-action {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+.quick-action:hover {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.quick-action .q-label,
+.quick-action p {
+  color: var(--text-secondary) !important;
+}
+.quick-action span {
+  filter: none;
+}
+.status-pill.open {
+  background: var(--success-bg) !important;
+  color: var(--success) !important;
+  border-color: var(--success-border) !important;
+}
+.status-pill.closed {
+  background: var(--error-bg) !important;
+  color: var(--error) !important;
+  border-color: var(--error-border) !important;
+}
+.btn-toggle-open {
+  color: var(--accent-contrast) !important;
+}
+
+/* 27. NOTIFICATIONS PAGE */
+.notif-type-box {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+.notif-type-option input[type="radio"]:checked + .notif-type-box {
+  transform: translateY(-3px);
+}
+.notif-item-icon.info {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.notif-item-icon.success {
+  background: var(--success-bg) !important;
+  border-color: var(--success-border) !important;
+}
+.notif-item-icon.warning {
+  background: var(--warm-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.notif-item-icon.urgent {
+  background: var(--error-bg) !important;
+  border-color: var(--error-border) !important;
+}
+
+/* 28. EMAIL SYSTEM PAGE */
+.email-status-banner {
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    transparent
+  ) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.status-online {
+  color: var(--success) !important;
+}
+.preview-badge {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.preview-logo h1 {
+  color: var(--accent) !important;
+}
+.preview-logo p {
+  color: var(--text-muted) !important;
+}
+.preview-logo {
+  border-bottom-color: var(--card-border-hover) !important;
+}
+.template-preview {
+  background: var(--card-bg-hover) !important;
+  border-left-color: var(--accent) !important;
+  color: var(--text-secondary) !important;
+}
+.api-status-row {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.api-dot {
+  background: var(--accent) !important;
+  box-shadow: 0 0 12px var(--accent-glow) !important;
+}
+.api-status-badge {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.settings-note {
+  background: var(--accent-soft) !important;
+  border-left-color: var(--accent) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* 29. REPORTS PAGE */
+.chart-period {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+  color: var(--text-secondary) !important;
+}
+.bar-label,
+.compare-label {
+  color: var(--text-secondary) !important;
+}
+.bar-value {
+  color: var(--accent) !important;
+}
+.district-name {
+  color: var(--text-primary) !important;
+}
+.district-count {
+  color: var(--accent) !important;
+}
+.donut-legend-item {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+.legend-count {
+  color: var(--accent) !important;
+}
+.donut-hole {
+  background: var(--card-bg) !important;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+}
+.legend-item {
+  color: var(--text-secondary) !important;
+}
+.report-btn {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.report-btn:hover {
+  background: var(--accent) !important;
+  color: var(--accent-contrast) !important;
+}
+.report-btn.excel {
+  background: var(--success-bg) !important;
+  color: var(--success) !important;
+  border-color: var(--success-border) !important;
+}
+
+/* 30. CABINET / LEADERSHIP ADMIN */
+.cabinet-info {
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    transparent
+  ) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.cabinet-tabs {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+.cabinet-section-label {
+  color: var(--accent) !important;
+  border-left-color: var(--accent) !important;
+}
+.cabinet-position-card {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+.cabinet-position-card.featured {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.cabinet-position-card.featured-female {
+  background: var(--female-soft) !important;
+  border-color: var(--female-border) !important;
+}
+.btn-position-menu,
+.btn-activity-menu,
+.btn-district-menu {
+  color: var(--text-primary) !important;
+}
+.btn-position-menu:hover,
+.btn-activity-menu:hover,
+.btn-district-menu:hover {
+  background: var(--accent-soft) !important;
+}
+.member-avatar-sm {
+  color: var(--accent-contrast) !important;
+}
+.member-avatar-sm.female {
+  background: linear-gradient(
+    135deg,
+    var(--female-accent),
+    var(--female-accent)
+  ) !important;
+}
+.archive-card {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+.archive-icon {
+  background: var(--accent-soft) !important;
+}
+.archive-status.current {
+  background: var(--success-bg) !important;
+  color: var(--success) !important;
+  border-color: var(--success-border) !important;
+}
+.archive-status.archived {
+  background: var(--card-bg-hover) !important;
+  color: var(--text-muted) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* 31. APPLICATIONS / ADMIN MEMBERS */
+.application-card::before {
+  background: var(--warm) !important;
+}
+.app-avatar {
+  color: var(--accent-contrast) !important;
+}
+.app-avatar.female {
+  background: linear-gradient(
+    135deg,
+    var(--female-accent),
+    var(--female-accent)
+  ) !important;
+}
+.detail-label {
+  color: var(--text-muted) !important;
+}
+.application-reason h4 {
+  color: var(--accent) !important;
+}
+.application-reason p {
+  color: var(--text-secondary) !important;
+}
+.btn-view-app {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.btn-approve,
+.btn-reject {
+  color: var(--accent-contrast) !important;
+}
+.btn-suspend,
+.btn-activate,
+.btn-delete {
+  background: var(--card-bg-hover) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* 32. ADMIN WELCOME / DASHBOARD BADGES */
+.admin-welcome {
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    var(--card-bg)
+  ) !important;
+}
+.admin-badge {
+  background: var(--warm-soft) !important;
+  color: var(--warm-text) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.admin-avatar {
+  background: linear-gradient(135deg, var(--warm), var(--warm-text)) !important;
+  color: var(--accent-contrast) !important;
+}
+
+/* 33. SIDEBAR DIVIDER */
+.sidebar-divider {
+  background: var(--card-border) !important;
+}
+
+/* 34. BADGE / PILL DEFENSIVE OVERRIDES */
+.status-badge-active {
+  background: var(--success-bg) !important;
+  color: var(--success) !important;
+  border-color: var(--success-border) !important;
+}
+.status-badge-active::before {
+  background: var(--success) !important;
+}
+.status-badge-pending {
+  background: var(--warm-soft) !important;
+  color: var(--warm-text) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.status-badge-pending::before {
+  background: var(--warm) !important;
+}
+.status-badge-inactive,
+.status-badge-overdue {
+  background: var(--error-bg) !important;
+  color: var(--error) !important;
+  border-color: var(--error-border) !important;
+}
+.notify-badge.yes {
+  background: var(--success-bg) !important;
+  color: var(--success) !important;
+  border-color: var(--success-border) !important;
+}
+.notify-badge.no {
+  background: var(--warm-soft) !important;
+  color: var(--warm-text) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.notify-badge.no::before {
+  background: var(--warm) !important;
+}
+
+/* 35. CATEGORY / PAY-METHOD BADGES */
+.pay-method.jazzcash {
+  background: var(--error-bg) !important;
+  color: var(--error) !important;
+  border-color: var(--error-border) !important;
+}
+.pay-method.easypaisa {
+  background: var(--success-bg) !important;
+  color: var(--success) !important;
+  border-color: var(--success-border) !important;
+}
+.pay-method.bank {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.pay-method.cash {
+  background: var(--card-bg-hover) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* 36. DONATION / SPONSOR BADGES */
+.donor-badge.named {
+  background: var(--success-bg) !important;
+  color: var(--success) !important;
+  border-color: var(--success-border) !important;
+}
+.donor-badge.anonymous {
+  background: var(--card-bg-hover) !important;
+  color: var(--text-secondary) !important;
+  border-color: var(--card-border) !important;
+}
+.sponsor-badge.platinum,
+.sponsor-badge.gold,
+.sponsor-badge.silver,
+.sponsor-badge.bronze {
+  background: var(--card-bg-hover) !important;
+  color: var(--warm-text) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.sponsor-status.active {
+  background: var(--success-bg) !important;
+  color: var(--success) !important;
+  border-color: var(--success-border) !important;
+}
+.sponsor-status.pending {
+  background: var(--warm-soft) !important;
+  color: var(--warm-text) !important;
+  border-color: var(--card-border-hover) !important;
+}
+
+/* 37. ROLE BADGES */
+.role-president,
+.role-vp,
+.role-gs,
+.role-coordinator,
+.role-member {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.uid-badge {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+  border-color: var(--card-border-hover) !important;
+}
+
+/* 38. INFO BANNER */
+.info-banner {
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft),
+    transparent
+  ) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.banner-content h4,
+.banner-content strong {
+  color: var(--accent) !important;
+}
+.banner-content p {
+  color: var(--text-secondary) !important;
+}
+
+/* 39. DANGER ZONE */
+.danger-action {
+  background: var(--error-bg) !important;
+  border-color: var(--error-border) !important;
+}
+.danger-action h4,
+.danger-action p {
+  color: var(--error) !important;
+}
+.danger-section {
+  background: var(--error-bg) !important;
+  border-color: var(--error-border) !important;
+}
+.danger-section h4,
+.danger-section p {
+  color: var(--error) !important;
+}
+.btn-danger,
+.btn-danger-sm {
+  background: var(--error-bg) !important;
+  color: var(--error) !important;
+  border-color: var(--error-border) !important;
+}
+.btn-danger:hover,
+.btn-danger-sm:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+/* 40. TOGGLE SWITCH */
+.toggle-slider {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+.toggle-switch input:checked + .toggle-slider {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+/* 41. SLIDER / PROGRESS */
+.slider-input {
+  background: var(--card-border) !important;
+}
+.slider-input::-webkit-slider-thumb,
+.slider-input::-moz-range-thumb {
+  background: var(--accent) !important;
+  border-color: var(--card-bg) !important;
+}
+.slider-value {
+  background: var(--accent-soft) !important;
+  color: var(--accent) !important;
+}
+
+/* 42. COLOR PICKER & UPLOAD */
+.color-input-wrapper input[type="color"] {
+  border-color: var(--card-border) !important;
+}
+.color-text {
+  font-family: "Courier New", monospace !important;
+}
+.upload-area {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+.upload-preview {
+  background: var(--accent-soft) !important;
+  border-color: var(--card-border-hover) !important;
+}
+.logo-preview span {
+  color: var(--accent) !important;
+}
+
+/* 43. BG IMAGE OPTIONS */
+.bg-preview {
+  border-color: var(--card-border) !important;
+}
+.bg-option.active .bg-preview {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-soft) !important;
+}
+.bg-option p {
+  color: var(--text-secondary) !important;
+}
+
+/* 44. SOCIAL SETTING ICONS */
+.social-setting-icon.facebook,
+.social-setting-icon.instagram,
+.social-setting-icon.twitter,
+.social-setting-icon.youtube,
+.social-setting-icon.whatsapp,
+.social-setting-icon.linkedin {
+  background: var(--accent-soft) !important;
+}
+
+/* 45. PAYMENT METHOD ICONS */
+.payment-method-icon.jazzcash,
+.payment-method-icon.easypaisa,
+.payment-method-icon.bank {
+  background: var(--accent-soft) !important;
+}
+
+/* 46. TIMELINE / MINI */
+.timeline-content h4 {
+  color: var(--text-primary) !important;
+}
+.timeline-content p,
+.timeline-content span {
+  color: var(--text-secondary) !important;
+}
+.timeline-dot {
+  background: var(--accent) !important;
+  border-color: var(--accent-soft) !important;
+}
+.timeline-mini-item:not(:last-child)::before {
+  background: var(--accent-soft) !important;
+}
+
+/* 47. STATUS INDICATOR */
+.status-indicator.closed {
+  background: var(--error) !important;
+  box-shadow: 0 0 0 4px var(--error-bg) !important;
+}
+.status-indicator.open {
+  background: var(--success) !important;
+}
+
+/* 48. ADMIN ITEM AVATAR */
+.admin-item-avatar {
+  color: var(--accent-contrast) !important;
+}
+.admin-item-avatar.paid {
+  color: var(--accent-contrast) !important;
+}
+.admin-item-amount {
+  color: var(--accent) !important;
+}
+
+/* 49. FOOTER / MISC DEFENSIVE */
+.footer-col h3,
+.footer-col h4 {
+  color: var(--text-primary) !important;
+}
+.glass-footer {
+  border-top-color: var(--footer-border) !important;
+}
+/* ============================================================
+   🚀 PERFORMANCE & GLASSMORPHISM FIX
+   ============================================================ */
+
+/* 1. SCROLL LAG FIX: Cards se heavy blur hata diya */
+.glass-card,
+.hero-content,
+.page-hero-content,
+.stat-card,
+.about-content,
+.cta-content,
+.benefit-card,
+.team-card,
+.content-card,
+.auth-welcome,
+.auth-form-block,
+.activity-card,
+.dashboard-topbar, /* Dashboard topbar ko bhi halka kiya */
+.topbar-user,
+.sidebar-nav {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 2. REAL GLASSMORPHISM: Light mode mein cards ko transparent kiya */
+html:not([data-theme="dark"]) .glass-card,
+html:not([data-theme="dark"]) .hero-content,
+html:not([data-theme="dark"]) .page-hero-content,
+html:not([data-theme="dark"]) .content-card,
+html:not([data-theme="dark"]) .auth-welcome,
+html:not([data-theme="dark"]) .auth-form-block {
+  /* Solid white ki jagah 70% transparent white */
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 8px 32px rgba(225, 29, 72, 0.08) !important; /* Halka sa rose shadow */
+}
+
+/* Dark mode mein pehle se rgba background tha, usko thoda aur glassy banaya */
+html[data-theme="dark"] .glass-card,
+html[data-theme="dark"] .content-card {
+  background: rgba(12, 24, 42, 0.45) !important;
+  border: 1px solid rgba(140, 200, 220, 0.15) !important;
+}
+
+/* 3. HEADER & SIDEBAR PAR BLUR WAPAS (Kyunki ye fix rehte hain) */
+.glass-header,
+.dashboard-sidebar,
+.settings-save-bar {
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+}
+
+/* 4. BACKGROUND STARS ANIMATION OPTIMIZATION (Scroll smooth karne ke liye) */
+body::before,
+body::after {
+  will-change: transform; /* GPU ko force karta hai smooth scroll ke liye */
+}
+/* ============================================================
+   🚀 ULTIMATE PERFORMANCE FIX (NO MORE LAG)
+   ============================================================ */
+
+/* 1. FLOATING STARS BAND (Lag ki sabse badi wajah) */
+/* Stars ab move nahi honge, sirf twinkle karenge */
+body::before {
+  animation: twinkleStarsFast 4.5s ease-in-out infinite !important;
+}
+body::after {
+  animation: twinkleStarsSlow 8s ease-in-out infinite !important;
+}
+
+/* 2. CARDS SE BLUR HATAO (Par glass look rakho) */
+.glass-card,
+.hero-content,
+.page-hero-content,
+.content-card,
+.auth-welcome,
+.auth-form-block,
+.dashboard-sidebar,
+.dashboard-topbar {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 3. ASLI GLASSMORPHISM (Bina lag ke) */
+/* Light Mode Glass */
+html:not([data-theme="dark"]) .glass-card,
+html:not([data-theme="dark"]) .content-card,
+html:not([data-theme="dark"]) .auth-welcome,
+html:not([data-theme="dark"]) .auth-form-block {
+  background: rgba(255, 255, 255, 0.75) !important; /* 75% transparent white */
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 8px 30px rgba(225, 29, 72, 0.08) !important;
+}
+
+/* Dark Mode Glass */
+html[data-theme="dark"] .glass-card,
+html[data-theme="dark"] .content-card,
+html[data-theme="dark"] .auth-welcome,
+html[data-theme="dark"] .auth-form-block {
+  background: rgba(12, 24, 42, 0.55) !important; /* 55% transparent dark */
+  border: 1px solid rgba(140, 200, 220, 0.2) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 4. HEADER PAR BLUR WAPAS (Kyunki header scroll nahi hota) */
+.glass-header {
+  backdrop-filter: blur(15px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(150%) !important;
+}
+
+/* 5. MOBILE OPTIMIZATION (Mobile pe lag zero) */
+@media (max-width: 768px) {
+  /* Mobile pe stars ki animation aur blur band */
+  body::before,
+  body::after {
+    animation: none !important;
+    opacity: 0.4 !important;
+  }
+  .glass-header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--header-bg) !important;
+  }
+  /* Mobile pe cards ko solid kar diya taaki smooth chale */
+  html:not([data-theme="dark"]) .glass-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+}
+/* ============================================================
+   🔥 FINAL FIX: WHITE TEXT ON LIGHT THEME
+   ============================================================ */
+
+/* 1. Leadership Page: Discipline Committee Names */
+.committee-card h4,
+.committee-card p,
+.member-name,
+.position-card h3 {
+  color: var(--text-primary) !important;
+}
+
+/* 2. Homepage: Member of the Month (Habibur Rahman) */
+/* Ye us card ka naam hai jo homepage pe dikhta hai */
+.motm-name,
+.member-name-large,
+.profile-card h2,
+.hero-content h2 {
+  color: var(--text-primary) !important;
+}
+
+/* 3. Login/Register Page: Feature List (View Your Profile, etc.) */
+.feature-item,
+.feature-item span,
+.feature-item p,
+.feature-item strong,
+.welcome-features div {
+  color: var(--text-secondary) !important;
+}
+
+/* Features ke chhote boxes ka background bhi theme ke hisaab se */
+.feature-item {
+  background: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* 4. Committee Section Background */
+.committee-section {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+/* ============================================================
+   🚀 ADMIN PANEL GLASSMORPHISM & OVERLAP FIX
+   ============================================================ */
+
+/* 1. TOPBAR OVERLAP FIX (Text ek doosre par nahi chadhega) */
+.dashboard-topbar {
+  z-index: 9999 !important; /* Taake content iske niche se jaye */
+  background: var(--header-bg) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important; /* Glassmorphism wapas */
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 2. SIDEBAR GLASSMORPHISM */
+.dashboard-sidebar {
+  background: var(--header-bg) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  border-right: 1px solid var(--card-border) !important;
+  z-index: 1000 !important;
+}
+
+/* 3. ADMIN TABLES & CARDS MEIN HALKA GLASS (Bina lag ke) */
+html:not([data-theme="dark"]) .content-card,
+html:not([data-theme="dark"]) .table-card,
+html:not([data-theme="dark"]) .filters-bar,
+html:not([data-theme="dark"]) .dash-stat-card,
+html:not([data-theme="dark"]) .glass-card {
+  background: rgba(255, 255, 255, 0.65) !important; /* 65% transparent white */
+  backdrop-filter: blur(10px) !important; /* Halka blur */
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Dark Mode Admin Glass */
+html[data-theme="dark"] .content-card,
+html[data-theme="dark"] .table-card,
+html[data-theme="dark"] .filters-bar,
+html[data-theme="dark"] .dash-stat-card,
+html[data-theme="dark"] .glass-card {
+  background: rgba(12, 24, 42, 0.55) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(140, 200, 220, 0.15) !important;
+}
+
+/* 4. PAGE HEADER TEXT FIX (Members Directory) */
+.page-header-info h1,
+.page-header-info p,
+.page-header-info strong {
+  color: var(--text-primary) !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* 5. SEARCH BAR FIX (Taake background solid lage) */
+.search-box input {
+  background: var(--input-bg) !important;
+}
+
+/* 6. TABLE KE ANDAR KE WHITE BACKGROUNDS HATAO */
+.data-table thead {
+  background: var(--accent-soft) !important;
+}
+.data-table tbody tr {
+  background: transparent !important;
+}
+/* ============================================================
+   🔥 NUCLEAR FIX: MEMBER DASHBOARD TEXT & FORM CONTRAST
+   (Profile, Payments, Settings, Proposals, etc.)
+   ============================================================ */
+
+/* 1. Form Card Headers (Personal Information, Security, etc.) */
+.form-card-header {
+  background: var(--accent-soft) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+  border-radius: 12px 12px 0 0 !important;
+  padding: 20px !important;
+}
+.form-card-header h3,
+.form-card-header h4 {
+  color: var(--accent) !important; /* Rose color in light, Teal in dark */
+  font-weight: 600 !important;
+}
+.form-card-header p {
+  color: var(--text-secondary) !important;
+}
+
+/* 2. Form Labels (FULL NAME, CNIC, GENDER, etc.) */
+.profile-form label,
+.form-group label,
+.settings-card label,
+.dashboard-content label {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* 3. Input Fields Background & Text */
+.profile-form input,
+.profile-form select,
+.profile-form textarea,
+.form-group input,
+.form-group select,
+.form-group textarea,
+.settings-card input,
+.settings-card select,
+.settings-card textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--input-border) !important;
+  font-weight: 500 !important;
+}
+
+/* 4. Disabled Inputs (Jo change nahi ho sakte, jaise CNIC) */
+.profile-form input:disabled,
+.form-group input:disabled {
+  background-color: var(--card-bg-hover) !important;
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+
+/* 5. Placeholders */
+.profile-form input::placeholder,
+.form-group input::placeholder,
+.dashboard-content input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* 6. Small Hints (Jaise "Cannot be changed", "LOCKED" etc.) */
+.form-hint,
+.profile-form small,
+.form-group small,
+.dashboard-content small {
+  color: var(--warm-text) !important; /* Amber/Gold color for warnings */
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+/* 7. Fix Headings & Text Outside Forms (Dashboard Texts) */
+.profile-header-info h1,
+.dashboard-content h1,
+.dashboard-content h2,
+.dashboard-content h3,
+.dashboard-content h4,
+.dashboard-content h5 {
+  color: var(--text-primary) !important;
+}
+
+.profile-header-info p,
+.profile-meta,
+.profile-role,
+.dashboard-content p {
+  color: var(--text-secondary) !important;
+}
+
+/* 8. Avatar Background Fix (Make it Rose in light mode) */
+.profile-avatar-big {
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    var(--accent-dark)
+  ) !important;
+  color: var(--accent-contrast) !important;
+}
+/* ============================================================
+   🚨 ABSOLUTE GLOBAL FIX: ALL MEMBER & ADMIN PAGES
+   (Text, Inputs, Selects, Badges)
+   ============================================================ */
+
+/* 1. FORCE ALL TEXT TO BE READABLE IN LIGHT MODE */
+html:not([data-theme="dark"]) .dashboard-content h1,
+html:not([data-theme="dark"]) .dashboard-content h2,
+html:not([data-theme="dark"]) .dashboard-content h3,
+html:not([data-theme="dark"]) .dashboard-content h4,
+html:not([data-theme="dark"]) .dashboard-content h5,
+html:not([data-theme="dark"]) .dashboard-content h6,
+html:not([data-theme="dark"]) .dashboard-content p,
+html:not([data-theme="dark"]) .dashboard-content span:not(.badge):not(.icon),
+html:not([data-theme="dark"]) .dashboard-content label,
+html:not([data-theme="dark"]) .dashboard-content strong,
+html:not([data-theme="dark"]) .dashboard-content small,
+html:not([data-theme="dark"]) .dashboard-content th,
+html:not([data-theme="dark"]) .dashboard-content td,
+html:not([data-theme="dark"]) .dashboard-content .score-label,
+html:not([data-theme="dark"]) .dashboard-content .stat-label {
+  color: var(--text-primary) !important;
+}
+
+/* 2. MAKE SECONDARY TEXT SLIGHTLY LIGHTER (Readable but distinct) */
+html:not([data-theme="dark"]) .dashboard-content .score-subtitle,
+html:not([data-theme="dark"]) .dashboard-content .dash-stat-info p,
+html:not([data-theme="dark"]) .dashboard-content .form-hint,
+html:not([data-theme="dark"]) .dashboard-content .profile-meta,
+html:not([data-theme="dark"]) .dashboard-content .text-muted,
+html:not([data-theme="dark"]) .dashboard-content .user-uid,
+html:not([data-theme="dark"]) .dashboard-content .page-header-info p {
+  color: var(--text-secondary) !important;
+}
+
+/* 3. RESTORE WHITE TEXT ONLY FOR BUTTONS, AVATARS & BADGES */
+html:not([data-theme="dark"]) .dashboard-content .btn-primary,
+html:not([data-theme="dark"]) .dashboard-content .btn-login,
+html:not([data-theme="dark"]) .dashboard-content .user-avatar,
+html:not([data-theme="dark"]) .dashboard-content .member-avatar,
+html:not([data-theme="dark"]) .dashboard-content .badge,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-active,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-pending,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-inactive,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-overdue,
+html:not([data-theme="dark"]) .dashboard-content .sponsor-status,
+html:not([data-theme="dark"]) .dashboard-content .role-badge,
+html:not([data-theme="dark"]) .dashboard-content .uid-badge,
+html:not([data-theme="dark"]) .dashboard-content .btn-toggle-open,
+html:not([data-theme="dark"]) .dashboard-content .action-btn {
+  color: #ffffff !important;
+}
+
+/* 4. FORM INPUTS & TEXTAREAS (Values inside them) */
+html:not([data-theme="dark"]) .dashboard-content input,
+html:not([data-theme="dark"]) .dashboard-content textarea {
+  color: var(--text-primary) !important;
+  background-color: var(--card-bg) !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* 5. DISABLED INPUTS (CNIC, Date of Birth) */
+html:not([data-theme="dark"]) .dashboard-content input:disabled {
+  color: var(--text-muted) !important;
+  background-color: var(--card-bg-hover) !important;
+  opacity: 1 !important;
+}
+
+/* 6. SELECT DROPDOWNS (Male, O+, Status) & ARROW FIX */
+html:not([data-theme="dark"]) .dashboard-content select {
+  color: var(--text-primary) !important;
+  background-color: var(--card-bg) !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--card-border) !important;
+  /* Custom dark arrow for light mode */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234c0519%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 15px center !important;
+  background-size: 12px !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  padding-right: 35px !important;
+}
+
+/* 7. DATE PICKER ICON (Calendar) */
+html:not([data-theme="dark"])
+  .dashboard-content
+  input::-webkit-calendar-picker-indicator {
+  filter: invert(0.2); /* Make calendar icon dark */
+}
+
+/* 8. FORM CARD HEADERS (Personal Information Box) */
+html:not([data-theme="dark"]) .dashboard-content .form-card-header {
+  background: var(--accent-soft) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+  padding: 20px !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .form-card-header h3,
+html:not([data-theme="dark"]) .dashboard-content .form-card-header i {
+  color: var(--accent) !important;
+}
+/* ============================================================
+   💥 THE ULTIMATE WHITE-TEXT DESTROYER (GLOBAL FIX)
+   Forces ANY white text to become Dark Maroon in Light Mode.
+   ============================================================ */
+
+/* 1. HOMEPAGE & PUBLIC PAGES (Habibur Rahman & Others) */
+html:not([data-theme="dark"]) .glass-card h1,
+html:not([data-theme="dark"]) .glass-card h2,
+html:not([data-theme="dark"]) .glass-card h3,
+html:not([data-theme="dark"]) .glass-card h4,
+html:not([data-theme="dark"]) .glass-card p,
+html:not([data-theme="dark"]) .glass-card span:not(.badge):not(.icon),
+html:not([data-theme="dark"]) .member-name,
+html:not([data-theme="dark"]) .motm-name,
+html:not([data-theme="dark"]) .hero-content h2,
+html:not([data-theme="dark"]) .hero-content p,
+html:not([data-theme="dark"]) .section-title,
+html:not([data-theme="dark"]) .section-subtitle,
+html:not([data-theme="dark"]) .feature-item span,
+html:not([data-theme="dark"]) .feature-item p {
+  color: var(--text-primary) !important;
+}
+
+/* 2. PROFILE PAGE TABS (Contact, Education, etc.) */
+html:not([data-theme="dark"]) .profile-tabs button,
+html:not([data-theme="dark"]) .profile-tabs .tab-btn,
+html:not([data-theme="dark"]) .tabs-container button,
+html:not([data-theme="dark"]) .settings-tabs button,
+html:not([data-theme="dark"]) .profile-tab-btn {
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+}
+
+/* Active Tab ko Accent Color do */
+html:not([data-theme="dark"]) .profile-tabs button.active,
+html:not([data-theme="dark"]) .profile-tabs .tab-btn.active,
+html:not([data-theme="dark"]) .tabs-container button.active,
+html:not([data-theme="dark"]) .settings-tabs button.active,
+html:not([data-theme="dark"]) .profile-tab-btn.active {
+  color: var(--accent-contrast) !important;
+  background: var(--accent) !important;
+}
+
+/* 3. DASHBOARD & ADMIN (My Badges, Headers) */
+html:not([data-theme="dark"]) .dashboard-content .content-card h1,
+html:not([data-theme="dark"]) .dashboard-content .content-card h2,
+html:not([data-theme="dark"]) .dashboard-content .content-card h3,
+html:not([data-theme="dark"]) .dashboard-content .content-card h4,
+html:not([data-theme="dark"]) .dashboard-content .card-header h3,
+html:not([data-theme="dark"]) .dashboard-content .welcome-text h1,
+html:not([data-theme="dark"]) .dashboard-content .welcome-text p {
+  color: var(--text-primary) !important;
+}
+
+/* 4. THE SAFETY NET (Catch-all for any remaining white text) */
+/* Agar koi text abhi bhi white hai jo button/badge nahi hai, toh usko maroon karo */
+html:not([data-theme="dark"])
+  .dashboard-content
+  span:not(.badge):not(.user-avatar):not(.nav-icon),
+html:not([data-theme="dark"]) .dashboard-content p,
+html:not([data-theme="dark"])
+  .dashboard-content
+  div:not(.btn-primary):not(.user-avatar):not(.badge) {
+  /* Sirf unko target karega jinki color explicitly white ho */
+  color: var(--text-primary) !important;
+}
+
+/* 5. EXCEPTIONS (Inko bilkul touch nahi karna, ye white hi rehne chahiye) */
+html:not([data-theme="dark"]) .btn-primary,
+html:not([data-theme="dark"]) .btn-login,
+html:not([data-theme="dark"]) .btn-toggle-open,
+html:not([data-theme="dark"]) .user-avatar,
+html:not([data-theme="dark"]) .member-avatar,
+html:not([data-theme="dark"]) .app-avatar,
+html:not([data-theme="dark"]) .badge,
+html:not([data-theme="dark"]) .status-badge-active,
+html:not([data-theme="dark"]) .status-badge-pending,
+html:not([data-theme="dark"]) .status-badge-inactive,
+html:not([data-theme="dark"]) .status-badge-overdue,
+html:not([data-theme="dark"]) .role-badge,
+html:not([data-theme="dark"]) .uid-badge,
+html:not([data-theme="dark"]) .score-value,
+html:not([data-theme="dark"]) .action-btn,
+html:not([data-theme="dark"]) .icon,
+html:not([data-theme="dark"]) .save-bar-message {
+  color: #ffffff !important;
+}
+
+/* 6. DARK MODE EXCEPTIONS (Profile Tabs dark mode mein white hi rahein) */
+html[data-theme="dark"] .profile-tabs button,
+html[data-theme="dark"] .profile-tabs .tab-btn {
+  color: var(--text-secondary) !important;
+}
+html[data-theme="dark"] .profile-tabs button.active,
+html[data-theme="dark"] .profile-tabs .tab-btn.active {
+  color: var(--accent-contrast) !important;
+  background: var(--accent) !important;
+}
+/* ============================================================
+   💣 ULTIMATE INLINE STYLE DESTROYER (For Remaining White Text)
+   ============================================================ */
+
+/* Light Mode: Pakdo har us element ko jiski inline style white hai */
+html:not([data-theme="dark"]) [style*="color: white"],
+html:not([data-theme="dark"]) [style*="color: #fff"],
+html:not([data-theme="dark"]) [style*="color: #ffffff"],
+html:not([data-theme="dark"]) [style*="color: rgba(255"] {
+  color: var(--text-primary) !important;
+}
+
+/* Profile Page ke Tabs (Contact, Education) agar phir bhi white hain */
+html:not([data-theme="dark"]) .profile-tab,
+html:not([data-theme="dark"]) .tab-button,
+html:not([data-theme="dark"]) .nav-tabs button {
+  color: var(--text-secondary) !important;
+}
+
+/* Agar tab active hai, toh usko Accent color do (Green/Teal) */
+html:not([data-theme="dark"]) .profile-tab.active,
+html:not([data-theme="dark"]) .tab-button.active,
+html:not([data-theme="dark"]) .nav-tabs button.active {
+  color: var(--accent-contrast) !important;
+  background: var(--accent) !important;
+}
+
+/* Homepage ke naam ko force karo dark karne ke liye */
+html:not([data-theme="dark"]) h2,
+html:not([data-theme="dark"]) h3 {
+  color: var(--text-primary) !important;
+}
+/* ============================================================
+   🔐 AUTH PAGES FINAL FIX (Login / Register / Password Labels)
+   ============================================================ */
+
+/* 1. Light Mode mein har label, text, aur span ko dark karo */
+html:not([data-theme="dark"]) .auth-section,
+html:not([data-theme="dark"]) .auth-section * {
+  color: var(--text-primary) !important;
+}
+
+/* 2. Jo cheezein Accent (Teal/Rose) color ki honi chahiye */
+html:not([data-theme="dark"]) .auth-section a,
+html:not([data-theme="dark"]) .auth-section .forgot-link,
+html:not([data-theme="dark"]) .auth-section .register-note a,
+html:not([data-theme="dark"]) .auth-section .welcome-logo,
+html:not([data-theme="dark"]) .auth-section .info-title {
+  color: var(--accent) !important;
+}
+
+/* 3. Buttons ka Text (Login button par white, baaki buttons par Accent) */
+html:not([data-theme="dark"]) .auth-section .btn-primary,
+html:not([data-theme="dark"]) .auth-section button[type="submit"] {
+  color: var(--accent-contrast) !important; /* White text on Teal button */
+}
+
+/* "Join Us" ya "Back" jaise secondary buttons */
+html:not([data-theme="dark"]) .auth-section .btn-secondary {
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  background: transparent !important;
+}
+
+/* 4. Divider ("OR" wali line) */
+html:not([data-theme="dark"]) .auth-section .divider span {
+  color: var(--text-muted) !important;
+}
+html:not([data-theme="dark"]) .auth-section .divider::before,
+html:not([data-theme="dark"]) .auth-section .divider::after {
+  background: var(--card-border) !important;
+}
+
+/* 5. Form Inputs (Email, Password) */
+html:not([data-theme="dark"]) .auth-section input {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--input-border) !important;
+}
+
+/* 6. Dark Mode mein sab wapas white ho jaye */
+html[data-theme="dark"] .auth-section,
+html[data-theme="dark"] .auth-section * {
+  color: var(--text-primary) !important;
+}
