@@ -448,11 +448,13 @@
     </section>
 
     <script src="js/main.js?v=99"></script>
-<script src="js/toast.js?v=99"></script>    <script>
+    <script src="js/toast.js?v=99"></script>
+    <script>
       window.addEventListener("load", function () {
         const registerForm = document.getElementById("registerForm");
         const messageBox = document.getElementById("messageBox");
         const registerBtn = document.getElementById("registerBtn");
+
         function showMessage(text, type) {
           messageBox.innerHTML = text.replace(/\n/g, "<br>");
           messageBox.className = "message-box " + type;
@@ -544,8 +546,16 @@
           registerBtn.disabled = true;
 
           try {
+            // 1. SIGN UP (Yahan humne Name bhi bhej diya hai taake Trigger ko pata chale)
             const { data: authData, error: authError } =
-              await supabaseClient.auth.signUp({ email, password });
+              await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                  data: { full_name: name }, // YEH ZAROORI THA TRIGGER KE LIYE
+                },
+              });
+
             if (authError) {
               showMessage("❌ " + authError.message, "error");
               registerBtn.textContent = originalText;
@@ -565,6 +575,7 @@
                 cacheControl: "3600",
                 upsert: false,
               });
+
             if (!uploadError) {
               const { data: urlData } = supabaseClient.storage
                 .from("member-photos")
@@ -574,36 +585,30 @@
 
             registerBtn.textContent = "Saving profile...";
 
-            // YAHAN FIX HUA HAI: user_id add kiya aur error log kiya
-            if (!authData || !authData.user) {
+            if (!authData || !authData.user)
               throw new Error("Auth user creation failed.");
-            }
 
+            // 2. UPDATE DATA (Yahan Insert ki jagah Update lagaya hai kyunke Trigger ne pehle hi row bana di hai)
             const { error: dbError } = await supabaseClient
               .from("members")
-              .insert([
-                {
-                  user_id: authData.user.id, // <--- ZAROORI HAI
-                  uid: uid,
-                  name: name,
-                  father_name: fatherName,
-                  email: email,
-                  phone: phone,
-                  cnic: cnic,
-                  dob: dob || null,
-                  gender: gender,
-                  blood_group: blood || null,
-                  district: district,
-                  tehsil: tehsil,
-                  photo_url: photoUrl,
-                  role: "Member",
-                  status: "Pending",
-                  is_active: true,
-                },
-              ]);
+              .update({
+                uid: uid, // UID update karein
+                father_name: fatherName,
+                phone: phone,
+                cnic: cnic,
+                dob: dob || null,
+                gender: gender,
+                blood_group: blood || null,
+                district: district,
+                tehsil: tehsil,
+                photo_url: photoUrl,
+                is_active: true,
+                member_type: "Member",
+              })
+              .eq("user_id", authData.user.id); // Trigger ne is ID se row banai hai
 
             if (dbError) {
-              console.error("Database Insert Error:", dbError); // F12 console mein error dekho
+              console.error("Database Update Error:", dbError);
               showMessage(
                 "⚠️ Profile save failed: " + dbError.message,
                 "error",

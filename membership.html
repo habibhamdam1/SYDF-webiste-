@@ -846,9 +846,6 @@
     <script>
       let verificationEmail = "";
 
-      // ==========================================
-      // TOGGLE PASSWORD VISIBILITY
-      // ==========================================
       function togglePassword() {
         const inp = document.getElementById("password");
         const btn = document.querySelector(".toggle-pass");
@@ -861,9 +858,6 @@
         }
       }
 
-      // ==========================================
-      // SHOW ALERT
-      // ==========================================
       function showAlert(type, message) {
         const box = document.getElementById("alertBox");
         const icons = { error: "❌", success: "✅", info: "ℹ️" };
@@ -881,9 +875,6 @@
         document.getElementById("alertBox").className = "alert";
       }
 
-      // ==========================================
-      // FORM SUBMIT
-      // ==========================================
       document
         .getElementById("membershipForm")
         .addEventListener("submit", async function (e) {
@@ -893,7 +884,6 @@
           const submitBtn = document.getElementById("submitBtn");
           const originalText = submitBtn.innerHTML;
 
-          // Get values
           const fullName = document.getElementById("fullName").value.trim();
           const email = document
             .getElementById("email")
@@ -909,35 +899,27 @@
           const tehsil = document.getElementById("tehsil").value.trim();
 
           // Validation
-          if (!fullName || fullName.length < 3) {
-            showAlert(
+          if (!fullName || fullName.length < 3)
+            return showAlert(
               "error",
               "Please enter your full name (min 3 characters).",
             );
-            return;
-          }
-          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            showAlert("error", "Please enter a valid email address.");
-            return;
-          }
-          if (!phone || phone.length < 10) {
-            showAlert("error", "Please enter a valid phone number.");
-            return;
-          }
-          if (!password || password.length < 6) {
-            showAlert("error", "Password must be at least 6 characters.");
-            return;
-          }
-          if (!gender) {
-            showAlert("error", "Please select your gender.");
-            return;
-          }
-          if (!district || !tehsil) {
-            showAlert("error", "Please select district and enter tehsil.");
-            return;
-          }
+          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+            return showAlert("error", "Please enter a valid email address.");
+          if (!phone || phone.length < 10)
+            return showAlert("error", "Please enter a valid phone number.");
+          if (!password || password.length < 6)
+            return showAlert(
+              "error",
+              "Password must be at least 6 characters.",
+            );
+          if (!gender) return showAlert("error", "Please select your gender.");
+          if (!district || !tehsil)
+            return showAlert(
+              "error",
+              "Please select district and enter tehsil.",
+            );
 
-          // Wait for supabase
           let attempts = 0;
           while (
             (typeof supabaseClient === "undefined" || !supabaseClient) &&
@@ -946,20 +928,18 @@
             await new Promise((r) => setTimeout(r, 100));
             attempts++;
           }
-          if (!supabaseClient) {
-            showAlert("error", "System not ready. Please refresh the page.");
-            return;
-          }
+          if (!supabaseClient)
+            return showAlert(
+              "error",
+              "System not ready. Please refresh the page.",
+            );
 
-          // Loading state
           submitBtn.disabled = true;
           submitBtn.innerHTML =
             '<span class="spinner"></span>Creating account...';
 
           try {
-            // ==========================================
-            // STEP 1: Sign up with Supabase Auth
-            // ==========================================
+            // STEP 1: Sign up with Supabase Auth (Trigger will handle basic insert)
             const { data: authData, error: authError } =
               await supabaseClient.auth.signUp({
                 email: email,
@@ -974,16 +954,10 @@
               });
 
             if (authError) {
-              if (
-                authError.message
-                  .toLowerCase()
-                  .includes("already registered") ||
-                authError.message.toLowerCase().includes("already exists") ||
-                authError.message.toLowerCase().includes("user already")
-              ) {
+              if (authError.message.toLowerCase().includes("already")) {
                 showAlert(
                   "error",
-                  "This email is already registered. Please login or use a different email.",
+                  "This email is already registered. Please login.",
                 );
               } else {
                 showAlert("error", authError.message);
@@ -1000,52 +974,33 @@
               return;
             }
 
-            // ==========================================
-            // STEP 2: Insert into members table
-            // ==========================================
-            const memberData = {
-              name: fullName,
-              email: email,
-              phone: phone,
-              gender: gender,
-              dob: dob || null,
-              district: district,
-              tehsil: tehsil,
-              status: "Pending",
-              role: "Member",
-              member_type: "Member",
-              created_at: new Date().toISOString(),
-            };
-
-            const { error: memberError } = await supabaseClient
+            // STEP 2: Update extra details in members table (Since trigger already made the row)
+            const { error: updateError } = await supabaseClient
               .from("members")
-              .insert([memberData]);
+              .update({
+                dob: dob || null,
+                district: district,
+                tehsil: tehsil,
+                member_type: "Member",
+              })
+              .eq("email", email); // Match by email
 
-            if (memberError) {
-              console.error("Member insert error:", memberError);
-              // Auth user ban gaya hai but member table mein nahi - still show email verification
-              // Admin ko manually add karna hoga
-              showAlert(
-                "info",
-                "Account created. Please check your email to verify. (Note: Contact admin if profile missing)",
-              );
+            if (updateError) {
+              console.error("Update Error:", updateError);
+              // Hum error nahi dikhayenge kyunke user main account ban chuka hai
             }
 
-            // ==========================================
-            // STEP 3: Check if email confirmation is required
-            // ==========================================
+            // STEP 3: Check Email Verification
             const requiresVerification = !authData.session;
 
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
 
             if (requiresVerification) {
-              // Show email verification modal
               verificationEmail = email;
               document.getElementById("modalEmail").textContent = email;
               document.getElementById("emailModal").classList.add("show");
             } else {
-              // Email confirmation OFF - direct login
               showAlert(
                 "success",
                 "✅ Registration successful! Your account is pending admin approval. You can now <a href='login.html' style='color:#5eead4;text-decoration:underline;'>login here</a>.",
@@ -1057,18 +1012,12 @@
             }
           } catch (err) {
             console.error("Registration error:", err);
-            showAlert(
-              "error",
-              "Something went wrong. Please try again or contact support.",
-            );
+            showAlert("error", "Something went wrong. Please try again.");
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
           }
         });
 
-      // ==========================================
-      // EMAIL VERIFICATION MODAL
-      // ==========================================
       function closeEmailModal() {
         document.getElementById("emailModal").classList.remove("show");
         window.location.href = "login.html";
@@ -1076,7 +1025,6 @@
 
       async function resendEmail() {
         if (!verificationEmail) return;
-
         const btn = document.getElementById("resendBtn");
         const originalHTML = btn.innerHTML;
         btn.innerHTML = "⏳ Sending...";
@@ -1096,7 +1044,6 @@
             }, 2000);
             return;
           }
-
           btn.innerHTML = "✅ Sent!";
           setTimeout(() => {
             btn.innerHTML = originalHTML;
@@ -1112,9 +1059,6 @@
         }
       }
 
-      // ==========================================
-      // EXPOSE
-      // ==========================================
       window.togglePassword = togglePassword;
       window.closeEmailModal = closeEmailModal;
       window.resendEmail = resendEmail;

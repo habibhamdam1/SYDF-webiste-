@@ -299,20 +299,7 @@
     })();
   }
 
-  // 9. SERVICE WORKER (PWA)
-  if ("serviceWorker" in navigator && !noindex) {
-    window.addEventListener("load", function () {
-      navigator.serviceWorker
-        .register("service-worker.js")
-        .then(function (reg) {
-          console.log("✅ Service Worker registered:", reg.scope);
-        })
-        .catch(function (err) {
-          console.warn("⚠️ Service Worker registration failed:", err);
-        });
-    });
-  }
-
+ 
   // 10. DEBUG
   console.log(
     "✅ head-includes loaded for page:",

@@ -2002,3 +2002,35 @@ html[data-theme="dark"] .auth-section,
 html[data-theme="dark"] .auth-section * {
   color: var(--text-primary) !important;
 }
+/* ============================================================
+   🎯 MEMBERSHIP & BENEFITS CARDS FINAL FIX
+   ============================================================ */
+
+/* 1. Benefit Cards ke Text ko Dark Maroon karo */
+html:not([data-theme="dark"]) .benefit-card h3,
+html:not([data-theme="dark"]) .benefit-card h4,
+html:not([data-theme="dark"]) .benefit-card p,
+html:not([data-theme="dark"]) .benefits-grid h3,
+html:not([data-theme="dark"]) .benefits-grid p {
+  color: var(--text-primary) !important;
+}
+
+/* 2. "Fill the form below" wale subtitle ko theek karo */
+html:not([data-theme="dark"]) .intro-block p,
+html:not([data-theme="dark"]) .form-intro,
+html:not([data-theme="dark"]) .section-subtitle {
+  color: var(--text-secondary) !important;
+}
+
+/* 3. "Note" wale box ka text dark karo */
+html:not([data-theme="dark"]) .info-box,
+html:not([data-theme="dark"]) .info-box p,
+html:not([data-theme="dark"]) .info-box .info-text,
+html:not([data-theme="dark"]) .info-box strong {
+  color: var(--text-primary) !important;
+}
+
+/* 4. "Create Your Account" ki heading (Agar wo bhi white ho) */
+html:not([data-theme="dark"]) .apply-block h2 {
+  color: var(--text-primary) !important;
+}
