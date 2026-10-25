@@ -765,3 +765,15 @@ window.logoutUser = logoutUser;
     document.head.appendChild(script);
   }
 })();
+// ==========================================
+// AUTO-CACHE KILLER (Permanent Fix for Updates)
+// ==========================================
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+    for (let registration of registrations) {
+      // Purane service worker ko unregister karo taaki nayi files foran load hon
+      registration.unregister();
+      console.log("✅ Old Service Worker Unregistered");
+    }
+  });
+}
