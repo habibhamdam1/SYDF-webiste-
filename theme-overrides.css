@@ -1437,3 +1437,74 @@ body::before,
 body::after {
   will-change: transform; /* GPU ko force karta hai smooth scroll ke liye */
 }
+/* ============================================================
+   🚀 ULTIMATE PERFORMANCE FIX (NO MORE LAG)
+   ============================================================ */
+
+/* 1. FLOATING STARS BAND (Lag ki sabse badi wajah) */
+/* Stars ab move nahi honge, sirf twinkle karenge */
+body::before {
+  animation: twinkleStarsFast 4.5s ease-in-out infinite !important;
+}
+body::after {
+  animation: twinkleStarsSlow 8s ease-in-out infinite !important;
+}
+
+/* 2. CARDS SE BLUR HATAO (Par glass look rakho) */
+.glass-card,
+.hero-content,
+.page-hero-content,
+.content-card,
+.auth-welcome,
+.auth-form-block,
+.dashboard-sidebar,
+.dashboard-topbar {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 3. ASLI GLASSMORPHISM (Bina lag ke) */
+/* Light Mode Glass */
+html:not([data-theme="dark"]) .glass-card,
+html:not([data-theme="dark"]) .content-card,
+html:not([data-theme="dark"]) .auth-welcome,
+html:not([data-theme="dark"]) .auth-form-block {
+  background: rgba(255, 255, 255, 0.75) !important; /* 75% transparent white */
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 8px 30px rgba(225, 29, 72, 0.08) !important;
+}
+
+/* Dark Mode Glass */
+html[data-theme="dark"] .glass-card,
+html[data-theme="dark"] .content-card,
+html[data-theme="dark"] .auth-welcome,
+html[data-theme="dark"] .auth-form-block {
+  background: rgba(12, 24, 42, 0.55) !important; /* 55% transparent dark */
+  border: 1px solid rgba(140, 200, 220, 0.2) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 4. HEADER PAR BLUR WAPAS (Kyunki header scroll nahi hota) */
+.glass-header {
+  backdrop-filter: blur(15px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(15px) saturate(150%) !important;
+}
+
+/* 5. MOBILE OPTIMIZATION (Mobile pe lag zero) */
+@media (max-width: 768px) {
+  /* Mobile pe stars ki animation aur blur band */
+  body::before,
+  body::after {
+    animation: none !important;
+    opacity: 0.4 !important;
+  }
+  .glass-header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--header-bg) !important;
+  }
+  /* Mobile pe cards ko solid kar diya taaki smooth chale */
+  html:not([data-theme="dark"]) .glass-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+}
