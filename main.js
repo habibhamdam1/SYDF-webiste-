@@ -777,3 +777,16 @@ if ("serviceWorker" in navigator) {
     }
   });
 }
+// ==========================================
+// MAGIC FIX: PURANI CSS FILES KO BAND KARO
+// ==========================================
+document.addEventListener("DOMContentLoaded", function () {
+  // Saari link tags dhoondo
+  document.querySelectorAll('link[rel="stylesheet"]').forEach(function (link) {
+    // Agar link ke andar "css/pages/" ya "admin.css" likha hai, toh usko band kar do
+    if (link.href.includes("css/pages/") || link.href.includes("admin.css")) {
+      link.disabled = true; // Is line se wo file load hona band ho jayegi
+      console.log("✅ Purani CSS disabled:", link.href);
+    }
+  });
+});
