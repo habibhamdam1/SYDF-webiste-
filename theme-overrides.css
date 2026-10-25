@@ -1549,3 +1549,456 @@ html[data-theme="dark"] .auth-form-block {
   background: var(--card-bg) !important;
   border-color: var(--card-border) !important;
 }
+/* ============================================================
+   🚀 ADMIN PANEL GLASSMORPHISM & OVERLAP FIX
+   ============================================================ */
+
+/* 1. TOPBAR OVERLAP FIX (Text ek doosre par nahi chadhega) */
+.dashboard-topbar {
+  z-index: 9999 !important; /* Taake content iske niche se jaye */
+  background: var(--header-bg) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important; /* Glassmorphism wapas */
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 2. SIDEBAR GLASSMORPHISM */
+.dashboard-sidebar {
+  background: var(--header-bg) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  border-right: 1px solid var(--card-border) !important;
+  z-index: 1000 !important;
+}
+
+/* 3. ADMIN TABLES & CARDS MEIN HALKA GLASS (Bina lag ke) */
+html:not([data-theme="dark"]) .content-card,
+html:not([data-theme="dark"]) .table-card,
+html:not([data-theme="dark"]) .filters-bar,
+html:not([data-theme="dark"]) .dash-stat-card,
+html:not([data-theme="dark"]) .glass-card {
+  background: rgba(255, 255, 255, 0.65) !important; /* 65% transparent white */
+  backdrop-filter: blur(10px) !important; /* Halka blur */
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Dark Mode Admin Glass */
+html[data-theme="dark"] .content-card,
+html[data-theme="dark"] .table-card,
+html[data-theme="dark"] .filters-bar,
+html[data-theme="dark"] .dash-stat-card,
+html[data-theme="dark"] .glass-card {
+  background: rgba(12, 24, 42, 0.55) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(140, 200, 220, 0.15) !important;
+}
+
+/* 4. PAGE HEADER TEXT FIX (Members Directory) */
+.page-header-info h1,
+.page-header-info p,
+.page-header-info strong {
+  color: var(--text-primary) !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* 5. SEARCH BAR FIX (Taake background solid lage) */
+.search-box input {
+  background: var(--input-bg) !important;
+}
+
+/* 6. TABLE KE ANDAR KE WHITE BACKGROUNDS HATAO */
+.data-table thead {
+  background: var(--accent-soft) !important;
+}
+.data-table tbody tr {
+  background: transparent !important;
+}
+/* ============================================================
+   🔥 NUCLEAR FIX: MEMBER DASHBOARD TEXT & FORM CONTRAST
+   (Profile, Payments, Settings, Proposals, etc.)
+   ============================================================ */
+
+/* 1. Form Card Headers (Personal Information, Security, etc.) */
+.form-card-header {
+  background: var(--accent-soft) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+  border-radius: 12px 12px 0 0 !important;
+  padding: 20px !important;
+}
+.form-card-header h3,
+.form-card-header h4 {
+  color: var(--accent) !important; /* Rose color in light, Teal in dark */
+  font-weight: 600 !important;
+}
+.form-card-header p {
+  color: var(--text-secondary) !important;
+}
+
+/* 2. Form Labels (FULL NAME, CNIC, GENDER, etc.) */
+.profile-form label,
+.form-group label,
+.settings-card label,
+.dashboard-content label {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* 3. Input Fields Background & Text */
+.profile-form input,
+.profile-form select,
+.profile-form textarea,
+.form-group input,
+.form-group select,
+.form-group textarea,
+.settings-card input,
+.settings-card select,
+.settings-card textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--input-border) !important;
+  font-weight: 500 !important;
+}
+
+/* 4. Disabled Inputs (Jo change nahi ho sakte, jaise CNIC) */
+.profile-form input:disabled,
+.form-group input:disabled {
+  background-color: var(--card-bg-hover) !important;
+  color: var(--text-muted) !important;
+  opacity: 1 !important;
+}
+
+/* 5. Placeholders */
+.profile-form input::placeholder,
+.form-group input::placeholder,
+.dashboard-content input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* 6. Small Hints (Jaise "Cannot be changed", "LOCKED" etc.) */
+.form-hint,
+.profile-form small,
+.form-group small,
+.dashboard-content small {
+  color: var(--warm-text) !important; /* Amber/Gold color for warnings */
+  opacity: 1 !important;
+  font-weight: 500 !important;
+}
+
+/* 7. Fix Headings & Text Outside Forms (Dashboard Texts) */
+.profile-header-info h1,
+.dashboard-content h1,
+.dashboard-content h2,
+.dashboard-content h3,
+.dashboard-content h4,
+.dashboard-content h5 {
+  color: var(--text-primary) !important;
+}
+
+.profile-header-info p,
+.profile-meta,
+.profile-role,
+.dashboard-content p {
+  color: var(--text-secondary) !important;
+}
+
+/* 8. Avatar Background Fix (Make it Rose in light mode) */
+.profile-avatar-big {
+  background: linear-gradient(
+    135deg,
+    var(--accent),
+    var(--accent-dark)
+  ) !important;
+  color: var(--accent-contrast) !important;
+}
+/* ============================================================
+   🚨 ABSOLUTE GLOBAL FIX: ALL MEMBER & ADMIN PAGES
+   (Text, Inputs, Selects, Badges)
+   ============================================================ */
+
+/* 1. FORCE ALL TEXT TO BE READABLE IN LIGHT MODE */
+html:not([data-theme="dark"]) .dashboard-content h1,
+html:not([data-theme="dark"]) .dashboard-content h2,
+html:not([data-theme="dark"]) .dashboard-content h3,
+html:not([data-theme="dark"]) .dashboard-content h4,
+html:not([data-theme="dark"]) .dashboard-content h5,
+html:not([data-theme="dark"]) .dashboard-content h6,
+html:not([data-theme="dark"]) .dashboard-content p,
+html:not([data-theme="dark"]) .dashboard-content span:not(.badge):not(.icon),
+html:not([data-theme="dark"]) .dashboard-content label,
+html:not([data-theme="dark"]) .dashboard-content strong,
+html:not([data-theme="dark"]) .dashboard-content small,
+html:not([data-theme="dark"]) .dashboard-content th,
+html:not([data-theme="dark"]) .dashboard-content td,
+html:not([data-theme="dark"]) .dashboard-content .score-label,
+html:not([data-theme="dark"]) .dashboard-content .stat-label {
+  color: var(--text-primary) !important;
+}
+
+/* 2. MAKE SECONDARY TEXT SLIGHTLY LIGHTER (Readable but distinct) */
+html:not([data-theme="dark"]) .dashboard-content .score-subtitle,
+html:not([data-theme="dark"]) .dashboard-content .dash-stat-info p,
+html:not([data-theme="dark"]) .dashboard-content .form-hint,
+html:not([data-theme="dark"]) .dashboard-content .profile-meta,
+html:not([data-theme="dark"]) .dashboard-content .text-muted,
+html:not([data-theme="dark"]) .dashboard-content .user-uid,
+html:not([data-theme="dark"]) .dashboard-content .page-header-info p {
+  color: var(--text-secondary) !important;
+}
+
+/* 3. RESTORE WHITE TEXT ONLY FOR BUTTONS, AVATARS & BADGES */
+html:not([data-theme="dark"]) .dashboard-content .btn-primary,
+html:not([data-theme="dark"]) .dashboard-content .btn-login,
+html:not([data-theme="dark"]) .dashboard-content .user-avatar,
+html:not([data-theme="dark"]) .dashboard-content .member-avatar,
+html:not([data-theme="dark"]) .dashboard-content .badge,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-active,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-pending,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-inactive,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-overdue,
+html:not([data-theme="dark"]) .dashboard-content .sponsor-status,
+html:not([data-theme="dark"]) .dashboard-content .role-badge,
+html:not([data-theme="dark"]) .dashboard-content .uid-badge,
+html:not([data-theme="dark"]) .dashboard-content .btn-toggle-open,
+html:not([data-theme="dark"]) .dashboard-content .action-btn {
+  color: #ffffff !important;
+}
+
+/* 4. FORM INPUTS & TEXTAREAS (Values inside them) */
+html:not([data-theme="dark"]) .dashboard-content input,
+html:not([data-theme="dark"]) .dashboard-content textarea {
+  color: var(--text-primary) !important;
+  background-color: var(--card-bg) !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* 5. DISABLED INPUTS (CNIC, Date of Birth) */
+html:not([data-theme="dark"]) .dashboard-content input:disabled {
+  color: var(--text-muted) !important;
+  background-color: var(--card-bg-hover) !important;
+  opacity: 1 !important;
+}
+
+/* 6. SELECT DROPDOWNS (Male, O+, Status) & ARROW FIX */
+html:not([data-theme="dark"]) .dashboard-content select {
+  color: var(--text-primary) !important;
+  background-color: var(--card-bg) !important;
+  font-weight: 500 !important;
+  border: 1px solid var(--card-border) !important;
+  /* Custom dark arrow for light mode */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234c0519%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 15px center !important;
+  background-size: 12px !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  padding-right: 35px !important;
+}
+
+/* 7. DATE PICKER ICON (Calendar) */
+html:not([data-theme="dark"])
+  .dashboard-content
+  input::-webkit-calendar-picker-indicator {
+  filter: invert(0.2); /* Make calendar icon dark */
+}
+
+/* 8. FORM CARD HEADERS (Personal Information Box) */
+html:not([data-theme="dark"]) .dashboard-content .form-card-header {
+  background: var(--accent-soft) !important;
+  border-bottom: 1px solid var(--card-border) !important;
+  padding: 20px !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .form-card-header h3,
+html:not([data-theme="dark"]) .dashboard-content .form-card-header i {
+  color: var(--accent) !important;
+}
+/* ============================================================
+   💥 THE ULTIMATE WHITE-TEXT DESTROYER (GLOBAL FIX)
+   Forces ANY white text to become Dark Maroon in Light Mode.
+   ============================================================ */
+
+/* 1. HOMEPAGE & PUBLIC PAGES (Habibur Rahman & Others) */
+html:not([data-theme="dark"]) .glass-card h1,
+html:not([data-theme="dark"]) .glass-card h2,
+html:not([data-theme="dark"]) .glass-card h3,
+html:not([data-theme="dark"]) .glass-card h4,
+html:not([data-theme="dark"]) .glass-card p,
+html:not([data-theme="dark"]) .glass-card span:not(.badge):not(.icon),
+html:not([data-theme="dark"]) .member-name,
+html:not([data-theme="dark"]) .motm-name,
+html:not([data-theme="dark"]) .hero-content h2,
+html:not([data-theme="dark"]) .hero-content p,
+html:not([data-theme="dark"]) .section-title,
+html:not([data-theme="dark"]) .section-subtitle,
+html:not([data-theme="dark"]) .feature-item span,
+html:not([data-theme="dark"]) .feature-item p {
+  color: var(--text-primary) !important;
+}
+
+/* 2. PROFILE PAGE TABS (Contact, Education, etc.) */
+html:not([data-theme="dark"]) .profile-tabs button,
+html:not([data-theme="dark"]) .profile-tabs .tab-btn,
+html:not([data-theme="dark"]) .tabs-container button,
+html:not([data-theme="dark"]) .settings-tabs button,
+html:not([data-theme="dark"]) .profile-tab-btn {
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+}
+
+/* Active Tab ko Accent Color do */
+html:not([data-theme="dark"]) .profile-tabs button.active,
+html:not([data-theme="dark"]) .profile-tabs .tab-btn.active,
+html:not([data-theme="dark"]) .tabs-container button.active,
+html:not([data-theme="dark"]) .settings-tabs button.active,
+html:not([data-theme="dark"]) .profile-tab-btn.active {
+  color: var(--accent-contrast) !important;
+  background: var(--accent) !important;
+}
+
+/* 3. DASHBOARD & ADMIN (My Badges, Headers) */
+html:not([data-theme="dark"]) .dashboard-content .content-card h1,
+html:not([data-theme="dark"]) .dashboard-content .content-card h2,
+html:not([data-theme="dark"]) .dashboard-content .content-card h3,
+html:not([data-theme="dark"]) .dashboard-content .content-card h4,
+html:not([data-theme="dark"]) .dashboard-content .card-header h3,
+html:not([data-theme="dark"]) .dashboard-content .welcome-text h1,
+html:not([data-theme="dark"]) .dashboard-content .welcome-text p {
+  color: var(--text-primary) !important;
+}
+
+/* 4. THE SAFETY NET (Catch-all for any remaining white text) */
+/* Agar koi text abhi bhi white hai jo button/badge nahi hai, toh usko maroon karo */
+html:not([data-theme="dark"])
+  .dashboard-content
+  span:not(.badge):not(.user-avatar):not(.nav-icon),
+html:not([data-theme="dark"]) .dashboard-content p,
+html:not([data-theme="dark"])
+  .dashboard-content
+  div:not(.btn-primary):not(.user-avatar):not(.badge) {
+  /* Sirf unko target karega jinki color explicitly white ho */
+  color: var(--text-primary) !important;
+}
+
+/* 5. EXCEPTIONS (Inko bilkul touch nahi karna, ye white hi rehne chahiye) */
+html:not([data-theme="dark"]) .btn-primary,
+html:not([data-theme="dark"]) .btn-login,
+html:not([data-theme="dark"]) .btn-toggle-open,
+html:not([data-theme="dark"]) .user-avatar,
+html:not([data-theme="dark"]) .member-avatar,
+html:not([data-theme="dark"]) .app-avatar,
+html:not([data-theme="dark"]) .badge,
+html:not([data-theme="dark"]) .status-badge-active,
+html:not([data-theme="dark"]) .status-badge-pending,
+html:not([data-theme="dark"]) .status-badge-inactive,
+html:not([data-theme="dark"]) .status-badge-overdue,
+html:not([data-theme="dark"]) .role-badge,
+html:not([data-theme="dark"]) .uid-badge,
+html:not([data-theme="dark"]) .score-value,
+html:not([data-theme="dark"]) .action-btn,
+html:not([data-theme="dark"]) .icon,
+html:not([data-theme="dark"]) .save-bar-message {
+  color: #ffffff !important;
+}
+
+/* 6. DARK MODE EXCEPTIONS (Profile Tabs dark mode mein white hi rahein) */
+html[data-theme="dark"] .profile-tabs button,
+html[data-theme="dark"] .profile-tabs .tab-btn {
+  color: var(--text-secondary) !important;
+}
+html[data-theme="dark"] .profile-tabs button.active,
+html[data-theme="dark"] .profile-tabs .tab-btn.active {
+  color: var(--accent-contrast) !important;
+  background: var(--accent) !important;
+}
+/* ============================================================
+   💣 ULTIMATE INLINE STYLE DESTROYER (For Remaining White Text)
+   ============================================================ */
+
+/* Light Mode: Pakdo har us element ko jiski inline style white hai */
+html:not([data-theme="dark"]) [style*="color: white"],
+html:not([data-theme="dark"]) [style*="color: #fff"],
+html:not([data-theme="dark"]) [style*="color: #ffffff"],
+html:not([data-theme="dark"]) [style*="color: rgba(255"] {
+  color: var(--text-primary) !important;
+}
+
+/* Profile Page ke Tabs (Contact, Education) agar phir bhi white hain */
+html:not([data-theme="dark"]) .profile-tab,
+html:not([data-theme="dark"]) .tab-button,
+html:not([data-theme="dark"]) .nav-tabs button {
+  color: var(--text-secondary) !important;
+}
+
+/* Agar tab active hai, toh usko Accent color do (Green/Teal) */
+html:not([data-theme="dark"]) .profile-tab.active,
+html:not([data-theme="dark"]) .tab-button.active,
+html:not([data-theme="dark"]) .nav-tabs button.active {
+  color: var(--accent-contrast) !important;
+  background: var(--accent) !important;
+}
+
+/* Homepage ke naam ko force karo dark karne ke liye */
+html:not([data-theme="dark"]) h2,
+html:not([data-theme="dark"]) h3 {
+  color: var(--text-primary) !important;
+}
+/* ============================================================
+   🔐 AUTH PAGES FINAL FIX (Login / Register / Password Labels)
+   ============================================================ */
+
+/* 1. Light Mode mein har label, text, aur span ko dark karo */
+html:not([data-theme="dark"]) .auth-section,
+html:not([data-theme="dark"]) .auth-section * {
+  color: var(--text-primary) !important;
+}
+
+/* 2. Jo cheezein Accent (Teal/Rose) color ki honi chahiye */
+html:not([data-theme="dark"]) .auth-section a,
+html:not([data-theme="dark"]) .auth-section .forgot-link,
+html:not([data-theme="dark"]) .auth-section .register-note a,
+html:not([data-theme="dark"]) .auth-section .welcome-logo,
+html:not([data-theme="dark"]) .auth-section .info-title {
+  color: var(--accent) !important;
+}
+
+/* 3. Buttons ka Text (Login button par white, baaki buttons par Accent) */
+html:not([data-theme="dark"]) .auth-section .btn-primary,
+html:not([data-theme="dark"]) .auth-section button[type="submit"] {
+  color: var(--accent-contrast) !important; /* White text on Teal button */
+}
+
+/* "Join Us" ya "Back" jaise secondary buttons */
+html:not([data-theme="dark"]) .auth-section .btn-secondary {
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  background: transparent !important;
+}
+
+/* 4. Divider ("OR" wali line) */
+html:not([data-theme="dark"]) .auth-section .divider span {
+  color: var(--text-muted) !important;
+}
+html:not([data-theme="dark"]) .auth-section .divider::before,
+html:not([data-theme="dark"]) .auth-section .divider::after {
+  background: var(--card-border) !important;
+}
+
+/* 5. Form Inputs (Email, Password) */
+html:not([data-theme="dark"]) .auth-section input {
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--input-border) !important;
+}
+
+/* 6. Dark Mode mein sab wapas white ho jaye */
+html[data-theme="dark"] .auth-section,
+html[data-theme="dark"] .auth-section * {
+  color: var(--text-primary) !important;
+}
