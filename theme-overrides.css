@@ -2002,3 +2002,88 @@ html[data-theme="dark"] .auth-section,
 html[data-theme="dark"] .auth-section * {
   color: var(--text-primary) !important;
 }
+/* ============================================================
+   🎯 MEMBERSHIP & BENEFITS CARDS FINAL FIX
+   ============================================================ */
+
+/* 1. Benefit Cards ke Text ko Dark Maroon karo */
+html:not([data-theme="dark"]) .benefit-card h3,
+html:not([data-theme="dark"]) .benefit-card h4,
+html:not([data-theme="dark"]) .benefit-card p,
+html:not([data-theme="dark"]) .benefits-grid h3,
+html:not([data-theme="dark"]) .benefits-grid p {
+  color: var(--text-primary) !important;
+}
+
+/* 2. "Fill the form below" wale subtitle ko theek karo */
+html:not([data-theme="dark"]) .intro-block p,
+html:not([data-theme="dark"]) .form-intro,
+html:not([data-theme="dark"]) .section-subtitle {
+  color: var(--text-secondary) !important;
+}
+
+/* 3. "Note" wale box ka text dark karo */
+html:not([data-theme="dark"]) .info-box,
+html:not([data-theme="dark"]) .info-box p,
+html:not([data-theme="dark"]) .info-box .info-text,
+html:not([data-theme="dark"]) .info-box strong {
+  color: var(--text-primary) !important;
+}
+
+/* 4. "Create Your Account" ki heading (Agar wo bhi white ho) */
+html:not([data-theme="dark"]) .apply-block h2 {
+  color: var(--text-primary) !important;
+}
+/* ============================================================
+   🎯 MEMBERSHIP PAGE ULTIMATE FORCE FIX
+   (Targets: Benefit Cards, Note Box, Terms Text, Login Link)
+   ============================================================ */
+
+/* 1. 4 Benefit Cards (Training & Workshops, etc.) */
+html:not([data-theme="dark"]) .benefit-card h3,
+html:not([data-theme="dark"]) .benefit-card p,
+html:not([data-theme="dark"]) .benefits-grid h3,
+html:not([data-theme="dark"]) .benefits-grid p,
+html:not([data-theme="dark"]) .benefits-section .glass-card h3,
+html:not([data-theme="dark"]) .benefits-section .glass-card p {
+  color: var(--text-primary) !important;
+}
+
+/* 2. "Fill the form below to apply..." wali line */
+html:not([data-theme="dark"]) .form-intro,
+html:not([data-theme="dark"]) .apply-block p,
+html:not([data-theme="dark"]) .waitlist-block p {
+  color: var(--text-secondary) !important;
+}
+
+/* 3. "Note:" wala Box (Info Box) */
+html:not([data-theme="dark"]) .info-box,
+html:not([data-theme="dark"]) .info-box p,
+html:not([data-theme="dark"]) .info-box span,
+html:not([data-theme="dark"]) .info-box div {
+  color: var(--text-primary) !important;
+}
+html:not([data-theme="dark"]) .info-box strong {
+  color: var(--accent) !important;
+}
+
+/* 4. Terms & Conditions wala Checkbox Text */
+html:not([data-theme="dark"]) .checkbox-label,
+html:not([data-theme="dark"]) .checkbox-label span,
+html:not([data-theme="dark"]) .checkbox-group,
+html:not([data-theme="dark"]) .checkbox-group span {
+  color: var(--text-primary) !important;
+}
+html:not([data-theme="dark"]) .checkbox-label a {
+  color: var(--accent) !important;
+}
+
+/* 5. "Already have an account? Login Here" wala Text */
+html:not([data-theme="dark"]) .register-note,
+html:not([data-theme="dark"]) .register-note span,
+html:not([data-theme="dark"]) .login-link {
+  color: var(--text-primary) !important;
+}
+html:not([data-theme="dark"]) .register-note a {
+  color: var(--accent) !important;
+}
