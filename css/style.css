@@ -2662,25 +2662,26 @@ html:not([data-theme="dark"]) select option {
 /* ============================================================
    19. PRINT — WORKS FROM DARK MODE TOO
    ============================================================ */
+/* ============================================================
+   19. PRINT — WORKS FROM DARK MODE TOO
+   ============================================================ */
 @media print {
-  * {
-    color: #000 !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
+  /* Sirf page ka background aur text color reset karo */
   html,
   body {
     background: #fff !important;
+    color: #000 !important;
   }
+
+  /* Background effects (stars/nebula) hide karo */
   html::before,
   html::after,
   body::before,
   body::after {
     display: none !important;
   }
+
+  /* Navbar, Sidebar, Footer hide karo */
   .glass-header,
   .glass-footer,
   .dashboard-sidebar,
@@ -2689,9 +2690,11 @@ html:not([data-theme="dark"]) select option {
   .whatsapp-fab {
     display: none !important;
   }
+
   .dashboard-main {
-    margin-left: 0;
+    margin-left: 0 !important;
   }
+
   a,
   a:visited {
     color: #000 !important;
