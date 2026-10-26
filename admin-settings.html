@@ -14,35 +14,208 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      .settings-tabs { display: flex; gap: 8px; flex-wrap: wrap; padding: 8px; background: rgba(255, 255, 255, 0.04); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 25px; }
-      .settings-tab { padding: 11px 20px; background: transparent; border: none; color: rgba(255, 255, 255, 0.7); font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 500; border-radius: 10px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
-      .settings-tab.active { background: var(--accent); color: white; font-weight: 600; }
-      .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-      .settings-card { padding: 25px 28px; background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--card-border); border-radius: 16px; }
-      .settings-card.full { grid-column: 1/-1; }
-      .settings-card h3 { font-size: 16px; font-weight: 600; color: var(--accent); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--card-border); }
-      .form-group { margin-bottom: 18px; }
-      .form-group label { display: block; font-size: 13px; color: var(--text-primary); opacity: 0.9; margin-bottom: 8px; font-weight: 500; }
-      .form-group input, .form-group textarea { width: 100%; padding: 12px 15px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; color: var(--text-primary); font-family: "Poppins", sans-serif; font-size: 13px; outline: none; transition: 0.3s; }
-      .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); background: var(--input-focus-bg); }
-      .form-group textarea { resize: vertical; min-height: 80px; }
-      .toggle-row { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid var(--card-border); }
-      .toggle-row:last-child { border-bottom: none; }
-      .toggle-row h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
-      .toggle-row p { font-size: 11px; color: var(--text-secondary); }
-      .toggle { position: relative; display: inline-block; width: 48px; height: 26px; flex-shrink: 0; cursor: pointer; }
-      .toggle input { opacity: 0; width: 0; height: 0; }
-      .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--input-bg); transition: 0.3s; border-radius: 26px; border: 1px solid var(--input-border); }
-      .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: var(--text-secondary); transition: 0.3s; border-radius: 50%; }
-      .toggle input:checked + .toggle-slider { background: var(--accent-soft); border-color: var(--accent); }
-      .toggle input:checked + .toggle-slider:before { transform: translateX(22px); background: var(--accent); }
-      .btn-save { padding: 12px 30px; background: var(--accent); color: white; border: none; border-radius: 12px; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-      .btn-save:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
-      .save-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: none; align-items: center; gap: 20px; padding: 15px 25px; background: var(--bg-base); backdrop-filter: blur(15px); border: 1px solid var(--warm); border-radius: 15px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5); z-index: 999; }
-      .save-bar.show { display: flex; }
-      .save-bar button { padding: 9px 20px; border-radius: 10px; font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid transparent; }
-      .btn-discard { background: var(--input-bg); color: var(--text-primary); border-color: var(--input-border); }
-      .btn-save-bar { background: var(--accent); color: white; }
+      .settings-tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        margin-bottom: 25px;
+      }
+      .settings-tab {
+        padding: 11px 20px;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+        white-space: nowrap;
+      }
+      .settings-tab.active {
+        background: var(--accent);
+        color: white;
+        font-weight: 600;
+      }
+      .settings-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+      }
+      .settings-card {
+        padding: 25px 28px;
+        background: var(--card-bg);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+      }
+      .settings-card.full {
+        grid-column: 1/-1;
+      }
+      .settings-card h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--card-border);
+      }
+      .form-group {
+        margin-bottom: 18px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        color: var(--text-primary);
+        opacity: 0.9;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        outline: none;
+        transition: 0.3s;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: var(--accent);
+        background: var(--input-focus-bg);
+      }
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .toggle-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--card-border);
+      }
+      .toggle-row:last-child {
+        border-bottom: none;
+      }
+      .toggle-row h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 3px;
+      }
+      .toggle-row p {
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .toggle {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 26px;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+      .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--input-bg);
+        transition: 0.3s;
+        border-radius: 26px;
+        border: 1px solid var(--input-border);
+      }
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background: var(--text-secondary);
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+      .toggle input:checked + .toggle-slider {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+      }
+      .toggle input:checked + .toggle-slider:before {
+        transform: translateX(22px);
+        background: var(--accent);
+      }
+      .btn-save {
+        padding: 12px 30px;
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px var(--accent-glow);
+      }
+      .save-bar {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: none;
+        align-items: center;
+        gap: 20px;
+        padding: 15px 25px;
+        background: var(--bg-base);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--warm);
+        border-radius: 15px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+      .save-bar.show {
+        display: flex;
+      }
+      .save-bar button {
+        padding: 9px 20px;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid transparent;
+      }
+      .btn-discard {
+        background: var(--input-bg);
+        color: var(--text-primary);
+        border-color: var(--input-border);
+      }
+      .btn-save-bar {
+        background: var(--accent);
+        color: white;
+      }
     </style>
   </head>
   <body class="dashboard-body admin-body">
@@ -226,10 +399,7 @@
           <button class="settings-tab" data-tab="membership">
             👥 Membership
           </button>
-
-          <!-- NAYA TAB: SECTION CONTROLS -->
           <button class="settings-tab" data-tab="sections">🎛️ Sections</button>
-
           <button class="settings-tab" data-tab="advanced">🔧 Advanced</button>
         </div>
 
@@ -239,29 +409,17 @@
             <h3>🏠 Website Information</h3>
             <div class="form-group">
               <label>Website Name</label
-              ><input
-                type="text"
-                id="setSiteName"
-                value="Swat Youth Development Forum"
-              />
+              ><input type="text" id="setSiteName" />
             </div>
             <div class="form-group">
               <label>Short Name</label
-              ><input type="text" id="setSiteShort" value="SYDF" />
+              ><input type="text" id="setSiteShort" />
             </div>
             <div class="form-group">
-              <label>Tagline</label
-              ><input
-                type="text"
-                id="setTagline"
-                value="Empowering Youth, Building Future"
-              />
+              <label>Tagline</label><input type="text" id="setTagline" />
             </div>
             <div class="form-group">
-              <label>Description</label
-              ><textarea id="setDescription">
-A non-profit organization dedicated to empowering the youth of Swat and beyond.</textarea
-              >
+              <label>Description</label><textarea id="setDescription"></textarea>
             </div>
           </div>
           <div class="settings-card full">
@@ -302,97 +460,40 @@ A non-profit organization dedicated to empowering the youth of Swat and beyond.<
           </div>
         </div>
 
-        <!-- SECTIONS TAB (NEW) -->
+        <!-- SECTIONS TAB -->
         <div class="settings-grid" id="tab-sections" style="display: none">
           <div class="settings-card full">
             <h3>🎛️ Public Website Sections</h3>
-            <p
-              style="
-                color: var(--text-secondary);
-                font-size: 13px;
-                margin-bottom: 20px;
-              "
-            >
-              Toggle switches to open or close sections of the public website
-              instantly.
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">
+              Toggle switches to open or close sections of the public website instantly.
             </p>
-
             <div class="toggle-row">
-              <div>
-                <h4>Activities</h4>
-                <p>Show/hide the Activities page and menu link</p>
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="setSecActivities" checked /><span
-                  class="toggle-slider"
-                ></span
-              ></label>
+              <div><h4>Activities</h4><p>Show/hide the Activities page and menu link</p></div>
+              <label class="toggle"><input type="checkbox" id="setSecActivities" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div>
-                <h4>News & Blog</h4>
-                <p>Show/hide the News page and menu link</p>
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="setSecNews" checked /><span
-                  class="toggle-slider"
-                ></span
-              ></label>
+              <div><h4>News & Blog</h4><p>Show/hide the News page and menu link</p></div>
+              <label class="toggle"><input type="checkbox" id="setSecNews" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div>
-                <h4>Gallery</h4>
-                <p>Show/hide the Gallery page and menu link</p>
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="setSecGallery" checked /><span
-                  class="toggle-slider"
-                ></span
-              ></label>
+              <div><h4>Gallery</h4><p>Show/hide the Gallery page and menu link</p></div>
+              <label class="toggle"><input type="checkbox" id="setSecGallery" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div>
-                <h4>Donate</h4>
-                <p>Show/hide the Donate page and menu link</p>
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="setSecDonate" checked /><span
-                  class="toggle-slider"
-                ></span
-              ></label>
+              <div><h4>Donate</h4><p>Show/hide the Donate page and menu link</p></div>
+              <label class="toggle"><input type="checkbox" id="setSecDonate" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div>
-                <h4>Events Calendar</h4>
-                <p>Show/hide the Events page and menu link</p>
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="setSecEvents" checked /><span
-                  class="toggle-slider"
-                ></span
-              ></label>
+              <div><h4>Events Calendar</h4><p>Show/hide the Events page and menu link</p></div>
+              <label class="toggle"><input type="checkbox" id="setSecEvents" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div>
-                <h4>Leadership</h4>
-                <p>Show/hide the Leadership page and menu link</p>
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="setSecLeadership" checked /><span
-                  class="toggle-slider"
-                ></span
-              ></label>
+              <div><h4>Leadership</h4><p>Show/hide the Leadership page and menu link</p></div>
+              <label class="toggle"><input type="checkbox" id="setSecLeadership" checked /><span class="toggle-slider"></span></label>
             </div>
             <div class="toggle-row">
-              <div>
-                <h4>Contact Us</h4>
-                <p>Show/hide the Contact page and menu link</p>
-              </div>
-              <label class="toggle"
-                ><input type="checkbox" id="setSecContact" checked /><span
-                  class="toggle-slider"
-                ></span
-              ></label>
+              <div><h4>Contact Us</h4><p>Show/hide the Contact page and menu link</p></div>
+              <label class="toggle"><input type="checkbox" id="setSecContact" checked /><span class="toggle-slider"></span></label>
             </div>
           </div>
         </div>
@@ -402,32 +503,19 @@ A non-profit organization dedicated to empowering the youth of Swat and beyond.<
           <div class="settings-card full">
             <h3>📞 Contact Information</h3>
             <div class="form-group">
-              <label>Primary Email</label
-              ><input type="email" id="setEmail" value="info@sydf.org" />
+              <label>Primary Email</label><input type="email" id="setEmail" />
             </div>
             <div class="form-group">
-              <label>Support Email</label
-              ><input
-                type="email"
-                id="setSupportEmail"
-                value="support@sydf.org"
-              />
+              <label>Support Email</label><input type="email" id="setSupportEmail" />
             </div>
             <div class="form-group">
-              <label>Primary Phone</label
-              ><input type="tel" id="setPhone" value="+92 300 1234567" />
+              <label>Primary Phone</label><input type="tel" id="setPhone" />
             </div>
             <div class="form-group">
-              <label>WhatsApp</label
-              ><input type="tel" id="setWhatsapp" value="+92 300 1234567" />
+              <label>WhatsApp</label><input type="tel" id="setWhatsapp" />
             </div>
             <div class="form-group">
-              <label>Address</label
-              ><input
-                type="text"
-                id="setAddress"
-                value="Mingora, Swat, Khyber Pakhtunkhwa"
-              />
+              <label>Address</label><input type="text" id="setAddress" />
             </div>
           </div>
         </div>
@@ -437,44 +525,19 @@ A non-profit organization dedicated to empowering the youth of Swat and beyond.<
           <div class="settings-card full">
             <h3>🌐 Social Media Links</h3>
             <div class="form-group">
-              <label>Facebook URL</label
-              ><input
-                type="url"
-                id="setFacebook"
-                placeholder="https://facebook.com/yourpage"
-              />
+              <label>Facebook URL</label><input type="url" id="setFacebook" placeholder="https://facebook.com/yourpage" />
             </div>
             <div class="form-group">
-              <label>Instagram URL</label
-              ><input
-                type="url"
-                id="setInstagram"
-                placeholder="https://instagram.com/yourhandle"
-              />
+              <label>Instagram URL</label><input type="url" id="setInstagram" placeholder="https://instagram.com/yourhandle" />
             </div>
             <div class="form-group">
-              <label>YouTube URL</label
-              ><input
-                type="url"
-                id="setYoutube"
-                placeholder="https://youtube.com/@yourchannel"
-              />
+              <label>YouTube URL</label><input type="url" id="setYoutube" placeholder="https://youtube.com/@yourchannel" />
             </div>
             <div class="form-group">
-              <label>WhatsApp</label
-              ><input
-                type="url"
-                id="setWhatsappLink"
-                placeholder="https://wa.me/923001234567"
-              />
+              <label>WhatsApp Link</label><input type="url" id="setWhatsappLink" placeholder="https://wa.me/923001234567" />
             </div>
             <div class="form-group">
-              <label>Twitter/X URL</label
-              ><input
-                type="url"
-                id="setTwitter"
-                placeholder="https://twitter.com/yourhandle"
-              />
+              <label>Twitter/X URL</label><input type="url" id="setTwitter" placeholder="https://twitter.com/yourhandle" />
             </div>
           </div>
         </div>
@@ -484,24 +547,19 @@ A non-profit organization dedicated to empowering the youth of Swat and beyond.<
           <div class="settings-card full">
             <h3>💳 Payment Methods</h3>
             <div class="form-group">
-              <label>JazzCash Account</label
-              ><input type="text" id="setJazzcash" value="0300-1234567" />
+              <label>JazzCash Account</label><input type="text" id="setJazzcash" placeholder="e.g. 0300-1234567" />
             </div>
             <div class="form-group">
-              <label>EasyPaisa Account</label
-              ><input type="text" id="setEasypaisa" value="0301-2345678" />
+              <label>EasyPaisa Account</label><input type="text" id="setEasypaisa" placeholder="e.g. 0301-2345678" />
             </div>
             <div class="form-group">
-              <label>Bank Name</label
-              ><input type="text" id="setBankName" value="HBL" />
+              <label>Bank Name</label><input type="text" id="setBankName" placeholder="e.g. HBL" />
             </div>
             <div class="form-group">
-              <label>Bank Account</label
-              ><input type="text" id="setBankAccount" value="1234-5678-9012" />
+              <label>Bank Account</label><input type="text" id="setBankAccount" placeholder="e.g. 1234-5678-9012" />
             </div>
             <div class="form-group">
-              <label>Account Title</label
-              ><input type="text" id="setAccountTitle" value="SYDF" />
+              <label>Account Title</label><input type="text" id="setAccountTitle" placeholder="e.g. SYDF" />
             </div>
           </div>
         </div>
@@ -522,22 +580,15 @@ A non-profit organization dedicated to empowering the youth of Swat and beyond.<
               ></label>
             </div>
             <div class="form-group" style="margin-top: 15px">
-              <label>Membership Fee (Monthly Rs.)</label
-              ><input type="number" id="setMembershipFee" value="300" />
+              <label>Membership Fee (Monthly Rs.)</label><input type="number" id="setMembershipFee" />
             </div>
-            
-            <!-- YEH NAYA FIELD HAI ELECTION FEE KE LIYE -->
             <div class="form-group" style="margin-top: 15px">
               <label>Election Nomination Fee (Rs.)</label>
-              <input type="number" id="setElectionFee" value="0" />
+              <input type="number" id="setElectionFee" />
               <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Set to 0 if nominations are free.</p>
             </div>
-
             <div class="form-group">
-              <label>Closed Message</label
-              ><textarea id="setClosedMessage">
-Membership is currently closed. Please check back later.</textarea
-              >
+              <label>Closed Message</label><textarea id="setClosedMessage"></textarea>
             </div>
           </div>
         </div>
@@ -547,51 +598,23 @@ Membership is currently closed. Please check back later.</textarea
           <div class="settings-card full">
             <h3>🔧 System Info</h3>
             <div class="toggle-row">
-              <div>
-                <h4>Total Members</h4>
-                <p>Currently registered</p>
-              </div>
-              <span
-                id="infoMembers"
-                style="color: var(--accent); font-weight: 700"
-                >-</span
-              >
+              <div><h4>Total Members</h4><p>Currently registered</p></div>
+              <span id="infoMembers" style="color: var(--accent); font-weight: 700">-</span>
             </div>
             <div class="toggle-row">
-              <div>
-                <h4>Total Payments</h4>
-                <p>All time</p>
-              </div>
-              <span id="infoPayments" style="color: #3b82f6; font-weight: 700"
-                >-</span
-              >
+              <div><h4>Total Payments</h4><p>All time</p></div>
+              <span id="infoPayments" style="color: #3b82f6; font-weight: 700">-</span>
             </div>
             <div class="toggle-row">
-              <div>
-                <h4>Database</h4>
-                <p>Supabase PostgreSQL</p>
-              </div>
-              <span style="color: var(--accent); font-weight: 700"
-                >✅ Connected</span
-              >
-            </div>
-            <div class="toggle-row">
-              <div>
-                <h4>Storage</h4>
-                <p>3 buckets active</p>
-              </div>
-              <span style="color: var(--accent); font-weight: 700"
-                >✅ Active</span
-              >
+              <div><h4>Database</h4><p>Supabase PostgreSQL</p></div>
+              <span style="color: var(--accent); font-weight: 700">✅ Connected</span>
             </div>
           </div>
         </div>
 
         <!-- SAVE BAR -->
         <div class="save-bar" id="saveBar">
-          <span style="color: var(--warm); font-weight: 500; font-size: 13px"
-            >⚠️ You have unsaved changes</span
-          >
+          <span style="color: var(--warm); font-weight: 500; font-size: 13px">⚠️ You have unsaved changes</span>
           <button class="btn-discard" id="discardBtn">Discard</button>
           <button class="btn-save-bar" id="saveBarBtn">💾 Save Now</button>
         </div>
@@ -674,12 +697,8 @@ Membership is currently closed. Please check back later.</textarea
           }
         });
 
-        document
-          .getElementById("saveAllBtn")
-          .addEventListener("click", saveAllSettings);
-        document
-          .getElementById("saveBarBtn")
-          .addEventListener("click", saveAllSettings);
+        document.getElementById("saveAllBtn").addEventListener("click", saveAllSettings);
+        document.getElementById("saveBarBtn").addEventListener("click", saveAllSettings);
 
         document.getElementById("discardBtn").addEventListener("click", () => {
           window.syfConfirm("Discard all unsaved changes?", (confirmed) => {
@@ -693,8 +712,13 @@ Membership is currently closed. Please check back later.</textarea
       }
 
       async function loadSettings() {
-        const { data } = await supabaseClient.from("settings").select("*");
+        const { data, error } = await supabaseClient.from("settings").select("*");
+        if (error) {
+            console.error("Error loading settings:", error);
+            return;
+        }
         if (!data) return;
+        
         const map = {};
         data.forEach((s) => (map[s.key] = s.value));
         originalSettings = { ...map };
@@ -720,7 +744,7 @@ Membership is currently closed. Please check back later.</textarea
         if (map.bank_account) document.getElementById("setBankAccount").value = map.bank_account;
         if (map.account_title) document.getElementById("setAccountTitle").value = map.account_title;
         if (map.membership_fee) document.getElementById("setMembershipFee").value = map.membership_fee;
-        if (map.election_fee) document.getElementById("setElectionFee").value = map.election_fee; // Election Fee Load
+        if (map.election_fee) document.getElementById("setElectionFee").value = map.election_fee;
         if (map.closed_message) document.getElementById("setClosedMessage").value = map.closed_message;
 
         // Toggles
@@ -767,7 +791,7 @@ Membership is currently closed. Please check back later.</textarea
           { key: "bank_account", value: document.getElementById("setBankAccount").value },
           { key: "account_title", value: document.getElementById("setAccountTitle").value },
           { key: "membership_fee", value: document.getElementById("setMembershipFee").value },
-          { key: "election_fee", value: document.getElementById("setElectionFee").value || "0" }, // Election Fee Save
+          { key: "election_fee", value: document.getElementById("setElectionFee").value || "0" },
           { key: "closed_message", value: document.getElementById("setClosedMessage").value },
           { key: "registration_open", value: document.getElementById("setRegistration").checked ? "true" : "false" },
           { key: "membership_open", value: document.getElementById("setMembershipOpen").checked ? "true" : "false" },
@@ -795,23 +819,36 @@ Membership is currently closed. Please check back later.</textarea
           }
         });
 
+        const btn = document.getElementById("saveAllBtn");
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = "⏳ Saving...";
+
         try {
           for (const u of updates) {
-            await supabaseClient
-              .from("settings")
-              .upsert(
-                {
-                  key: u.key,
-                  value: u.value,
-                  updated_at: new Date().toISOString(),
-                },
-                { onConflict: "key" },
-              );
+            // Yahan error check karna zaroori hai
+            const { error } = await supabaseClient.from("settings").upsert(
+              {
+                key: u.key,
+                value: u.value,
+                updated_at: new Date().toISOString(),
+              },
+              { onConflict: "key" },
+            );
+
+            if (error) {
+              console.error(`Error saving ${u.key}:`, error);
+              throw new Error(`Failed to save ${u.key}. Check Database Permissions (RLS).`);
+            }
           }
           window.syfSuccess("All settings saved successfully!");
           document.getElementById("saveBar").classList.remove("show");
         } catch (err) {
-          window.syfError("Error: " + err.message);
+          console.error(err);
+          window.syfError("❌ " + err.message);
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
         }
       }
     </script>
