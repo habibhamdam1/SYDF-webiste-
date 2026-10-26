@@ -1,5 +1,5 @@
 /* ============================================================
-   SYDF — THEME OVERRIDES (BRIDGE FILE)
+   SYDF — THEME OVERRIDES (COMPLETE & FINAL VERSION)
    ============================================================ */
 
 /* 1. DASHBOARD BODY BACKGROUND */
@@ -216,14 +216,19 @@ html:not([data-theme="dark"]) .filter-select option {
 
 /* 7. TOPBAR & SIDEBAR */
 .dashboard-topbar {
+  z-index: 9999 !important;
   background: var(--header-bg) !important;
   border-bottom-color: var(--card-border) !important;
   backdrop-filter: blur(20px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
 }
 .dashboard-sidebar {
   background: var(--header-bg) !important;
   border-right-color: var(--card-border) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+  z-index: 1000 !important;
 }
 .sidebar-header {
   border-bottom-color: var(--card-border) !important;
@@ -274,6 +279,9 @@ html:not([data-theme="dark"]) .filter-select option {
 .logout-btn:hover {
   background: rgba(239, 68, 68, 0.18) !important;
 }
+.sidebar-divider {
+  background: var(--card-border) !important;
+}
 
 /* 8. TABLES */
 .data-table thead {
@@ -285,6 +293,7 @@ html:not([data-theme="dark"]) .filter-select option {
 }
 .data-table tbody tr {
   border-bottom-color: var(--card-border) !important;
+  background: transparent !important;
 }
 .data-table tbody tr:hover {
   background: var(--accent-soft) !important;
@@ -355,11 +364,7 @@ html:not([data-theme="dark"]) .filter-select option {
 
 /* 10. WELCOME CARD & PROGRESS */
 .welcome-card {
-  background: linear-gradient(
-    135deg,
-    var(--accent-soft),
-    var(--card-bg)
-  ) !important;
+  background: linear-gradient(135deg, var(--accent-soft), var(--card-bg)) !important;
   border-color: var(--card-border) !important;
 }
 .welcome-badge {
@@ -520,50 +525,28 @@ html:not([data-theme="dark"]) .filter-select option {
   border-color: var(--card-border) !important;
   box-shadow: var(--card-shadow-hover) !important;
 }
-.syf-toast-title {
-  color: var(--text-primary) !important;
-}
-.syf-toast.success .syf-toast-title {
-  color: var(--success) !important;
-}
-.syf-toast.error .syf-toast-title {
-  color: var(--error) !important;
-}
-.syf-toast.warning .syf-toast-title {
-  color: var(--warm-text) !important;
-}
-.syf-toast.info .syf-toast-title {
-  color: var(--accent) !important;
-}
-.syf-toast-message {
-  color: var(--text-secondary) !important;
-}
-.syf-toast-close {
-  color: var(--text-muted) !important;
-}
-.syf-toast-close:hover {
-  color: var(--text-primary) !important;
-}
+.syf-toast-title { color: var(--text-primary) !important; }
+.syf-toast.success .syf-toast-title { color: var(--success) !important; }
+.syf-toast.error .syf-toast-title { color: var(--error) !important; }
+.syf-toast.warning .syf-toast-title { color: var(--warm-text) !important; }
+.syf-toast.info .syf-toast-title { color: var(--accent) !important; }
+.syf-toast-message { color: var(--text-secondary) !important; }
+.syf-toast-close { color: var(--text-muted) !important; }
+.syf-toast-close:hover { color: var(--text-primary) !important; }
 .syf-confirm {
   background: var(--card-bg) !important;
   color: var(--text-primary) !important;
   border-color: var(--card-border-hover) !important;
   box-shadow: var(--card-shadow-hover) !important;
 }
-.syf-confirm-title {
-  color: var(--text-primary) !important;
-}
-.syf-confirm-message {
-  color: var(--text-secondary) !important;
-}
+.syf-confirm-title { color: var(--text-primary) !important; }
+.syf-confirm-message { color: var(--text-secondary) !important; }
 .syf-confirm-btn.cancel {
   background: var(--card-bg-hover) !important;
   color: var(--text-primary) !important;
   border-color: var(--card-border) !important;
 }
-.syf-confirm-btn.cancel:hover {
-  background: var(--accent-soft) !important;
-}
+.syf-confirm-btn.cancel:hover { background: var(--accent-soft) !important; }
 
 /* 17. PAGE HERO */
 .page-hero-content {
@@ -571,896 +554,293 @@ html:not([data-theme="dark"]) .filter-select option {
   border-color: var(--card-border) !important;
   box-shadow: var(--card-shadow) !important;
 }
-.page-hero-content h1 {
-  color: var(--accent) !important;
-}
-.page-hero-content p {
-  color: var(--text-secondary) !important;
-}
+.page-hero-content h1 { color: var(--accent) !important; }
+.page-hero-content p { color: var(--text-secondary) !important; }
 
 /* 18. STATUS BADGES */
-.activity-status-badge.ongoing {
-  color: #1c1917 !important;
-}
-.activity-status-badge.upcoming {
-  color: #ffffff !important;
-}
-.activity-status-badge.completed {
-  color: #ffffff !important;
-}
+.activity-status-badge.ongoing { color: #1c1917 !important; }
+.activity-status-badge.upcoming { color: #ffffff !important; }
+.activity-status-badge.completed { color: #ffffff !important; }
 
 /* 19. AUTH PAGES */
-.auth-form-block h2,
-.register-form-block h2,
-.welcome-content h1 {
-  color: var(--text-primary) !important;
-}
-.form-subtitle,
-.welcome-content > p,
-.welcome-note,
-.form-note,
-.admin-note,
-.register-note {
-  color: var(--text-secondary) !important;
-}
-.forgot-link,
-.register-note a,
-.admin-note a {
-  color: var(--accent) !important;
-}
-.info-title {
-  color: var(--accent) !important;
-}
-.info-text {
-  color: var(--text-secondary) !important;
-}
-.info-box {
-  background: var(--accent-soft) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.divider::before,
-.divider::after {
-  background: var(--card-border) !important;
-}
+.auth-form-block h2, .register-form-block h2, .welcome-content h1 { color: var(--text-primary) !important; }
+.form-subtitle, .welcome-content > p, .welcome-note, .form-note, .admin-note, .register-note { color: var(--text-secondary) !important; }
+.forgot-link, .register-note a, .admin-note a { color: var(--accent) !important; }
+.info-title { color: var(--accent) !important; }
+.info-text { color: var(--text-secondary) !important; }
+.info-box { background: var(--accent-soft) !important; border-color: var(--card-border-hover) !important; }
+.divider::before, .divider::after { background: var(--card-border) !important; }
+html:not([data-theme="dark"]) .auth-section, html:not([data-theme="dark"]) .auth-section * { color: var(--text-primary) !important; }
+html:not([data-theme="dark"]) .auth-section a, html:not([data-theme="dark"]) .auth-section .forgot-link, html:not([data-theme="dark"]) .auth-section .register-note a, html:not([data-theme="dark"]) .auth-section .welcome-logo, html:not([data-theme="dark"]) .auth-section .info-title { color: var(--accent) !important; }
+html:not([data-theme="dark"]) .auth-section .btn-primary, html:not([data-theme="dark"]) .auth-section button[type="submit"] { color: var(--accent-contrast) !important; }
+html:not([data-theme="dark"]) .auth-section .btn-secondary { color: var(--accent) !important; border-color: var(--accent) !important; background: transparent !important; }
+html:not([data-theme="dark"]) .auth-section .divider span { color: var(--text-muted) !important; }
+html:not([data-theme="dark"]) .auth-section .divider::before, html:not([data-theme="dark"]) .auth-section .divider::after { background: var(--card-border) !important; }
+html:not([data-theme="dark"]) .auth-section input { background-color: var(--input-bg) !important; color: var(--text-primary) !important; border: 1px solid var(--input-border) !important; }
+html[data-theme="dark"] .auth-section, html[data-theme="dark"] .auth-section * { color: var(--text-primary) !important; }
 
 /* 20. MEMBERSHIP / FEE BLOCK */
-.currency,
-.fee-amount .currency,
-.period {
-  color: var(--accent) !important;
-}
-.amount {
-  color: var(--text-primary) !important;
-}
-.fee-desc,
-.status-badge {
-  color: var(--text-secondary) !important;
-}
+.currency, .fee-amount .currency, .period { color: var(--accent) !important; }
+.amount { color: var(--text-primary) !important; }
+.fee-desc, .status-badge { color: var(--text-secondary) !important; }
+html:not([data-theme="dark"]) .benefit-mini h4, html:not([data-theme="dark"]) .benefit-mini p, html:not([data-theme="dark"]) .form-header p, html:not([data-theme="dark"]) .form-label, html:not([data-theme="dark"]) .checkbox-group, html:not([data-theme="dark"]) .form-footer, html:not([data-theme="dark"]) .info-notice .txt, html:not([data-theme="dark"]) .apply-block h2, html:not([data-theme="dark"]) .amount { color: var(--text-primary) !important; }
+html:not([data-theme="dark"]) .form-input, html:not([data-theme="dark"]) .form-select, html:not([data-theme="dark"]) .radio-option { color: var(--text-primary) !important; background-color: var(--input-bg) !important; border-color: var(--input-border) !important; }
+html:not([data-theme="dark"]) .form-input::placeholder { color: var(--text-muted) !important; }
+html:not([data-theme="dark"]) .form-select option { background-color: #ffffff !important; color: #4c0519 !important; }
+html:not([data-theme="dark"]) .benefit-mini, html:not([data-theme="dark"]) .form-container, html:not([data-theme="dark"]) .info-notice { background: rgba(255, 255, 255, 0.65) !important; border-color: var(--card-border) !important; }
+html:not([data-theme="dark"]) .toggle-pass { color: var(--text-secondary) !important; }
 
 /* 21. LEADERSHIP PAGE */
-.position-card h3 {
-  color: var(--text-primary) !important;
-}
-.position-card::before {
-  background: linear-gradient(
-    90deg,
-    var(--accent),
-    var(--accent-dark)
-  ) !important;
-}
-.position-card.featured {
-  background: var(--accent-soft) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.position-card.featured-female {
-  background: var(--female-soft) !important;
-  border-color: var(--female-border) !important;
-}
-.position-card.featured-female::before {
-  background: linear-gradient(
-    90deg,
-    var(--female-accent),
-    var(--female-accent)
-  ) !important;
-}
-.position-card.featured-female .position-badge {
-  background: var(--female-soft) !important;
-  color: var(--female-accent) !important;
-  border-color: var(--female-border) !important;
-}
-.position-note {
-  color: var(--text-muted) !important;
-}
+.position-card h3 { color: var(--text-primary) !important; }
+.position-card::before { background: linear-gradient(90deg, var(--accent), var(--accent-dark)) !important; }
+.position-card.featured { background: var(--accent-soft) !important; border-color: var(--card-border-hover) !important; }
+.position-card.featured-female { background: var(--female-soft) !important; border-color: var(--female-border) !important; }
+.position-card.featured-female::before { background: linear-gradient(90deg, var(--female-accent), var(--female-accent)) !important; }
+.position-card.featured-female .position-badge { background: var(--female-soft) !important; color: var(--female-accent) !important; border-color: var(--female-border) !important; }
+.position-note { color: var(--text-muted) !important; }
+.committee-card h4, .committee-card p, .member-name { color: var(--text-primary) !important; }
+.committee-section { background: var(--card-bg) !important; border-color: var(--card-border) !important; }
 
 /* 22. DISTRICTS PAGE */
-.district-card::before {
-  background: linear-gradient(
-    90deg,
-    var(--accent),
-    var(--accent-dark)
-  ) !important;
-}
-.district-header h3 {
-  color: var(--accent) !important;
-}
-.district-info {
-  color: var(--text-muted) !important;
-  border-bottom-color: var(--card-border) !important;
-}
-.district-footer {
-  border-top-color: var(--card-border) !important;
-}
-.district-footer p {
-  color: var(--text-secondary) !important;
-}
-.roadmap-card.active {
-  background: var(--accent-soft) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.roadmap-badge {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.roadmap-desc {
-  color: var(--text-secondary) !important;
-}
+.district-card::before { background: linear-gradient(90deg, var(--accent), var(--accent-dark)) !important; }
+.district-header h3 { color: var(--accent) !important; }
+.district-info { color: var(--text-muted) !important; border-bottom-color: var(--card-border) !important; }
+.district-footer { border-top-color: var(--card-border) !important; }
+.district-footer p { color: var(--text-secondary) !important; }
+.roadmap-card.active { background: var(--accent-soft) !important; border-color: var(--card-border-hover) !important; }
+.roadmap-badge { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
+.roadmap-desc { color: var(--text-secondary) !important; }
 
 /* 23. GALLERY PAGE */
-.gallery-item:hover {
-  box-shadow: var(--card-shadow-hover) !important;
-}
-.gallery-overlay h3 {
-  color: var(--accent) !important;
-}
-.gallery-overlay p {
-  color: #ffffff !important;
-}
+.gallery-item:hover { box-shadow: var(--card-shadow-hover) !important; }
+.gallery-overlay h3 { color: var(--accent) !important; }
+.gallery-overlay p { color: #ffffff !important; }
 
 /* 24. PROFILE PAGE */
-.profile-avatar-big {
-  color: var(--accent-contrast) !important;
-  border-color: var(--card-bg) !important;
-}
-.avatar-upload-btn {
-  background: var(--accent) !important;
-  color: var(--accent-contrast) !important;
-  border-color: var(--card-bg) !important;
-}
-.profile-header-info h1 {
-  color: var(--text-primary) !important;
-}
-.profile-role {
-  color: var(--accent) !important;
-}
-.profile-completion strong {
-  color: var(--warm-text) !important;
-}
-.form-card-header h3 {
-  color: var(--accent) !important;
-}
-.form-card-header p {
-  color: var(--text-secondary) !important;
-}
-.form-card-header {
-  border-bottom-color: var(--card-border) !important;
-}
-.interest-item {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-  color: var(--text-secondary) !important;
-}
-.interest-item:hover {
-  background: var(--accent-soft) !important;
-  border-color: var(--accent) !important;
-}
-.interest-item:has(input:checked) {
-  background: var(--accent-soft) !important;
-  border-color: var(--accent) !important;
-  color: var(--accent) !important;
-}
-.security-section h4 {
-  color: var(--text-primary) !important;
-}
-.security-section > p {
-  color: var(--text-secondary) !important;
-}
-.session-current {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.privacy-notice strong {
-  color: var(--accent) !important;
-}
+.profile-avatar-big { color: var(--accent-contrast) !important; border-color: var(--card-bg) !important; background: linear-gradient(135deg, var(--accent), var(--accent-dark)) !important; }
+.avatar-upload-btn { background: var(--accent) !important; color: var(--accent-contrast) !important; border-color: var(--card-bg) !important; }
+.profile-header-info h1 { color: var(--text-primary) !important; }
+.profile-role { color: var(--accent) !important; }
+.profile-completion strong { color: var(--warm-text) !important; }
+.form-card-header h3 { color: var(--accent) !important; }
+.form-card-header p { color: var(--text-secondary) !important; }
+.form-card-header { border-bottom-color: var(--card-border) !important; background: var(--accent-soft) !important; border-radius: 12px 12px 0 0 !important; padding: 20px !important; }
+.interest-item { background: var(--card-bg-hover) !important; border-color: var(--card-border) !important; color: var(--text-secondary) !important; }
+.interest-item:hover { background: var(--accent-soft) !important; border-color: var(--accent) !important; }
+.interest-item:has(input:checked) { background: var(--accent-soft) !important; border-color: var(--accent) !important; color: var(--accent) !important; }
+.security-section h4 { color: var(--text-primary) !important; }
+.security-section > p { color: var(--text-secondary) !important; }
+.session-current { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
+.privacy-notice strong { color: var(--accent) !important; }
+.form-hint, .profile-form small, .form-group small, .dashboard-content small { color: var(--warm-text) !important; opacity: 1 !important; font-weight: 500 !important; }
+.profile-form label, .form-group label, .settings-card label, .dashboard-content label { color: var(--text-primary) !important; font-weight: 600 !important; opacity: 1 !important; }
+html:not([data-theme="dark"]) .dashboard-content input:disabled { color: var(--text-muted) !important; background-color: var(--card-bg-hover) !important; opacity: 1 !important; }
+html:not([data-theme="dark"]) .dashboard-content select { color: var(--text-primary) !important; background-color: var(--card-bg) !important; font-weight: 500 !important; border: 1px solid var(--card-border) !important; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234c0519%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E") !important; background-repeat: no-repeat !important; background-position: right 15px center !important; background-size: 12px !important; -webkit-appearance: none !important; -moz-appearance: none !important; appearance: none !important; padding-right: 35px !important; }
+html:not([data-theme="dark"]) .dashboard-content input::-webkit-calendar-picker-indicator { filter: invert(0.2); }
 
 /* 25. MY PAYMENTS / FINANCE */
-.summary-card.total .summary-value {
-  color: var(--accent) !important;
-}
-.summary-card.current .summary-value {
-  color: var(--accent) !important;
-}
-.summary-card.due .summary-value {
-  color: var(--warm-text) !important;
-}
-.summary-card.streak .summary-value {
-  color: var(--female-accent) !important;
-}
-.pay-method-card {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-}
-.pay-method-card h4 {
-  color: var(--text-primary) !important;
-}
-.pm-account {
-  color: var(--accent) !important;
-}
-.pm-account-title {
-  color: var(--text-muted) !important;
-}
-.alert-success {
-  background: linear-gradient(
-    135deg,
-    var(--accent-soft),
-    transparent
-  ) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.alert-content h4 {
-  color: var(--accent) !important;
-}
-.alert-content p {
-  color: var(--text-secondary) !important;
-}
-.receipt-id {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.amount-green {
-  color: var(--success) !important;
-}
-.amount-orange {
-  color: var(--warm-text) !important;
-}
-.amount-red {
-  color: #dc2626 !important;
-}
+.summary-card.total .summary-value { color: var(--accent) !important; }
+.summary-card.current .summary-value { color: var(--accent) !important; }
+.summary-card.due .summary-value { color: var(--warm-text) !important; }
+.summary-card.streak .summary-value { color: var(--female-accent) !important; }
+.pay-method-card { background: var(--card-bg-hover) !important; border-color: var(--card-border) !important; }
+.pay-method-card h4 { color: var(--text-primary) !important; }
+.pm-account { color: var(--accent) !important; }
+.pm-account-title { color: var(--text-muted) !important; }
+.alert-success { background: linear-gradient(135deg, var(--accent-soft), transparent) !important; border-color: var(--card-border-hover) !important; }
+.alert-content h4 { color: var(--accent) !important; }
+.alert-content p { color: var(--text-secondary) !important; }
+.receipt-id { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
+.amount-green { color: var(--success) !important; }
+.amount-orange { color: var(--warm-text) !important; }
+.amount-red { color: #dc2626 !important; }
 
 /* 26. ADMIN QUICK ACTIONS / STATUS PILLS */
-.quick-action {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-}
-.quick-action:hover {
-  background: var(--accent-soft) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.quick-action .q-label,
-.quick-action p {
-  color: var(--text-secondary) !important;
-}
-.quick-action span {
-  filter: none;
-}
-.status-pill.open {
-  background: var(--success-bg) !important;
-  color: var(--success) !important;
-  border-color: var(--success-border) !important;
-}
-.status-pill.closed {
-  background: var(--error-bg) !important;
-  color: var(--error) !important;
-  border-color: var(--error-border) !important;
-}
-.btn-toggle-open {
-  color: var(--accent-contrast) !important;
-}
+.quick-action { background: var(--card-bg-hover) !important; border-color: var(--card-border) !important; }
+.quick-action:hover { background: var(--accent-soft) !important; border-color: var(--card-border-hover) !important; }
+.quick-action .q-label, .quick-action p { color: var(--text-secondary) !important; }
+.quick-action span { filter: none; }
+.status-pill.open { background: var(--success-bg) !important; color: var(--success) !important; border-color: var(--success-border) !important; }
+.status-pill.closed { background: var(--error-bg) !important; color: var(--error) !important; border-color: var(--error-border) !important; }
+.btn-toggle-open { color: var(--accent-contrast) !important; }
 
 /* 27. NOTIFICATIONS PAGE */
-.notif-type-box {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-}
-.notif-type-option input[type="radio"]:checked + .notif-type-box {
-  transform: translateY(-3px);
-}
-.notif-item-icon.info {
-  background: var(--accent-soft) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.notif-item-icon.success {
-  background: var(--success-bg) !important;
-  border-color: var(--success-border) !important;
-}
-.notif-item-icon.warning {
-  background: var(--warm-soft) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.notif-item-icon.urgent {
-  background: var(--error-bg) !important;
-  border-color: var(--error-border) !important;
-}
+.notif-type-box { background: var(--card-bg-hover) !important; border-color: var(--card-border) !important; }
+.notif-type-option input[type="radio"]:checked + .notif-type-box { transform: translateY(-3px); }
+.notif-item-icon.info { background: var(--accent-soft) !important; border-color: var(--card-border-hover) !important; }
+.notif-item-icon.success { background: var(--success-bg) !important; border-color: var(--success-border) !important; }
+.notif-item-icon.warning { background: var(--warm-soft) !important; border-color: var(--card-border-hover) !important; }
+.notif-item-icon.urgent { background: var(--error-bg) !important; border-color: var(--error-border) !important; }
 
 /* 28. EMAIL SYSTEM PAGE */
-.email-status-banner {
-  background: linear-gradient(
-    135deg,
-    var(--accent-soft),
-    transparent
-  ) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.status-online {
-  color: var(--success) !important;
-}
-.preview-badge {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.preview-logo h1 {
-  color: var(--accent) !important;
-}
-.preview-logo p {
-  color: var(--text-muted) !important;
-}
-.preview-logo {
-  border-bottom-color: var(--card-border-hover) !important;
-}
-.template-preview {
-  background: var(--card-bg-hover) !important;
-  border-left-color: var(--accent) !important;
-  color: var(--text-secondary) !important;
-}
-.api-status-row {
-  background: var(--accent-soft) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.api-dot {
-  background: var(--accent) !important;
-  box-shadow: 0 0 12px var(--accent-glow) !important;
-}
-.api-status-badge {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.settings-note {
-  background: var(--accent-soft) !important;
-  border-left-color: var(--accent) !important;
-  color: var(--text-secondary) !important;
-}
+.email-status-banner { background: linear-gradient(135deg, var(--accent-soft), transparent) !important; border-color: var(--card-border-hover) !important; }
+.status-online { color: var(--success) !important; }
+.preview-badge { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
+.preview-logo h1 { color: var(--accent) !important; }
+.preview-logo p { color: var(--text-muted) !important; }
+.preview-logo { border-bottom-color: var(--card-border-hover) !important; }
+.template-preview { background: var(--card-bg-hover) !important; border-left-color: var(--accent) !important; color: var(--text-secondary) !important; }
+.api-status-row { background: var(--accent-soft) !important; border-color: var(--card-border-hover) !important; }
+.api-dot { background: var(--accent) !important; box-shadow: 0 0 12px var(--accent-glow) !important; }
+.api-status-badge { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
+.settings-note { background: var(--accent-soft) !important; border-left-color: var(--accent) !important; color: var(--text-secondary) !important; }
 
 /* 29. REPORTS PAGE */
-.chart-period {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-  color: var(--text-secondary) !important;
-}
-.bar-label,
-.compare-label {
-  color: var(--text-secondary) !important;
-}
-.bar-value {
-  color: var(--accent) !important;
-}
-.district-name {
-  color: var(--text-primary) !important;
-}
-.district-count {
-  color: var(--accent) !important;
-}
-.donut-legend-item {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-}
-.legend-count {
-  color: var(--accent) !important;
-}
-.donut-hole {
-  background: var(--card-bg) !important;
-  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1) !important;
-}
-.legend-item {
-  color: var(--text-secondary) !important;
-}
-.report-btn {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.report-btn:hover {
-  background: var(--accent) !important;
-  color: var(--accent-contrast) !important;
-}
-.report-btn.excel {
-  background: var(--success-bg) !important;
-  color: var(--success) !important;
-  border-color: var(--success-border) !important;
-}
+.chart-period { background: var(--card-bg-hover) !important; border-color: var(--card-border) !important; color: var(--text-secondary) !important; }
+.bar-label, .compare-label { color: var(--text-secondary) !important; }
+.bar-value { color: var(--accent) !important; }
+.district-name { color: var(--text-primary) !important; }
+.district-count { color: var(--accent) !important; }
+.donut-legend-item { background: var(--card-bg-hover) !important; border-color: var(--card-border) !important; }
+.legend-count { color: var(--accent) !important; }
+.donut-hole { background: var(--card-bg) !important; box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1) !important; }
+.legend-item { color: var(--text-secondary) !important; }
+.report-btn { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
+.report-btn:hover { background: var(--accent) !important; color: var(--accent-contrast) !important; }
+.report-btn.excel { background: var(--success-bg) !important; color: var(--success) !important; border-color: var(--success-border) !important; }
 
 /* 30. CABINET / LEADERSHIP ADMIN */
-.cabinet-info {
-  background: linear-gradient(
-    135deg,
-    var(--accent-soft),
-    transparent
-  ) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.cabinet-tabs {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-}
-.cabinet-section-label {
-  color: var(--accent) !important;
-  border-left-color: var(--accent) !important;
-}
-.cabinet-position-card {
-  background: var(--card-bg) !important;
-  border-color: var(--card-border) !important;
-}
-.cabinet-position-card.featured {
-  background: var(--accent-soft) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.cabinet-position-card.featured-female {
-  background: var(--female-soft) !important;
-  border-color: var(--female-border) !important;
-}
-.btn-position-menu,
-.btn-activity-menu,
-.btn-district-menu {
-  color: var(--text-primary) !important;
-}
-.btn-position-menu:hover,
-.btn-activity-menu:hover,
-.btn-district-menu:hover {
-  background: var(--accent-soft) !important;
-}
-.member-avatar-sm {
-  color: var(--accent-contrast) !important;
-}
-.member-avatar-sm.female {
-  background: linear-gradient(
-    135deg,
-    var(--female-accent),
-    var(--female-accent)
-  ) !important;
-}
-.archive-card {
-  background: var(--card-bg) !important;
-  border-color: var(--card-border) !important;
-}
-.archive-icon {
-  background: var(--accent-soft) !important;
-}
-.archive-status.current {
-  background: var(--success-bg) !important;
-  color: var(--success) !important;
-  border-color: var(--success-border) !important;
-}
-.archive-status.archived {
-  background: var(--card-bg-hover) !important;
-  color: var(--text-muted) !important;
-  border-color: var(--card-border) !important;
-}
+.cabinet-info { background: linear-gradient(135deg, var(--accent-soft), transparent) !important; border-color: var(--card-border-hover) !important; }
+.cabinet-tabs { background: var(--card-bg-hover) !important; border-color: var(--card-border) !important; }
+.cabinet-section-label { color: var(--accent) !important; border-left-color: var(--accent) !important; }
+.cabinet-position-card { background: var(--card-bg) !important; border-color: var(--card-border) !important; }
+.cabinet-position-card.featured { background: var(--accent-soft) !important; border-color: var(--card-border-hover) !important; }
+.cabinet-position-card.featured-female { background: var(--female-soft) !important; border-color: var(--female-border) !important; }
+.btn-position-menu, .btn-activity-menu, .btn-district-menu { color: var(--text-primary) !important; }
+.btn-position-menu:hover, .btn-activity-menu:hover, .btn-district-menu:hover { background: var(--accent-soft) !important; }
+.member-avatar-sm { color: var(--accent-contrast) !important; }
+.member-avatar-sm.female { background: linear-gradient(135deg, var(--female-accent), var(--female-accent)) !important; }
+.archive-card { background: var(--card-bg) !important; border-color: var(--card-border) !important; }
+.archive-icon { background: var(--accent-soft) !important; }
+.archive-status.current { background: var(--success-bg) !important; color: var(--success) !important; border-color: var(--success-border) !important; }
+.archive-status.archived { background: var(--card-bg-hover) !important; color: var(--text-muted) !important; border-color: var(--card-border) !important; }
 
 /* 31. APPLICATIONS / ADMIN MEMBERS */
-.application-card::before {
-  background: var(--warm) !important;
-}
-.app-avatar {
-  color: var(--accent-contrast) !important;
-}
-.app-avatar.female {
-  background: linear-gradient(
-    135deg,
-    var(--female-accent),
-    var(--female-accent)
-  ) !important;
-}
-.detail-label {
-  color: var(--text-muted) !important;
-}
-.application-reason h4 {
-  color: var(--accent) !important;
-}
-.application-reason p {
-  color: var(--text-secondary) !important;
-}
-.btn-view-app {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.btn-approve,
-.btn-reject {
-  color: var(--accent-contrast) !important;
-}
-.btn-suspend,
-.btn-activate,
-.btn-delete {
-  background: var(--card-bg-hover) !important;
-  color: var(--text-primary) !important;
-  border-color: var(--card-border) !important;
-}
+.application-card::before { background: var(--warm) !important; }
+.app-avatar { color: var(--accent-contrast) !important; }
+.app-avatar.female { background: linear-gradient(135deg, var(--female-accent), var(--female-accent)) !important; }
+.detail-label { color: var(--text-muted) !important; }
+.application-reason h4 { color: var(--accent) !important; }
+.application-reason p { color: var(--text-secondary) !important; }
+.btn-view-app { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
+.btn-approve, .btn-reject { color: var(--accent-contrast) !important; }
+.btn-suspend, .btn-activate, .btn-delete { background: var(--card-bg-hover) !important; color: var(--text-primary) !important; border-color: var(--card-border) !important; }
 
 /* 32. ADMIN WELCOME / DASHBOARD BADGES */
-.admin-welcome {
-  background: linear-gradient(
-    135deg,
-    var(--accent-soft),
-    var(--card-bg)
-  ) !important;
-}
-.admin-badge {
-  background: var(--warm-soft) !important;
-  color: var(--warm-text) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.admin-avatar {
-  background: linear-gradient(135deg, var(--warm), var(--warm-text)) !important;
-  color: var(--accent-contrast) !important;
-}
-
-/* 33. SIDEBAR DIVIDER */
-.sidebar-divider {
-  background: var(--card-border) !important;
-}
+.admin-welcome { background: linear-gradient(135deg, var(--accent-soft), var(--card-bg)) !important; }
+.admin-badge { background: var(--warm-soft) !important; color: var(--warm-text) !important; border-color: var(--card-border-hover) !important; }
+.admin-avatar { background: linear-gradient(135deg, var(--warm), var(--warm-text)) !important; color: var(--accent-contrast) !important; }
 
 /* 34. BADGE / PILL DEFENSIVE OVERRIDES */
-.status-badge-active {
-  background: var(--success-bg) !important;
-  color: var(--success) !important;
-  border-color: var(--success-border) !important;
-}
-.status-badge-active::before {
-  background: var(--success) !important;
-}
-.status-badge-pending {
-  background: var(--warm-soft) !important;
-  color: var(--warm-text) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.status-badge-pending::before {
-  background: var(--warm) !important;
-}
-.status-badge-inactive,
-.status-badge-overdue {
-  background: var(--error-bg) !important;
-  color: var(--error) !important;
-  border-color: var(--error-border) !important;
-}
-.notify-badge.yes {
-  background: var(--success-bg) !important;
-  color: var(--success) !important;
-  border-color: var(--success-border) !important;
-}
-.notify-badge.no {
-  background: var(--warm-soft) !important;
-  color: var(--warm-text) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.notify-badge.no::before {
-  background: var(--warm) !important;
-}
+.status-badge-active { background: var(--success-bg) !important; color: var(--success) !important; border-color: var(--success-border) !important; }
+.status-badge-active::before { background: var(--success) !important; }
+.status-badge-pending { background: var(--warm-soft) !important; color: var(--warm-text) !important; border-color: var(--card-border-hover) !important; }
+.status-badge-pending::before { background: var(--warm) !important; }
+.status-badge-inactive, .status-badge-overdue { background: var(--error-bg) !important; color: var(--error) !important; border-color: var(--error-border) !important; }
+.notify-badge.yes { background: var(--success-bg) !important; color: var(--success) !important; border-color: var(--success-border) !important; }
+.notify-badge.no { background: var(--warm-soft) !important; color: var(--warm-text) !important; border-color: var(--card-border-hover) !important; }
+.notify-badge.no::before { background: var(--warm) !important; }
 
 /* 35. CATEGORY / PAY-METHOD BADGES */
-.pay-method.jazzcash {
-  background: var(--error-bg) !important;
-  color: var(--error) !important;
-  border-color: var(--error-border) !important;
-}
-.pay-method.easypaisa {
-  background: var(--success-bg) !important;
-  color: var(--success) !important;
-  border-color: var(--success-border) !important;
-}
-.pay-method.bank {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.pay-method.cash {
-  background: var(--card-bg-hover) !important;
-  color: var(--text-secondary) !important;
-  border-color: var(--card-border) !important;
-}
+.pay-method.jazzcash { background: var(--error-bg) !important; color: var(--error) !important; border-color: var(--error-border) !important; }
+.pay-method.easypaisa { background: var(--success-bg) !important; color: var(--success) !important; border-color: var(--success-border) !important; }
+.pay-method.bank { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
+.pay-method.cash { background: var(--card-bg-hover) !important; color: var(--text-secondary) !important; border-color: var(--card-border) !important; }
 
 /* 36. DONATION / SPONSOR BADGES */
-.donor-badge.named {
-  background: var(--success-bg) !important;
-  color: var(--success) !important;
-  border-color: var(--success-border) !important;
-}
-.donor-badge.anonymous {
-  background: var(--card-bg-hover) !important;
-  color: var(--text-secondary) !important;
-  border-color: var(--card-border) !important;
-}
-.sponsor-badge.platinum,
-.sponsor-badge.gold,
-.sponsor-badge.silver,
-.sponsor-badge.bronze {
-  background: var(--card-bg-hover) !important;
-  color: var(--warm-text) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.sponsor-status.active {
-  background: var(--success-bg) !important;
-  color: var(--success) !important;
-  border-color: var(--success-border) !important;
-}
-.sponsor-status.pending {
-  background: var(--warm-soft) !important;
-  color: var(--warm-text) !important;
-  border-color: var(--card-border-hover) !important;
-}
+.donor-badge.named { background: var(--success-bg) !important; color: var(--success) !important; border-color: var(--success-border) !important; }
+.donor-badge.anonymous { background: var(--card-bg-hover) !important; color: var(--text-secondary) !important; border-color: var(--card-border) !important; }
+.sponsor-badge.platinum, .sponsor-badge.gold, .sponsor-badge.silver, .sponsor-badge.bronze { background: var(--card-bg-hover) !important; color: var(--warm-text) !important; border-color: var(--card-border-hover) !important; }
+.sponsor-status.active { background: var(--success-bg) !important; color: var(--success) !important; border-color: var(--success-border) !important; }
+.sponsor-status.pending { background: var(--warm-soft) !important; color: var(--warm-text) !important; border-color: var(--card-border-hover) !important; }
 
 /* 37. ROLE BADGES */
-.role-president,
-.role-vp,
-.role-gs,
-.role-coordinator,
-.role-member {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.uid-badge {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-  border-color: var(--card-border-hover) !important;
-}
+.role-president, .role-vp, .role-gs, .role-coordinator, .role-member { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
+.uid-badge { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--card-border-hover) !important; }
 
 /* 38. INFO BANNER */
-.info-banner {
-  background: linear-gradient(
-    135deg,
-    var(--accent-soft),
-    transparent
-  ) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.banner-content h4,
-.banner-content strong {
-  color: var(--accent) !important;
-}
-.banner-content p {
-  color: var(--text-secondary) !important;
-}
+.info-banner { background: linear-gradient(135deg, var(--accent-soft), transparent) !important; border-color: var(--card-border-hover) !important; }
+.banner-content h4, .banner-content strong { color: var(--accent) !important; }
+.banner-content p { color: var(--text-secondary) !important; }
 
 /* 39. DANGER ZONE */
-.danger-action {
-  background: var(--error-bg) !important;
-  border-color: var(--error-border) !important;
-}
-.danger-action h4,
-.danger-action p {
-  color: var(--error) !important;
-}
-.danger-section {
-  background: var(--error-bg) !important;
-  border-color: var(--error-border) !important;
-}
-.danger-section h4,
-.danger-section p {
-  color: var(--error) !important;
-}
-.btn-danger,
-.btn-danger-sm {
-  background: var(--error-bg) !important;
-  color: var(--error) !important;
-  border-color: var(--error-border) !important;
-}
-.btn-danger:hover,
-.btn-danger-sm:hover {
-  background: #ef4444 !important;
-  color: #ffffff !important;
-}
+.danger-action { background: var(--error-bg) !important; border-color: var(--error-border) !important; }
+.danger-action h4, .danger-action p { color: var(--error) !important; }
+.danger-section { background: var(--error-bg) !important; border-color: var(--error-border) !important; }
+.danger-section h4, .danger-section p { color: var(--error) !important; }
+.btn-danger, .btn-danger-sm { background: var(--error-bg) !important; color: var(--error) !important; border-color: var(--error-border) !important; }
+.btn-danger:hover, .btn-danger-sm:hover { background: #ef4444 !important; color: #ffffff !important; }
 
 /* 40. TOGGLE SWITCH */
-.toggle-slider {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-}
-.toggle-switch input:checked + .toggle-slider {
-  background: var(--accent) !important;
-  border-color: var(--accent) !important;
-}
+.toggle-slider { background: var(--card-bg-hover) !important; border-color: var(--card-border) !important; }
+.toggle-switch input:checked + .toggle-slider { background: var(--accent) !important; border-color: var(--accent) !important; }
 
 /* 41. SLIDER / PROGRESS */
-.slider-input {
-  background: var(--card-border) !important;
-}
-.slider-input::-webkit-slider-thumb,
-.slider-input::-moz-range-thumb {
-  background: var(--accent) !important;
-  border-color: var(--card-bg) !important;
-}
-.slider-value {
-  background: var(--accent-soft) !important;
-  color: var(--accent) !important;
-}
+.slider-input { background: var(--card-border) !important; }
+.slider-input::-webkit-slider-thumb, .slider-input::-moz-range-thumb { background: var(--accent) !important; border-color: var(--card-bg) !important; }
+.slider-value { background: var(--accent-soft) !important; color: var(--accent) !important; }
 
 /* 42. COLOR PICKER & UPLOAD */
-.color-input-wrapper input[type="color"] {
-  border-color: var(--card-border) !important;
-}
-.color-text {
-  font-family: "Courier New", monospace !important;
-}
-.upload-area {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-}
-.upload-preview {
-  background: var(--accent-soft) !important;
-  border-color: var(--card-border-hover) !important;
-}
-.logo-preview span {
-  color: var(--accent) !important;
-}
+.color-input-wrapper input[type="color"] { border-color: var(--card-border) !important; }
+.color-text { font-family: "Courier New", monospace !important; }
+.upload-area { background: var(--card-bg-hover) !important; border-color: var(--card-border) !important; }
+.upload-preview { background: var(--accent-soft) !important; border-color: var(--card-border-hover) !important; }
+.logo-preview span { color: var(--accent) !important; }
 
 /* 43. BG IMAGE OPTIONS */
-.bg-preview {
-  border-color: var(--card-border) !important;
-}
-.bg-option.active .bg-preview {
-  border-color: var(--accent) !important;
-  box-shadow: 0 0 0 3px var(--accent-soft) !important;
-}
-.bg-option p {
-  color: var(--text-secondary) !important;
-}
+.bg-preview { border-color: var(--card-border) !important; }
+.bg-option.active .bg-preview { border-color: var(--accent) !important; box-shadow: 0 0 0 3px var(--accent-soft) !important; }
+.bg-option p { color: var(--text-secondary) !important; }
 
 /* 44. SOCIAL SETTING ICONS */
-.social-setting-icon.facebook,
-.social-setting-icon.instagram,
-.social-setting-icon.twitter,
-.social-setting-icon.youtube,
-.social-setting-icon.whatsapp,
-.social-setting-icon.linkedin {
-  background: var(--accent-soft) !important;
-}
+.social-setting-icon.facebook, .social-setting-icon.instagram, .social-setting-icon.twitter, .social-setting-icon.youtube, .social-setting-icon.whatsapp, .social-setting-icon.linkedin { background: var(--accent-soft) !important; }
 
 /* 45. PAYMENT METHOD ICONS */
-.payment-method-icon.jazzcash,
-.payment-method-icon.easypaisa,
-.payment-method-icon.bank {
-  background: var(--accent-soft) !important;
-}
+.payment-method-icon.jazzcash, .payment-method-icon.easypaisa, .payment-method-icon.bank { background: var(--accent-soft) !important; }
 
 /* 46. TIMELINE / MINI */
-.timeline-content h4 {
-  color: var(--text-primary) !important;
-}
-.timeline-content p,
-.timeline-content span {
-  color: var(--text-secondary) !important;
-}
-.timeline-dot {
-  background: var(--accent) !important;
-  border-color: var(--accent-soft) !important;
-}
-.timeline-mini-item:not(:last-child)::before {
-  background: var(--accent-soft) !important;
-}
+.timeline-content h4 { color: var(--text-primary) !important; }
+.timeline-content p, .timeline-content span { color: var(--text-secondary) !important; }
+.timeline-dot { background: var(--accent) !important; border-color: var(--accent-soft) !important; }
+.timeline-mini-item:not(:last-child)::before { background: var(--accent-soft) !important; }
 
 /* 47. STATUS INDICATOR */
-.status-indicator.closed {
-  background: var(--error) !important;
-  box-shadow: 0 0 0 4px var(--error-bg) !important;
-}
-.status-indicator.open {
-  background: var(--success) !important;
-}
+.status-indicator.closed { background: var(--error) !important; box-shadow: 0 0 0 4px var(--error-bg) !important; }
+.status-indicator.open { background: var(--success) !important; }
 
 /* 48. ADMIN ITEM AVATAR */
-.admin-item-avatar {
-  color: var(--accent-contrast) !important;
-}
-.admin-item-avatar.paid {
-  color: var(--accent-contrast) !important;
-}
-.admin-item-amount {
-  color: var(--accent) !important;
-}
+.admin-item-avatar { color: var(--accent-contrast) !important; }
+.admin-item-avatar.paid { color: var(--accent-contrast) !important; }
+.admin-item-amount { color: var(--accent) !important; }
 
-/* 49. FOOTER / MISC DEFENSIVE */
-.footer-col h3,
-.footer-col h4 {
-  color: var(--text-primary) !important;
-}
-.glass-footer {
-  border-top-color: var(--footer-border) !important;
-}
+/* 49. FOOTER / MISC */
+.footer-col h3, .footer-col h4 { color: var(--text-primary) !important; }
+.glass-footer { border-top-color: var(--footer-border) !important; }
 
 /* ============================================================
    🚀 PERFORMANCE & GLASSMORPHISM FIX
    ============================================================ */
-
-.glass-card,
-.hero-content,
-.page-hero-content,
-.stat-card,
-.about-content,
-.cta-content,
-.benefit-card,
-.team-card,
-.content-card,
-.auth-welcome,
-.auth-form-block,
-.activity-card,
-.dashboard-topbar,
-.topbar-user,
-.sidebar-nav {
+.glass-card, .hero-content, .page-hero-content, .content-card, .auth-welcome, .auth-form-block, .activity-card, .dashboard-topbar, .topbar-user, .sidebar-nav, .table-card, .filters-bar, .dash-stat-card {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
-
-html:not([data-theme="dark"]) .glass-card,
-html:not([data-theme="dark"]) .hero-content,
-html:not([data-theme="dark"]) .page-hero-content,
-html:not([data-theme="dark"]) .content-card,
-html:not([data-theme="dark"]) .auth-welcome,
-html:not([data-theme="dark"]) .auth-form-block,
-html:not([data-theme="dark"]) .table-card,
-html:not([data-theme="dark"]) .filters-bar,
-html:not([data-theme="dark"]) .dash-stat-card {
+html:not([data-theme="dark"]) .glass-card, html:not([data-theme="dark"]) .hero-content, html:not([data-theme="dark"]) .page-hero-content, html:not([data-theme="dark"]) .content-card, html:not([data-theme="dark"]) .auth-welcome, html:not([data-theme="dark"]) .auth-form-block, html:not([data-theme="dark"]) .table-card, html:not([data-theme="dark"]) .filters-bar, html:not([data-theme="dark"]) .dash-stat-card {
   background: rgba(255, 255, 255, 0.65) !important;
   border: 1px solid rgba(255, 255, 255, 0.9) !important;
   box-shadow: 0 8px 32px rgba(225, 29, 72, 0.08) !important;
 }
-
-html[data-theme="dark"] .glass-card,
-html[data-theme="dark"] .content-card,
-html[data-theme="dark"] .table-card,
-html[data-theme="dark"] .filters-bar,
-html[data-theme="dark"] .dash-stat-card {
+html[data-theme="dark"] .glass-card, html[data-theme="dark"] .content-card, html[data-theme="dark"] .table-card, html[data-theme="dark"] .filters-bar, html[data-theme="dark"] .dash-stat-card {
   background: rgba(12, 24, 42, 0.55) !important;
   border: 1px solid rgba(140, 200, 220, 0.15) !important;
 }
-
-.glass-header,
-.dashboard-sidebar,
-.settings-save-bar {
+.glass-header, .dashboard-sidebar, .settings-save-bar {
   backdrop-filter: blur(20px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
 }
 
 /* ============================================================
-   🔥 NUCLEAR FIX: MEMBER DASHBOARD TEXT & FORM CONTRAST
+   🔥 FORCE READABLE TEXT
    ============================================================ */
-
-.form-card-header {
-  background: var(--accent-soft) !important;
-  border-bottom: 1px solid var(--card-border) !important;
-  border-radius: 12px 12px 0 0 !important;
-  padding: 20px !important;
-}
-.form-card-header h3,
-.form-card-header h4 {
-  color: var(--accent) !important;
-  font-weight: 600 !important;
-}
-.form-card-header p {
-  color: var(--text-secondary) !important;
-}
-
-.profile-form label,
-.form-group label,
-.settings-card label,
-.dashboard-content label {
-  color: var(--text-primary) !important;
-  font-weight: 600 !important;
-  opacity: 1 !important;
-}
-
 html:not([data-theme="dark"]) .dashboard-content h1,
 html:not([data-theme="dark"]) .dashboard-content h2,
 html:not([data-theme="dark"]) .dashboard-content h3,
@@ -1474,11 +854,24 @@ html:not([data-theme="dark"]) .dashboard-content strong,
 html:not([data-theme="dark"]) .dashboard-content small,
 html:not([data-theme="dark"]) .dashboard-content th,
 html:not([data-theme="dark"]) .dashboard-content td,
-html:not([data-theme="dark"]) .dashboard-content .score-label,
-html:not([data-theme="dark"]) .dashboard-content .stat-label {
+html:not([data-theme="dark"]) .glass-card h1,
+html:not([data-theme="dark"]) .glass-card h2,
+html:not([data-theme="dark"]) .glass-card h3,
+html:not([data-theme="dark"]) .glass-card h4,
+html:not([data-theme="dark"]) .glass-card p,
+html:not([data-theme="dark"]) .glass-card span:not(.badge):not(.icon),
+html:not([data-theme="dark"]) .hero-content h2,
+html:not([data-theme="dark"]) .hero-content p,
+html:not([data-theme="dark"]) .section-title,
+html:not([data-theme="dark"]) .section-subtitle,
+html:not([data-theme="dark"]) .feature-item span,
+html:not([data-theme="dark"]) .feature-item p,
+html:not([data-theme="dark"]) [style*="color: white"],
+html:not([data-theme="dark"]) [style*="color: #fff"],
+html:not([data-theme="dark"]) [style*="color: #ffffff"],
+html:not([data-theme="dark"]) [style*="color: rgba(255"] {
   color: var(--text-primary) !important;
 }
-
 html:not([data-theme="dark"]) .dashboard-content .btn-primary,
 html:not([data-theme="dark"]) .dashboard-content .btn-login,
 html:not([data-theme="dark"]) .dashboard-content .user-avatar,
@@ -1492,416 +885,172 @@ html:not([data-theme="dark"]) .dashboard-content .sponsor-status,
 html:not([data-theme="dark"]) .dashboard-content .role-badge,
 html:not([data-theme="dark"]) .dashboard-content .uid-badge,
 html:not([data-theme="dark"]) .dashboard-content .btn-toggle-open,
-html:not([data-theme="dark"]) .dashboard-content .action-btn {
+html:not([data-theme="dark"]) .dashboard-content .action-btn,
+html:not([data-theme="dark"]) .btn-primary,
+html:not([data-theme="dark"]) .btn-login,
+html:not([data-theme="dark"]) .user-avatar,
+html:not([data-theme="dark"]) .member-avatar,
+html:not([data-theme="dark"]) .app-avatar,
+html:not([data-theme="dark"]) .badge,
+html:not([data-theme="dark"]) .status-badge-active,
+html:not([data-theme="dark"]) .status-badge-pending,
+html:not([data-theme="dark"]) .status-badge-inactive,
+html:not([data-theme="dark"]) .status-badge-overdue,
+html:not([data-theme="dark"]) .role-badge,
+html:not([data-theme="dark"]) .uid-badge,
+html:not([data-theme="dark"]) .score-value,
+html:not([data-theme="dark"]) .action-btn,
+html:not([data-theme="dark"]) .icon,
+html:not([data-theme="dark"]) .save-bar-message {
   color: #ffffff !important;
+}
+
+/* ============================================================
+   📱 FIX: DESKTOP MODE ON MOBILE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .menu-toggle { display: inline-block !important; }
+  .dashboard-sidebar { transform: translateX(-100%) !important; }
+  .dashboard-sidebar.active { transform: translateX(0) !important; }
+  .dashboard-main { margin-left: 0 !important; }
 }
 
 /* ============================================================
    🫧 LIGHT THEME: DARK NAVY & CYAN GLOWING BUBBLES
    ============================================================ */
-
 html:not([data-theme="dark"]) body::before {
   background-image:
-    radial-gradient(
-      circle 2.5px at 25px 45px,
-      #ffffff 0%,
-      #1e3a8a 40%,
-      rgba(15, 23, 42, 0.3) 80%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 2px at 75px 90px,
-      #e0f2fe 0%,
-      #0f172a 40%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 3px at 130px 40px,
-      #ffffff 0%,
-      #1e3a8a 40%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 2.5px at 200px 120px,
-      #ffffff 0%,
-      #0284c7 40%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 2px at 320px 85px,
-      #e0f2fe 0%,
-      #0ea5e9 40%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 2.5px at 95px 220px,
-      #ffffff 0%,
-      #38bdf8 40%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 2px at 275px 260px,
-      #ffffff 0%,
-      #3730a3 40%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 3px at 360px 340px,
-      #e0f2fe 0%,
-      #0284c7 40%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 2px at 180px 315px,
-      #ffffff 0%,
-      #1e3a8a 40%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 2.5px at 40px 355px,
-      #ffffff 0%,
-      #0ea5e9 40%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 2px at 240px 180px,
-      #e0f2fe 0%,
-      #3730a3 40%,
-      transparent 100%
-    );
+    radial-gradient(circle 2.5px at 25px 45px, #ffffff 0%, #1e3a8a 40%, rgba(15, 23, 42, 0.3) 80%, transparent 100%),
+    radial-gradient(circle 2px at 75px 90px, #e0f2fe 0%, #0f172a 40%, transparent 100%),
+    radial-gradient(circle 3px at 130px 40px, #ffffff 0%, #1e3a8a 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 200px 120px, #ffffff 0%, #0284c7 40%, transparent 100%),
+    radial-gradient(circle 2px at 320px 85px, #e0f2fe 0%, #0ea5e9 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 95px 220px, #ffffff 0%, #38bdf8 40%, transparent 100%),
+    radial-gradient(circle 2px at 275px 260px, #ffffff 0%, #3730a3 40%, transparent 100%),
+    radial-gradient(circle 3px at 360px 340px, #e0f2fe 0%, #0284c7 40%, transparent 100%),
+    radial-gradient(circle 2px at 180px 315px, #ffffff 0%, #1e3a8a 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 40px 355px, #ffffff 0%, #0ea5e9 40%, transparent 100%),
+    radial-gradient(circle 2px at 240px 180px, #e0f2fe 0%, #3730a3 40%, transparent 100%);
   background-size: 400px 400px;
   opacity: 1 !important;
 }
-
 html:not([data-theme="dark"]) body::after {
   background-image:
-    radial-gradient(
-      circle 6px at 120px 180px,
-      #ffffff 0%,
-      #1e3a8a 30%,
-      rgba(15, 23, 42, 0.4) 70%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 5px at 500px 400px,
-      #e0f2fe 0%,
-      #0f172a 30%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 6px at 450px 620px,
-      #ffffff 0%,
-      #1e3a8a 30%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 7px at 380px 80px,
-      #ffffff 0%,
-      #0ea5e9 30%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 5px at 680px 220px,
-      #e0f2fe 0%,
-      #38bdf8 30%,
-      transparent 100%
-    ),
-    radial-gradient(
-      circle 7px at 200px 520px,
-      #ffffff 0%,
-      #3730a3 30%,
-      transparent 100%
-    );
+    radial-gradient(circle 6px at 120px 180px, #ffffff 0%, #1e3a8a 30%, rgba(15, 23, 42, 0.4) 70%, transparent 100%),
+    radial-gradient(circle 5px at 500px 400px, #e0f2fe 0%, #0f172a 30%, transparent 100%),
+    radial-gradient(circle 6px at 450px 620px, #ffffff 0%, #1e3a8a 30%, transparent 100%),
+    radial-gradient(circle 7px at 380px 80px, #ffffff 0%, #0ea5e9 30%, transparent 100%),
+    radial-gradient(circle 5px at 680px 220px, #e0f2fe 0%, #38bdf8 30%, transparent 100%),
+    radial-gradient(circle 7px at 200px 520px, #ffffff 0%, #3730a3 30%, transparent 100%);
   background-size: 800px 800px;
   opacity: 1 !important;
 }
 
 /* ============================================================
-   ✨ FLOATING STARS ANIMATION (GPU OPTIMIZED - NO LAG)
+   ✨ FLOATING STARS ANIMATION (GPU OPTIMIZED)
    ============================================================ */
-
-body::before,
-body::after {
+body::before, body::after {
   inset: -50% !important;
   will-change: transform, opacity !important;
 }
-
 @keyframes floatStarsDownGPU {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-400px, 400px, 0);
-  }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-400px, 400px, 0); }
 }
-
 @keyframes floatStarsUpGPU {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(800px, -800px, 0);
-  }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(800px, -800px, 0); }
 }
-
 body::before {
-  animation:
-    twinkleStarsFast 4.5s ease-in-out infinite,
-    floatStarsDownGPU 90s linear infinite !important;
+  animation: twinkleStarsFast 4.5s ease-in-out infinite, floatStarsDownGPU 90s linear infinite !important;
 }
-
 body::after {
-  animation:
-    twinkleStarsSlow 8s ease-in-out infinite,
-    floatStarsUpGPU 130s linear infinite !important;
+  animation: twinkleStarsSlow 8s ease-in-out infinite, floatStarsUpGPU 130s linear infinite !important;
 }
-
 @media (max-width: 768px) {
-  body::before {
-    animation:
-      twinkleStarsFast 6s ease-in-out infinite,
-      floatStarsDownGPU 120s linear infinite !important;
-  }
-  body::after {
-    animation:
-      twinkleStarsSlow 10s ease-in-out infinite,
-      floatStarsUpGPU 180s linear infinite !important;
-  }
+  body::before { animation: twinkleStarsFast 6s ease-in-out infinite, floatStarsDownGPU 120s linear infinite !important; }
+  body::after { animation: twinkleStarsSlow 10s ease-in-out infinite, floatStarsUpGPU 180s linear infinite !important; }
 }
 
 /* ============================================================
-   📱 FIX: DESKTOP MODE ON MOBILE (Missing Sidebar & Hamburger)
+   🪪 ID CARD PRINT / PDF SPECIFIC FIX (Sabse Aakhir)
    ============================================================ */
-@media (max-width: 1024px) {
-  .menu-toggle {
-    display: inline-block !important;
+@media print {
+  /* Force browser to print colors */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
-  .dashboard-sidebar {
-    transform: translateX(-100%) !important;
+
+  @page {
+    size: auto;
+    margin: 10mm;
   }
-  .dashboard-sidebar.active {
-    transform: translateX(0) !important;
+
+  /* Hide everything except ID cards */
+  body * {
+    visibility: hidden;
   }
+  
+  .id-cards-wrapper,
+  .id-card-wrapper,
+  .id-card,
+  .card-front,
+  .card-back,
+  .id-cards-wrapper *,
+  .id-card *,
+  .card-front *,
+  .card-back * {
+    visibility: visible;
+  }
+
+  /* Position ID cards nicely */
+  .id-cards-wrapper {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    gap: 20px !important;
+    padding: 20px 0 !important;
+    margin: 0 !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  /* Remove page headers, sidebars, buttons */
+  .dashboard-sidebar,
+  .dashboard-topbar,
+  .page-header-block,
+  .card-label,
+  .sidebar-overlay {
+    display: none !important;
+  }
+
   .dashboard-main {
-    margin-left: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
-}
 
-/* ============================================================
-   🪪 ID CARD: ABSOLUTE THEME LOCK
-   Force the ID card to always look like the dark mode version,
-   regardless of the website theme or print settings.
-   ============================================================ */
+  /* ID Card styling */
+  .id-card {
+    box-shadow: 0 0 0 1px #ccc !important;
+    transform: none !important;
+    page-break-inside: avoid !important;
+    background: #f7f8fa !important;
+  }
+  
+  body.theme-female .id-card {
+    background: #faf7f5 !important;
+  }
 
-/* Main Card Wrapper (White Background Force) */
-.id-card,
-.card-front,
-.card-back,
-.id-card-preview-container,
-.id-card-container {
-  background: #f7f8fa !important;
-  color: #333333 !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* Sidebar (Left/Right Maroon/Navy Bar Force) */
-.id-card .sidebar,
-.id-card .card-sidebar,
-.id-card .id-side,
-.id-card .id-card-left-bar,
-.id-card .id-card-right-bar {
-  background: linear-gradient(
-    180deg,
-    #0a1628 0%,
-    #142a4a 50%,
-    #1e3a5f 100%
-  ) !important;
-  color: #ffffff !important;
-}
-
-/* Specific Theme Override for Female */
-body.theme-female .id-card .sidebar {
-  background: linear-gradient(
-    180deg,
-    #450a0a 0%,
-    #7f1d1d 50%,
-    #991b1b 100%
-  ) !important;
-}
-
-/* Sidebar Text (SYDF, ID#) */
-.id-card .sidebar *,
-.id-card .card-sidebar *,
-.id-card .id-side * {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-}
-
-/* Main Content Area (Naam, Details) */
-.id-card .main-content,
-.id-card .back-main,
-.id-card .id-card-details,
-.id-card .card-body {
-  background: #f7f8fa !important;
-}
-
-body.theme-female .id-card .main-content,
-body.theme-female .id-card .back-main {
-  background: #faf7f5 !important;
-}
-
-.id-card .member-name,
-.id-card .info-line .val,
-.id-card .instr-header h4,
-.id-card .instr-list li strong,
-.id-card .date-row .val {
-  color: #0a1628 !important;
-  -webkit-text-fill-color: #0a1628 !important;
-}
-
-body.theme-female .id-card .member-name,
-body.theme-female .id-card .info-line .val,
-body.theme-female .id-card .instr-header h4,
-body.theme-female .id-card .instr-list li strong,
-body.theme-female .id-card .date-row .val {
-  color: #450a0a !important;
-  -webkit-text-fill-color: #450a0a !important;
-}
-
-/* Labels (CNIC, PHONE, BLOOD GROUP) */
-.id-card .info-line .lbl,
-.id-card .date-row .lbl,
-.id-card .instr-header p,
-.id-card .member-dept {
-  color: #6b7280 !important;
-  -webkit-text-fill-color: #6b7280 !important;
-}
-/* ============================================================
-   SYDF — THEME OVERRIDES (BRIDGE FILE)
-   ============================================================ */
-
-/* 1. DASHBOARD BODY BACKGROUND */
-.dashboard-body { background: transparent !important; background-image: none !important; }
-
-/* 2. ALL FORM INPUTS */
-.form-group input, .form-group select, .form-group textarea, .search-box input, .filter-select,
-.email-compose-card input, .email-compose-card select, .email-compose-card textarea,
-.settings-card input, .settings-card select, .settings-card textarea,
-.social-setting-input input, .payment-details input, .profile-form input, .profile-form select, .profile-form textarea {
-  background: var(--input-bg) !important; color: var(--text-primary) !important; border-color: var(--input-border) !important;
-}
-.form-group input::placeholder, .form-group textarea::placeholder, .search-box input::placeholder,
-.profile-form input::placeholder, .profile-form textarea::placeholder { color: var(--text-muted) !important; }
-
-/* 3. SELECT DROPDOWN OPTIONS */
-html[data-theme="dark"] select option { background: #0a1d33 !important; color: #f0f6ff !important; }
-html:not([data-theme="dark"]) select option { background: #ffffff !important; color: #4c0519 !important; }
-
-/* 4. FILTER BUTTONS / TABS */
-.filter-btn, .btn-filter-type, .settings-tab, .cabinet-tab { background: var(--card-bg) !important; color: var(--text-secondary) !important; border-color: var(--card-border) !important; }
-.filter-btn:hover, .btn-filter-type:hover, .settings-tab:hover, .cabinet-tab:hover { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--accent) !important; }
-.filter-btn.active, .btn-filter-type.active, .settings-tab.active, .cabinet-tab.active { background: var(--accent) !important; color: var(--accent-contrast) !important; border-color: var(--accent) !important; font-weight: 600 !important; }
-
-/* 5. TARGETED FIX FOR MEMBER PAGES (Transparency & White Text) */
-html:not([data-theme="dark"]) .content-card,
-html:not([data-theme="dark"]) .summary-card,
-html:not([data-theme="dark"]) .doc-card,
-html:not([data-theme="dark"]) .activity-card,
-html:not([data-theme="dark"]) .report-card,
-html:not([data-theme="dark"]) .proposal-card,
-html:not([data-theme="dark"]) .election-block,
-html:not([data-theme="dark"]) .info-banner,
-html:not([data-theme="dark"]) .page-header-block,
-html:not([data-theme="dark"]) .stat-box,
-html:not([data-theme="dark"]) .pay-instructions {
-  background: rgba(255, 255, 255, 0.95) !important; /* Transparency kam ki */
-  border-color: var(--card-border) !important;
-}
-
-/* Light mode mein in pages ke hardcoded white text ko theek karo */
-html:not([data-theme="dark"]) .page-header-block h1,
-html:not([data-theme="dark"]) .page-header-block p,
-html:not([data-theme="dark"]) .page-intro h1,
-html:not([data-theme="dark"]) .page-intro p,
-html:not([data-theme="dark"]) .summary-label,
-html:not([data-theme="dark"]) .summary-sub,
-html:not([data-theme="dark"]) .doc-title-block h3,
-html:not([data-theme="dark"]) .doc-meta,
-html:not([data-theme="dark"]) .doc-meta span,
-html:not([data-theme="dark"]) .activity-title,
-html:not([data-theme="dark"]) .activity-meta,
-html:not([data-theme="dark"]) .report-card h3,
-html:not([data-theme="dark"]) .report-item h4,
-html:not([data-theme="dark"]) .report-item p,
-html:not([data-theme="dark"]) .proposal-title,
-html:not([data-theme="dark"]) .proposal-desc,
-html:not([data-theme="dark"]) .election-block h2,
-html:not([data-theme="dark"]) .election-block h3,
-html:not([data-theme="dark"]) .election-block h4,
-html:not([data-theme="dark"]) .info-banner p,
-html:not([data-theme="dark"]) .info-banner strong,
-html:not([data-theme="dark"]) .pay-method-card h4,
-html:not([data-theme="dark"]) .pay-method-card .title,
-html:not([data-theme="dark"]) .pay-note p,
-html:not([data-theme="dark"]) .payment-table td {
-  color: var(--text-primary) !important;
-}
-
-/* Inputs & search boxes in Member Pages */
-html:not([data-theme="dark"]) .search-box input { background: var(--card-bg) !important; color: var(--text-primary) !important; }
-html:not([data-theme="dark"]) .filter-select { background: var(--card-bg) !important; color: var(--text-primary) !important; }
-
-/* 6. DASHBOARD & SIDEBAR MAIN TEXT */
-.dashboard-topbar { background: var(--header-bg) !important; border-bottom-color: var(--card-border) !important; backdrop-filter: blur(20px) !important; }
-.dashboard-sidebar { background: var(--header-bg) !important; border-right-color: var(--card-border) !important; }
-.topbar-title h2 { color: var(--text-primary) !important; }
-.topbar-title p { color: var(--text-muted) !important; }
-.user-name { color: var(--text-primary) !important; }
-.user-uid { color: var(--text-muted) !important; }
-.sidebar-logo h1 { color: var(--accent) !important; }
-.sidebar-logo p { color: var(--text-muted) !important; }
-.sidebar-nav li a { color: var(--text-secondary) !important; }
-.sidebar-nav li a:hover { background: var(--accent-soft) !important; color: var(--text-primary) !important; }
-.sidebar-nav li a.active { background: var(--accent-soft) !important; color: var(--accent) !important; }
-
-/* 7. BUTTONS & BADGES WHICH SHOULD REMAIN WHITE */
-.btn-primary, .btn-login, .user-avatar, .member-avatar, .app-avatar,
-.badge, .status-badge-active, .status-badge-pending, .status-badge-inactive, .status-badge-overdue,
-.role-badge, .uid-badge, .btn-toggle-open, .action-btn {
-  color: #ffffff !important;
-}
-
-/* 8. TABLES */
-.data-table thead { background: var(--accent-soft) !important; }
-.data-table th { color: var(--accent) !important; }
-.data-table td { color: var(--text-primary) !important; }
-
-/* 9. FORM HEADERS (Profile Page) */
-.form-card-header { background: var(--accent-soft) !important; border-bottom: 1px solid var(--card-border) !important; }
-.form-card-header h3, .form-card-header h4 { color: var(--accent) !important; }
-.form-card-header p { color: var(--text-secondary) !important; }
-.profile-form label, .form-group label, .settings-card label { color: var(--text-primary) !important; font-weight: 600 !important; }
-
-/* 10. GLASSMORPHISM FOR STARS */
-body::before, body::after { will-change: transform, opacity !important; }
-body::before { animation: twinkleStarsFast 4.5s ease-in-out infinite, floatStarsDownGPU 90s linear infinite !important; }
-body::after { animation: twinkleStarsSlow 8s ease-in-out infinite, floatStarsUpGPU 130s linear infinite !important; }
-
-@keyframes floatStarsDownGPU { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-400px, 400px, 0); } }
-@keyframes floatStarsUpGPU { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(800px, -800px, 0); } }
-
-/* 11. ID CARD THEME LOCK (Always Maroon/Navy & White) */
-.id-card, .card-front, .card-back { background: #f7f8fa !important; color: #333333 !important; }
-.id-card .sidebar { background: linear-gradient(180deg, #0a1628 0%, #142a4a 50%, #1e3a5f 100%) !important; }
-body.theme-female .id-card .sidebar { background: linear-gradient(180deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%) !important; }
-.id-card .sidebar * { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
-.id-card .member-name, .id-card .info-line .val, .id-card .date-row .val { color: #0a1628 !important; }
-body.theme-female .id-card .member-name, body.theme-female .id-card .info-line .val { color: #450a0a !important; }
-.id-card .info-line .lbl, .id-card .date-row .lbl { color: #6b7280 !important; }
-/* Role Badge */
-.id-card .member-role {
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  /* Force Sidebar colors */
+  .id-card .sidebar {
+    background: linear-gradient(180deg, #0a1628 0%, #142a4a 50%, #1e3a5f 100%) !important;
+  }
+  body.theme-female .id-card .sidebar {
+    background: linear-gradient(180deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%) !important;
+  }
 }
