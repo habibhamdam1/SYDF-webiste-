@@ -1054,3 +1054,58 @@ body::after {
     background: linear-gradient(180deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%) !important;
   }
 }
+/* ============================================================
+   💥 ULTIMATE FINAL FIX (Inputs & Dashboard Text Rescue)
+   ============================================================ */
+
+/* 1. Fix Inputs, Selects & Textareas (Force Text & Fill Color) */
+html:not([data-theme="dark"]) .dashboard-content input,
+html:not([data-theme="dark"]) .dashboard-content select,
+html:not([data-theme="dark"]) .dashboard-content textarea,
+html:not([data-theme="dark"]) .profile-form input,
+html:not([data-theme="dark"]) .profile-form select {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  background-color: #ffffff !important; /* Force solid white bg */
+  opacity: 1 !important;
+}
+
+/* 2. Fix Profile Page Headers (Personal Information, etc.) */
+html:not([data-theme="dark"]) .form-card-header h3,
+html:not([data-theme="dark"]) .form-card-header p,
+html:not([data-theme="dark"]) .profile-header-info h1,
+html:not([data-theme="dark"]) .profile-header-info p,
+html:not([data-theme="dark"]) .form-card-header i {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+/* 3. Fix Dashboard Text (Engagement Score, Badges, etc.) */
+html:not([data-theme="dark"]) .dashboard-content h2,
+html:not([data-theme="dark"]) .dashboard-content h3,
+html:not([data-theme="dark"]) .dashboard-content h4,
+html:not([data-theme="dark"]) .dashboard-content p,
+html:not([data-theme="dark"]) .dashboard-content span:not(.badge):not(.icon):not(.score-label),
+html:not([data-theme="dark"]) .dashboard-content strong,
+html:not([data-theme="dark"]) .score-value,
+html:not([data-theme="dark"]) .stat-value {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+/* 4. Destroy ANY remaining rgba(255) inline styles (Jo dashboard me hain) */
+html:not([data-theme="dark"]) [style*="rgba(255"],
+html:not([data-theme="dark"]) [style*="rgba(240"],
+html:not([data-theme="dark"]) [style*="color: white"],
+html:not([data-theme="dark"]) [style*="color: #fff"] {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+/* 5. Dark Mode Exceptions (Inputs ko dark me bhi theek rakhein) */
+html[data-theme="dark"] .dashboard-content input,
+html[data-theme="dark"] .dashboard-content select,
+html[data-theme="dark"] .dashboard-content textarea {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
