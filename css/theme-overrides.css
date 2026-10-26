@@ -1,6 +1,5 @@
 /* ============================================================
    SYDF — THEME OVERRIDES (BRIDGE FILE)
-   Bridges ALL hardcoded dark-theme page CSS to the theme system.
    ============================================================ */
 
 /* 1. DASHBOARD BODY BACKGROUND */
@@ -514,7 +513,7 @@ html:not([data-theme="dark"]) .filter-select option {
   opacity: 1 !important;
 }
 
-/* 16. TOAST & CONFIRM (JS-injected, safety net) */
+/* 16. TOAST & CONFIRM */
 .syf-toast {
   background: var(--card-bg) !important;
   color: var(--text-primary) !important;
@@ -1380,11 +1379,11 @@ html:not([data-theme="dark"]) .filter-select option {
 .glass-footer {
   border-top-color: var(--footer-border) !important;
 }
+
 /* ============================================================
    🚀 PERFORMANCE & GLASSMORPHISM FIX
    ============================================================ */
 
-/* 1. SCROLL LAG FIX: Cards se heavy blur hata diya */
 .glass-card,
 .hero-content,
 .page-hero-content,
@@ -1397,34 +1396,36 @@ html:not([data-theme="dark"]) .filter-select option {
 .auth-welcome,
 .auth-form-block,
 .activity-card,
-.dashboard-topbar, /* Dashboard topbar ko bhi halka kiya */
+.dashboard-topbar,
 .topbar-user,
 .sidebar-nav {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
-/* 2. REAL GLASSMORPHISM: Light mode mein cards ko transparent kiya */
 html:not([data-theme="dark"]) .glass-card,
 html:not([data-theme="dark"]) .hero-content,
 html:not([data-theme="dark"]) .page-hero-content,
 html:not([data-theme="dark"]) .content-card,
 html:not([data-theme="dark"]) .auth-welcome,
-html:not([data-theme="dark"]) .auth-form-block {
-  /* Solid white ki jagah 70% transparent white */
+html:not([data-theme="dark"]) .auth-form-block,
+html:not([data-theme="dark"]) .table-card,
+html:not([data-theme="dark"]) .filters-bar,
+html:not([data-theme="dark"]) .dash-stat-card {
   background: rgba(255, 255, 255, 0.65) !important;
   border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: 0 8px 32px rgba(225, 29, 72, 0.08) !important; /* Halka sa rose shadow */
+  box-shadow: 0 8px 32px rgba(225, 29, 72, 0.08) !important;
 }
 
-/* Dark mode mein pehle se rgba background tha, usko thoda aur glassy banaya */
 html[data-theme="dark"] .glass-card,
-html[data-theme="dark"] .content-card {
-  background: rgba(12, 24, 42, 0.45) !important;
+html[data-theme="dark"] .content-card,
+html[data-theme="dark"] .table-card,
+html[data-theme="dark"] .filters-bar,
+html[data-theme="dark"] .dash-stat-card {
+  background: rgba(12, 24, 42, 0.55) !important;
   border: 1px solid rgba(140, 200, 220, 0.15) !important;
 }
 
-/* 3. HEADER & SIDEBAR PAR BLUR WAPAS (Kyunki ye fix rehte hain) */
 .glass-header,
 .dashboard-sidebar,
 .settings-save-bar {
@@ -1432,197 +1433,10 @@ html[data-theme="dark"] .content-card {
   -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
 }
 
-/* 4. BACKGROUND STARS ANIMATION OPTIMIZATION (Scroll smooth karne ke liye) */
-body::before,
-body::after {
-  will-change: transform; /* GPU ko force karta hai smooth scroll ke liye */
-}
-/* ============================================================
-   🚀 ULTIMATE PERFORMANCE FIX (NO MORE LAG)
-   ============================================================ */
-
-/* 1. FLOATING STARS BAND (Lag ki sabse badi wajah) */
-/* Stars ab move nahi honge, sirf twinkle karenge */
-body::before {
-  animation: twinkleStarsFast 4.5s ease-in-out infinite !important;
-}
-body::after {
-  animation: twinkleStarsSlow 8s ease-in-out infinite !important;
-}
-
-/* 2. CARDS SE BLUR HATAO (Par glass look rakho) */
-.glass-card,
-.hero-content,
-.page-hero-content,
-.content-card,
-.auth-welcome,
-.auth-form-block,
-.dashboard-sidebar,
-.dashboard-topbar {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* 3. ASLI GLASSMORPHISM (Bina lag ke) */
-/* Light Mode Glass */
-html:not([data-theme="dark"]) .glass-card,
-html:not([data-theme="dark"]) .content-card,
-html:not([data-theme="dark"]) .auth-welcome,
-html:not([data-theme="dark"]) .auth-form-block {
-  background: rgba(255, 255, 255, 0.75) !important; /* 75% transparent white */
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-  box-shadow: 0 8px 30px rgba(225, 29, 72, 0.08) !important;
-}
-
-/* Dark Mode Glass */
-html[data-theme="dark"] .glass-card,
-html[data-theme="dark"] .content-card,
-html[data-theme="dark"] .auth-welcome,
-html[data-theme="dark"] .auth-form-block {
-  background: rgba(12, 24, 42, 0.55) !important; /* 55% transparent dark */
-  border: 1px solid rgba(140, 200, 220, 0.2) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* 4. HEADER PAR BLUR WAPAS (Kyunki header scroll nahi hota) */
-.glass-header {
-  backdrop-filter: blur(15px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(15px) saturate(150%) !important;
-}
-
-/* 5. MOBILE OPTIMIZATION (Mobile pe lag zero) */
-@media (max-width: 768px) {
-  /* Mobile pe stars ki animation aur blur band */
-  body::before,
-  body::after {
-    animation: none !important;
-    opacity: 0.4 !important;
-  }
-  .glass-header {
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    background: var(--header-bg) !important;
-  }
-  /* Mobile pe cards ko solid kar diya taaki smooth chale */
-  html:not([data-theme="dark"]) .glass-card {
-    background: rgba(255, 255, 255, 0.95) !important;
-  }
-}
-/* ============================================================
-   🔥 FINAL FIX: WHITE TEXT ON LIGHT THEME
-   ============================================================ */
-
-/* 1. Leadership Page: Discipline Committee Names */
-.committee-card h4,
-.committee-card p,
-.member-name,
-.position-card h3 {
-  color: var(--text-primary) !important;
-}
-
-/* 2. Homepage: Member of the Month (Habibur Rahman) */
-/* Ye us card ka naam hai jo homepage pe dikhta hai */
-.motm-name,
-.member-name-large,
-.profile-card h2,
-.hero-content h2 {
-  color: var(--text-primary) !important;
-}
-
-/* 3. Login/Register Page: Feature List (View Your Profile, etc.) */
-.feature-item,
-.feature-item span,
-.feature-item p,
-.feature-item strong,
-.welcome-features div {
-  color: var(--text-secondary) !important;
-}
-
-/* Features ke chhote boxes ka background bhi theme ke hisaab se */
-.feature-item {
-  background: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-}
-
-/* 4. Committee Section Background */
-.committee-section {
-  background: var(--card-bg) !important;
-  border-color: var(--card-border) !important;
-}
-/* ============================================================
-   🚀 ADMIN PANEL GLASSMORPHISM & OVERLAP FIX
-   ============================================================ */
-
-/* 1. TOPBAR OVERLAP FIX (Text ek doosre par nahi chadhega) */
-.dashboard-topbar {
-  z-index: 9999 !important; /* Taake content iske niche se jaye */
-  background: var(--header-bg) !important;
-  backdrop-filter: blur(20px) saturate(150%) !important; /* Glassmorphism wapas */
-  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
-  border-bottom: 1px solid var(--card-border) !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* 2. SIDEBAR GLASSMORPHISM */
-.dashboard-sidebar {
-  background: var(--header-bg) !important;
-  backdrop-filter: blur(20px) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
-  border-right: 1px solid var(--card-border) !important;
-  z-index: 1000 !important;
-}
-
-/* 3. ADMIN TABLES & CARDS MEIN HALKA GLASS (Bina lag ke) */
-html:not([data-theme="dark"]) .content-card,
-html:not([data-theme="dark"]) .table-card,
-html:not([data-theme="dark"]) .filters-bar,
-html:not([data-theme="dark"]) .dash-stat-card,
-html:not([data-theme="dark"]) .glass-card {
-  background: rgba(255, 255, 255, 0.65) !important; /* 65% transparent white */
-  backdrop-filter: blur(10px) !important; /* Halka blur */
-  -webkit-backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.9) !important;
-}
-
-/* Dark Mode Admin Glass */
-html[data-theme="dark"] .content-card,
-html[data-theme="dark"] .table-card,
-html[data-theme="dark"] .filters-bar,
-html[data-theme="dark"] .dash-stat-card,
-html[data-theme="dark"] .glass-card {
-  background: rgba(12, 24, 42, 0.55) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(140, 200, 220, 0.15) !important;
-}
-
-/* 4. PAGE HEADER TEXT FIX (Members Directory) */
-.page-header-info h1,
-.page-header-info p,
-.page-header-info strong {
-  color: var(--text-primary) !important;
-  position: relative;
-  z-index: 10;
-}
-
-/* 5. SEARCH BAR FIX (Taake background solid lage) */
-.search-box input {
-  background: var(--input-bg) !important;
-}
-
-/* 6. TABLE KE ANDAR KE WHITE BACKGROUNDS HATAO */
-.data-table thead {
-  background: var(--accent-soft) !important;
-}
-.data-table tbody tr {
-  background: transparent !important;
-}
 /* ============================================================
    🔥 NUCLEAR FIX: MEMBER DASHBOARD TEXT & FORM CONTRAST
-   (Profile, Payments, Settings, Proposals, etc.)
    ============================================================ */
 
-/* 1. Form Card Headers (Personal Information, Security, etc.) */
 .form-card-header {
   background: var(--accent-soft) !important;
   border-bottom: 1px solid var(--card-border) !important;
@@ -1631,14 +1445,13 @@ html[data-theme="dark"] .glass-card {
 }
 .form-card-header h3,
 .form-card-header h4 {
-  color: var(--accent) !important; /* Rose color in light, Teal in dark */
+  color: var(--accent) !important;
   font-weight: 600 !important;
 }
 .form-card-header p {
   color: var(--text-secondary) !important;
 }
 
-/* 2. Form Labels (FULL NAME, CNIC, GENDER, etc.) */
 .profile-form label,
 .form-group label,
 .settings-card label,
@@ -1648,79 +1461,6 @@ html[data-theme="dark"] .glass-card {
   opacity: 1 !important;
 }
 
-/* 3. Input Fields Background & Text */
-.profile-form input,
-.profile-form select,
-.profile-form textarea,
-.form-group input,
-.form-group select,
-.form-group textarea,
-.settings-card input,
-.settings-card select,
-.settings-card textarea {
-  background-color: var(--input-bg) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--input-border) !important;
-  font-weight: 500 !important;
-}
-
-/* 4. Disabled Inputs (Jo change nahi ho sakte, jaise CNIC) */
-.profile-form input:disabled,
-.form-group input:disabled {
-  background-color: var(--card-bg-hover) !important;
-  color: var(--text-muted) !important;
-  opacity: 1 !important;
-}
-
-/* 5. Placeholders */
-.profile-form input::placeholder,
-.form-group input::placeholder,
-.dashboard-content input::placeholder {
-  color: var(--text-muted) !important;
-}
-
-/* 6. Small Hints (Jaise "Cannot be changed", "LOCKED" etc.) */
-.form-hint,
-.profile-form small,
-.form-group small,
-.dashboard-content small {
-  color: var(--warm-text) !important; /* Amber/Gold color for warnings */
-  opacity: 1 !important;
-  font-weight: 500 !important;
-}
-
-/* 7. Fix Headings & Text Outside Forms (Dashboard Texts) */
-.profile-header-info h1,
-.dashboard-content h1,
-.dashboard-content h2,
-.dashboard-content h3,
-.dashboard-content h4,
-.dashboard-content h5 {
-  color: var(--text-primary) !important;
-}
-
-.profile-header-info p,
-.profile-meta,
-.profile-role,
-.dashboard-content p {
-  color: var(--text-secondary) !important;
-}
-
-/* 8. Avatar Background Fix (Make it Rose in light mode) */
-.profile-avatar-big {
-  background: linear-gradient(
-    135deg,
-    var(--accent),
-    var(--accent-dark)
-  ) !important;
-  color: var(--accent-contrast) !important;
-}
-/* ============================================================
-   🚨 ABSOLUTE GLOBAL FIX: ALL MEMBER & ADMIN PAGES
-   (Text, Inputs, Selects, Badges)
-   ============================================================ */
-
-/* 1. FORCE ALL TEXT TO BE READABLE IN LIGHT MODE */
 html:not([data-theme="dark"]) .dashboard-content h1,
 html:not([data-theme="dark"]) .dashboard-content h2,
 html:not([data-theme="dark"]) .dashboard-content h3,
@@ -1739,18 +1479,6 @@ html:not([data-theme="dark"]) .dashboard-content .stat-label {
   color: var(--text-primary) !important;
 }
 
-/* 2. MAKE SECONDARY TEXT SLIGHTLY LIGHTER (Readable but distinct) */
-html:not([data-theme="dark"]) .dashboard-content .score-subtitle,
-html:not([data-theme="dark"]) .dashboard-content .dash-stat-info p,
-html:not([data-theme="dark"]) .dashboard-content .form-hint,
-html:not([data-theme="dark"]) .dashboard-content .profile-meta,
-html:not([data-theme="dark"]) .dashboard-content .text-muted,
-html:not([data-theme="dark"]) .dashboard-content .user-uid,
-html:not([data-theme="dark"]) .dashboard-content .page-header-info p {
-  color: var(--text-secondary) !important;
-}
-
-/* 3. RESTORE WHITE TEXT ONLY FOR BUTTONS, AVATARS & BADGES */
 html:not([data-theme="dark"]) .dashboard-content .btn-primary,
 html:not([data-theme="dark"]) .dashboard-content .btn-login,
 html:not([data-theme="dark"]) .dashboard-content .user-avatar,
@@ -1768,490 +1496,186 @@ html:not([data-theme="dark"]) .dashboard-content .action-btn {
   color: #ffffff !important;
 }
 
-/* 4. FORM INPUTS & TEXTAREAS (Values inside them) */
-html:not([data-theme="dark"]) .dashboard-content input,
-html:not([data-theme="dark"]) .dashboard-content textarea {
-  color: var(--text-primary) !important;
-  background-color: var(--card-bg) !important;
-  font-weight: 500 !important;
-  border: 1px solid var(--card-border) !important;
-}
+/* ============================================================
+   🫧 LIGHT THEME: DARK NAVY & CYAN GLOWING BUBBLES
+   ============================================================ */
 
-/* 5. DISABLED INPUTS (CNIC, Date of Birth) */
-html:not([data-theme="dark"]) .dashboard-content input:disabled {
-  color: var(--text-muted) !important;
-  background-color: var(--card-bg-hover) !important;
+html:not([data-theme="dark"]) body::before {
+  background-image:
+    radial-gradient(
+      circle 2.5px at 25px 45px,
+      #ffffff 0%,
+      #1e3a8a 40%,
+      rgba(15, 23, 42, 0.3) 80%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2px at 75px 90px,
+      #e0f2fe 0%,
+      #0f172a 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 3px at 130px 40px,
+      #ffffff 0%,
+      #1e3a8a 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.5px at 200px 120px,
+      #ffffff 0%,
+      #0284c7 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2px at 320px 85px,
+      #e0f2fe 0%,
+      #0ea5e9 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.5px at 95px 220px,
+      #ffffff 0%,
+      #38bdf8 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2px at 275px 260px,
+      #ffffff 0%,
+      #3730a3 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 3px at 360px 340px,
+      #e0f2fe 0%,
+      #0284c7 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2px at 180px 315px,
+      #ffffff 0%,
+      #1e3a8a 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2.5px at 40px 355px,
+      #ffffff 0%,
+      #0ea5e9 40%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 2px at 240px 180px,
+      #e0f2fe 0%,
+      #3730a3 40%,
+      transparent 100%
+    );
+  background-size: 400px 400px;
   opacity: 1 !important;
 }
 
-/* 6. SELECT DROPDOWNS (Male, O+, Status) & ARROW FIX */
-html:not([data-theme="dark"]) .dashboard-content select {
-  color: var(--text-primary) !important;
-  background-color: var(--card-bg) !important;
-  font-weight: 500 !important;
-  border: 1px solid var(--card-border) !important;
-  /* Custom dark arrow for light mode */
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234c0519%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 15px center !important;
-  background-size: 12px !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
-  padding-right: 35px !important;
+html:not([data-theme="dark"]) body::after {
+  background-image:
+    radial-gradient(
+      circle 6px at 120px 180px,
+      #ffffff 0%,
+      #1e3a8a 30%,
+      rgba(15, 23, 42, 0.4) 70%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 5px at 500px 400px,
+      #e0f2fe 0%,
+      #0f172a 30%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 6px at 450px 620px,
+      #ffffff 0%,
+      #1e3a8a 30%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 7px at 380px 80px,
+      #ffffff 0%,
+      #0ea5e9 30%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 5px at 680px 220px,
+      #e0f2fe 0%,
+      #38bdf8 30%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle 7px at 200px 520px,
+      #ffffff 0%,
+      #3730a3 30%,
+      transparent 100%
+    );
+  background-size: 800px 800px;
+  opacity: 1 !important;
 }
 
-/* 7. DATE PICKER ICON (Calendar) */
-html:not([data-theme="dark"])
-  .dashboard-content
-  input::-webkit-calendar-picker-indicator {
-  filter: invert(0.2); /* Make calendar icon dark */
-}
-
-/* 8. FORM CARD HEADERS (Personal Information Box) */
-html:not([data-theme="dark"]) .dashboard-content .form-card-header {
-  background: var(--accent-soft) !important;
-  border-bottom: 1px solid var(--card-border) !important;
-  padding: 20px !important;
-  border-radius: 12px 12px 0 0 !important;
-}
-html:not([data-theme="dark"]) .dashboard-content .form-card-header h3,
-html:not([data-theme="dark"]) .dashboard-content .form-card-header i {
-  color: var(--accent) !important;
-}
-/* ============================================================
-   💥 THE ULTIMATE WHITE-TEXT DESTROYER (GLOBAL FIX)
-   Forces ANY white text to become Dark Maroon in Light Mode.
-   ============================================================ */
-
-/* 1. HOMEPAGE & PUBLIC PAGES (Habibur Rahman & Others) */
-html:not([data-theme="dark"]) .glass-card h1,
-html:not([data-theme="dark"]) .glass-card h2,
-html:not([data-theme="dark"]) .glass-card h3,
-html:not([data-theme="dark"]) .glass-card h4,
-html:not([data-theme="dark"]) .glass-card p,
-html:not([data-theme="dark"]) .glass-card span:not(.badge):not(.icon),
-html:not([data-theme="dark"]) .member-name,
-html:not([data-theme="dark"]) .motm-name,
-html:not([data-theme="dark"]) .hero-content h2,
-html:not([data-theme="dark"]) .hero-content p,
-html:not([data-theme="dark"]) .section-title,
-html:not([data-theme="dark"]) .section-subtitle,
-html:not([data-theme="dark"]) .feature-item span,
-html:not([data-theme="dark"]) .feature-item p {
-  color: var(--text-primary) !important;
-}
-
-/* 2. PROFILE PAGE TABS (Contact, Education, etc.) */
-html:not([data-theme="dark"]) .profile-tabs button,
-html:not([data-theme="dark"]) .profile-tabs .tab-btn,
-html:not([data-theme="dark"]) .tabs-container button,
-html:not([data-theme="dark"]) .settings-tabs button,
-html:not([data-theme="dark"]) .profile-tab-btn {
-  color: var(--text-secondary) !important;
-  background: transparent !important;
-}
-
-/* Active Tab ko Accent Color do */
-html:not([data-theme="dark"]) .profile-tabs button.active,
-html:not([data-theme="dark"]) .profile-tabs .tab-btn.active,
-html:not([data-theme="dark"]) .tabs-container button.active,
-html:not([data-theme="dark"]) .settings-tabs button.active,
-html:not([data-theme="dark"]) .profile-tab-btn.active {
-  color: var(--accent-contrast) !important;
-  background: var(--accent) !important;
-}
-
-/* 3. DASHBOARD & ADMIN (My Badges, Headers) */
-html:not([data-theme="dark"]) .dashboard-content .content-card h1,
-html:not([data-theme="dark"]) .dashboard-content .content-card h2,
-html:not([data-theme="dark"]) .dashboard-content .content-card h3,
-html:not([data-theme="dark"]) .dashboard-content .content-card h4,
-html:not([data-theme="dark"]) .dashboard-content .card-header h3,
-html:not([data-theme="dark"]) .dashboard-content .welcome-text h1,
-html:not([data-theme="dark"]) .dashboard-content .welcome-text p {
-  color: var(--text-primary) !important;
-}
-
-/* 4. THE SAFETY NET (Catch-all for any remaining white text) */
-/* Agar koi text abhi bhi white hai jo button/badge nahi hai, toh usko maroon karo */
-html:not([data-theme="dark"])
-  .dashboard-content
-  span:not(.badge):not(.user-avatar):not(.nav-icon),
-html:not([data-theme="dark"]) .dashboard-content p,
-html:not([data-theme="dark"])
-  .dashboard-content
-  div:not(.btn-primary):not(.user-avatar):not(.badge) {
-  /* Sirf unko target karega jinki color explicitly white ho */
-  color: var(--text-primary) !important;
-}
-
-/* 5. EXCEPTIONS (Inko bilkul touch nahi karna, ye white hi rehne chahiye) */
-html:not([data-theme="dark"]) .btn-primary,
-html:not([data-theme="dark"]) .btn-login,
-html:not([data-theme="dark"]) .btn-toggle-open,
-html:not([data-theme="dark"]) .user-avatar,
-html:not([data-theme="dark"]) .member-avatar,
-html:not([data-theme="dark"]) .app-avatar,
-html:not([data-theme="dark"]) .badge,
-html:not([data-theme="dark"]) .status-badge-active,
-html:not([data-theme="dark"]) .status-badge-pending,
-html:not([data-theme="dark"]) .status-badge-inactive,
-html:not([data-theme="dark"]) .status-badge-overdue,
-html:not([data-theme="dark"]) .role-badge,
-html:not([data-theme="dark"]) .uid-badge,
-html:not([data-theme="dark"]) .score-value,
-html:not([data-theme="dark"]) .action-btn,
-html:not([data-theme="dark"]) .icon,
-html:not([data-theme="dark"]) .save-bar-message {
-  color: #ffffff !important;
-}
-
-/* 6. DARK MODE EXCEPTIONS (Profile Tabs dark mode mein white hi rahein) */
-html[data-theme="dark"] .profile-tabs button,
-html[data-theme="dark"] .profile-tabs .tab-btn {
-  color: var(--text-secondary) !important;
-}
-html[data-theme="dark"] .profile-tabs button.active,
-html[data-theme="dark"] .profile-tabs .tab-btn.active {
-  color: var(--accent-contrast) !important;
-  background: var(--accent) !important;
-}
-/* ============================================================
-   💣 ULTIMATE INLINE STYLE DESTROYER (For Remaining White Text)
-   ============================================================ */
-
-/* Light Mode: Pakdo har us element ko jiski inline style white hai */
-html:not([data-theme="dark"]) [style*="color: white"],
-html:not([data-theme="dark"]) [style*="color: #fff"],
-html:not([data-theme="dark"]) [style*="color: #ffffff"],
-html:not([data-theme="dark"]) [style*="color: rgba(255"] {
-  color: var(--text-primary) !important;
-}
-
-/* Profile Page ke Tabs (Contact, Education) agar phir bhi white hain */
-html:not([data-theme="dark"]) .profile-tab,
-html:not([data-theme="dark"]) .tab-button,
-html:not([data-theme="dark"]) .nav-tabs button {
-  color: var(--text-secondary) !important;
-}
-
-/* Agar tab active hai, toh usko Accent color do (Green/Teal) */
-html:not([data-theme="dark"]) .profile-tab.active,
-html:not([data-theme="dark"]) .tab-button.active,
-html:not([data-theme="dark"]) .nav-tabs button.active {
-  color: var(--accent-contrast) !important;
-  background: var(--accent) !important;
-}
-
-/* Homepage ke naam ko force karo dark karne ke liye */
-html:not([data-theme="dark"]) h2,
-html:not([data-theme="dark"]) h3 {
-  color: var(--text-primary) !important;
-}
-/* ============================================================
-   🔐 AUTH PAGES FINAL FIX (Login / Register / Password Labels)
-   ============================================================ */
-
-/* 1. Light Mode mein har label, text, aur span ko dark karo */
-html:not([data-theme="dark"]) .auth-section,
-html:not([data-theme="dark"]) .auth-section * {
-  color: var(--text-primary) !important;
-}
-
-/* 2. Jo cheezein Accent (Teal/Rose) color ki honi chahiye */
-html:not([data-theme="dark"]) .auth-section a,
-html:not([data-theme="dark"]) .auth-section .forgot-link,
-html:not([data-theme="dark"]) .auth-section .register-note a,
-html:not([data-theme="dark"]) .auth-section .welcome-logo,
-html:not([data-theme="dark"]) .auth-section .info-title {
-  color: var(--accent) !important;
-}
-
-/* 3. Buttons ka Text (Login button par white, baaki buttons par Accent) */
-html:not([data-theme="dark"]) .auth-section .btn-primary,
-html:not([data-theme="dark"]) .auth-section button[type="submit"] {
-  color: var(--accent-contrast) !important; /* White text on Teal button */
-}
-
-/* "Join Us" ya "Back" jaise secondary buttons */
-html:not([data-theme="dark"]) .auth-section .btn-secondary {
-  color: var(--accent) !important;
-  border-color: var(--accent) !important;
-  background: transparent !important;
-}
-
-/* 4. Divider ("OR" wali line) */
-html:not([data-theme="dark"]) .auth-section .divider span {
-  color: var(--text-muted) !important;
-}
-html:not([data-theme="dark"]) .auth-section .divider::before,
-html:not([data-theme="dark"]) .auth-section .divider::after {
-  background: var(--card-border) !important;
-}
-
-/* 5. Form Inputs (Email, Password) */
-html:not([data-theme="dark"]) .auth-section input {
-  background-color: var(--input-bg) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--input-border) !important;
-}
-
-/* 6. Dark Mode mein sab wapas white ho jaye */
-html[data-theme="dark"] .auth-section,
-html[data-theme="dark"] .auth-section * {
-  color: var(--text-primary) !important;
-}
-/* ============================================================
-   🎯 MEMBERSHIP & BENEFITS CARDS FINAL FIX
-   ============================================================ */
-
-/* 1. Benefit Cards ke Text ko Dark Maroon karo */
-html:not([data-theme="dark"]) .benefit-card h3,
-html:not([data-theme="dark"]) .benefit-card h4,
-html:not([data-theme="dark"]) .benefit-card p,
-html:not([data-theme="dark"]) .benefits-grid h3,
-html:not([data-theme="dark"]) .benefits-grid p {
-  color: var(--text-primary) !important;
-}
-
-/* 2. "Fill the form below" wale subtitle ko theek karo */
-html:not([data-theme="dark"]) .intro-block p,
-html:not([data-theme="dark"]) .form-intro,
-html:not([data-theme="dark"]) .section-subtitle {
-  color: var(--text-secondary) !important;
-}
-
-/* 3. "Note" wale box ka text dark karo */
-html:not([data-theme="dark"]) .info-box,
-html:not([data-theme="dark"]) .info-box p,
-html:not([data-theme="dark"]) .info-box .info-text,
-html:not([data-theme="dark"]) .info-box strong {
-  color: var(--text-primary) !important;
-}
-
-/* 4. "Create Your Account" ki heading (Agar wo bhi white ho) */
-html:not([data-theme="dark"]) .apply-block h2 {
-  color: var(--text-primary) !important;
-}
-/* ============================================================
-   🎯 MEMBERSHIP PAGE ULTIMATE FORCE FIX
-   (Targets: Benefit Cards, Note Box, Terms Text, Login Link)
-   ============================================================ */
-
-/* 1. 4 Benefit Cards (Training & Workshops, etc.) */
-html:not([data-theme="dark"]) .benefit-card h3,
-html:not([data-theme="dark"]) .benefit-card p,
-html:not([data-theme="dark"]) .benefits-grid h3,
-html:not([data-theme="dark"]) .benefits-grid p,
-html:not([data-theme="dark"]) .benefits-section .glass-card h3,
-html:not([data-theme="dark"]) .benefits-section .glass-card p {
-  color: var(--text-primary) !important;
-}
-
-/* 2. "Fill the form below to apply..." wali line */
-html:not([data-theme="dark"]) .form-intro,
-html:not([data-theme="dark"]) .apply-block p,
-html:not([data-theme="dark"]) .waitlist-block p {
-  color: var(--text-secondary) !important;
-}
-
-/* 3. "Note:" wala Box (Info Box) */
-html:not([data-theme="dark"]) .info-box,
-html:not([data-theme="dark"]) .info-box p,
-html:not([data-theme="dark"]) .info-box span,
-html:not([data-theme="dark"]) .info-box div {
-  color: var(--text-primary) !important;
-}
-html:not([data-theme="dark"]) .info-box strong {
-  color: var(--accent) !important;
-}
-
-/* 4. Terms & Conditions wala Checkbox Text */
-html:not([data-theme="dark"]) .checkbox-label,
-html:not([data-theme="dark"]) .checkbox-label span,
-html:not([data-theme="dark"]) .checkbox-group,
-html:not([data-theme="dark"]) .checkbox-group span {
-  color: var(--text-primary) !important;
-}
-html:not([data-theme="dark"]) .checkbox-label a {
-  color: var(--accent) !important;
-}
-
-/* 5. "Already have an account? Login Here" wala Text */
-html:not([data-theme="dark"]) .register-note,
-html:not([data-theme="dark"]) .register-note span,
-html:not([data-theme="dark"]) .login-link {
-  color: var(--text-primary) !important;
-}
-html:not([data-theme="dark"]) .register-note a {
-  color: var(--accent) !important;
-}
-/* ============================================================
-   💥 MEMBERSHIP PAGE - FORCE OVERRIDE (FINAL BOSS)
-   ============================================================ */
-
-/* 1. Benefit Cards, Form, Note Box, aur Checkbox ke ANDAR ka har text pakdo */
-html:not([data-theme="dark"]) .benefits-section *,
-html:not([data-theme="dark"]) .apply-block *,
-html:not([data-theme="dark"]) .info-box *,
-html:not([data-theme="dark"]) .checkbox-group * {
-  color: var(--text-primary) !important;
-}
-
-/* 2. Links (Terms & Conditions, Login Here) ko Rose/Teal color do */
-html:not([data-theme="dark"]) .checkbox-group a,
-html:not([data-theme="dark"]) .register-note a {
-  color: var(--accent) !important;
-  font-weight: 600 !important;
-}
-
-/* 3. "Note:" wale word ko Blue/Accent color do taake wo highlight rahe */
-html:not([data-theme="dark"]) .info-box strong,
-html:not([data-theme="dark"]) .info-box span[style*="color"] {
-  color: var(--accent) !important;
-}
-
-/* 4. "Create Account" wale Button ka text White hi rahega (Kyunki background green hai) */
-html:not([data-theme="dark"]) .apply-block .btn-primary,
-html:not([data-theme="dark"]) .apply-block button[type="submit"] {
-  color: #ffffff !important;
-}
-
-/* 5. Checkbox ka text thoda halka (muted) dikhe */
-html:not([data-theme="dark"]) .checkbox-label {
-  color: var(--text-secondary) !important;
-}
-/* ============================================================
-   🎯 FIX FOR INLINE <STYLE> IN MEMBERSHIP.HTML
-   (Overrides hardcoded white colors & dark backgrounds)
-   ============================================================ */
-
-/* 1. Light Mode: Benefit Cards, Form Headers, Labels, Footer */
-html:not([data-theme="dark"]) .benefit-mini h4,
-html:not([data-theme="dark"]) .benefit-mini p,
-html:not([data-theme="dark"]) .form-header p,
-html:not([data-theme="dark"]) .form-label,
-html:not([data-theme="dark"]) .checkbox-group,
-html:not([data-theme="dark"]) .form-footer,
-html:not([data-theme="dark"]) .info-notice .txt,
-html:not([data-theme="dark"]) .apply-block h2,
-html:not([data-theme="dark"]) .amount {
-  color: var(--text-primary) !important;
-}
-
-/* 2. Form Inputs, Selects, aur Radio Buttons */
-html:not([data-theme="dark"]) .form-input,
-html:not([data-theme="dark"]) .form-select,
-html:not([data-theme="dark"]) .radio-option {
-  color: var(--text-primary) !important;
-  background-color: var(--input-bg) !important;
-  border-color: var(--input-border) !important;
-}
-
-/* 3. Form Inputs ke andar ka Placeholder Text */
-html:not([data-theme="dark"]) .form-input::placeholder {
-  color: var(--text-muted) !important;
-}
-
-/* 4. Select Dropdown (District) ka Arrow aur Text */
-html:not([data-theme="dark"]) .form-select option {
-  background-color: #ffffff !important;
-  color: #4c0519 !important;
-}
-
-/* 5. Light Mode mein Boxon ka Background Glassy karo */
-html:not([data-theme="dark"]) .benefit-mini,
-html:not([data-theme="dark"]) .form-container,
-html:not([data-theme="dark"]) .info-notice {
-  background: rgba(255, 255, 255, 0.65) !important;
-  border-color: var(--card-border) !important;
-}
-/* ============================================================
-   🎯 CONTACT PAGE FINAL FIX (Social Links & Hours)
-   ============================================================ */
-
-/* 1. Light Mode mein Social Links ke naam ko Dark Maroon karo */
-html:not([data-theme="dark"]) .social-link {
-  color: var(--text-primary) !important;
-  background-color: var(--card-bg-hover) !important;
-  border-color: var(--card-border) !important;
-}
-
-/* 2. Jab Mouse (Hover) le jayein toh accent color ho jaye */
-html:not([data-theme="dark"]) .social-link:hover {
-  background-color: var(--accent-soft) !important;
-  border-color: var(--accent) !important;
-  color: var(--accent) !important;
-}
-
-/* 3. Timing (Hours List) ka text theek karo */
-html:not([data-theme="dark"]) .hours-list li span:first-child {
-  color: var(--text-secondary) !important;
-}
-
-html:not([data-theme="dark"]) .hours-list li span:last-child {
-  color: var(--accent) !important;
-}
-
-html:not([data-theme="dark"]) .hours-list li {
-  border-bottom-color: var(--card-border) !important;
-}
-/* 6. Toggle Password (Eye Icon) ka color theek karo */
-html:not([data-theme="dark"]) .toggle-pass {
-  color: var(--text-secondary) !important;
-}
 /* ============================================================
    ✨ FLOATING STARS ANIMATION (GPU OPTIMIZED - NO LAG)
    ============================================================ */
 
-/* 1. Star layers ko bada karo taake move hone par kinare na dikhein */
 body::before,
 body::after {
   inset: -50% !important;
   will-change: transform, opacity !important;
 }
 
-/* 2. Naye GPU Accelerated Keyframes (Transform use kar rahe hain) */
 @keyframes floatStarsDownGPU {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-400px, 400px, 0); }
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-400px, 400px, 0);
+  }
 }
 
 @keyframes floatStarsUpGPU {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(800px, -800px, 0); }
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(800px, -800px, 0);
+  }
 }
 
-/* 3. Animation Apply karo */
 body::before {
-  animation: twinkleStarsFast 4.5s ease-in-out infinite, floatStarsDownGPU 90s linear infinite !important;
+  animation:
+    twinkleStarsFast 4.5s ease-in-out infinite,
+    floatStarsDownGPU 90s linear infinite !important;
 }
 
 body::after {
-  animation: twinkleStarsSlow 8s ease-in-out infinite, floatStarsUpGPU 130s linear infinite !important;
+  animation:
+    twinkleStarsSlow 8s ease-in-out infinite,
+    floatStarsUpGPU 130s linear infinite !important;
 }
 
-/* 4. Mobile Webview Fix (Mobile par speed thodi slow karo taake battery bache) */
 @media (max-width: 768px) {
   body::before {
-    animation: twinkleStarsFast 6s ease-in-out infinite, floatStarsDownGPU 120s linear infinite !important;
+    animation:
+      twinkleStarsFast 6s ease-in-out infinite,
+      floatStarsDownGPU 120s linear infinite !important;
   }
   body::after {
-    animation: twinkleStarsSlow 10s ease-in-out infinite, floatStarsUpGPU 180s linear infinite !important;
+    animation:
+      twinkleStarsSlow 10s ease-in-out infinite,
+      floatStarsUpGPU 180s linear infinite !important;
   }
 }
+
 /* ============================================================
    📱 FIX: DESKTOP MODE ON MOBILE (Missing Sidebar & Hamburger)
    ============================================================ */
-
-/* 1. Force Hamburger Button to show on Tablet & Desktop-Mode Mobile */
 @media (max-width: 1024px) {
   .menu-toggle {
     display: inline-block !important;
   }
-  
-  /* Sidebar ko chhupao jab tak button click na ho */
   .dashboard-sidebar {
     transform: translateX(-100%) !important;
   }
@@ -2264,276 +1688,99 @@ body::after {
 }
 
 /* ============================================================
-   ✨ FLOATING STARS ANIMATION (GPU OPTIMIZED - NO LAG)
+   🪪 ID CARD: ABSOLUTE THEME LOCK
+   Force the ID card to always look like the dark mode version,
+   regardless of the website theme or print settings.
    ============================================================ */
 
-/* Star layers ko bada karo taake move hone par kinare na dikhein */
-body::before,
-body::after {
-  inset: -50% !important;
-  will-change: transform, opacity !important;
-}
-
-/* Naye GPU Accelerated Keyframes (Transform use kar rahe hain) */
-@keyframes floatStarsDownGPU {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(-400px, 400px, 0); }
-}
-
-@keyframes floatStarsUpGPU {
-  0% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(800px, -800px, 0); }
-}
-
-/* Animation Apply karo */
-body::before {
-  animation: twinkleStarsFast 4.5s ease-in-out infinite, floatStarsDownGPU 90s linear infinite !important;
-}
-
-body::after {
-  animation: twinkleStarsSlow 8s ease-in-out infinite, floatStarsUpGPU 130s linear infinite !important;
-}
-
-/* Mobile par speed thodi slow karo taake smooth chale */
-@media (max-width: 768px) {
-  body::before {
-    animation: twinkleStarsFast 6s ease-in-out infinite, floatStarsDownGPU 120s linear infinite !important;
-  }
-  body::after {
-    animation: twinkleStarsSlow 10s ease-in-out infinite, floatStarsUpGPU 180s linear infinite !important;
-  }
-}
-/* ============================================================
-   🫧 LIGHT THEME: EXTRA VISIBLE "BUBBLE" STARS
-   ============================================================ */
-
-/* Light Mode ke liye naye, zyada aur clear stars */
-html:not([data-theme="dark"]) body::before {
-  background-image:
-    /* Chhote bubbles (White center + Rose edge) */
-    radial-gradient(circle 2.5px at 25px 45px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(225,29,72,0.4) 80%, transparent 100%),
-    radial-gradient(circle 2px at 75px 90px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(225,29,72,0.3) 80%, transparent 100%),
-    radial-gradient(circle 3px at 130px 40px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(245,158,11,0.4) 80%, transparent 100%),
-    radial-gradient(circle 2px at 200px 120px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(244,63,94,0.4) 80%, transparent 100%),
-    radial-gradient(circle 2.5px at 320px 85px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(245,158,11,0.3) 80%, transparent 100%),
-    radial-gradient(circle 2px at 95px 220px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(225,29,72,0.4) 80%, transparent 100%),
-    radial-gradient(circle 3px at 275px 260px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(244,63,94,0.3) 80%, transparent 100%),
-    radial-gradient(circle 2px at 360px 340px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(245,158,11,0.4) 80%, transparent 100%),
-    radial-gradient(circle 2.5px at 180px 315px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(225,29,72,0.4) 80%, transparent 100%),
-    radial-gradient(circle 2px at 40px 355px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(244,63,94,0.3) 80%, transparent 100%),
-    radial-gradient(circle 3px at 240px 180px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(245,158,11,0.4) 80%, transparent 100%);
-  background-size: 400px 400px;
-  opacity: 1 !important; /* Pehle se zyada clear */
-}
-
-/* Bade bubbles jo dheere dheere float karenge */
-html:not([data-theme="dark"]) body::after {
-  background-image:
-    radial-gradient(circle 6px at 120px 180px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(245,158,11,0.5) 80%, transparent 100%),
-    radial-gradient(circle 4px at 380px 80px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(225,29,72,0.5) 80%, transparent 100%),
-    radial-gradient(circle 5px at 500px 400px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(244,63,94,0.4) 80%, transparent 100%),
-    radial-gradient(circle 7px at 200px 520px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(245,158,11,0.5) 80%, transparent 100%),
-    radial-gradient(circle 5px at 680px 220px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(225,29,72,0.4) 80%, transparent 100%),
-    radial-gradient(circle 6px at 450px 620px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(244,63,94,0.5) 80%, transparent 100%);
-  background-size: 800px 800px;
-  opacity: 1 !important;
-}
-
-/* Dark mode mein pehle wale normal stars hi rahenge */
-/* ============================================================
-   ✨ LIGHT THEME: DARK & SPARKLING STARS (CHAMAKDAR)
-   ============================================================ */
-
-/* 1. Chhote Dark Sparkles (Fast twinkle) */
-html:not([data-theme="dark"]) body::before {
-  background-image:
-    /* Dark Maroon Sparkles */
-    radial-gradient(circle 2.5px at 25px 45px, #ffffff 0%, #4c0519 40%, transparent 100%),
-    radial-gradient(circle 2px at 75px 90px, #ffffff 0%, #881337 40%, transparent 100%),
-    radial-gradient(circle 2.5px at 200px 120px, #ffffff 0%, #4c0519 40%, transparent 100%),
-    radial-gradient(circle 2px at 360px 340px, #ffffff 0%, #881337 40%, transparent 100%),
-    radial-gradient(circle 2.5px at 180px 315px, #ffffff 0%, #4c0519 40%, transparent 100%),
-    
-    /* Deep Rose Sparkles */
-    radial-gradient(circle 3px at 130px 40px, #ffffff 0%, #be123c 40%, transparent 100%),
-    radial-gradient(circle 2.5px at 320px 85px, #ffffff 0%, #e11d48 40%, transparent 100%),
-    radial-gradient(circle 2px at 40px 355px, #ffffff 0%, #be123c 40%, transparent 100%),
-    
-    /* Dark Amber Sparkles */
-    radial-gradient(circle 3px at 95px 220px, #ffffff 0%, #b45309 40%, transparent 100%),
-    radial-gradient(circle 2.5px at 275px 260px, #ffffff 0%, #f59e0b 40%, transparent 100%),
-    radial-gradient(circle 3px at 240px 180px, #ffffff 0%, #b45309 40%, transparent 100%);
-  background-size: 400px 400px;
-  opacity: 1 !important;
-}
-
-/* 2. Bade Dark Sparkles (Slow twinkle, zyada chamak) */
-html:not([data-theme="dark"]) body::after {
-  background-image:
-    /* Bade Dark Maroon Stars */
-    radial-gradient(circle 6px at 120px 180px, #ffffff 0%, #4c0519 30%, transparent 100%),
-    radial-gradient(circle 5px at 500px 400px, #ffffff 0%, #881337 30%, transparent 100%),
-    radial-gradient(circle 6px at 450px 620px, #ffffff 0%, #4c0519 30%, transparent 100%),
-    
-    /* Bade Deep Rose Stars */
-    radial-gradient(circle 7px at 380px 80px, #ffffff 0%, #be123c 30%, transparent 100%),
-    radial-gradient(circle 5px at 680px 220px, #ffffff 0%, #e11d48 30%, transparent 100%),
-    
-    /* Bade Dark Amber Stars */
-    radial-gradient(circle 7px at 200px 520px, #ffffff 0%, #b45309 30%, transparent 100%);
-  background-size: 800px 800px;
-  opacity: 1 !important;
-}/* ============================================================
-   ✨ LIGHT THEME: DARK & SPARKLING STARS (CHAMAKDAR)
-   ============================================================ */
-
-/* 1. Chhote Dark Sparkles (Fast twinkle) */
-html:not([data-theme="dark"]) body::before {
-  background-image:
-    /* Dark Maroon Sparkles */
-    radial-gradient(circle 2.5px at 25px 45px, #ffffff 0%, #4c0519 40%, transparent 100%),
-    radial-gradient(circle 2px at 75px 90px, #ffffff 0%, #881337 40%, transparent 100%),
-    radial-gradient(circle 2.5px at 200px 120px, #ffffff 0%, #4c0519 40%, transparent 100%),
-    radial-gradient(circle 2px at 360px 340px, #ffffff 0%, #881337 40%, transparent 100%),
-    radial-gradient(circle 2.5px at 180px 315px, #ffffff 0%, #4c0519 40%, transparent 100%),
-    
-    /* Deep Rose Sparkles */
-    radial-gradient(circle 3px at 130px 40px, #ffffff 0%, #be123c 40%, transparent 100%),
-    radial-gradient(circle 2.5px at 320px 85px, #ffffff 0%, #e11d48 40%, transparent 100%),
-    radial-gradient(circle 2px at 40px 355px, #ffffff 0%, #be123c 40%, transparent 100%),
-    
-    /* Dark Amber Sparkles */
-    radial-gradient(circle 3px at 95px 220px, #ffffff 0%, #b45309 40%, transparent 100%),
-    radial-gradient(circle 2.5px at 275px 260px, #ffffff 0%, #f59e0b 40%, transparent 100%),
-    radial-gradient(circle 3px at 240px 180px, #ffffff 0%, #b45309 40%, transparent 100%);
-  background-size: 400px 400px;
-  opacity: 1 !important;
-}
-
-/* 2. Bade Dark Sparkles (Slow twinkle, zyada chamak) */
-html:not([data-theme="dark"]) body::after {
-  background-image:
-    /* Bade Dark Maroon Stars */
-    radial-gradient(circle 6px at 120px 180px, #ffffff 0%, #4c0519 30%, transparent 100%),
-    radial-gradient(circle 5px at 500px 400px, #ffffff 0%, #881337 30%, transparent 100%),
-    radial-gradient(circle 6px at 450px 620px, #ffffff 0%, #4c0519 30%, transparent 100%),
-    
-    /* Bade Deep Rose Stars */
-    radial-gradient(circle 7px at 380px 80px, #ffffff 0%, #be123c 30%, transparent 100%),
-    radial-gradient(circle 5px at 680px 220px, #ffffff 0%, #e11d48 30%, transparent 100%),
-    
-    /* Bade Dark Amber Stars */
-    radial-gradient(circle 7px at 200px 520px, #ffffff 0%, #b45309 30%, transparent 100%);
-  background-size: 800px 800px;
-  opacity: 1 !important;
-}
-/* ============================================================
-   🪪 ID CARD: THEME LOCK (Same Design in Light, Dark & Print)
-   ============================================================ */
-
-/* 1. Main ID Card Wrapper - Force White Background */
-.id-card-wrapper,
+/* Main Card Wrapper (White Background Force) */
 .id-card,
 .card-front,
 .card-back,
-.id-card-preview-container {
-  background: #ffffff !important;
+.id-card-preview-container,
+.id-card-container {
+  background: #f7f8fa !important;
   color: #333333 !important;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
-  -webkit-print-color-adjust: exact !important; /* Print mein colors force karega */
-  print-color-adjust: exact !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-/* 2. Sidebar - Force Dark Maroon (Jo Dark Mode mein hai) */
-.id-card-sidebar,
-.card-sidebar,
-.id-side,
-.id-card-left-bar {
-  background: linear-gradient(135deg, #4c0519 0%, #881337 100%) !important;
+/* Sidebar (Left/Right Maroon/Navy Bar Force) */
+.id-card .sidebar,
+.id-card .card-sidebar,
+.id-card .id-side,
+.id-card .id-card-left-bar,
+.id-card .id-card-right-bar {
+  background: linear-gradient(
+    180deg,
+    #0a1628 0%,
+    #142a4a 50%,
+    #1e3a5f 100%
+  ) !important;
   color: #ffffff !important;
 }
 
-/* 3. Sidebar Text */
-.id-card-sidebar *,
-.card-sidebar *,
-.id-side *,
-.id-card-left-bar * {
+/* Specific Theme Override for Female */
+body.theme-female .id-card .sidebar {
+  background: linear-gradient(
+    180deg,
+    #450a0a 0%,
+    #7f1d1d 50%,
+    #991b1b 100%
+  ) !important;
+}
+
+/* Sidebar Text (SYDF, ID#) */
+.id-card .sidebar *,
+.id-card .card-sidebar *,
+.id-card .id-side * {
   color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
-/* 4. Main Content Area Text (Name, CNIC, Details) */
-.id-card-content,
-.id-card-details,
-.card-body {
-  background: #ffffff !important;
+/* Main Content Area (Naam, Details) */
+.id-card .main-content,
+.id-card .back-main,
+.id-card .id-card-details,
+.id-card .card-body {
+  background: #f7f8fa !important;
 }
 
-.id-card-content h2,
-.id-card-content h3,
-.id-card-content .member-name,
-.card-body h2,
-.card-body h3,
-.card-body .member-name {
-  color: #4c0519 !important; /* Dark Maroon for Name */
-  font-weight: 800 !important;
+body.theme-female .id-card .main-content,
+body.theme-female .id-card .back-main {
+  background: #faf7f5 !important;
 }
 
-.id-card-content p,
-.id-card-content span,
-.id-card-content strong,
-.card-body p,
-.card-body span,
-.card-body strong {
-  color: #1f2937 !important; /* Dark Grey for details */
+.id-card .member-name,
+.id-card .info-line .val,
+.id-card .instr-header h4,
+.id-card .instr-list li strong,
+.id-card .date-row .val {
+  color: #0a1628 !important;
+  -webkit-text-fill-color: #0a1628 !important;
 }
 
-.id-card-content .label,
-.card-body .label {
-  color: #6b7280 !important; /* Light Grey for labels like 'CNIC' */
+body.theme-female .id-card .member-name,
+body.theme-female .id-card .info-line .val,
+body.theme-female .id-card .instr-header h4,
+body.theme-female .id-card .instr-list li strong,
+body.theme-female .id-card .date-row .val {
+  color: #450a0a !important;
+  -webkit-text-fill-color: #450a0a !important;
 }
 
-/* 5. Member Role Badge (Member, Coordinator, etc.) */
-.id-card-role-badge,
-.member-role-badge {
-  background: #e0f2fe !important; /* Light Blue bg */
-  color: #0284c7 !important; /* Dark Blue text */
-  border: 1px solid #bae6fd !important;
-  font-weight: 700 !important;
+/* Labels (CNIC, PHONE, BLOOD GROUP) */
+.id-card .info-line .lbl,
+.id-card .date-row .lbl,
+.id-card .instr-header p,
+.id-card .member-dept {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
 }
 
-/* 6. Female Card Specific Fix (Agar alag class hai toh) */
-.id-card-wrapper.female-card .id-card-sidebar,
-.id-card.female .card-sidebar {
-  background: linear-gradient(135deg, #4c0519 0%, #881337 100%) !important;
-}
-
-/* ============================================================
-   🖨️ PRINT / PDF SPECIFIC FIX
-   ============================================================ */
-@media print {
-  /* Print mein background colors ko force karo */
-  .id-card-wrapper,
-  .id-card,
-  .card-front,
-  .card-back,
-  .id-card-sidebar,
-  .card-sidebar,
-  .id-card-role-badge {
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  /* Print ke waqt ID card ko page ke center mein rakho */
-  .id-card-wrapper,
-  .id-card {
-    margin: 0 auto !important;
-    page-break-inside: avoid !important;
-    box-shadow: none !important;
-    border: 1px solid #e5e7eb !important;
-  }
-
-  /* Print mein page ka background safaid ho */
-  body, html {
-    background: #ffffff !important;
-  }
+/* Role Badge */
+.id-card .member-role {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
