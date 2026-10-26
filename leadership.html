@@ -68,6 +68,11 @@
           opacity: 0.5;
         }
       }
+
+      /* Hide empty rows so there's no awkward gap */
+      .leadership-row:empty {
+        display: none !important;
+      }
     </style>
   </head>
   <body>
@@ -215,20 +220,14 @@
       </div>
 
       <!-- ✅ DISCIPLINE COMMITTEE MEMBERS (DYNAMIC FROM ADMIN PANEL) -->
-      <div class="committee-section">
+      <div
+        class="committee-section"
+        id="committeeSection"
+        style="display: none"
+      >
         <h3 class="committee-title">Discipline Committee Members</h3>
         <div class="committee-grid" id="disciplineCommitteeGrid">
           <!-- Yahan data admin panel se automatically aayega -->
-          <p
-            style="
-              text-align: center;
-              width: 100%;
-              opacity: 0.6;
-              color: var(--text-primary);
-            "
-          >
-            Loading members...
-          </p>
         </div>
       </div>
 
@@ -331,25 +330,33 @@
 
           if (error) throw error;
 
+          // Pehle saari cards ko hide kar dein (safety ke liye)
+          document.querySelectorAll(".position-card").forEach((card) => {
+            card.style.display = "none";
+          });
+
+          // Ab sirf un cards ko show karein jinko Admin panel se assign kiya gaya hai
           positions.forEach((p) => {
-            const el = document.querySelector(
-              `.member-name[data-role="${p.title}"]`,
-            );
-            if (el) {
-              el.textContent = p.assigned_to_name
-                ? p.assigned_to_name
-                : "Vacant";
-              el.classList.remove("loading");
+            if (p.assigned_to_name && p.assigned_to_name.trim() !== "") {
+              const el = document.querySelector(
+                `.member-name[data-role="${p.title}"]`,
+              );
+              if (el) {
+                el.textContent = p.assigned_to_name;
+                el.classList.remove("loading");
+
+                // Uska parent card show karein
+                const parentCard = el.closest(".position-card");
+                if (parentCard) {
+                  parentCard.style.display = ""; // Default styling wapas laayein
+                }
+              }
             }
           });
 
-          document.querySelectorAll(".member-name.loading").forEach((el) => {
-            el.textContent = "Vacant";
-            el.classList.remove("loading");
-          });
+          // Jo cards HTML mein hain lekin database mein unka koi zikr nahi (yani vacant hain), wo hidden rahenge.
 
           // 2. DISCIPLINE COMMITTEE MEMBERS FETCH (Admin Panel se)
-          // Hum un members ko dhoond rahe hain jinka role "Discipline Committee Member" hai
           const { data: committeeMembers, error: commError } =
             await supabaseClient
               .from("members")
@@ -358,8 +365,11 @@
               .eq("status", "Active");
 
           const grid = document.getElementById("disciplineCommitteeGrid");
+          const committeeSection = document.getElementById("committeeSection");
 
           if (committeeMembers && committeeMembers.length > 0) {
+            // Agar members mojood hain toh section show karein aur naam lagayein
+            committeeSection.style.display = "block";
             grid.innerHTML = committeeMembers
               .map(
                 (m) => `
@@ -370,18 +380,15 @@
               )
               .join("");
           } else {
-            // Agar admin panel mein koi member add nahi hai
-            grid.innerHTML = `<p style="text-align: center; width: 100%; opacity: 0.6; color: var(--text-primary);">No members assigned yet.</p>`;
+            // Agar admin panel mein koi member add nahi hai toh poora section hide kar dein
+            committeeSection.style.display = "none";
           }
         } catch (err) {
           console.error("Error loading leadership:", err);
-          document.querySelectorAll(".member-name.loading").forEach((el) => {
-            el.textContent = "Vacant";
-            el.classList.remove("loading");
-          });
-          const grid = document.getElementById("disciplineCommitteeGrid");
-          if (grid)
-            grid.innerHTML = `<p style="text-align: center; width: 100%; color: var(--text-primary);">Failed to load members.</p>`;
+          // Error ki soorat mein bhi kuch na dikhayein
+          document
+            .querySelectorAll(".position-card")
+            .forEach((card) => (card.style.display = "none"));
         }
       });
     </script>
