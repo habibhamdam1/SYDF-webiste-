@@ -2241,3 +2241,65 @@ body::after {
     animation: twinkleStarsSlow 10s ease-in-out infinite, floatStarsUpGPU 180s linear infinite !important;
   }
 }
+/* ============================================================
+   📱 FIX: DESKTOP MODE ON MOBILE (Missing Sidebar & Hamburger)
+   ============================================================ */
+
+/* 1. Force Hamburger Button to show on Tablet & Desktop-Mode Mobile */
+@media (max-width: 1024px) {
+  .menu-toggle {
+    display: inline-block !important;
+  }
+  
+  /* Sidebar ko chhupao jab tak button click na ho */
+  .dashboard-sidebar {
+    transform: translateX(-100%) !important;
+  }
+  .dashboard-sidebar.active {
+    transform: translateX(0) !important;
+  }
+  .dashboard-main {
+    margin-left: 0 !important;
+  }
+}
+
+/* ============================================================
+   ✨ FLOATING STARS ANIMATION (GPU OPTIMIZED - NO LAG)
+   ============================================================ */
+
+/* Star layers ko bada karo taake move hone par kinare na dikhein */
+body::before,
+body::after {
+  inset: -50% !important;
+  will-change: transform, opacity !important;
+}
+
+/* Naye GPU Accelerated Keyframes (Transform use kar rahe hain) */
+@keyframes floatStarsDownGPU {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-400px, 400px, 0); }
+}
+
+@keyframes floatStarsUpGPU {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(800px, -800px, 0); }
+}
+
+/* Animation Apply karo */
+body::before {
+  animation: twinkleStarsFast 4.5s ease-in-out infinite, floatStarsDownGPU 90s linear infinite !important;
+}
+
+body::after {
+  animation: twinkleStarsSlow 8s ease-in-out infinite, floatStarsUpGPU 130s linear infinite !important;
+}
+
+/* Mobile par speed thodi slow karo taake smooth chale */
+@media (max-width: 768px) {
+  body::before {
+    animation: twinkleStarsFast 6s ease-in-out infinite, floatStarsDownGPU 120s linear infinite !important;
+  }
+  body::after {
+    animation: twinkleStarsSlow 10s ease-in-out infinite, floatStarsUpGPU 180s linear infinite !important;
+  }
+}
