@@ -1172,3 +1172,68 @@ html:not([data-theme="dark"]) .sidebar-nav li a.active {
   color: var(--accent) !important;
   background: var(--accent-soft) !important;
 }
+/* ============================================================
+   💎 ULTIMATE GLASSMORPHISM RESTORE (NO LAG) & TEXT FIX
+   ============================================================ */
+
+/* 1. MAIN CARDS: True Glassmorphism (Transparent + Blur) */
+html:not([data-theme="dark"]) .dashboard-content .glass-card,
+html:not([data-theme="dark"]) .dashboard-content .content-card,
+html:not([data-theme="dark"]) .dashboard-content .welcome-card,
+html:not([data-theme="dark"]) .dashboard-content .engagement-card {
+  background: rgba(255, 255, 255, 0.35) !important; /* 35% White, 65% Transparent */
+  backdrop-filter: blur(16px) saturate(140%) !important; /* Premium Glass Blur */
+  -webkit-backdrop-filter: blur(16px) saturate(140%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important; /* White Glass Border */
+  box-shadow: 0 8px 32px rgba(225, 29, 72, 0.08) !important; /* Soft Rose Shadow */
+}
+
+/* 2. INNER BOXES (Payments, Activities, etc.): Halka Glass */
+html:not([data-theme="dark"]) .dashboard-content .score-box,
+html:not([data-theme="dark"]) .dashboard-content .stat-box,
+html:not([data-theme="dark"]) .dashboard-content .dash-stat-card,
+html:not([data-theme="dark"]) .dashboard-content .summary-card {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+}
+
+/* 3. FORCE ALL SMALL TEXT TO BE DARK (Fix for "PAYMENTS", "/ 40", etc.) */
+html:not([data-theme="dark"]) .dashboard-content .score-label,
+html:not([data-theme="dark"]) .dashboard-content .stat-label,
+html:not([data-theme="dark"]) .dashboard-content .score-subtitle,
+html:not([data-theme="dark"]) .dashboard-content span:not(.badge):not(.icon):not(.user-avatar):not(.nav-icon):not(.btn-primary),
+html:not([data-theme="dark"]) .dashboard-content small,
+html:not([data-theme="dark"]) .dashboard-content p,
+html:not([data-theme="dark"]) .dashboard-content h1,
+html:not([data-theme="dark"]) .dashboard-content h2,
+html:not([data-theme="dark"]) .dashboard-content h3,
+html:not([data-theme="dark"]) .dashboard-content h4,
+html:not([data-theme="dark"]) .dashboard-content h5 {
+  color: var(--text-primary) !important;
+}
+
+/* 4. EXCEPTIONS: Jo cheezein colored ya white honi chahiye */
+html:not([data-theme="dark"]) .dashboard-content .btn-primary,
+html:not([data-theme="dark"]) .dashboard-content .badge,
+html:not([data-theme="dark"]) .dashboard-content .user-avatar,
+html:not([data-theme="dark"]) .dashboard-content .member-avatar,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-active,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-pending {
+  color: #ffffff !important;
+}
+
+/* 5. Score Numbers (0, 2, 7) ko unka color wapas do */
+html:not([data-theme="dark"]) .dashboard-content .score-value,
+html:not([data-theme="dark"]) .dashboard-content .stat-value,
+html:not([data-theme="dark"]) .dashboard-content .text-teal,
+html:not([data-theme="dark"]) .dashboard-content .text-orange,
+html:not([data-theme="dark"]) .dashboard-content .text-blue {
+  color: inherit !important; /* Unka inline color ya class color kaam karega */
+}
+/* Specific score colors (Agar inline style nahi hai toh) */
+html:not([data-theme="dark"]) .dashboard-content .stat-box:nth-child(1) .stat-value { color: #f59e0b !important; }
+html:not([data-theme="dark"]) .dashboard-content .stat-box:nth-child(2) .stat-value { color: #ec4899 !important; }
+html:not([data-theme="dark"]) .dashboard-content .stat-box:nth-child(3) .stat-value { color: #1abc9c !important; }
+html:not([data-theme="dark"]) .dashboard-content .stat-box:nth-child(4) .stat-value { color: #3b82f6 !important; }
