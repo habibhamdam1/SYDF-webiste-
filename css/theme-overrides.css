@@ -2507,3 +2507,186 @@ html:not([data-theme="dark"]) .dashboard-content .summary-card {
   backdrop-filter: blur(10px) !important;
   -webkit-backdrop-filter: blur(10px) !important;
 }
+/* ============================================================
+   🪪 ID CARD THEME PROTECTION
+   Male = Navy Blue | Female = Maroon
+   Ye block ID card ko upar wale ".dashboard-content *" override
+   se bachata hai.
+   ============================================================ */
+
+/* --- Page header (title + subtitle) → WHITE --- */
+body .dashboard-content .page-header-block .page-header-info h1 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+body .dashboard-content .page-header-block .page-header-info p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 0.75 !important;
+}
+
+/* --- Header buttons --- */
+body .dashboard-content .page-header-block .btn-print {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+body .dashboard-content .page-header-block .btn-verify {
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+}
+
+/* --- Loading / Status box → WHITE --- */
+body .dashboard-content .loading-box h3,
+body .dashboard-content .loading-box p,
+body .dashboard-content .loading-box .ico {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+body .dashboard-content .loading-box.warn .ico {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+}
+body .dashboard-content .loading-box.err .ico {
+  color: #fca5a5 !important;
+  -webkit-text-fill-color: #fca5a5 !important;
+}
+
+/* --- Card labels (◆ Front ◆ / ◆ Back ◆) --- */
+body .dashboard-content .id-cards-wrapper .card-label {
+  color: rgba(255, 255, 255, 0.5) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* --- Watermark ko wapas halka karo (0.05 opacity) --- */
+body .dashboard-content .id-card .watermark-bg {
+  opacity: 0.05 !important;
+}
+
+/* ============================================================
+   ID CARD — SIDEBAR (always white)
+   ============================================================ */
+body .dashboard-content .id-card .sidebar-brand,
+body .dashboard-content .id-card .sidebar-id-block .val {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+body .dashboard-content .id-card .sidebar-id-block .lbl {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 0.75 !important;
+}
+
+/* ============================================================
+   ID CARD — MALE (NAVY BLUE)
+   ============================================================ */
+body.theme-male .dashboard-content .id-card .member-name,
+body.theme-male .dashboard-content .id-card .info-line .val,
+body.theme-male .dashboard-content .id-card .instr-header h4,
+body.theme-male .dashboard-content .id-card .instr-list li strong,
+body.theme-male .dashboard-content .id-card .date-row .val {
+  color: #0a1628 !important;
+  -webkit-text-fill-color: #0a1628 !important;
+}
+body.theme-male .dashboard-content .id-card .info-line .val.accent,
+body.theme-male .dashboard-content .id-card .instr-header p,
+body.theme-male .dashboard-content .id-card .date-row .val.accent,
+body.theme-male .dashboard-content .id-card .sig-line {
+  color: #1e3a5f !important;
+  -webkit-text-fill-color: #1e3a5f !important;
+}
+body.theme-male .dashboard-content .id-card .member-photo {
+  color: #1e3a5f !important;
+  -webkit-text-fill-color: #1e3a5f !important;
+}
+
+/* ============================================================
+   ID CARD — FEMALE (MAROON)
+   ============================================================ */
+body.theme-female .dashboard-content .id-card .member-name,
+body.theme-female .dashboard-content .id-card .info-line .val,
+body.theme-female .dashboard-content .id-card .instr-header h4,
+body.theme-female .dashboard-content .id-card .instr-list li strong,
+body.theme-female .dashboard-content .id-card .date-row .val {
+  color: #450a0a !important;
+  -webkit-text-fill-color: #450a0a !important;
+}
+body.theme-female .dashboard-content .id-card .info-line .val.accent,
+body.theme-female .dashboard-content .id-card .instr-header p,
+body.theme-female .dashboard-content .id-card .date-row .val.accent,
+body.theme-female .dashboard-content .id-card .sig-line {
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+}
+body.theme-female .dashboard-content .id-card .member-photo {
+  color: #991b1b !important;
+  -webkit-text-fill-color: #991b1b !important;
+}
+
+/* ============================================================
+   ID CARD — MUTED / SECONDARY TEXT (both genders)
+   ============================================================ */
+body .dashboard-content .id-card .info-line .lbl,
+body .dashboard-content .id-card .date-row .lbl,
+body .dashboard-content .id-card .member-dept,
+body .dashboard-content .id-card .instr-list li,
+body .dashboard-content .id-card .qr-sub,
+body .dashboard-content .id-card .sig-lbl {
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+}
+
+/* ============================================================
+   ID CARD — ROLE BADGE (gender + member type preserved)
+   ============================================================ */
+body.theme-male .dashboard-content .id-card .member-role {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.3),
+    rgba(59, 130, 246, 0.1)
+  ) !important;
+  border: 1px solid rgba(96, 165, 250, 0.7) !important;
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25) !important;
+}
+body.theme-female .dashboard-content .id-card .member-role {
+  background: linear-gradient(
+    135deg,
+    rgba(251, 113, 133, 0.3),
+    rgba(251, 113, 133, 0.1)
+  ) !important;
+  border: 1px solid rgba(253, 164, 175, 0.7) !important;
+  color: #fda4af !important;
+  -webkit-text-fill-color: #fda4af !important;
+  box-shadow: 0 4px 15px rgba(251, 113, 133, 0.25) !important;
+}
+body .dashboard-content .id-card .member-role.volunteer {
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.3),
+    rgba(34, 197, 94, 0.1)
+  ) !important;
+  border: 1px solid rgba(74, 222, 128, 0.7) !important;
+  color: #4ade80 !important;
+  -webkit-text-fill-color: #4ade80 !important;
+}
+body .dashboard-content .id-card .member-role.intern {
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.3),
+    rgba(59, 130, 246, 0.1)
+  ) !important;
+  border: 1px solid rgba(147, 197, 253, 0.7) !important;
+  color: #93c5fd !important;
+  -webkit-text-fill-color: #93c5fd !important;
+}
+body .dashboard-content .id-card .member-role.coordinator {
+  background: linear-gradient(
+    135deg,
+    rgba(251, 146, 60, 0.3),
+    rgba(251, 146, 60, 0.1)
+  ) !important;
+  border: 1px solid rgba(253, 186, 116, 0.7) !important;
+  color: #fb923c !important;
+  -webkit-text-fill-color: #fb923c !important;
+}
