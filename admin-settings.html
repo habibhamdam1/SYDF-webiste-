@@ -14,208 +14,35 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      .settings-tabs {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        padding: 8px;
-        background: rgba(255, 255, 255, 0.04);
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        margin-bottom: 25px;
-      }
-      .settings-tab {
-        padding: 11px 20px;
-        background: transparent;
-        border: none;
-        color: rgba(255, 255, 255, 0.7);
-        font-family: "Poppins", sans-serif;
-        font-size: 13px;
-        font-weight: 500;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.3s;
-        white-space: nowrap;
-      }
-      .settings-tab.active {
-        background: var(--accent);
-        color: white;
-        font-weight: 600;
-      }
-      .settings-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 22px;
-      }
-      .settings-card {
-        padding: 25px 28px;
-        background: var(--card-bg);
-        backdrop-filter: blur(15px);
-        border: 1px solid var(--card-border);
-        border-radius: 16px;
-      }
-      .settings-card.full {
-        grid-column: 1/-1;
-      }
-      .settings-card h3 {
-        font-size: 16px;
-        font-weight: 600;
-        color: var(--accent);
-        margin-bottom: 20px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid var(--card-border);
-      }
-      .form-group {
-        margin-bottom: 18px;
-      }
-      .form-group label {
-        display: block;
-        font-size: 13px;
-        color: var(--text-primary);
-        opacity: 0.9;
-        margin-bottom: 8px;
-        font-weight: 500;
-      }
-      .form-group input,
-      .form-group textarea {
-        width: 100%;
-        padding: 12px 15px;
-        background: var(--input-bg);
-        border: 1px solid var(--input-border);
-        border-radius: 10px;
-        color: var(--text-primary);
-        font-family: "Poppins", sans-serif;
-        font-size: 13px;
-        outline: none;
-        transition: 0.3s;
-      }
-      .form-group input:focus,
-      .form-group textarea:focus {
-        border-color: var(--accent);
-        background: var(--input-focus-bg);
-      }
-      .form-group textarea {
-        resize: vertical;
-        min-height: 80px;
-      }
-      .toggle-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-        padding: 15px 0;
-        border-bottom: 1px solid var(--card-border);
-      }
-      .toggle-row:last-child {
-        border-bottom: none;
-      }
-      .toggle-row h4 {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 3px;
-      }
-      .toggle-row p {
-        font-size: 11px;
-        color: var(--text-secondary);
-      }
-      .toggle {
-        position: relative;
-        display: inline-block;
-        width: 48px;
-        height: 26px;
-        flex-shrink: 0;
-        cursor: pointer;
-      }
-      .toggle input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-      }
-      .toggle-slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: var(--input-bg);
-        transition: 0.3s;
-        border-radius: 26px;
-        border: 1px solid var(--input-border);
-      }
-      .toggle-slider:before {
-        position: absolute;
-        content: "";
-        height: 18px;
-        width: 18px;
-        left: 3px;
-        bottom: 3px;
-        background: var(--text-secondary);
-        transition: 0.3s;
-        border-radius: 50%;
-      }
-      .toggle input:checked + .toggle-slider {
-        background: var(--accent-soft);
-        border-color: var(--accent);
-      }
-      .toggle input:checked + .toggle-slider:before {
-        transform: translateX(22px);
-        background: var(--accent);
-      }
-      .btn-save {
-        padding: 12px 30px;
-        background: var(--accent);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-family: "Poppins", sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.3s;
-      }
-      .btn-save:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px var(--accent-glow);
-      }
-      .save-bar {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: none;
-        align-items: center;
-        gap: 20px;
-        padding: 15px 25px;
-        background: var(--bg-base);
-        backdrop-filter: blur(15px);
-        border: 1px solid var(--warm);
-        border-radius: 15px;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-        z-index: 999;
-      }
-      .save-bar.show {
-        display: flex;
-      }
-      .save-bar button {
-        padding: 9px 20px;
-        border-radius: 10px;
-        font-family: "Poppins", sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        border: 1px solid transparent;
-      }
-      .btn-discard {
-        background: var(--input-bg);
-        color: var(--text-primary);
-        border-color: var(--input-border);
-      }
-      .btn-save-bar {
-        background: var(--accent);
-        color: white;
-      }
+      .settings-tabs { display: flex; gap: 8px; flex-wrap: wrap; padding: 8px; background: rgba(255, 255, 255, 0.04); border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.08); margin-bottom: 25px; }
+      .settings-tab { padding: 11px 20px; background: transparent; border: none; color: rgba(255, 255, 255, 0.7); font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 500; border-radius: 10px; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+      .settings-tab.active { background: var(--accent); color: white; font-weight: 600; }
+      .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+      .settings-card { padding: 25px 28px; background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--card-border); border-radius: 16px; }
+      .settings-card.full { grid-column: 1/-1; }
+      .settings-card h3 { font-size: 16px; font-weight: 600; color: var(--accent); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--card-border); }
+      .form-group { margin-bottom: 18px; }
+      .form-group label { display: block; font-size: 13px; color: var(--text-primary); opacity: 0.9; margin-bottom: 8px; font-weight: 500; }
+      .form-group input, .form-group textarea { width: 100%; padding: 12px 15px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; color: var(--text-primary); font-family: "Poppins", sans-serif; font-size: 13px; outline: none; transition: 0.3s; }
+      .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); background: var(--input-focus-bg); }
+      .form-group textarea { resize: vertical; min-height: 80px; }
+      .toggle-row { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 0; border-bottom: 1px solid var(--card-border); }
+      .toggle-row:last-child { border-bottom: none; }
+      .toggle-row h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+      .toggle-row p { font-size: 11px; color: var(--text-secondary); }
+      .toggle { position: relative; display: inline-block; width: 48px; height: 26px; flex-shrink: 0; cursor: pointer; }
+      .toggle input { opacity: 0; width: 0; height: 0; }
+      .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--input-bg); transition: 0.3s; border-radius: 26px; border: 1px solid var(--input-border); }
+      .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: var(--text-secondary); transition: 0.3s; border-radius: 50%; }
+      .toggle input:checked + .toggle-slider { background: var(--accent-soft); border-color: var(--accent); }
+      .toggle input:checked + .toggle-slider:before { transform: translateX(22px); background: var(--accent); }
+      .btn-save { padding: 12px 30px; background: var(--accent); color: white; border: none; border-radius: 12px; font-family: "Poppins", sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+      .btn-save:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
+      .save-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: none; align-items: center; gap: 20px; padding: 15px 25px; background: var(--bg-base); backdrop-filter: blur(15px); border: 1px solid var(--warm); border-radius: 15px; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5); z-index: 999; }
+      .save-bar.show { display: flex; }
+      .save-bar button { padding: 9px 20px; border-radius: 10px; font-family: "Poppins", sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid transparent; }
+      .btn-discard { background: var(--input-bg); color: var(--text-primary); border-color: var(--input-border); }
+      .btn-save-bar { background: var(--accent); color: white; }
     </style>
   </head>
   <body class="dashboard-body admin-body">
@@ -682,7 +509,7 @@ A non-profit organization dedicated to empowering the youth of Swat and beyond.<
         <!-- MEMBERSHIP TAB -->
         <div class="settings-grid" id="tab-membership" style="display: none">
           <div class="settings-card full">
-            <h3>👥 Membership Settings</h3>
+            <h3>👥 Membership & Election Settings</h3>
             <div class="toggle-row">
               <div>
                 <h4>Membership Open</h4>
@@ -698,6 +525,14 @@ A non-profit organization dedicated to empowering the youth of Swat and beyond.<
               <label>Membership Fee (Monthly Rs.)</label
               ><input type="number" id="setMembershipFee" value="300" />
             </div>
+            
+            <!-- YEH NAYA FIELD HAI ELECTION FEE KE LIYE -->
+            <div class="form-group" style="margin-top: 15px">
+              <label>Election Nomination Fee (Rs.)</label>
+              <input type="number" id="setElectionFee" value="0" />
+              <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Set to 0 if nominations are free.</p>
+            </div>
+
             <div class="form-group">
               <label>Closed Message</label
               ><textarea id="setClosedMessage">
@@ -865,63 +700,34 @@ Membership is currently closed. Please check back later.</textarea
         originalSettings = { ...map };
 
         // Apply to fields
-        if (map.site_name)
-          document.getElementById("setSiteName").value = map.site_name;
-        if (map.site_short)
-          document.getElementById("setSiteShort").value = map.site_short;
-        if (map.tagline)
-          document.getElementById("setTagline").value = map.tagline;
-        if (map.description)
-          document.getElementById("setDescription").value = map.description;
-        if (map.contact_email)
-          document.getElementById("setEmail").value = map.contact_email;
-        if (map.support_email)
-          document.getElementById("setSupportEmail").value = map.support_email;
+        if (map.site_name) document.getElementById("setSiteName").value = map.site_name;
+        if (map.site_short) document.getElementById("setSiteShort").value = map.site_short;
+        if (map.tagline) document.getElementById("setTagline").value = map.tagline;
+        if (map.description) document.getElementById("setDescription").value = map.description;
+        if (map.contact_email) document.getElementById("setEmail").value = map.contact_email;
+        if (map.support_email) document.getElementById("setSupportEmail").value = map.support_email;
         if (map.phone) document.getElementById("setPhone").value = map.phone;
-        if (map.whatsapp)
-          document.getElementById("setWhatsapp").value = map.whatsapp;
-        if (map.address)
-          document.getElementById("setAddress").value = map.address;
-        if (map.facebook)
-          document.getElementById("setFacebook").value = map.facebook;
-        if (map.instagram)
-          document.getElementById("setInstagram").value = map.instagram;
-        if (map.youtube)
-          document.getElementById("setYoutube").value = map.youtube;
-        if (map.whatsapp_link)
-          document.getElementById("setWhatsappLink").value = map.whatsapp_link;
-        if (map.twitter)
-          document.getElementById("setTwitter").value = map.twitter;
-        if (map.jazzcash)
-          document.getElementById("setJazzcash").value = map.jazzcash;
-        if (map.easypaisa)
-          document.getElementById("setEasypaisa").value = map.easypaisa;
-        if (map.bank_name)
-          document.getElementById("setBankName").value = map.bank_name;
-        if (map.bank_account)
-          document.getElementById("setBankAccount").value = map.bank_account;
-        if (map.account_title)
-          document.getElementById("setAccountTitle").value = map.account_title;
-        if (map.membership_fee)
-          document.getElementById("setMembershipFee").value =
-            map.membership_fee;
-        if (map.closed_message)
-          document.getElementById("setClosedMessage").value =
-            map.closed_message;
+        if (map.whatsapp) document.getElementById("setWhatsapp").value = map.whatsapp;
+        if (map.address) document.getElementById("setAddress").value = map.address;
+        if (map.facebook) document.getElementById("setFacebook").value = map.facebook;
+        if (map.instagram) document.getElementById("setInstagram").value = map.instagram;
+        if (map.youtube) document.getElementById("setYoutube").value = map.youtube;
+        if (map.whatsapp_link) document.getElementById("setWhatsappLink").value = map.whatsapp_link;
+        if (map.twitter) document.getElementById("setTwitter").value = map.twitter;
+        if (map.jazzcash) document.getElementById("setJazzcash").value = map.jazzcash;
+        if (map.easypaisa) document.getElementById("setEasypaisa").value = map.easypaisa;
+        if (map.bank_name) document.getElementById("setBankName").value = map.bank_name;
+        if (map.bank_account) document.getElementById("setBankAccount").value = map.bank_account;
+        if (map.account_title) document.getElementById("setAccountTitle").value = map.account_title;
+        if (map.membership_fee) document.getElementById("setMembershipFee").value = map.membership_fee;
+        if (map.election_fee) document.getElementById("setElectionFee").value = map.election_fee; // Election Fee Load
+        if (map.closed_message) document.getElementById("setClosedMessage").value = map.closed_message;
 
         // Toggles
-        if (map.registration_open)
-          document.getElementById("setRegistration").checked =
-            map.registration_open === "true";
-        if (map.membership_open)
-          document.getElementById("setMembershipOpen").checked =
-            map.membership_open === "true";
-        if (map.site_online)
-          document.getElementById("setSiteOnline").checked =
-            map.site_online !== "false";
-        if (map.maintenance)
-          document.getElementById("setMaintenance").checked =
-            map.maintenance === "true";
+        if (map.registration_open) document.getElementById("setRegistration").checked = map.registration_open === "true";
+        if (map.membership_open) document.getElementById("setMembershipOpen").checked = map.membership_open === "true";
+        if (map.site_online) document.getElementById("setSiteOnline").checked = map.site_online !== "false";
+        if (map.maintenance) document.getElementById("setMaintenance").checked = map.maintenance === "true";
 
         // Section Controls Toggles
         const sections = [
@@ -941,111 +747,32 @@ Membership is currently closed. Please check back later.</textarea
 
       async function saveAllSettings() {
         const updates = [
-          {
-            key: "site_name",
-            value: document.getElementById("setSiteName").value,
-          },
-          {
-            key: "site_short",
-            value: document.getElementById("setSiteShort").value,
-          },
-          {
-            key: "tagline",
-            value: document.getElementById("setTagline").value,
-          },
-          {
-            key: "description",
-            value: document.getElementById("setDescription").value,
-          },
-          {
-            key: "contact_email",
-            value: document.getElementById("setEmail").value,
-          },
-          {
-            key: "support_email",
-            value: document.getElementById("setSupportEmail").value,
-          },
+          { key: "site_name", value: document.getElementById("setSiteName").value },
+          { key: "site_short", value: document.getElementById("setSiteShort").value },
+          { key: "tagline", value: document.getElementById("setTagline").value },
+          { key: "description", value: document.getElementById("setDescription").value },
+          { key: "contact_email", value: document.getElementById("setEmail").value },
+          { key: "support_email", value: document.getElementById("setSupportEmail").value },
           { key: "phone", value: document.getElementById("setPhone").value },
-          {
-            key: "whatsapp",
-            value: document.getElementById("setWhatsapp").value,
-          },
-          {
-            key: "address",
-            value: document.getElementById("setAddress").value,
-          },
-          {
-            key: "facebook",
-            value: document.getElementById("setFacebook").value,
-          },
-          {
-            key: "instagram",
-            value: document.getElementById("setInstagram").value,
-          },
-          {
-            key: "youtube",
-            value: document.getElementById("setYoutube").value,
-          },
-          {
-            key: "whatsapp_link",
-            value: document.getElementById("setWhatsappLink").value,
-          },
-          {
-            key: "twitter",
-            value: document.getElementById("setTwitter").value,
-          },
-          {
-            key: "jazzcash",
-            value: document.getElementById("setJazzcash").value,
-          },
-          {
-            key: "easypaisa",
-            value: document.getElementById("setEasypaisa").value,
-          },
-          {
-            key: "bank_name",
-            value: document.getElementById("setBankName").value,
-          },
-          {
-            key: "bank_account",
-            value: document.getElementById("setBankAccount").value,
-          },
-          {
-            key: "account_title",
-            value: document.getElementById("setAccountTitle").value,
-          },
-          {
-            key: "membership_fee",
-            value: document.getElementById("setMembershipFee").value,
-          },
-          {
-            key: "closed_message",
-            value: document.getElementById("setClosedMessage").value,
-          },
-          {
-            key: "registration_open",
-            value: document.getElementById("setRegistration").checked
-              ? "true"
-              : "false",
-          },
-          {
-            key: "membership_open",
-            value: document.getElementById("setMembershipOpen").checked
-              ? "true"
-              : "false",
-          },
-          {
-            key: "site_online",
-            value: document.getElementById("setSiteOnline").checked
-              ? "true"
-              : "false",
-          },
-          {
-            key: "maintenance",
-            value: document.getElementById("setMaintenance").checked
-              ? "true"
-              : "false",
-          },
+          { key: "whatsapp", value: document.getElementById("setWhatsapp").value },
+          { key: "address", value: document.getElementById("setAddress").value },
+          { key: "facebook", value: document.getElementById("setFacebook").value },
+          { key: "instagram", value: document.getElementById("setInstagram").value },
+          { key: "youtube", value: document.getElementById("setYoutube").value },
+          { key: "whatsapp_link", value: document.getElementById("setWhatsappLink").value },
+          { key: "twitter", value: document.getElementById("setTwitter").value },
+          { key: "jazzcash", value: document.getElementById("setJazzcash").value },
+          { key: "easypaisa", value: document.getElementById("setEasypaisa").value },
+          { key: "bank_name", value: document.getElementById("setBankName").value },
+          { key: "bank_account", value: document.getElementById("setBankAccount").value },
+          { key: "account_title", value: document.getElementById("setAccountTitle").value },
+          { key: "membership_fee", value: document.getElementById("setMembershipFee").value },
+          { key: "election_fee", value: document.getElementById("setElectionFee").value || "0" }, // Election Fee Save
+          { key: "closed_message", value: document.getElementById("setClosedMessage").value },
+          { key: "registration_open", value: document.getElementById("setRegistration").checked ? "true" : "false" },
+          { key: "membership_open", value: document.getElementById("setMembershipOpen").checked ? "true" : "false" },
+          { key: "site_online", value: document.getElementById("setSiteOnline").checked ? "true" : "false" },
+          { key: "maintenance", value: document.getElementById("setMaintenance").checked ? "true" : "false" },
         ];
 
         // Add Section Controls to updates array
