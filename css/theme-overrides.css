@@ -2303,3 +2303,127 @@ body::after {
     animation: twinkleStarsSlow 10s ease-in-out infinite, floatStarsUpGPU 180s linear infinite !important;
   }
 }
+/* ============================================================
+   🫧 LIGHT THEME: EXTRA VISIBLE "BUBBLE" STARS
+   ============================================================ */
+
+/* Light Mode ke liye naye, zyada aur clear stars */
+html:not([data-theme="dark"]) body::before {
+  background-image:
+    /* Chhote bubbles (White center + Rose edge) */
+    radial-gradient(circle 2.5px at 25px 45px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(225,29,72,0.4) 80%, transparent 100%),
+    radial-gradient(circle 2px at 75px 90px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(225,29,72,0.3) 80%, transparent 100%),
+    radial-gradient(circle 3px at 130px 40px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(245,158,11,0.4) 80%, transparent 100%),
+    radial-gradient(circle 2px at 200px 120px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(244,63,94,0.4) 80%, transparent 100%),
+    radial-gradient(circle 2.5px at 320px 85px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(245,158,11,0.3) 80%, transparent 100%),
+    radial-gradient(circle 2px at 95px 220px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(225,29,72,0.4) 80%, transparent 100%),
+    radial-gradient(circle 3px at 275px 260px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(244,63,94,0.3) 80%, transparent 100%),
+    radial-gradient(circle 2px at 360px 340px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(245,158,11,0.4) 80%, transparent 100%),
+    radial-gradient(circle 2.5px at 180px 315px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(225,29,72,0.4) 80%, transparent 100%),
+    radial-gradient(circle 2px at 40px 355px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(244,63,94,0.3) 80%, transparent 100%),
+    radial-gradient(circle 3px at 240px 180px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.2) 40%, rgba(245,158,11,0.4) 80%, transparent 100%);
+  background-size: 400px 400px;
+  opacity: 1 !important; /* Pehle se zyada clear */
+}
+
+/* Bade bubbles jo dheere dheere float karenge */
+html:not([data-theme="dark"]) body::after {
+  background-image:
+    radial-gradient(circle 6px at 120px 180px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(245,158,11,0.5) 80%, transparent 100%),
+    radial-gradient(circle 4px at 380px 80px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(225,29,72,0.5) 80%, transparent 100%),
+    radial-gradient(circle 5px at 500px 400px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(244,63,94,0.4) 80%, transparent 100%),
+    radial-gradient(circle 7px at 200px 520px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(245,158,11,0.5) 80%, transparent 100%),
+    radial-gradient(circle 5px at 680px 220px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(225,29,72,0.4) 80%, transparent 100%),
+    radial-gradient(circle 6px at 450px 620px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.1) 40%, rgba(244,63,94,0.5) 80%, transparent 100%);
+  background-size: 800px 800px;
+  opacity: 1 !important;
+}
+
+/* Dark mode mein pehle wale normal stars hi rahenge */
+/* ============================================================
+   ✨ LIGHT THEME: DARK & SPARKLING STARS (CHAMAKDAR)
+   ============================================================ */
+
+/* 1. Chhote Dark Sparkles (Fast twinkle) */
+html:not([data-theme="dark"]) body::before {
+  background-image:
+    /* Dark Maroon Sparkles */
+    radial-gradient(circle 2.5px at 25px 45px, #ffffff 0%, #4c0519 40%, transparent 100%),
+    radial-gradient(circle 2px at 75px 90px, #ffffff 0%, #881337 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 200px 120px, #ffffff 0%, #4c0519 40%, transparent 100%),
+    radial-gradient(circle 2px at 360px 340px, #ffffff 0%, #881337 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 180px 315px, #ffffff 0%, #4c0519 40%, transparent 100%),
+    
+    /* Deep Rose Sparkles */
+    radial-gradient(circle 3px at 130px 40px, #ffffff 0%, #be123c 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 320px 85px, #ffffff 0%, #e11d48 40%, transparent 100%),
+    radial-gradient(circle 2px at 40px 355px, #ffffff 0%, #be123c 40%, transparent 100%),
+    
+    /* Dark Amber Sparkles */
+    radial-gradient(circle 3px at 95px 220px, #ffffff 0%, #b45309 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 275px 260px, #ffffff 0%, #f59e0b 40%, transparent 100%),
+    radial-gradient(circle 3px at 240px 180px, #ffffff 0%, #b45309 40%, transparent 100%);
+  background-size: 400px 400px;
+  opacity: 1 !important;
+}
+
+/* 2. Bade Dark Sparkles (Slow twinkle, zyada chamak) */
+html:not([data-theme="dark"]) body::after {
+  background-image:
+    /* Bade Dark Maroon Stars */
+    radial-gradient(circle 6px at 120px 180px, #ffffff 0%, #4c0519 30%, transparent 100%),
+    radial-gradient(circle 5px at 500px 400px, #ffffff 0%, #881337 30%, transparent 100%),
+    radial-gradient(circle 6px at 450px 620px, #ffffff 0%, #4c0519 30%, transparent 100%),
+    
+    /* Bade Deep Rose Stars */
+    radial-gradient(circle 7px at 380px 80px, #ffffff 0%, #be123c 30%, transparent 100%),
+    radial-gradient(circle 5px at 680px 220px, #ffffff 0%, #e11d48 30%, transparent 100%),
+    
+    /* Bade Dark Amber Stars */
+    radial-gradient(circle 7px at 200px 520px, #ffffff 0%, #b45309 30%, transparent 100%);
+  background-size: 800px 800px;
+  opacity: 1 !important;
+}/* ============================================================
+   ✨ LIGHT THEME: DARK & SPARKLING STARS (CHAMAKDAR)
+   ============================================================ */
+
+/* 1. Chhote Dark Sparkles (Fast twinkle) */
+html:not([data-theme="dark"]) body::before {
+  background-image:
+    /* Dark Maroon Sparkles */
+    radial-gradient(circle 2.5px at 25px 45px, #ffffff 0%, #4c0519 40%, transparent 100%),
+    radial-gradient(circle 2px at 75px 90px, #ffffff 0%, #881337 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 200px 120px, #ffffff 0%, #4c0519 40%, transparent 100%),
+    radial-gradient(circle 2px at 360px 340px, #ffffff 0%, #881337 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 180px 315px, #ffffff 0%, #4c0519 40%, transparent 100%),
+    
+    /* Deep Rose Sparkles */
+    radial-gradient(circle 3px at 130px 40px, #ffffff 0%, #be123c 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 320px 85px, #ffffff 0%, #e11d48 40%, transparent 100%),
+    radial-gradient(circle 2px at 40px 355px, #ffffff 0%, #be123c 40%, transparent 100%),
+    
+    /* Dark Amber Sparkles */
+    radial-gradient(circle 3px at 95px 220px, #ffffff 0%, #b45309 40%, transparent 100%),
+    radial-gradient(circle 2.5px at 275px 260px, #ffffff 0%, #f59e0b 40%, transparent 100%),
+    radial-gradient(circle 3px at 240px 180px, #ffffff 0%, #b45309 40%, transparent 100%);
+  background-size: 400px 400px;
+  opacity: 1 !important;
+}
+
+/* 2. Bade Dark Sparkles (Slow twinkle, zyada chamak) */
+html:not([data-theme="dark"]) body::after {
+  background-image:
+    /* Bade Dark Maroon Stars */
+    radial-gradient(circle 6px at 120px 180px, #ffffff 0%, #4c0519 30%, transparent 100%),
+    radial-gradient(circle 5px at 500px 400px, #ffffff 0%, #881337 30%, transparent 100%),
+    radial-gradient(circle 6px at 450px 620px, #ffffff 0%, #4c0519 30%, transparent 100%),
+    
+    /* Bade Deep Rose Stars */
+    radial-gradient(circle 7px at 380px 80px, #ffffff 0%, #be123c 30%, transparent 100%),
+    radial-gradient(circle 5px at 680px 220px, #ffffff 0%, #e11d48 30%, transparent 100%),
+    
+    /* Bade Dark Amber Stars */
+    radial-gradient(circle 7px at 200px 520px, #ffffff 0%, #b45309 30%, transparent 100%);
+  background-size: 800px 800px;
+  opacity: 1 !important;
+}
