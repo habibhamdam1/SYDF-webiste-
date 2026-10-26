@@ -2,23 +2,26 @@
 <html lang="en">
   <head>
     <script>
-  // Force kill all service workers for this site
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      for(let registration of registrations) {
-        registration.unregister().then(function(success) {
-          if(success) console.log('Service Worker unregistered successfully');
+      // Force kill all service workers for this site
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (registrations) {
+            for (let registration of registrations) {
+              registration.unregister().then(function (success) {
+                if (success)
+                  console.log("Service Worker unregistered successfully");
+              });
+            }
+          });
+      }
+      // Clear all caches
+      if ("caches" in window) {
+        caches.keys().then(function (names) {
+          for (let name of names) caches.delete(name);
         });
       }
-    });
-  }
-  // Clear all caches
-  if ('caches' in window) {
-    caches.keys().then(function(names) {
-      for (let name of names) caches.delete(name);
-    });
-  }
-</script>
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Membership - SYDF</title>
@@ -381,6 +384,35 @@
         text-decoration: underline;
       }
 
+      /* Closed Message Box */
+      .closed-box {
+        max-width: 600px;
+        margin: 40px auto;
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 20px;
+        padding: 40px 30px;
+        text-align: center;
+        display: none;
+      }
+      .closed-box .icon {
+        font-size: 60px;
+        margin-bottom: 15px;
+        display: block;
+      }
+      .closed-box h2 {
+        color: #fca5a5;
+        font-size: 24px;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      .closed-box p {
+        color: var(--text-secondary);
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
       /* ==========================================
          EMAIL VERIFICATION MODAL
          ========================================== */
@@ -635,185 +667,195 @@
     </section>
 
     <section class="membership-section">
-      <!-- Benefits -->
-      <div class="benefits-row">
-        <div class="benefit-mini">
-          <span class="ico">🎓</span>
-          <h4>Training & Workshops</h4>
-          <p>Free access to leadership programs</p>
-        </div>
-        <div class="benefit-mini">
-          <span class="ico">🆔</span>
-          <h4>Official ID Card</h4>
-          <p>Digital + printable member identity</p>
-        </div>
-        <div class="benefit-mini">
-          <span class="ico">📜</span>
-          <h4>Membership Certificate</h4>
-          <p>Verified membership certificate</p>
-        </div>
-        <div class="benefit-mini">
-          <span class="ico">🎯</span>
-          <h4>Community Activities</h4>
-          <p>Join social & welfare events</p>
-        </div>
+      <!-- CLOSED MESSAGE BOX -->
+      <div class="closed-box" id="closedMessageBox">
+        <span class="icon">🚫</span>
+        <h2>Membership Closed</h2>
+        <p>Registrations are currently closed by the administration. Please check back later or contact us for more details.</p>
+        <a href="index.html" class="btn-modal btn-modal-primary" style="text-decoration:none;">Return to Homepage</a>
       </div>
 
-      <!-- Form -->
-      <div class="form-container">
-        <div class="form-header">
-          <h2>Create Your Account</h2>
-          <p>Fill the form below to apply for SYDF membership</p>
-        </div>
-
-        <div id="alertBox" class="alert"></div>
-
-        <div class="info-notice">
-          <span class="ico">💡</span>
-          <div class="txt">
-            <strong>Note:</strong> After registration, you'll receive a
-            verification email. Please verify your email, then wait for admin
-            approval to activate your account.
+      <div id="formContainer">
+        <!-- Benefits -->
+        <div class="benefits-row">
+          <div class="benefit-mini">
+            <span class="ico">🎓</span>
+            <h4>Training & Workshops</h4>
+            <p>Free access to leadership programs</p>
+          </div>
+          <div class="benefit-mini">
+            <span class="ico">🆔</span>
+            <h4>Official ID Card</h4>
+            <p>Digital + printable member identity</p>
+          </div>
+          <div class="benefit-mini">
+            <span class="ico">📜</span>
+            <h4>Membership Certificate</h4>
+            <p>Verified membership certificate</p>
+          </div>
+          <div class="benefit-mini">
+            <span class="ico">🎯</span>
+            <h4>Community Activities</h4>
+            <p>Join social & welfare events</p>
           </div>
         </div>
 
-        <form id="membershipForm" autocomplete="on">
-          <div class="form-grid">
-            <div class="form-group full">
-              <label class="form-label"
-                >Full Name <span class="req">*</span></label
-              >
-              <input
-                type="text"
-                class="form-input"
-                id="fullName"
-                placeholder="e.g. Habib Ur Rahman"
-                required
-              />
-            </div>
+        <!-- Form -->
+        <div class="form-container">
+          <div class="form-header">
+            <h2>Create Your Account</h2>
+            <p>Fill the form below to apply for SYDF membership</p>
+          </div>
 
-            <div class="form-group">
-              <label class="form-label"
-                >Email Address <span class="req">*</span></label
-              >
-              <input
-                type="email"
-                class="form-input"
-                id="email"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
+          <div id="alertBox" class="alert"></div>
 
-            <div class="form-group">
-              <label class="form-label"
-                >Phone Number <span class="req">*</span></label
-              >
-              <input
-                type="tel"
-                class="form-input"
-                id="phone"
-                placeholder="03XXXXXXXXX"
-                pattern="[0-9+ -]{10,15}"
-                required
-              />
+          <div class="info-notice">
+            <span class="ico">💡</span>
+            <div class="txt">
+              <strong>Note:</strong> After registration, you'll receive a
+              verification email. Please verify your email, then wait for admin
+              approval to activate your account.
             </div>
+          </div>
 
-            <div class="form-group full">
-              <label class="form-label"
-                >Password <span class="req">*</span></label
-              >
-              <div class="password-wrapper">
+          <form id="membershipForm" autocomplete="on">
+            <div class="form-grid">
+              <div class="form-group full">
+                <label class="form-label"
+                  >Full Name <span class="req">*</span></label
+                >
                 <input
-                  type="password"
+                  type="text"
                   class="form-input"
-                  id="password"
-                  placeholder="Minimum 6 characters"
-                  minlength="6"
+                  id="fullName"
+                  placeholder="e.g. Habib Ur Rahman"
                   required
                 />
-                <button
-                  type="button"
-                  class="toggle-pass"
-                  onclick="togglePassword()"
+              </div>
+
+              <div class="form-group">
+                <label class="form-label"
+                  >Email Address <span class="req">*</span></label
                 >
-                  👁️
-                </button>
+                <input
+                  type="email"
+                  class="form-input"
+                  id="email"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label"
+                  >Phone Number <span class="req">*</span></label
+                >
+                <input
+                  type="tel"
+                  class="form-input"
+                  id="phone"
+                  placeholder="03XXXXXXXXX"
+                  pattern="[0-9+ -]{10,15}"
+                  required
+                />
+              </div>
+
+              <div class="form-group full">
+                <label class="form-label"
+                  >Password <span class="req">*</span></label
+                >
+                <div class="password-wrapper">
+                  <input
+                    type="password"
+                    class="form-input"
+                    id="password"
+                    placeholder="Minimum 6 characters"
+                    minlength="6"
+                    required
+                  />
+                  <button
+                    type="button"
+                    class="toggle-pass"
+                    onclick="togglePassword()"
+                  >
+                    👁️
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label"
+                  >Gender <span class="req">*</span></label
+                >
+                <div class="radio-group">
+                  <label class="radio-option">
+                    <input type="radio" name="gender" value="Male" required />
+                    <span>👨 Male</span>
+                  </label>
+                  <label class="radio-option">
+                    <input type="radio" name="gender" value="Female" required />
+                    <span>👩 Female</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label"
+                  >Date of Birth <span class="req">*</span></label
+                >
+                <input type="date" class="form-input" id="dob" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label"
+                  >District <span class="req">*</span></label
+                >
+                <select class="form-select" id="district" required>
+                  <option value="">Select District</option>
+                  <option value="Swat">Swat</option>
+                  <option value="Shangla">Shangla</option>
+                  <option value="Buner">Buner</option>
+                  <option value="Malakand">Malakand</option>
+                  <option value="Upper Dir">Upper Dir</option>
+                  <option value="Lower Dir">Lower Dir</option>
+                  <option value="Upper Chitral">Upper Chitral</option>
+                  <option value="Lower Chitral">Lower Chitral</option>
+                  <option value="Bajaur">Bajaur</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label"
+                  >Tehsil <span class="req">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-input"
+                  id="tehsil"
+                  placeholder="e.g. Babuzai"
+                  required
+                />
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label"
-                >Gender <span class="req">*</span></label
-              >
-              <div class="radio-group">
-                <label class="radio-option">
-                  <input type="radio" name="gender" value="Male" required />
-                  <span>👨 Male</span>
-                </label>
-                <label class="radio-option">
-                  <input type="radio" name="gender" value="Female" required />
-                  <span>👩 Female</span>
-                </label>
-              </div>
-            </div>
+            <label class="checkbox-group">
+              <input type="checkbox" id="terms" required />
+              <span>
+                I agree to the
+                <a href="terms.html" target="_blank">Terms & Conditions</a> and
+                <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                of SYDF. I confirm that the information provided is accurate.
+              </span>
+            </label>
 
-            <div class="form-group">
-              <label class="form-label"
-                >Date of Birth <span class="req">*</span></label
-              >
-              <input type="date" class="form-input" id="dob" required />
-            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">
+              Create Account
+            </button>
+          </form>
 
-            <div class="form-group">
-              <label class="form-label"
-                >District <span class="req">*</span></label
-              >
-              <select class="form-select" id="district" required>
-                <option value="">Select District</option>
-                <option value="Swat">Swat</option>
-                <option value="Shangla">Shangla</option>
-                <option value="Buner">Buner</option>
-                <option value="Malakand">Malakand</option>
-                <option value="Upper Dir">Upper Dir</option>
-                <option value="Lower Dir">Lower Dir</option>
-                <option value="Upper Chitral">Upper Chitral</option>
-                <option value="Lower Chitral">Lower Chitral</option>
-                <option value="Bajaur">Bajaur</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label"
-                >Tehsil <span class="req">*</span></label
-              >
-              <input
-                type="text"
-                class="form-input"
-                id="tehsil"
-                placeholder="e.g. Babuzai"
-                required
-              />
-            </div>
+          <div class="form-footer">
+            Already have an account? <a href="login.html">Login Here</a>
           </div>
-
-          <label class="checkbox-group">
-            <input type="checkbox" id="terms" required />
-            <span>
-              I agree to the
-              <a href="terms.html" target="_blank">Terms & Conditions</a> and
-              <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
-              of SYDF. I confirm that the information provided is accurate.
-            </span>
-          </label>
-
-          <button type="submit" class="btn-submit" id="submitBtn">
-            Create Account
-          </button>
-        </form>
-
-        <div class="form-footer">
-          Already have an account? <a href="login.html">Login Here</a>
         </div>
       </div>
     </section>
@@ -863,6 +905,34 @@
     <script src="js/main.js"></script>
     <script>
       let verificationEmail = "";
+
+      // Check membership status on page load
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        try {
+          const { data, error } = await supabaseClient
+            .from("settings")
+            .select("value")
+            .eq("key", "membership_open")
+            .maybeSingle();
+
+          // If data is missing, or value is not "true", close the form
+          const isOpen = data && data.value === "true";
+
+          if (!isOpen) {
+            document.getElementById("formContainer").style.display = "none";
+            document.getElementById("closedMessageBox").style.display = "block";
+          }
+        } catch (err) {
+          console.error("Error checking membership status:", err);
+        }
+      });
 
       function togglePassword() {
         const inp = document.getElementById("password");
