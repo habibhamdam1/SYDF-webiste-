@@ -2167,7 +2167,36 @@ html:not([data-theme="dark"]) .info-notice {
   background: rgba(255, 255, 255, 0.65) !important;
   border-color: var(--card-border) !important;
 }
+/* ============================================================
+   🎯 CONTACT PAGE FINAL FIX (Social Links & Hours)
+   ============================================================ */
 
+/* 1. Light Mode mein Social Links ke naam ko Dark Maroon karo */
+html:not([data-theme="dark"]) .social-link {
+  color: var(--text-primary) !important;
+  background-color: var(--card-bg-hover) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* 2. Jab Mouse (Hover) le jayein toh accent color ho jaye */
+html:not([data-theme="dark"]) .social-link:hover {
+  background-color: var(--accent-soft) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+/* 3. Timing (Hours List) ka text theek karo */
+html:not([data-theme="dark"]) .hours-list li span:first-child {
+  color: var(--text-secondary) !important;
+}
+
+html:not([data-theme="dark"]) .hours-list li span:last-child {
+  color: var(--accent) !important;
+}
+
+html:not([data-theme="dark"]) .hours-list li {
+  border-bottom-color: var(--card-border) !important;
+}
 /* 6. Toggle Password (Eye Icon) ka color theek karo */
 html:not([data-theme="dark"]) .toggle-pass {
   color: var(--text-secondary) !important;
