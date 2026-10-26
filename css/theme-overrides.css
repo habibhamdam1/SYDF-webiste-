@@ -2201,3 +2201,43 @@ html:not([data-theme="dark"]) .hours-list li {
 html:not([data-theme="dark"]) .toggle-pass {
   color: var(--text-secondary) !important;
 }
+/* ============================================================
+   ✨ FLOATING STARS ANIMATION (GPU OPTIMIZED - NO LAG)
+   ============================================================ */
+
+/* 1. Star layers ko bada karo taake move hone par kinare na dikhein */
+body::before,
+body::after {
+  inset: -50% !important;
+  will-change: transform, opacity !important;
+}
+
+/* 2. Naye GPU Accelerated Keyframes (Transform use kar rahe hain) */
+@keyframes floatStarsDownGPU {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-400px, 400px, 0); }
+}
+
+@keyframes floatStarsUpGPU {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(800px, -800px, 0); }
+}
+
+/* 3. Animation Apply karo */
+body::before {
+  animation: twinkleStarsFast 4.5s ease-in-out infinite, floatStarsDownGPU 90s linear infinite !important;
+}
+
+body::after {
+  animation: twinkleStarsSlow 8s ease-in-out infinite, floatStarsUpGPU 130s linear infinite !important;
+}
+
+/* 4. Mobile Webview Fix (Mobile par speed thodi slow karo taake battery bache) */
+@media (max-width: 768px) {
+  body::before {
+    animation: twinkleStarsFast 6s ease-in-out infinite, floatStarsDownGPU 120s linear infinite !important;
+  }
+  body::after {
+    animation: twinkleStarsSlow 10s ease-in-out infinite, floatStarsUpGPU 180s linear infinite !important;
+  }
+}
