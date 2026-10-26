@@ -90,6 +90,18 @@
         font-size: 13px;
         outline: none;
       }
+      .form-group input[type="file"]::file-selector-button {
+        background: rgba(26, 188, 156, 0.15);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        padding: 6px 14px;
+        border-radius: 8px;
+        margin-right: 10px;
+        cursor: pointer;
+        font-family: "Poppins", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+      }
       .form-group input:focus,
       .form-group select:focus,
       .form-group textarea:focus {
@@ -402,6 +414,13 @@
               ><input type="number" id="acParticipants" value="0" />
             </div>
           </div>
+
+          <!-- NAYA: Photo Upload Field -->
+          <div class="form-group">
+            <label>Activity Cover Photo * (Required)</label>
+            <input type="file" id="acImage" accept="image/*" required />
+          </div>
+
           <div class="modal-actions">
             <button
               type="button"
@@ -414,7 +433,11 @@
             >
               Cancel
             </button>
-            <button type="submit" class="btn-modal btn-save-modal">
+            <button
+              type="submit"
+              class="btn-modal btn-save-modal"
+              id="saveActivityBtn"
+            >
               💾 Save
             </button>
           </div>
@@ -463,38 +486,96 @@
         }
 
         await loadActivities();
+
         document
           .getElementById("addActivityBtn")
           .addEventListener("click", () =>
             document.getElementById("activityModal").classList.add("active"),
           );
 
+        // FORM SUBMIT LOGIC WITH IMAGE UPLOAD
         document
           .getElementById("activityForm")
           .addEventListener("submit", async function (e) {
             e.preventDefault();
-            const { error } = await supabaseClient.from("activities").insert([
-              {
-                title: document.getElementById("acTitle").value.trim(),
-                description: document.getElementById("acDesc").value.trim(),
-                activity_date: document.getElementById("acDate").value,
-                location: document.getElementById("acLocation").value.trim(),
-                organizer:
-                  document.getElementById("acOrganizer").value.trim() || null,
-                status: document.getElementById("acStatus").value,
-                budget: document.getElementById("acBudget").value || 0,
-                participants:
-                  document.getElementById("acParticipants").value || 0,
-              },
-            ]);
-            if (error) {
-              alert("❌ " + error.message);
+
+            const btn = document.getElementById("saveActivityBtn");
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = "⏳ Uploading...";
+
+            const fileInput = document.getElementById("acImage");
+            const file = fileInput.files[0];
+
+            if (!file) {
+              alert("❌ Please select a photo for the activity.");
+              btn.disabled = false;
+              btn.innerHTML = originalText;
               return;
             }
-            alert("✅ Activity added!");
-            document.getElementById("activityModal").classList.remove("active");
-            this.reset();
-            await loadActivities();
+
+            if (file.size > 5 * 1024 * 1024) {
+              alert("❌ Photo must be less than 5MB");
+              btn.disabled = false;
+              btn.innerHTML = originalText;
+              return;
+            }
+
+            try {
+              // 1. Upload Image to Supabase Storage (gallery-images bucket)
+              const fileExt = file.name.split(".").pop();
+              const fileName = `activity-${Date.now()}.${fileExt}`;
+
+              const { error: uploadError } = await supabaseClient.storage
+                .from("gallery-images")
+                .upload(fileName, file);
+
+              if (uploadError) throw uploadError;
+
+              // 2. Get Public URL
+              const { data: urlData } = supabaseClient.storage
+                .from("gallery-images")
+                .getPublicUrl(fileName);
+
+              const imageUrl = urlData.publicUrl;
+
+              // 3. Insert Data into Database
+              const { error: dbError } = await supabaseClient
+                .from("activities")
+                .insert([
+                  {
+                    title: document.getElementById("acTitle").value.trim(),
+                    description: document.getElementById("acDesc").value.trim(),
+                    activity_date: document.getElementById("acDate").value,
+                    location: document
+                      .getElementById("acLocation")
+                      .value.trim(),
+                    organizer:
+                      document.getElementById("acOrganizer").value.trim() ||
+                      null,
+                    status: document.getElementById("acStatus").value,
+                    budget: document.getElementById("acBudget").value || 0,
+                    participants:
+                      document.getElementById("acParticipants").value || 0,
+                    image_url: imageUrl, // Saving Image Link
+                  },
+                ]);
+
+              if (dbError) throw dbError;
+
+              alert("✅ Activity added successfully with photo!");
+              document
+                .getElementById("activityModal")
+                .classList.remove("active");
+              this.reset();
+              await loadActivities();
+            } catch (error) {
+              console.error(error);
+              alert("❌ Error: " + error.message);
+            } finally {
+              btn.disabled = false;
+              btn.innerHTML = originalText;
+            }
           });
       });
 
@@ -524,7 +605,9 @@
                   : "status-badge-pending";
             return `
                 <div class="glass-card" style="padding:22px;display:flex;gap:22px;align-items:center;flex-wrap:wrap;background:rgba(255,255,255,0.06);border-radius:16px;border:1px solid rgba(255,255,255,0.1);">
-                    <div style="width:100px;height:100px;border-radius:14px;background:linear-gradient(135deg,#1abc9c,#16a085);display:flex;align-items:center;justify-content:center;font-size:48px;">🎯</div>
+                    <div style="width:100px;height:100px;border-radius:14px;background:linear-gradient(135deg,#1abc9c,#16a085);display:flex;align-items:center;justify-content:center;font-size:48px;overflow:hidden;">
+                        ${a.image_url ? `<img src="${a.image_url}" style="width:100%;height:100%;object-fit:cover;">` : "🎯"}
+                    </div>
                     <div style="flex:1;min-width:250px;">
                         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
                             <span class="${sc}" style="font-size:10px;">${a.status}</span>
