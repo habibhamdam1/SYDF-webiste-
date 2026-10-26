@@ -7,7 +7,10 @@
     <script src="js/head-includes.js"></script>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages/contact.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
   </head>
@@ -42,7 +45,11 @@
     <section class="contact-intro">
       <div class="glass-card intro-block">
         <h2>Get in Touch</h2>
-        <p>Have a question, suggestion, or want to collaborate with us? We would love to hear from you. Reach out through any of the channels below or fill out the contact form.</p>
+        <p>
+          Have a question, suggestion, or want to collaborate with us? We would
+          love to hear from you. Reach out through any of the channels below or
+          fill out the contact form.
+        </p>
       </div>
     </section>
 
@@ -58,7 +65,7 @@
           <div class="contact-card-icon">📧</div>
           <h3>Email Us</h3>
           <p id="dynEmail">info@SYDF.org</p>
-          <p>membership@SYDF.org</p>
+          <p id="dynEmail2">membership@SYDF.org</p>
         </div>
         <div class="glass-card contact-card">
           <div class="contact-card-icon">📱</div>
@@ -73,24 +80,41 @@
       <div class="contact-main-grid">
         <div class="glass-card contact-form-block">
           <h2>Send Us a Message</h2>
-          <p class="form-intro">Fill out the form below and we'll get back to you as soon as possible.</p>
+          <p class="form-intro">
+            Fill out the form below and we'll get back to you as soon as
+            possible.
+          </p>
 
           <form class="contact-form" id="contactForm">
             <div class="form-row">
               <div class="form-group">
                 <label for="contactName">Full Name *</label>
-                <input type="text" id="contactName" placeholder="Enter your name" required />
+                <input
+                  type="text"
+                  id="contactName"
+                  placeholder="Enter your name"
+                  required
+                />
               </div>
               <div class="form-group">
                 <label for="contactEmail">Email *</label>
-                <input type="email" id="contactEmail" placeholder="example@email.com" required />
+                <input
+                  type="email"
+                  id="contactEmail"
+                  placeholder="example@email.com"
+                  required
+                />
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label for="contactPhone">Phone / WhatsApp</label>
-                <input type="tel" id="contactPhone" placeholder="+92 3XX XXXXXXX" />
+                <input
+                  type="tel"
+                  id="contactPhone"
+                  placeholder="+92 3XX XXXXXXX"
+                />
               </div>
               <div class="form-group">
                 <label for="contactSubject">Subject *</label>
@@ -109,10 +133,21 @@
 
             <div class="form-group">
               <label for="contactMessage">Your Message *</label>
-              <textarea id="contactMessage" rows="5" placeholder="Write your message here..." required></textarea>
+              <textarea
+                id="contactMessage"
+                rows="5"
+                placeholder="Write your message here..."
+                required
+              ></textarea>
             </div>
 
-            <button type="submit" class="btn-primary btn-full" id="btnSubmitContact">Send Message</button>
+            <button
+              type="submit"
+              class="btn-primary btn-full"
+              id="btnSubmitContact"
+            >
+              Send Message
+            </button>
             <p class="form-note">We usually respond within 24-48 hours.</p>
           </form>
         </div>
@@ -129,19 +164,42 @@
           <div class="glass-card info-side-block">
             <h3>Follow Us</h3>
             <div class="social-links">
-              <a href="#" class="social-link" id="dynFacebook"><span>📘</span> Facebook</a>
-              <a href="#" class="social-link" id="dynInstagram"><span>📷</span> Instagram</a>
-              <a href="#" class="social-link"><span>🐦</span> Twitter / X</a>
-              <!-- WhatsApp Link Fixed -->
-              <a href="#" class="social-link" id="dynWhatsApp" target="_blank" rel="noopener noreferrer"><span>💬</span> WhatsApp</a>
+              <a href="#" class="social-link" id="dynFacebook"
+                ><span>📘</span> Facebook</a
+              >
+              <a href="#" class="social-link" id="dynInstagram"
+                ><span>📷</span> Instagram</a
+              >
+              <a href="#" class="social-link" id="dynTwitter"
+                ><span>🐦</span> Twitter / X</a
+              >
+              <!-- WhatsApp Link -->
+              <a
+                href="#"
+                class="social-link"
+                id="dynWhatsApp"
+                target="_blank"
+                rel="noopener noreferrer"
+                ><span>💬</span> WhatsApp</a
+              >
             </div>
           </div>
+          
+          <!-- Quick Contacts Section (Only show if phone number exists) -->
           <div class="glass-card info-side-block">
             <h3>Quick Response</h3>
-            <p class="quick-desc">Need urgent help? Reach out to our team directly:</p>
+            <p class="quick-desc">
+              Need urgent help? Reach out to our team directly:
+            </p>
             <div class="quick-contacts">
-              <p><strong>President:</strong> <span id="dynPresPhone">+92 3XX XXXXXXX</span></p>
-              <p><strong>Secretary General:</strong> <span id="dynSecPhone">+92 3XX XXXXXXX</span></p>
+              <p>
+                <strong>Main Office:</strong>
+                <span id="dynMainPhone">+92 3XX XXXXXXX</span>
+              </p>
+              <p>
+                <strong>Support:</strong>
+                <span id="dynSecPhone">+92 3XX XXXXXXX</span>
+              </p>
             </div>
           </div>
         </div>
@@ -153,7 +211,7 @@
         <h2>Find Us</h2>
         <div class="map-placeholder">
           <span class="map-pin">📍</span>
-          <h3>Swat, Malakand Division</h3>
+          <h3 id="dynMapAddress">Swat, Malakand Division</h3>
           <p>Khyber Pakhtunkhwa, Pakistan</p>
           <p class="map-note">Interactive map will be added soon</p>
         </div>
@@ -165,45 +223,74 @@
     <script src="js/main.js"></script>
     <script>
       // ==========================================
-      // 1. DYNAMIC SETTINGS FETCHING (WhatsApp, Email, Phone)
+      // 1. DYNAMIC SETTINGS FETCHING (Live Data from Admin)
       // ==========================================
       window.addEventListener("load", async function () {
         let attempts = 0;
-        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
-          await new Promise((r) => setTimeout(r, 100)); attempts++;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
         }
         if (!supabaseClient) return;
 
         try {
-          const { data } = await supabaseClient.from("settings").select("key, value");
+          const { data } = await supabaseClient
+            .from("settings")
+            .select("key, value");
           if (!data) return;
 
           const settings = {};
           data.forEach((d) => (settings[d.key] = d.value));
 
-          // Emails
-          if (settings.email) document.getElementById("dynEmail").textContent = settings.email;
-          if (settings.email2) document.querySelector("#dynEmail + p").textContent = settings.email2;
-          
-          // Phones
-          if (settings.phone) document.getElementById("dynPhone").textContent = settings.phone;
-          
-          // WhatsApp Link FIX (Prevents page from scrolling to top)
-          if (settings.whatsapp) {
-            const waNumber = settings.whatsapp.replace(/[^0-9]/g, "");
-            document.getElementById("dynWhatsApp").href = `https://wa.me/${waNumber}?text=Assalam%20o%20Alaikum%20SYDF%2C%20I%20have%20a%20query.`;
-          } else if (settings.phone) {
-             const waNumber = settings.phone.replace(/[^0-9]/g, "");
-             document.getElementById("dynWhatsApp").href = `https://wa.me/${waNumber}`;
+          // Address
+          if (settings.address) {
+            document.getElementById("dynAddress").textContent = settings.address;
+            document.getElementById("dynMapAddress").textContent = settings.address;
           }
 
-          // Quick Contacts
-          if (settings.president_phone) document.getElementById("dynPresPhone").textContent = settings.president_phone;
-          if (settings.gs_phone) document.getElementById("dynSecPhone").textContent = settings.gs_phone;
+          // Emails
+          if (settings.contact_email)
+            document.getElementById("dynEmail").textContent = settings.contact_email;
+          if (settings.support_email)
+            document.getElementById("dynEmail2").textContent = settings.support_email;
+
+          // Phones
+          if (settings.phone) {
+            document.getElementById("dynPhone").textContent = settings.phone;
+            document.getElementById("dynMainPhone").textContent = settings.phone;
+            
+            // Agar koi alag support number nahi hai, to same number dikhado
+            if(!settings.support_phone) {
+                document.getElementById("dynSecPhone").textContent = settings.phone;
+            }
+          }
+          if (settings.support_phone) {
+              document.getElementById("dynSecPhone").textContent = settings.support_phone;
+          }
+
+          // WhatsApp Link FIX
+          // Admin panel mein 'whatsapp' aur 'whatsapp_link' dono hain
+          let waNumber = "";
+          if (settings.whatsapp) {
+             waNumber = settings.whatsapp.replace(/[^0-9]/g, "");
+          } else if (settings.phone) {
+             waNumber = settings.phone.replace(/[^0-9]/g, "");
+          }
+          
+          if (waNumber) {
+            document.getElementById("dynWhatsApp").href = `https://wa.me/${waNumber}?text=Assalam%20o%20Alaikum%20SYDF%2C%20I%20have%20a%20query.`;
+          }
 
           // Social Links
-          if (settings.facebook) document.getElementById("dynFacebook").href = settings.facebook;
-          if (settings.instagram) document.getElementById("dynInstagram").href = settings.instagram;
+          if (settings.facebook)
+            document.getElementById("dynFacebook").href = settings.facebook;
+          if (settings.instagram)
+            document.getElementById("dynInstagram").href = settings.instagram;
+          if (settings.twitter)
+            document.getElementById("dynTwitter").href = settings.twitter;
 
         } catch (err) {
           console.error("Settings load error:", err);
@@ -213,38 +300,54 @@
       // ==========================================
       // 2. CONTACT FORM SUBMISSION
       // ==========================================
-      document.getElementById("contactForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-        const btn = document.getElementById("btnSubmitContact");
-        const originalText = btn.textContent;
-        btn.disabled = true;
-        btn.textContent = "Sending...";
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const btn = document.getElementById("btnSubmitContact");
+          const originalText = btn.textContent;
+          btn.disabled = true;
+          btn.textContent = "Sending...";
 
-        const name = document.getElementById("contactName").value.trim();
-        const email = document.getElementById("contactEmail").value.trim();
-        const phone = document.getElementById("contactPhone").value.trim();
-        const subject = document.getElementById("contactSubject").value;
-        const message = document.getElementById("contactMessage").value.trim();
+          const name = document.getElementById("contactName").value.trim();
+          const email = document.getElementById("contactEmail").value.trim();
+          const phone = document.getElementById("contactPhone").value.trim();
+          const subject = document.getElementById("contactSubject").value;
+          const message = document
+            .getElementById("contactMessage")
+            .value.trim();
 
-        try {
-          if (typeof supabaseClient === "undefined" || !supabaseClient) throw new Error("Database connection not ready.");
+          try {
+            if (typeof supabaseClient === "undefined" || !supabaseClient)
+              throw new Error("Database connection not ready.");
 
-          const { error } = await supabaseClient.from("contact_messages").insert([{
-              name: name, email: email, phone: phone || null, subject: subject, message: message, status: 'unread'
-          }]);
+            const { error } = await supabaseClient
+              .from("contact_messages")
+              .insert([
+                {
+                  name: name,
+                  email: email,
+                  phone: phone || null,
+                  subject: subject,
+                  message: message,
+                  status: "unread",
+                },
+              ]);
 
-          if (error) throw error;
+            if (error) throw error;
 
-          window.syfSuccess("✅ Message sent successfully! We will reply soon.");
-          this.reset();
-        } catch (err) {
-          console.error(err);
-          window.syfError("❌ Error: " + err.message);
-        } finally {
-          btn.disabled = false;
-          btn.textContent = originalText;
-        }
-      });
+            window.syfSuccess(
+              "✅ Message sent successfully! We will reply soon.",
+            );
+            this.reset();
+          } catch (err) {
+            console.error(err);
+            window.syfError("❌ Error: " + err.message);
+          } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+          }
+        });
     </script>
   </body>
 </html>
