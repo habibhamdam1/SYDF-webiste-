@@ -750,24 +750,62 @@
                 : c.status === "Rejected"
                   ? "#ef4444"
                   : "#f59e0b";
-            let actionBtns = "";
 
-            if (c.status === "Pending" || !c.status) {
-              actionBtns = `
-                <button onclick="updateCandidateStatus(${c.id}, 'Approved')" style="padding:6px 12px; background:#1abc9c; color:white; border:none; border-radius:6px; cursor:pointer; font-size:12px; margin-left:5px;">✓ Approve</button>
-                <button onclick="updateCandidateStatus(${c.id}, 'Rejected')" style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:12px; margin-left:5px;">✕ Reject</button>
+            let feeHTML = "";
+            let verifyBtn = "";
+
+            // Yahan hum transaction ID show karenge
+            if (c.transaction_id) {
+              let feeColor =
+                c.fee_status === "Verified"
+                  ? "#1abc9c"
+                  : c.fee_status === "Rejected"
+                    ? "#ef4444"
+                    : "#f59e0b";
+              feeHTML = `
+                <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; margin-top: 5px; font-size: 11px; border-left: 2px solid ${feeColor};">
+                  <strong>Fee Status:</strong> <span style="color: ${feeColor};">${c.fee_status}</span><br>
+                  <strong>Method:</strong> ${c.payment_method || "-"} | <strong>Trx ID:</strong> ${c.transaction_id}
+                </div>
               `;
+              if (c.fee_status === "Pending Verification") {
+                verifyBtn = `
+                  <div style="margin-top: 5px; display: flex; gap: 5px;">
+                    <button onclick="verifyFee(${c.id}, 'Verified')" style="padding:4px 8px; background:#1abc9c; color:white; border:none; border-radius:4px; cursor:pointer; font-size:10px;">Verify Payment</button>
+                    <button onclick="verifyFee(${c.id}, 'Rejected')" style="padding:4px 8px; background:#ef4444; color:white; border:none; border-radius:4px; cursor:pointer; font-size:10px;">Reject Payment</button>
+                  </div>
+                `;
+              }
+            }
+
+            let actionBtns = "";
+            if (c.status === "Pending" || !c.status) {
+              // Agar fee hai to pehle verify karna zaroori hai
+              if (c.fee_status === "Verified" || !c.transaction_id) {
+                actionBtns = `
+                  <button onclick="updateCandidateStatus(${c.id}, 'Approved')" style="padding:6px 12px; background:#1abc9c; color:white; border:none; border-radius:6px; cursor:pointer; font-size:12px; margin-left:5px;">✓ Approve</button>
+                  <button onclick="updateCandidateStatus(${c.id}, 'Rejected')" style="padding:6px 12px; background:#ef4444; color:white; border:none; border-radius:6px; cursor:pointer; font-size:12px; margin-left:5px;">✕ Reject</button>
+                `;
+              } else {
+                actionBtns = `<span style="font-size:11px; color:#f59e0b; margin-left:5px;">Verify payment first to approve.</span>`;
+              }
             }
 
             html += `
-              <div class="candidate-row">
-                <div>
-                  <strong style="color:var(--text-primary);">${c.member_name}</strong> 
-                  <span style="font-size:12px; color:var(--text-secondary);">(${c.member_email})</span>
-                  <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">"${c.manifesto}"</div>
+              <div class="candidate-row" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 15px 0; border-bottom: 1px solid var(--card-border);">
+                <div style="width: 100%; display: flex; justify-content: space-between; align-items: flex-start;">
+                  <div>
+                    <strong style="color:var(--text-primary); font-size: 14px;">${c.member_name}</strong> 
+                    <span style="font-size:12px; color:var(--text-secondary);">(${c.member_email})</span>
+                    <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">"${c.manifesto}"</div>
+                    ${feeHTML}
+                  </div>
+                  <div style="text-align:right; display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                    <span style="color:${statusColor}; font-weight:bold; font-size:12px; text-transform:uppercase;">${c.status || "Pending"}</span>
+                    ${verifyBtn}
+                  </div>
                 </div>
-                <div style="text-align:right;">
-                  <span style="color:${statusColor}; font-weight:bold; font-size:12px; text-transform:uppercase;">${c.status || "Pending"}</span>
+                <div style="width: 100%; text-align: right; margin-top: 5px;">
                   ${actionBtns}
                 </div>
               </div>
@@ -777,6 +815,18 @@
 
         list.innerHTML = html;
       }
+
+      // Nayi function: Payment verify karne ke liye
+      window.verifyFee = async function (id, status) {
+        const { error } = await supabaseClient
+          .from("election_candidates")
+          .update({ fee_status: status })
+          .eq("id", id);
+
+        if (error) return window.syfError("Error: " + error.message);
+        window.syfSuccess(`Payment marked as ${status}`);
+        renderCandidatesList();
+      };
 
       window.updateCandidateStatus = async function (id, status) {
         await supabaseClient
