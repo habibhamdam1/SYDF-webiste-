@@ -307,12 +307,69 @@
 
     <script src="js/main.js?v=99"></script>
     <script src="js/toast.js?v=99"></script>
-    <script>
+        <script>
       let allMembers = [];
       let currentFilter = "pending";
       let currentAdminRole = "";
       let currentAdminDistrict = "";
 
+      // ==========================================
+      // AUTHENTICATION & AUTHORIZATION CHECK
+      // ==========================================
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) return;
+
+        try {
+          // 1. Check if user is logged in
+          const { data: { session } } = await supabaseClient.auth.getSession();
+          
+          if (!session) {
+            // No session, redirect to admin login
+            window.location.href = "admin-login.html";
+            return;
+          }
+
+          // 2. Check user role
+          const { data: admin, error } = await supabaseClient
+            .from("members")
+            .select("role, district")
+            .eq("email", session.user.email)
+            .maybeSingle();
+
+          // Allowed roles to view this page
+          const allowedRoles = ["Super Admin", "Admin", "President", "Senior Vice President", "Vice President", "Secretary General", "District Admin"];
+
+          if (error || !admin || !allowedRoles.includes(admin.role)) {
+            // Not an admin, kick them out
+            window.syfError("Access Denied. You are not authorized to view this page.");
+            setTimeout(() => {
+              window.location.href = "index.html"; // Send to homepage
+            }, 2000);
+            return;
+          }
+
+          // Setup current admin details
+          currentAdminRole = admin.role;
+          currentAdminDistrict = admin.district;
+          document.getElementById("topRole").textContent = admin.role;
+
+          // If everything is verified, load the applications
+          loadApplications();
+
+        } catch (err) {
+          console.error("Auth check failed:", err);
+          window.location.href = "admin-login.html";
+        }
+      });
+
+      // ==========================================
+      // LOAD APPLICATIONS DATA
+      // ==========================================
       async function loadApplications() {
         const loadingState = document.getElementById("loadingState");
         const grid = document.getElementById("applicationsGrid");
@@ -323,29 +380,12 @@
         emptyState.style.display = "none";
 
         try {
-          // 1. Get Current User Role & District
-          const {
-            data: { session },
-          } = await supabaseClient.auth.getSession();
-          if (session) {
-            const { data: admin } = await supabaseClient
-              .from("members")
-              .select("role, district")
-              .eq("email", session.user.email)
-              .maybeSingle();
-            if (admin) {
-              currentAdminRole = admin.role;
-              currentAdminDistrict = admin.district;
-              document.getElementById("topRole").textContent = admin.role;
-            }
-          }
-
-          // 2. Load Applications with Filter
           let query = supabaseClient
             .from("members")
             .select("*")
             .order("created_at", { ascending: false });
 
+          // District Admin restrictions
           if (currentAdminRole === "District Admin" && currentAdminDistrict) {
             query = query.eq("district", currentAdminDistrict);
           }
@@ -367,6 +407,9 @@
         }
       }
 
+      // ==========================================
+      // RENDER APPLICATIONS
+      // ==========================================
       function renderApplications() {
         const grid = document.getElementById("applicationsGrid");
         const emptyState = document.getElementById("emptyState");
@@ -456,6 +499,9 @@
           .join("");
       }
 
+      // ==========================================
+      // ACTIONS (Approve / Reject)
+      // ==========================================
       window.handleAction = function (id, action) {
         const member = allMembers.find((m) => String(m.id) === String(id));
         if (!member) return;
@@ -484,13 +530,16 @@
                 .update({ status: "Rejected" })
                 .eq("id", id);
               if (error) return window.syfError("Error: " + error.message);
-              window.syfError(member.name + " rejected."); // Using error toast for visual distinction
+              window.syfError(member.name + " rejected.");
               loadApplications();
             },
           );
         }
       };
 
+      // ==========================================
+      // FILTERS
+      // ==========================================
       document.querySelectorAll(".btn-filter-type").forEach((btn) => {
         btn.addEventListener("click", function () {
           document.querySelectorAll(".btn-filter-type").forEach((b) => {
@@ -511,10 +560,6 @@
 
       const refreshBtn = document.getElementById("refreshBtn");
       if (refreshBtn) refreshBtn.addEventListener("click", loadApplications);
-
-      window.addEventListener("load", function () {
-        setTimeout(loadApplications, 500);
-      });
     </script>
   </body>
 </html>
