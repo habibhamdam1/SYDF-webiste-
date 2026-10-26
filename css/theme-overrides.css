@@ -1778,7 +1778,128 @@ body.theme-female .id-card .date-row .val {
   color: #6b7280 !important;
   -webkit-text-fill-color: #6b7280 !important;
 }
+/* ============================================================
+   SYDF — THEME OVERRIDES (BRIDGE FILE)
+   ============================================================ */
 
+/* 1. DASHBOARD BODY BACKGROUND */
+.dashboard-body { background: transparent !important; background-image: none !important; }
+
+/* 2. ALL FORM INPUTS */
+.form-group input, .form-group select, .form-group textarea, .search-box input, .filter-select,
+.email-compose-card input, .email-compose-card select, .email-compose-card textarea,
+.settings-card input, .settings-card select, .settings-card textarea,
+.social-setting-input input, .payment-details input, .profile-form input, .profile-form select, .profile-form textarea {
+  background: var(--input-bg) !important; color: var(--text-primary) !important; border-color: var(--input-border) !important;
+}
+.form-group input::placeholder, .form-group textarea::placeholder, .search-box input::placeholder,
+.profile-form input::placeholder, .profile-form textarea::placeholder { color: var(--text-muted) !important; }
+
+/* 3. SELECT DROPDOWN OPTIONS */
+html[data-theme="dark"] select option { background: #0a1d33 !important; color: #f0f6ff !important; }
+html:not([data-theme="dark"]) select option { background: #ffffff !important; color: #4c0519 !important; }
+
+/* 4. FILTER BUTTONS / TABS */
+.filter-btn, .btn-filter-type, .settings-tab, .cabinet-tab { background: var(--card-bg) !important; color: var(--text-secondary) !important; border-color: var(--card-border) !important; }
+.filter-btn:hover, .btn-filter-type:hover, .settings-tab:hover, .cabinet-tab:hover { background: var(--accent-soft) !important; color: var(--accent) !important; border-color: var(--accent) !important; }
+.filter-btn.active, .btn-filter-type.active, .settings-tab.active, .cabinet-tab.active { background: var(--accent) !important; color: var(--accent-contrast) !important; border-color: var(--accent) !important; font-weight: 600 !important; }
+
+/* 5. TARGETED FIX FOR MEMBER PAGES (Transparency & White Text) */
+html:not([data-theme="dark"]) .content-card,
+html:not([data-theme="dark"]) .summary-card,
+html:not([data-theme="dark"]) .doc-card,
+html:not([data-theme="dark"]) .activity-card,
+html:not([data-theme="dark"]) .report-card,
+html:not([data-theme="dark"]) .proposal-card,
+html:not([data-theme="dark"]) .election-block,
+html:not([data-theme="dark"]) .info-banner,
+html:not([data-theme="dark"]) .page-header-block,
+html:not([data-theme="dark"]) .stat-box,
+html:not([data-theme="dark"]) .pay-instructions {
+  background: rgba(255, 255, 255, 0.95) !important; /* Transparency kam ki */
+  border-color: var(--card-border) !important;
+}
+
+/* Light mode mein in pages ke hardcoded white text ko theek karo */
+html:not([data-theme="dark"]) .page-header-block h1,
+html:not([data-theme="dark"]) .page-header-block p,
+html:not([data-theme="dark"]) .page-intro h1,
+html:not([data-theme="dark"]) .page-intro p,
+html:not([data-theme="dark"]) .summary-label,
+html:not([data-theme="dark"]) .summary-sub,
+html:not([data-theme="dark"]) .doc-title-block h3,
+html:not([data-theme="dark"]) .doc-meta,
+html:not([data-theme="dark"]) .doc-meta span,
+html:not([data-theme="dark"]) .activity-title,
+html:not([data-theme="dark"]) .activity-meta,
+html:not([data-theme="dark"]) .report-card h3,
+html:not([data-theme="dark"]) .report-item h4,
+html:not([data-theme="dark"]) .report-item p,
+html:not([data-theme="dark"]) .proposal-title,
+html:not([data-theme="dark"]) .proposal-desc,
+html:not([data-theme="dark"]) .election-block h2,
+html:not([data-theme="dark"]) .election-block h3,
+html:not([data-theme="dark"]) .election-block h4,
+html:not([data-theme="dark"]) .info-banner p,
+html:not([data-theme="dark"]) .info-banner strong,
+html:not([data-theme="dark"]) .pay-method-card h4,
+html:not([data-theme="dark"]) .pay-method-card .title,
+html:not([data-theme="dark"]) .pay-note p,
+html:not([data-theme="dark"]) .payment-table td {
+  color: var(--text-primary) !important;
+}
+
+/* Inputs & search boxes in Member Pages */
+html:not([data-theme="dark"]) .search-box input { background: var(--card-bg) !important; color: var(--text-primary) !important; }
+html:not([data-theme="dark"]) .filter-select { background: var(--card-bg) !important; color: var(--text-primary) !important; }
+
+/* 6. DASHBOARD & SIDEBAR MAIN TEXT */
+.dashboard-topbar { background: var(--header-bg) !important; border-bottom-color: var(--card-border) !important; backdrop-filter: blur(20px) !important; }
+.dashboard-sidebar { background: var(--header-bg) !important; border-right-color: var(--card-border) !important; }
+.topbar-title h2 { color: var(--text-primary) !important; }
+.topbar-title p { color: var(--text-muted) !important; }
+.user-name { color: var(--text-primary) !important; }
+.user-uid { color: var(--text-muted) !important; }
+.sidebar-logo h1 { color: var(--accent) !important; }
+.sidebar-logo p { color: var(--text-muted) !important; }
+.sidebar-nav li a { color: var(--text-secondary) !important; }
+.sidebar-nav li a:hover { background: var(--accent-soft) !important; color: var(--text-primary) !important; }
+.sidebar-nav li a.active { background: var(--accent-soft) !important; color: var(--accent) !important; }
+
+/* 7. BUTTONS & BADGES WHICH SHOULD REMAIN WHITE */
+.btn-primary, .btn-login, .user-avatar, .member-avatar, .app-avatar,
+.badge, .status-badge-active, .status-badge-pending, .status-badge-inactive, .status-badge-overdue,
+.role-badge, .uid-badge, .btn-toggle-open, .action-btn {
+  color: #ffffff !important;
+}
+
+/* 8. TABLES */
+.data-table thead { background: var(--accent-soft) !important; }
+.data-table th { color: var(--accent) !important; }
+.data-table td { color: var(--text-primary) !important; }
+
+/* 9. FORM HEADERS (Profile Page) */
+.form-card-header { background: var(--accent-soft) !important; border-bottom: 1px solid var(--card-border) !important; }
+.form-card-header h3, .form-card-header h4 { color: var(--accent) !important; }
+.form-card-header p { color: var(--text-secondary) !important; }
+.profile-form label, .form-group label, .settings-card label { color: var(--text-primary) !important; font-weight: 600 !important; }
+
+/* 10. GLASSMORPHISM FOR STARS */
+body::before, body::after { will-change: transform, opacity !important; }
+body::before { animation: twinkleStarsFast 4.5s ease-in-out infinite, floatStarsDownGPU 90s linear infinite !important; }
+body::after { animation: twinkleStarsSlow 8s ease-in-out infinite, floatStarsUpGPU 130s linear infinite !important; }
+
+@keyframes floatStarsDownGPU { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-400px, 400px, 0); } }
+@keyframes floatStarsUpGPU { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(800px, -800px, 0); } }
+
+/* 11. ID CARD THEME LOCK (Always Maroon/Navy & White) */
+.id-card, .card-front, .card-back { background: #f7f8fa !important; color: #333333 !important; }
+.id-card .sidebar { background: linear-gradient(180deg, #0a1628 0%, #142a4a 50%, #1e3a5f 100%) !important; }
+body.theme-female .id-card .sidebar { background: linear-gradient(180deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%) !important; }
+.id-card .sidebar * { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+.id-card .member-name, .id-card .info-line .val, .id-card .date-row .val { color: #0a1628 !important; }
+body.theme-female .id-card .member-name, body.theme-female .id-card .info-line .val { color: #450a0a !important; }
+.id-card .info-line .lbl, .id-card .date-row .lbl { color: #6b7280 !important; }
 /* Role Badge */
 .id-card .member-role {
   color: #ffffff !important;
