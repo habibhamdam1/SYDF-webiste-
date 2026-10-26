@@ -1109,3 +1109,66 @@ html[data-theme="dark"] .dashboard-content textarea {
   color: var(--text-primary) !important;
   -webkit-text-fill-color: var(--text-primary) !important;
 }
+/* ============================================================
+   🎯 DASHBOARD & PROFILE: LESS TRANSPARENCY & TEXT FIX
+   ============================================================ */
+
+/* 1. Make background of dashboard cards more solid so text is readable */
+html:not([data-theme="dark"]) .dashboard-content .glass-card,
+html:not([data-theme="dark"]) .dashboard-content .content-card,
+html:not([data-theme="dark"]) .dashboard-content .dash-stat-card,
+html:not([data-theme="dark"]) .dashboard-content .summary-card,
+html:not([data-theme="dark"]) .dashboard-content .payment-table-card {
+  background: rgba(255, 255, 255, 0.95) !important; /* Increased opacity from 0.65 to 0.95 */
+  backdrop-filter: blur(5px) !important;
+}
+
+/* 2. Force All Text in Dashboard/Profile to be Dark (Except Buttons/Badges) */
+html:not([data-theme="dark"]) .dashboard-content h1,
+html:not([data-theme="dark"]) .dashboard-content h2,
+html:not([data-theme="dark"]) .dashboard-content h3,
+html:not([data-theme="dark"]) .dashboard-content h4,
+html:not([data-theme="dark"]) .dashboard-content p,
+html:not([data-theme="dark"]) .dashboard-content span:not(.badge):not(.nav-icon):not(.user-avatar),
+html:not([data-theme="dark"]) .dashboard-content label,
+html:not([data-theme="dark"]) .dashboard-content strong,
+html:not([data-theme="dark"]) .dashboard-content td,
+html:not([data-theme="dark"]) .dashboard-content th,
+html:not([data-theme="dark"]) .profile-header-info h1,
+html:not([data-theme="dark"]) .profile-header-info p,
+html:not([data-theme="dark"]) .profile-form label {
+  color: var(--text-primary) !important;
+}
+
+/* 3. Fix specific white text issue in "Your Engagement Score" */
+html:not([data-theme="dark"]) .score-label,
+html:not([data-theme="dark"]) .score-value,
+html:not([data-theme="dark"]) .stat-label,
+html:not([data-theme="dark"]) .stat-value,
+html:not([data-theme="dark"]) .dashboard-content .card-header h3,
+html:not([data-theme="dark"]) .dashboard-content .welcome-text h1,
+html:not([data-theme="dark"]) .dashboard-content .welcome-text p {
+  color: var(--text-primary) !important;
+}
+
+/* 4. Badges, Avatars and Buttons wapas white text use karein */
+html:not([data-theme="dark"]) .dashboard-content .btn-primary,
+html:not([data-theme="dark"]) .dashboard-content .user-avatar,
+html:not([data-theme="dark"]) .dashboard-content .badge,
+html:not([data-theme="dark"]) .dashboard-content .status-badge-active,
+html:not([data-theme="dark"]) .dashboard-content .member-avatar,
+html:not([data-theme="dark"]) .dashboard-content .profile-avatar-big {
+  color: #ffffff !important;
+}
+
+/* 5. Sidebar background ko solid karo taake text clear ho */
+html:not([data-theme="dark"]) .dashboard-sidebar {
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+html:not([data-theme="dark"]) .sidebar-nav li a {
+  color: var(--text-secondary) !important;
+}
+html:not([data-theme="dark"]) .sidebar-nav li a.active {
+  color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+}
