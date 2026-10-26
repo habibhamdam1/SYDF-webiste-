@@ -501,20 +501,20 @@
           <div class="pay-method-card">
             <div class="pay-method-icon jazzcash">📱</div>
             <h4>JazzCash</h4>
-            <p>0300-1234567</p>
-            <small>Account Title: SYDF</small>
+            <p id="dynJazzcash">0300-1234567</p>
+            <small>Account Title: <span id="dynAccountTitle1">SYDF</span></small>
           </div>
           <div class="pay-method-card">
             <div class="pay-method-icon easypaisa">💚</div>
             <h4>EasyPaisa</h4>
-            <p>0301-2345678</p>
-            <small>Account Title: SYDF</small>
+            <p id="dynEasypaisa">0301-2345678</p>
+            <small>Account Title: <span id="dynAccountTitle2">SYDF</span></small>
           </div>
           <div class="pay-method-card">
             <div class="pay-method-icon bank">🏦</div>
             <h4>Bank Transfer</h4>
-            <p>HBL: 1234-5678-9012</p>
-            <small>Account Title: SYDF</small>
+            <p id="dynBank">HBL: 1234-5678-9012</p>
+            <small>Account Title: <span id="dynAccountTitle3">SYDF</span></small>
           </div>
         </div>
       </div>
@@ -598,6 +598,50 @@
         });
       });
 
+      // ==========================================
+      // Load Payment Settings dynamically from Admin Panel
+      // ==========================================
+      async function loadPaymentSettings() {
+        try {
+          if (typeof supabaseClient === "undefined" || !supabaseClient) return;
+
+          const { data, error } = await supabaseClient
+            .from("settings")
+            .select("key, value");
+
+          if (error) throw error;
+          if (!data) return;
+
+          const settings = {};
+          data.forEach((d) => (settings[d.key] = d.value));
+
+          // Update JazzCash
+          if (settings.jazzcash)
+            document.getElementById("dynJazzcash").textContent = settings.jazzcash;
+          
+          // Update EasyPaisa
+          if (settings.easypaisa)
+            document.getElementById("dynEasypaisa").textContent = settings.easypaisa;
+
+          // Update Bank (Name + Account)
+          if (settings.bank_name && settings.bank_account) {
+            document.getElementById("dynBank").textContent = `${settings.bank_name}: ${settings.bank_account}`;
+          } else if (settings.bank_account) {
+            document.getElementById("dynBank").textContent = settings.bank_account;
+          }
+
+          // Update Account Title (for all three cards)
+          if (settings.account_title) {
+            document.getElementById("dynAccountTitle1").textContent = settings.account_title;
+            document.getElementById("dynAccountTitle2").textContent = settings.account_title;
+            document.getElementById("dynAccountTitle3").textContent = settings.account_title;
+          }
+
+        } catch (err) {
+          console.error("Error loading payment settings:", err);
+        }
+      }
+
       // Load Top Donors
       async function loadTopDonors() {
         const list = document.getElementById("topDonorsList");
@@ -661,6 +705,19 @@
 
           const receiptNo = "SYDF-DON-" + String(Date.now()).slice(-6);
 
+          // FIXED: Yahan donationData define kiya gaya hai jo pehle missing tha
+          const donationData = {
+            receipt_no: receiptNo,
+            donor_name: document.getElementById("donorName").value.trim(),
+            donor_email: document.getElementById("donorEmail").value.trim(),
+            donor_phone: document.getElementById("donorPhone").value.trim() || null,
+            amount: Number(amount),
+            method: document.getElementById("paymentMethod").value,
+            purpose: document.getElementById("donationPurpose").value,
+            message: document.getElementById("donorMessage").value.trim() || null,
+            is_anonymous: document.getElementById("anonymous").checked,
+            status: "Pending", // Admin panel se "Completed" set hoga
+          };
 
           try {
             if (typeof supabaseClient === "undefined" || !supabaseClient) {
@@ -695,7 +752,10 @@
 
       // Load on start
       window.addEventListener("load", () => {
-        setTimeout(loadTopDonors, 1000);
+        setTimeout(() => {
+          loadPaymentSettings();
+          loadTopDonors();
+        }, 500);
       });
     </script>
   </body>
