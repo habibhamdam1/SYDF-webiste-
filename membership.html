@@ -1,6 +1,24 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script>
+  // Force kill all service workers for this site
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for(let registration of registrations) {
+        registration.unregister().then(function(success) {
+          if(success) console.log('Service Worker unregistered successfully');
+        });
+      }
+    });
+  }
+  // Clear all caches
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      for (let name of names) caches.delete(name);
+    });
+  }
+</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Membership - SYDF</title>
