@@ -2034,3 +2034,141 @@ html:not([data-theme="dark"]) .info-box strong {
 html:not([data-theme="dark"]) .apply-block h2 {
   color: var(--text-primary) !important;
 }
+/* ============================================================
+   🎯 MEMBERSHIP PAGE ULTIMATE FORCE FIX
+   (Targets: Benefit Cards, Note Box, Terms Text, Login Link)
+   ============================================================ */
+
+/* 1. 4 Benefit Cards (Training & Workshops, etc.) */
+html:not([data-theme="dark"]) .benefit-card h3,
+html:not([data-theme="dark"]) .benefit-card p,
+html:not([data-theme="dark"]) .benefits-grid h3,
+html:not([data-theme="dark"]) .benefits-grid p,
+html:not([data-theme="dark"]) .benefits-section .glass-card h3,
+html:not([data-theme="dark"]) .benefits-section .glass-card p {
+  color: var(--text-primary) !important;
+}
+
+/* 2. "Fill the form below to apply..." wali line */
+html:not([data-theme="dark"]) .form-intro,
+html:not([data-theme="dark"]) .apply-block p,
+html:not([data-theme="dark"]) .waitlist-block p {
+  color: var(--text-secondary) !important;
+}
+
+/* 3. "Note:" wala Box (Info Box) */
+html:not([data-theme="dark"]) .info-box,
+html:not([data-theme="dark"]) .info-box p,
+html:not([data-theme="dark"]) .info-box span,
+html:not([data-theme="dark"]) .info-box div {
+  color: var(--text-primary) !important;
+}
+html:not([data-theme="dark"]) .info-box strong {
+  color: var(--accent) !important;
+}
+
+/* 4. Terms & Conditions wala Checkbox Text */
+html:not([data-theme="dark"]) .checkbox-label,
+html:not([data-theme="dark"]) .checkbox-label span,
+html:not([data-theme="dark"]) .checkbox-group,
+html:not([data-theme="dark"]) .checkbox-group span {
+  color: var(--text-primary) !important;
+}
+html:not([data-theme="dark"]) .checkbox-label a {
+  color: var(--accent) !important;
+}
+
+/* 5. "Already have an account? Login Here" wala Text */
+html:not([data-theme="dark"]) .register-note,
+html:not([data-theme="dark"]) .register-note span,
+html:not([data-theme="dark"]) .login-link {
+  color: var(--text-primary) !important;
+}
+html:not([data-theme="dark"]) .register-note a {
+  color: var(--accent) !important;
+}
+/* ============================================================
+   💥 MEMBERSHIP PAGE - FORCE OVERRIDE (FINAL BOSS)
+   ============================================================ */
+
+/* 1. Benefit Cards, Form, Note Box, aur Checkbox ke ANDAR ka har text pakdo */
+html:not([data-theme="dark"]) .benefits-section *,
+html:not([data-theme="dark"]) .apply-block *,
+html:not([data-theme="dark"]) .info-box *,
+html:not([data-theme="dark"]) .checkbox-group * {
+  color: var(--text-primary) !important;
+}
+
+/* 2. Links (Terms & Conditions, Login Here) ko Rose/Teal color do */
+html:not([data-theme="dark"]) .checkbox-group a,
+html:not([data-theme="dark"]) .register-note a {
+  color: var(--accent) !important;
+  font-weight: 600 !important;
+}
+
+/* 3. "Note:" wale word ko Blue/Accent color do taake wo highlight rahe */
+html:not([data-theme="dark"]) .info-box strong,
+html:not([data-theme="dark"]) .info-box span[style*="color"] {
+  color: var(--accent) !important;
+}
+
+/* 4. "Create Account" wale Button ka text White hi rahega (Kyunki background green hai) */
+html:not([data-theme="dark"]) .apply-block .btn-primary,
+html:not([data-theme="dark"]) .apply-block button[type="submit"] {
+  color: #ffffff !important;
+}
+
+/* 5. Checkbox ka text thoda halka (muted) dikhe */
+html:not([data-theme="dark"]) .checkbox-label {
+  color: var(--text-secondary) !important;
+}
+/* ============================================================
+   🎯 FIX FOR INLINE <STYLE> IN MEMBERSHIP.HTML
+   (Overrides hardcoded white colors & dark backgrounds)
+   ============================================================ */
+
+/* 1. Light Mode: Benefit Cards, Form Headers, Labels, Footer */
+html:not([data-theme="dark"]) .benefit-mini h4,
+html:not([data-theme="dark"]) .benefit-mini p,
+html:not([data-theme="dark"]) .form-header p,
+html:not([data-theme="dark"]) .form-label,
+html:not([data-theme="dark"]) .checkbox-group,
+html:not([data-theme="dark"]) .form-footer,
+html:not([data-theme="dark"]) .info-notice .txt,
+html:not([data-theme="dark"]) .apply-block h2,
+html:not([data-theme="dark"]) .amount {
+  color: var(--text-primary) !important;
+}
+
+/* 2. Form Inputs, Selects, aur Radio Buttons */
+html:not([data-theme="dark"]) .form-input,
+html:not([data-theme="dark"]) .form-select,
+html:not([data-theme="dark"]) .radio-option {
+  color: var(--text-primary) !important;
+  background-color: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+}
+
+/* 3. Form Inputs ke andar ka Placeholder Text */
+html:not([data-theme="dark"]) .form-input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* 4. Select Dropdown (District) ka Arrow aur Text */
+html:not([data-theme="dark"]) .form-select option {
+  background-color: #ffffff !important;
+  color: #4c0519 !important;
+}
+
+/* 5. Light Mode mein Boxon ka Background Glassy karo */
+html:not([data-theme="dark"]) .benefit-mini,
+html:not([data-theme="dark"]) .form-container,
+html:not([data-theme="dark"]) .info-notice {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* 6. Toggle Password (Eye Icon) ka color theek karo */
+html:not([data-theme="dark"]) .toggle-pass {
+  color: var(--text-secondary) !important;
+}
