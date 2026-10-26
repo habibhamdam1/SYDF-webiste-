@@ -2427,3 +2427,113 @@ html:not([data-theme="dark"]) body::after {
   background-size: 800px 800px;
   opacity: 1 !important;
 }
+/* ============================================================
+   🪪 ID CARD: THEME LOCK (Same Design in Light, Dark & Print)
+   ============================================================ */
+
+/* 1. Main ID Card Wrapper - Force White Background */
+.id-card-wrapper,
+.id-card,
+.card-front,
+.card-back,
+.id-card-preview-container {
+  background: #ffffff !important;
+  color: #333333 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+  -webkit-print-color-adjust: exact !important; /* Print mein colors force karega */
+  print-color-adjust: exact !important;
+}
+
+/* 2. Sidebar - Force Dark Maroon (Jo Dark Mode mein hai) */
+.id-card-sidebar,
+.card-sidebar,
+.id-side,
+.id-card-left-bar {
+  background: linear-gradient(135deg, #4c0519 0%, #881337 100%) !important;
+  color: #ffffff !important;
+}
+
+/* 3. Sidebar Text */
+.id-card-sidebar *,
+.card-sidebar *,
+.id-side *,
+.id-card-left-bar * {
+  color: #ffffff !important;
+}
+
+/* 4. Main Content Area Text (Name, CNIC, Details) */
+.id-card-content,
+.id-card-details,
+.card-body {
+  background: #ffffff !important;
+}
+
+.id-card-content h2,
+.id-card-content h3,
+.id-card-content .member-name,
+.card-body h2,
+.card-body h3,
+.card-body .member-name {
+  color: #4c0519 !important; /* Dark Maroon for Name */
+  font-weight: 800 !important;
+}
+
+.id-card-content p,
+.id-card-content span,
+.id-card-content strong,
+.card-body p,
+.card-body span,
+.card-body strong {
+  color: #1f2937 !important; /* Dark Grey for details */
+}
+
+.id-card-content .label,
+.card-body .label {
+  color: #6b7280 !important; /* Light Grey for labels like 'CNIC' */
+}
+
+/* 5. Member Role Badge (Member, Coordinator, etc.) */
+.id-card-role-badge,
+.member-role-badge {
+  background: #e0f2fe !important; /* Light Blue bg */
+  color: #0284c7 !important; /* Dark Blue text */
+  border: 1px solid #bae6fd !important;
+  font-weight: 700 !important;
+}
+
+/* 6. Female Card Specific Fix (Agar alag class hai toh) */
+.id-card-wrapper.female-card .id-card-sidebar,
+.id-card.female .card-sidebar {
+  background: linear-gradient(135deg, #4c0519 0%, #881337 100%) !important;
+}
+
+/* ============================================================
+   🖨️ PRINT / PDF SPECIFIC FIX
+   ============================================================ */
+@media print {
+  /* Print mein background colors ko force karo */
+  .id-card-wrapper,
+  .id-card,
+  .card-front,
+  .card-back,
+  .id-card-sidebar,
+  .card-sidebar,
+  .id-card-role-badge {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Print ke waqt ID card ko page ke center mein rakho */
+  .id-card-wrapper,
+  .id-card {
+    margin: 0 auto !important;
+    page-break-inside: avoid !important;
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  /* Print mein page ka background safaid ho */
+  body, html {
+    background: #ffffff !important;
+  }
+}
