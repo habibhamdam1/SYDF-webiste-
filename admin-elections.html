@@ -14,161 +14,28 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(5px);
-        z-index: 999999;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        overflow-y: auto;
-      }
-      .modal-overlay.active {
-        display: flex;
-      }
-      .modal-box {
-        background: var(--bg-base);
-        border: 1px solid var(--card-border);
-        border-radius: 20px;
-        padding: 30px;
-        max-width: 800px;
-        width: 100%;
-        max-height: 90vh;
-        overflow-y: auto;
-        position: relative;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-      }
-      .modal-close {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        background: rgba(239, 68, 68, 0.15);
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #fca5a5;
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 18px;
-      }
-      .modal-box h2 {
-        color: var(--accent);
-        margin-bottom: 20px;
-        font-size: 22px;
-      }
-      .election-card {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: var(--r-md);
-        padding: 20px;
-        margin-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 15px;
-      }
-      .election-info h3 {
-        color: var(--text-primary);
-        font-size: 18px;
-        margin-bottom: 5px;
-      }
-      .election-info p {
-        color: var(--text-secondary);
-        font-size: 13px;
-      }
-      .status-badge {
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-      }
-      .status-upcoming {
-        background: rgba(59, 130, 246, 0.15);
-        color: #3b82f6;
-        border: 1px solid #3b82f6;
-      }
-      .status-active {
-        background: rgba(26, 188, 156, 0.15);
-        color: #1abc9c;
-        border: 1px solid #1abc9c;
-      }
-      .status-completed {
-        background: rgba(107, 114, 128, 0.15);
-        color: #6b7280;
-        border: 1px solid #6b7280;
-      }
-      .vote-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-        font-size: 13px;
-      }
-      .vote-table th,
-      .vote-table td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid var(--card-border);
-      }
-      .vote-table th {
-        background: var(--input-bg);
-        color: var(--text-primary);
-        font-weight: 600;
-      }
-      .vote-table td {
-        color: var(--text-secondary);
-      }
-      .candidate-stat {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 15px;
-        background: var(--input-bg);
-        border-radius: 8px;
-        margin-bottom: 8px;
-      }
-      .seat-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 10px;
-      }
-      .seat-checkbox {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13px;
-        color: var(--text-primary);
-        cursor: pointer;
-        padding: 8px 12px;
-        background: var(--input-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 8px;
-        transition: 0.2s;
-      }
-      .seat-checkbox:hover {
-        border-color: var(--accent);
-      }
-      .seat-checkbox input {
-        accent-color: var(--accent);
-        width: 16px;
-        height: 16px;
-        cursor: pointer;
-      }
-      .candidate-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px;
-        border-bottom: 1px solid var(--card-border);
-      }
+      .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); z-index: 999999; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
+      .modal-overlay.active { display: flex; }
+      .modal-box { background: var(--bg-base); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6); }
+      .modal-close { position: absolute; top: 15px; right: 20px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 18px; }
+      .modal-box h2 { color: var(--accent); margin-bottom: 20px; font-size: 22px; }
+      .election-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--r-md); padding: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+      .election-info h3 { color: var(--text-primary); font-size: 18px; margin-bottom: 5px; }
+      .election-info p { color: var(--text-secondary); font-size: 13px; }
+      .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+      .status-upcoming { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid #3b82f6; }
+      .status-active { background: rgba(26, 188, 156, 0.15); color: #1abc9c; border: 1px solid #1abc9c; }
+      .status-completed { background: rgba(107, 114, 128, 0.15); color: #6b7280; border: 1px solid #6b7280; }
+      .vote-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+      .vote-table th, .vote-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border); }
+      .vote-table th { background: var(--input-bg); color: var(--text-primary); font-weight: 600; }
+      .vote-table td { color: var(--text-secondary); }
+      .candidate-stat { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: var(--input-bg); border-radius: 8px; margin-bottom: 8px; }
+      .seat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+      .seat-checkbox { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-primary); cursor: pointer; padding: 8px 12px; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 8px; transition: 0.2s; }
+      .seat-checkbox:hover { border-color: var(--accent); }
+      .seat-checkbox input { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+      .candidate-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--card-border); }
     </style>
   </head>
   <body class="dashboard-body admin-body">
@@ -183,59 +50,19 @@
       <nav class="sidebar-nav">
         <div class="nav-section-title">Main</div>
         <ul>
-          <li>
-            <a href="admin.html"
-              ><span class="nav-icon">📊</span><span>Dashboard</span></a
-            >
-          </li>
+          <li><a href="admin.html"><span class="nav-icon">📊</span><span>Dashboard</span></a></li>
         </ul>
         <div class="nav-section-title">Members</div>
         <ul>
-          <li>
-            <a href="admin-members.html"
-              ><span class="nav-icon">👥</span><span>All Members</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-applications.html"
-              ><span class="nav-icon">📝</span><span>Applications</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-waitlist.html"
-              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-issue-reports.html"
-              ><span class="nav-icon">🚨</span><span>Issue Reports</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-public-issues.html"
-              ><span class="nav-icon">🛡️</span><span>Public Grievances</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-proposals.html"
-              ><span class="nav-icon">💡</span><span>Proposals</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-elections.html" class="active"
-              ><span class="nav-icon">🗳️</span><span>Elections</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-cabinet.html"
-              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-districts.html"
-              ><span class="nav-icon">🗺️</span><span>Districts</span></a
-            >
-          </li>
+          <li><a href="admin-members.html"><span class="nav-icon">👥</span><span>All Members</span></a></li>
+          <li><a href="admin-applications.html"><span class="nav-icon">📝</span><span>Applications</span></a></li>
+          <li><a href="admin-waitlist.html"><span class="nav-icon">⏳</span><span>Waitlist</span></a></li>
+          <li><a href="admin-issue-reports.html"><span class="nav-icon">🚨</span><span>Issue Reports</span></a></li>
+          <li><a href="admin-public-issues.html"><span class="nav-icon">🛡️</span><span>Public Grievances</span></a></li>
+          <li><a href="admin-proposals.html"><span class="nav-icon">💡</span><span>Proposals</span></a></li>
+          <li><a href="admin-elections.html" class="active"><span class="nav-icon">🗳️</span><span>Elections</span></a></li>
+          <li><a href="admin-cabinet.html"><span class="nav-icon">🏛️</span><span>Cabinet</span></a></li>
+          <li><a href="admin-districts.html"><span class="nav-icon">🗺️</span><span>Districts</span></a></li>
         </ul>
       </nav>
     </aside>
@@ -253,50 +80,23 @@
           <div class="topbar-user">
             <div class="user-avatar admin-avatar" id="topAvatar">A</div>
             <div class="user-info">
-              <span class="user-name">Admin</span
-              ><span class="user-uid" id="topRole">Super Admin</span>
+              <span class="user-name">Admin</span><span class="user-uid" id="topRole">Super Admin</span>
             </div>
           </div>
         </div>
       </div>
 
       <div class="dashboard-content">
-        <div
-          class="page-header-block"
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 20px;
-          "
-        >
+        <div class="page-header-block" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
           <div class="page-header-info">
             <h1 style="color: var(--text-primary)">🗳️ Elections</h1>
           </div>
-          <button
-            id="createElectionBtn"
-            class="btn-primary"
-            style="
-              padding: 12px 24px;
-              border-radius: 12px;
-              font-weight: 600;
-              cursor: pointer;
-            "
-          >
+          <button id="createElectionBtn" class="btn-primary" style="padding: 12px 24px; border-radius: 12px; font-weight: 600; cursor: pointer;">
             ＋ Create New Election
           </button>
         </div>
-        <div
-          id="electionsList"
-          style="display: flex; flex-direction: column; gap: 15px"
-        >
-          <div
-            style="text-align: center; padding: 40px; color: var(--text-muted)"
-          >
-            Loading elections...
-          </div>
+        <div id="electionsList" style="display: flex; flex-direction: column; gap: 15px">
+          <div style="text-align: center; padding: 40px; color: var(--text-muted)">Loading elections...</div>
         </div>
       </div>
     </main>
@@ -304,63 +104,27 @@
     <!-- CREATE MODAL -->
     <div class="modal-overlay" id="createModal">
       <div class="modal-box">
-        <button
-          class="modal-close"
-          onclick="
-            document.getElementById('createModal').classList.remove('active')
-          "
-        >
-          ✕
-        </button>
+        <button class="modal-close" onclick="document.getElementById('createModal').classList.remove('active')">✕</button>
         <h2>Create New Election</h2>
         <form id="createElectionForm">
           <div class="form-group" style="margin-bottom: 20px">
-            <label
-              style="
-                color: var(--text-primary);
-                font-size: 13px;
-                margin-bottom: 5px;
-                display: block;
-              "
-              >Election Title</label
-            >
-            <input
-              type="text"
-              id="elTitle"
-              placeholder="e.g. Cabinet Election 2026"
-              required
-              style="
-                width: 100%;
-                padding: 12px;
-                background: var(--input-bg);
-                border: 1px solid var(--card-border);
-                border-radius: 8px;
-                color: var(--text-primary);
-                outline: none;
-              "
-            />
+            <label style="color: var(--text-primary); font-size: 13px; margin-bottom: 5px; display: block;">Election Title</label>
+            <input type="text" id="elTitle" placeholder="e.g. Cabinet Election 2026" required style="width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-primary); outline: none;" />
+          </div>
+
+          <!-- NAYA: Fee Input -->
+          <div class="form-group" style="margin-bottom: 20px">
+            <label style="color: var(--text-primary); font-size: 13px; margin-bottom: 5px; display: block;">Nomination Fee (Rs.)</label>
+            <input type="number" id="elFee" placeholder="Enter amount, 0 for free" value="0" required style="width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-primary); outline: none;" />
+            <p style="font-size: 11px; color: var(--text-secondary); margin-top: 5px;">Set to 0 if nominations are free. Members will have to pay this to apply.</p>
           </div>
 
           <div class="form-group" style="margin-bottom: 20px">
-            <label
-              style="
-                color: var(--text-primary);
-                font-size: 13px;
-                margin-bottom: 5px;
-                display: block;
-              "
-              >Select Seats for Election (Fetched from Cabinet)</label
-            >
+            <label style="color: var(--text-primary); font-size: 13px; margin-bottom: 5px; display: block;">Select Seats for Election (Fetched from Cabinet)</label>
             <div class="seat-grid" id="dynamicSeatsContainer"></div>
           </div>
 
-          <button
-            type="submit"
-            class="btn-primary"
-            style="width: 100%; padding: 12px; border-radius: 10px"
-          >
-            Create Election
-          </button>
+          <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; border-radius: 10px">Create Election</button>
         </form>
       </div>
     </div>
@@ -368,81 +132,28 @@
     <!-- MANAGE CANDIDATES MODAL -->
     <div class="modal-overlay" id="candidatesModal">
       <div class="modal-box">
-        <button
-          class="modal-close"
-          onclick="
-            document
-              .getElementById('candidatesModal')
-              .classList.remove('active')
-          "
-        >
-          ✕
-        </button>
+        <button class="modal-close" onclick="document.getElementById('candidatesModal').classList.remove('active')">✕</button>
         <h2 id="candidatesTitle">Manage Candidates</h2>
-        <div
-          id="candidatesList"
-          style="display: flex; flex-direction: column"
-        ></div>
+        <div id="candidatesList" style="display: flex; flex-direction: column"></div>
       </div>
     </div>
 
     <!-- RESULTS MODAL -->
     <div class="modal-overlay" id="resultsModal">
       <div class="modal-box">
-        <button
-          class="modal-close"
-          onclick="
-            document.getElementById('resultsModal').classList.remove('active')
-          "
-        >
-          ✕
-        </button>
+        <button class="modal-close" onclick="document.getElementById('resultsModal').classList.remove('active')">✕</button>
         <h2 id="resultsTitle">Election Results</h2>
-        <h3
-          style="
-            color: var(--text-primary);
-            font-size: 16px;
-            margin-bottom: 15px;
-          "
-        >
-          Current Standings
-        </h3>
+        <h3 style="color: var(--text-primary); font-size: 16px; margin-bottom: 15px;">Current Standings</h3>
         <div id="statsContainer" style="margin-bottom: 25px"></div>
-        <h3
-          style="
-            color: var(--text-primary);
-            font-size: 16px;
-            margin-bottom: 15px;
-          "
-        >
-          Voting Log
-        </h3>
+        <h3 style="color: var(--text-primary); font-size: 16px; margin-bottom: 15px;">Voting Log</h3>
         <div style="overflow-x: auto">
           <table class="vote-table">
-            <thead>
-              <tr>
-                <th>Voter</th>
-                <th>Voted For</th>
-                <th>Position</th>
-                <th>Time</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Voter</th><th>Voted For</th><th>Position</th><th>Time</th></tr></thead>
             <tbody id="votesLogBody"></tbody>
           </table>
         </div>
         <div style="margin-top: 25px; text-align: right">
-          <button
-            id="finalizeBtn"
-            class="btn-primary"
-            style="
-              padding: 12px 24px;
-              border-radius: 10px;
-              background: var(--warm);
-              color: #1a1a1a;
-            "
-          >
-            🏆 Finalize Results & Assign Roles
-          </button>
+          <button id="finalizeBtn" class="btn-primary" style="padding: 12px 24px; border-radius: 10px; background: var(--warm); color: #1a1a1a;">🏆 Finalize Results & Assign Roles</button>
         </div>
       </div>
     </div>
@@ -455,287 +166,174 @@
 
       window.addEventListener("load", async function () {
         let attempts = 0;
-        while (
-          (typeof supabaseClient === "undefined" || !supabaseClient) &&
-          attempts < 30
-        ) {
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
           await new Promise((r) => setTimeout(r, 100));
           attempts++;
         }
         if (!supabaseClient) return;
 
-        const {
-          data: { session },
-        } = await supabaseClient.auth.getSession();
-        if (!session) {
-          window.location.href = "admin-login.html";
-          return;
-        }
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return window.location.href = "admin-login.html";
 
-        const { data: admin } = await supabaseClient
-          .from("members")
-          .select("name, role")
-          .eq("email", session.user.email)
-          .maybeSingle();
-        if (!admin) {
-          window.location.href = "index.html";
-          return;
-        }
+        const { data: admin } = await supabaseClient.from("members").select("name, role").eq("email", session.user.email).maybeSingle();
+        if (!admin) return window.location.href = "index.html";
 
-        document.getElementById("topAvatar").textContent = (admin.name || "A")
-          .charAt(0)
-          .toUpperCase();
-        document
-          .querySelectorAll(".user-name")
-          .forEach((el) => (el.textContent = admin.name));
-        document
-          .querySelectorAll(".user-uid")
-          .forEach((el) => (el.textContent = admin.role || "Admin"));
+        document.getElementById("topAvatar").textContent = (admin.name || "A").charAt(0).toUpperCase();
+        document.querySelectorAll(".user-name").forEach((el) => (el.textContent = admin.name));
+        document.querySelectorAll(".user-uid").forEach((el) => (el.textContent = admin.role || "Admin"));
 
         // Fetch Cabinet Positions
-        const { data: positions } = await supabaseClient
-          .from("cabinet_positions")
-          .select("title")
-          .order("created_at", { ascending: true });
+        const { data: positions } = await supabaseClient.from("cabinet_positions").select("title").order("created_at", { ascending: true });
         if (positions && positions.length > 0) {
-          cabinetPositionsList = positions
-            .map((p) => p.title)
-            .filter((title) => title !== "Chairman & President");
+          cabinetPositionsList = positions.map((p) => p.title).filter((title) => title !== "Chairman & President");
           let seatsHTML = "";
           cabinetPositionsList.forEach((pos) => {
             seatsHTML += `<label class="seat-checkbox"><input type="checkbox" name="seats" value="${pos}"> ${pos}</label>`;
           });
-          document.getElementById("dynamicSeatsContainer").innerHTML =
-            seatsHTML;
+          document.getElementById("dynamicSeatsContainer").innerHTML = seatsHTML;
         } else {
-          document.getElementById("dynamicSeatsContainer").innerHTML =
-            `<p style="color:#fca5a5; font-size: 12px; grid-column: 1/-1;">No positions found. Please add positions in Cabinet Management first.</p>`;
+          document.getElementById("dynamicSeatsContainer").innerHTML = `<p style="color:#fca5a5; font-size: 12px; grid-column: 1/-1;">No positions found. Please add positions in Cabinet Management first.</p>`;
         }
 
         loadElections();
 
-        document
-          .getElementById("createElectionBtn")
-          .addEventListener("click", function () {
-            document.getElementById("createModal").classList.add("active");
+        document.getElementById("createElectionBtn").addEventListener("click", function () {
+          document.getElementById("createModal").classList.add("active");
+        });
+
+        document.getElementById("createElectionForm").addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const title = document.getElementById("elTitle").value.trim();
+          const fee = Number(document.getElementById("elFee").value) || 0; // Read Fee
+          const selectedSeats = Array.from(document.querySelectorAll('input[name="seats"]:checked')).map((cb) => cb.value);
+
+          if (selectedSeats.length === 0) return window.syfError("Please select at least one seat.");
+
+          const { error } = await supabaseClient.from("elections").insert([{ title, status: "Upcoming", positions: selectedSeats, fee: fee }]);
+          if (error) return window.syfError(error.message);
+
+          window.syfSuccess("Election created successfully!");
+          this.reset();
+          document.getElementById("createModal").classList.remove("active");
+          loadElections();
+        });
+
+        document.getElementById("finalizeBtn").addEventListener("click", async function () {
+          if (!currentElectionId) return;
+          window.syfConfirm("Announce winners and update roles? (President will not be changed)", async (confirmed) => {
+            if (!confirmed) return;
+            try {
+              const { data: candidates } = await supabaseClient.from("election_candidates").select("*").eq("election_id", currentElectionId).eq("status", "Approved");
+              const { data: votes } = await supabaseClient.from("election_votes").select("*").eq("election_id", currentElectionId);
+
+              const positions = [...new Set(candidates.map((c) => c.position))];
+              let winners = [];
+
+              positions.forEach((pos) => {
+                if (pos === "Chairman & President") return;
+                const posCandidates = candidates.filter((c) => c.position === pos);
+                let winner = null; let maxVotes = -1;
+                posCandidates.forEach((c) => {
+                  const vCount = votes.filter((v) => v.candidate_id === c.id).length;
+                  if (vCount > maxVotes) { maxVotes = vCount; winner = c; }
+                });
+                if (winner && maxVotes > 0) winners.push({ email: winner.member_email, role: pos });
+              });
+
+              const cabinetRoles = ["Vice President", "Senior Vice President", "Secretary General", "Deputy Secretary General", "Information Secretary", "Finance Secretary", "Media Secretary"];
+              await supabaseClient.from("members").update({ role: "Member" }).in("role", cabinetRoles);
+
+              for (const w of winners) {
+                await supabaseClient.from("members").update({ role: w.role }).eq("email", w.email);
+              }
+
+              await supabaseClient.from("elections").update({ status: "Completed" }).eq("id", currentElectionId);
+              window.syfSuccess("Election finalized! Roles updated.");
+              document.getElementById("resultsModal").classList.remove("active");
+              loadElections();
+            } catch (err) {
+              window.syfError("Error: " + err.message);
+            }
           });
-
-        document
-          .getElementById("createElectionForm")
-          .addEventListener("submit", async function (e) {
-            e.preventDefault();
-            const title = document.getElementById("elTitle").value.trim();
-            const selectedSeats = Array.from(
-              document.querySelectorAll('input[name="seats"]:checked'),
-            ).map((cb) => cb.value);
-
-            if (selectedSeats.length === 0)
-              return window.syfError("Please select at least one seat.");
-
-            const { error } = await supabaseClient
-              .from("elections")
-              .insert([
-                { title, status: "Upcoming", positions: selectedSeats },
-              ]);
-            if (error) return window.syfError(error.message);
-
-            window.syfSuccess("Election created successfully!");
-            this.reset();
-            document.getElementById("createModal").classList.remove("active");
-            loadElections();
-          });
-
-        document
-          .getElementById("finalizeBtn")
-          .addEventListener("click", async function () {
-            if (!currentElectionId) return;
-            window.syfConfirm(
-              "Announce winners and update roles? (President will not be changed)",
-              async (confirmed) => {
-                if (!confirmed) return;
-                try {
-                  const { data: candidates } = await supabaseClient
-                    .from("election_candidates")
-                    .select("*")
-                    .eq("election_id", currentElectionId)
-                    .eq("status", "Approved");
-                  const { data: votes } = await supabaseClient
-                    .from("election_votes")
-                    .select("*")
-                    .eq("election_id", currentElectionId);
-
-                  const positions = [
-                    ...new Set(candidates.map((c) => c.position)),
-                  ];
-                  let winners = [];
-
-                  positions.forEach((pos) => {
-                    if (pos === "Chairman & President") return;
-                    const posCandidates = candidates.filter(
-                      (c) => c.position === pos,
-                    );
-                    let winner = null;
-                    let maxVotes = -1;
-                    posCandidates.forEach((c) => {
-                      const vCount = votes.filter(
-                        (v) => v.candidate_id === c.id,
-                      ).length;
-                      if (vCount > maxVotes) {
-                        maxVotes = vCount;
-                        winner = c;
-                      }
-                    });
-                    if (winner && maxVotes > 0)
-                      winners.push({ email: winner.member_email, role: pos });
-                  });
-
-                  const cabinetRoles = [
-                    "Vice President",
-                    "Senior Vice President",
-                    "Secretary General",
-                    "Deputy Secretary General",
-                    "Information Secretary",
-                    "Finance Secretary",
-                    "Media Secretary",
-                  ];
-                  await supabaseClient
-                    .from("members")
-                    .update({ role: "Member" })
-                    .in("role", cabinetRoles);
-
-                  for (const w of winners) {
-                    await supabaseClient
-                      .from("members")
-                      .update({ role: w.role })
-                      .eq("email", w.email);
-                  }
-
-                  await supabaseClient
-                    .from("elections")
-                    .update({ status: "Completed" })
-                    .eq("id", currentElectionId);
-                  window.syfSuccess("Election finalized! Roles updated.");
-                  document
-                    .getElementById("resultsModal")
-                    .classList.remove("active");
-                  loadElections();
-                } catch (err) {
-                  window.syfError("Error: " + err.message);
-                }
-              },
-            );
-          });
+        });
       });
 
       async function loadElections() {
         const list = document.getElementById("electionsList");
-        const { data: elections } = await supabaseClient
-          .from("elections")
-          .select("*")
-          .order("created_at", { ascending: false });
+        const { data: elections } = await supabaseClient.from("elections").select("*").order("created_at", { ascending: false });
 
         if (!elections || elections.length === 0) {
           list.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted); background: var(--input-bg); border-radius: 12px;">No elections created yet.</div>`;
           return;
         }
 
-        // Get pending counts for all elections
-        const { data: pendingCounts } = await supabaseClient
-          .from("election_candidates")
-          .select("election_id")
-          .eq("status", "Pending");
+        const { data: pendingCounts } = await supabaseClient.from("election_candidates").select("election_id").eq("status", "Pending");
         const pendingMap = {};
-        if (pendingCounts)
-          pendingCounts.forEach((p) => {
-            pendingMap[p.election_id] = (pendingMap[p.election_id] || 0) + 1;
-          });
+        if (pendingCounts) pendingCounts.forEach((p) => { pendingMap[p.election_id] = (pendingMap[p.election_id] || 0) + 1; });
 
-        list.innerHTML = elections
-          .map((el) => {
-            let statusClass =
-              el.status === "Active"
-                ? "status-active"
-                : el.status === "Completed"
-                  ? "status-completed"
-                  : "status-upcoming";
-            let actionBtns = "";
+        list.innerHTML = elections.map((el) => {
+          let statusClass = el.status === "Active" ? "status-active" : el.status === "Completed" ? "status-completed" : "status-upcoming";
+          let actionBtns = "";
+          let pendingCount = pendingMap[el.id] || 0;
+          let badge = pendingCount > 0 ? `<span style="background:#ef4444; color:white; padding:2px 6px; border-radius:10px; font-size:10px; margin-left:5px;">${pendingCount}</span>` : "";
 
-            let pendingCount = pendingMap[el.id] || 0;
-            let badge =
-              pendingCount > 0
-                ? `<span style="background:#ef4444; color:white; padding:2px 6px; border-radius:10px; font-size:10px; margin-left:5px;">${pendingCount}</span>`
-                : "";
+          if (el.status === "Upcoming") {
+            actionBtns = `<button onclick="changeStatus(${el.id}, 'Active')" class="btn-primary" style="padding: 8px 15px; border-radius: 8px; font-size: 12px; background: #1abc9c;">▶ Start Election</button>`;
+          } else if (el.status === "Active") {
+            actionBtns = `<button onclick="viewResults(${el.id}, '${el.title}')" class="btn-primary" style="padding: 8px 15px; border-radius: 8px; font-size: 12px; background: #3b82f6;">📊 Live Results</button>`;
+          } else {
+            actionBtns = `<button onclick="viewResults(${el.id}, '${el.title}')" class="btn-secondary" style="padding: 8px 15px; border-radius: 8px; font-size: 12px;">📄 Final Results</button>`;
+          }
 
-            if (el.status === "Upcoming") {
-              actionBtns = `<button onclick="changeStatus(${el.id}, 'Active')" class="btn-primary" style="padding: 8px 15px; border-radius: 8px; font-size: 12px; background: #1abc9c;">▶ Start Election</button>`;
-            } else if (el.status === "Active") {
-              actionBtns = `<button onclick="viewResults(${el.id}, '${el.title}')" class="btn-primary" style="padding: 8px 15px; border-radius: 8px; font-size: 12px; background: #3b82f6;">📊 Live Results</button>`;
-            } else {
-              actionBtns = `<button onclick="viewResults(${el.id}, '${el.title}')" class="btn-secondary" style="padding: 8px 15px; border-radius: 8px; font-size: 12px;">📄 Final Results</button>`;
-            }
+          let manageBtn = `<button onclick="manageCandidates(${el.id}, '${el.title}')" class="btn-secondary" style="padding: 8px 15px; border-radius: 8px; font-size: 12px; margin-right:5px;">📋 Candidates ${badge}</button>`;
 
-            let manageBtn = `<button onclick="manageCandidates(${el.id}, '${el.title}')" class="btn-secondary" style="padding: 8px 15px; border-radius: 8px; font-size: 12px; margin-right:5px;">📋 Candidates ${badge}</button>`;
+          // Display Fee in Card
+          let feeText = el.fee > 0 ? `<span style="color: #f59e0b; font-weight: 600;">Fee: Rs. ${el.fee}</span>` : `<span style="color: #1abc9c; font-weight: 600;">Free Nomination</span>`;
 
-            return `
-            <div class="election-card">
-              <div class="election-info">
-                <h3>${el.title}</h3>
-                <p>Created: ${new Date(el.created_at).toLocaleDateString()}</p>
-                <p style="margin-top: 5px; color: var(--accent); font-size: 11px;">Seats: ${el.positions ? el.positions.join(", ") : "All"}</p>
-              </div>
-              <div style="display:flex; align-items:center; gap: 10px;">
-                <span class="status-badge ${statusClass}">${el.status}</span>
-                ${manageBtn}
-                ${actionBtns}
-              </div>
+          return `
+          <div class="election-card">
+            <div class="election-info">
+              <h3>${el.title}</h3>
+              <p>Created: ${new Date(el.created_at).toLocaleDateString()} | ${feeText}</p>
+              <p style="margin-top: 5px; color: var(--text-secondary); font-size: 11px;">Seats: ${el.positions ? el.positions.join(", ") : "All"}</p>
             </div>
-          `;
-          })
-          .join("");
+            <div style="display:flex; align-items:center; gap: 10px;">
+              <span class="status-badge ${statusClass}">${el.status}</span>
+              ${manageBtn}
+              ${actionBtns}
+            </div>
+          </div>`;
+        }).join("");
       }
 
       window.changeStatus = async function (id, status) {
-        window.syfConfirm(
-          `Change election status to ${status}?`,
-          async (confirmed) => {
-            if (!confirmed) return;
-            await supabaseClient
-              .from("elections")
-              .update({ status })
-              .eq("id", id);
-            window.syfSuccess(`Election is now ${status}!`);
-            loadElections();
-          },
-        );
+        window.syfConfirm(`Change election status to ${status}?`, async (confirmed) => {
+          if (!confirmed) return;
+          await supabaseClient.from("elections").update({ status }).eq("id", id);
+          window.syfSuccess(`Election is now ${status}!`);
+          loadElections();
+        });
       };
 
-      // MANAGE CANDIDATES LOGIC
       window.manageCandidates = async function (electionId, title) {
         currentElectionId = electionId;
         currentElectionTitle = title;
-        document.getElementById("candidatesTitle").textContent =
-          `Candidates: ${title}`;
+        document.getElementById("candidatesTitle").textContent = `Candidates: ${title}`;
         document.getElementById("candidatesModal").classList.add("active");
         renderCandidatesList();
       };
 
       async function renderCandidatesList() {
         const list = document.getElementById("candidatesList");
-        list.innerHTML =
-          "<div style='text-align:center; padding:20px;'>Loading...</div>";
+        list.innerHTML = "<div style='text-align:center; padding:20px;'>Loading...</div>";
 
-        const { data: candidates } = await supabaseClient
-          .from("election_candidates")
-          .select("*")
-          .eq("election_id", currentElectionId);
+        const { data: candidates } = await supabaseClient.from("election_candidates").select("*").eq("election_id", currentElectionId);
 
         if (!candidates || candidates.length === 0) {
-          list.innerHTML =
-            "<p style='color:var(--text-muted); text-align:center;'>No candidates registered yet.</p>";
+          list.innerHTML = "<p style='color:var(--text-muted); text-align:center;'>No candidates registered yet.</p>";
           return;
         }
 
-        // Group by position
         const positions = [...new Set(candidates.map((c) => c.position))];
         let html = "";
 
@@ -744,24 +342,12 @@
 
           const posCandidates = candidates.filter((c) => c.position === pos);
           posCandidates.forEach((c) => {
-            let statusColor =
-              c.status === "Approved"
-                ? "#1abc9c"
-                : c.status === "Rejected"
-                  ? "#ef4444"
-                  : "#f59e0b";
-
+            let statusColor = c.status === "Approved" ? "#1abc9c" : c.status === "Rejected" ? "#ef4444" : "#f59e0b";
             let feeHTML = "";
             let verifyBtn = "";
 
-            // Yahan hum transaction ID show karenge
             if (c.transaction_id) {
-              let feeColor =
-                c.fee_status === "Verified"
-                  ? "#1abc9c"
-                  : c.fee_status === "Rejected"
-                    ? "#ef4444"
-                    : "#f59e0b";
+              let feeColor = c.fee_status === "Verified" ? "#1abc9c" : c.fee_status === "Rejected" ? "#ef4444" : "#f59e0b";
               feeHTML = `
                 <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; margin-top: 5px; font-size: 11px; border-left: 2px solid ${feeColor};">
                   <strong>Fee Status:</strong> <span style="color: ${feeColor};">${c.fee_status}</span><br>
@@ -780,7 +366,6 @@
 
             let actionBtns = "";
             if (c.status === "Pending" || !c.status) {
-              // Agar fee hai to pehle verify karna zaroori hai
               if (c.fee_status === "Verified" || !c.transaction_id) {
                 actionBtns = `
                   <button onclick="updateCandidateStatus(${c.id}, 'Approved')" style="padding:6px 12px; background:#1abc9c; color:white; border:none; border-radius:6px; cursor:pointer; font-size:12px; margin-left:5px;">✓ Approve</button>
@@ -805,63 +390,40 @@
                     ${verifyBtn}
                   </div>
                 </div>
-                <div style="width: 100%; text-align: right; margin-top: 5px;">
-                  ${actionBtns}
-                </div>
+                <div style="width: 100%; text-align: right; margin-top: 5px;">${actionBtns}</div>
               </div>
             `;
           });
         });
-
         list.innerHTML = html;
       }
 
-      // Nayi function: Payment verify karne ke liye
       window.verifyFee = async function (id, status) {
-        const { error } = await supabaseClient
-          .from("election_candidates")
-          .update({ fee_status: status })
-          .eq("id", id);
-
+        const { error } = await supabaseClient.from("election_candidates").update({ fee_status: status }).eq("id", id);
         if (error) return window.syfError("Error: " + error.message);
         window.syfSuccess(`Payment marked as ${status}`);
         renderCandidatesList();
       };
 
       window.updateCandidateStatus = async function (id, status) {
-        await supabaseClient
-          .from("election_candidates")
-          .update({ status })
-          .eq("id", id);
+        await supabaseClient.from("election_candidates").update({ status }).eq("id", id);
         window.syfSuccess(`Candidate marked as ${status}`);
-        renderCandidatesList(); // Refresh modal
-        loadElections(); // Refresh main list for badges
+        renderCandidatesList(); 
+        loadElections(); 
       };
 
-      // RESULTS LOGIC
       window.viewResults = async function (electionId, title) {
         currentElectionId = electionId;
-        document.getElementById("resultsTitle").textContent =
-          `Results: ${title}`;
+        document.getElementById("resultsTitle").textContent = `Results: ${title}`;
         document.getElementById("resultsModal").classList.add("active");
 
-        const { data: candidates } = await supabaseClient
-          .from("election_candidates")
-          .select("*")
-          .eq("election_id", electionId)
-          .eq("status", "Approved");
-        const { data: votes } = await supabaseClient
-          .from("election_votes")
-          .select("*")
-          .eq("election_id", electionId);
+        const { data: candidates } = await supabaseClient.from("election_candidates").select("*").eq("election_id", electionId).eq("status", "Approved");
+        const { data: votes } = await supabaseClient.from("election_votes").select("*").eq("election_id", electionId);
 
         const voterEmails = [...new Set(votes.map((v) => v.voter_email))];
         let memberMap = {};
         if (voterEmails.length > 0) {
-          const { data: members } = await supabaseClient
-            .from("members")
-            .select("name, email")
-            .in("email", voterEmails);
+          const { data: members } = await supabaseClient.from("members").select("name, email").in("email", voterEmails);
           if (members) members.forEach((m) => (memberMap[m.email] = m.name));
         }
 
@@ -869,26 +431,19 @@
         let statsHTML = "";
         positions.forEach((pos) => {
           statsHTML += `<div style="margin-bottom: 15px;"><h4 style="color: var(--warm); margin-bottom: 8px; font-size: 14px;">${pos}</h4>`;
-          candidates
-            .filter((c) => c.position === pos)
-            .forEach((c) => {
-              const vCount = votes.filter(
-                (v) => v.candidate_id === c.id,
-              ).length;
-              statsHTML += `<div class="candidate-stat"><span style="color:var(--text-primary); font-weight:600;">${c.member_name}</span><span style="color:var(--accent); font-weight:700;">${vCount} Votes</span></div>`;
-            });
+          candidates.filter((c) => c.position === pos).forEach((c) => {
+            const vCount = votes.filter((v) => v.candidate_id === c.id).length;
+            statsHTML += `<div class="candidate-stat"><span style="color:var(--text-primary); font-weight:600;">${c.member_name}</span><span style="color:var(--accent); font-weight:700;">${vCount} Votes</span></div>`;
+          });
           statsHTML += `</div>`;
         });
-        document.getElementById("statsContainer").innerHTML =
-          statsHTML || "<p>No approved candidates.</p>";
+        document.getElementById("statsContainer").innerHTML = statsHTML || "<p>No approved candidates.</p>";
 
         const tbody = document.getElementById("votesLogBody");
-        tbody.innerHTML = votes
-          .map((v) => {
+        tbody.innerHTML = votes.map((v) => {
             const candidate = candidates.find((c) => c.id === v.candidate_id);
             return `<tr><td><strong>${memberMap[v.voter_email] || v.voter_email}</strong></td><td style="color:var(--accent);">${candidate ? candidate.member_name : "Unknown"}</td><td>${v.position}</td><td>${new Date(v.created_at).toLocaleString()}</td></tr>`;
-          })
-          .join("");
+        }).join("");
       };
     </script>
   </body>
