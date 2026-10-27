@@ -62,7 +62,7 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 });
 
 // ==========================================
-// BACK TO TOP BUTTON — FIX #2: theme-aware color
+// BACK TO TOP BUTTON
 // ==========================================
 const backToTopBtn = document.createElement("button");
 backToTopBtn.innerHTML = "↑";
@@ -127,7 +127,6 @@ backToTopBtn.addEventListener("click", function () {
     });
   }
 
-  // FIX #3: logo bg from theme vars
   const logoDiv = document.querySelector(".glass-header .logo");
   if (logoDiv && !logoDiv.querySelector("img")) {
     const img = document.createElement("img");
@@ -341,7 +340,6 @@ async function protectDashboard() {
   return null;
 }
 
-// FIX #4: Loading overlay theme-aware
 function showLoadingOverlay() {
   if (document.getElementById("authLoadingOverlay")) return;
   const overlay = document.createElement("div");
@@ -562,7 +560,7 @@ function addBottomButtons(sidebarNav) {
 }
 
 // ==========================================
-// SECTION CONTROLS & RBAC
+// SECTION CONTROLS (Public Website)
 // ==========================================
 async function applySectionControls() {
   let attempts = 0;
@@ -633,8 +631,18 @@ async function applySectionControls() {
   }
 }
 
+// ==========================================
+// ADMIN AUTH GUARD & RBAC (Task 3 & Task 4)
+// ==========================================
 async function enforceAdminPermissions() {
-  if (!window.location.pathname.includes("admin")) return;
+  const path = window.location.pathname;
+  const currentPage = path.substring(path.lastIndexOf("/") + 1);
+
+  // 1. Sirf Admin pages par check lagayen (Login page ko chhor kar)
+  if (!currentPage.includes("admin") || currentPage === "admin-login.html") {
+    return;
+  }
+
   let attempts = 0;
   while (
     (typeof supabaseClient === "undefined" || !supabaseClient) &&
@@ -645,22 +653,43 @@ async function enforceAdminPermissions() {
   }
   if (!supabaseClient) return;
 
+  // 2. Session Check (Kya user login hai?)
   const {
     data: { session },
   } = await supabaseClient.auth.getSession();
-  if (!session) return;
+  if (!session) {
+    window.location.replace("admin-login.html");
+    return;
+  }
 
+  // 3. Role Check (Kya user Admin hai?)
   const { data: admin } = await supabaseClient
     .from("members")
     .select("role, district")
     .eq("email", session.user.email)
     .maybeSingle();
-  if (!admin) return;
+
+  const allowedRoles = [
+    "Super Admin",
+    "Admin",
+    "President",
+    "Senior Vice President",
+    "Vice President",
+    "Secretary General",
+    "District Admin",
+  ];
+
+  if (!admin || !allowedRoles.includes(admin.role)) {
+    await supabaseClient.auth.signOut();
+    alert("⛔ Access Denied: You do not have Admin privileges.");
+    window.location.replace("login.html");
+    return;
+  }
 
   window.currentAdminRole = admin.role;
   window.currentAdminDistrict = admin.district;
 
-  // 1. District Admin Restrictions (Purana wala)
+  // 4. District Admin Restrictions
   if (admin.role === "District Admin") {
     const restrictedHrefs = [
       "admin-settings.html",
@@ -671,22 +700,28 @@ async function enforceAdminPermissions() {
       "admin-email.html",
     ];
     document.querySelectorAll(".sidebar-nav a").forEach((a) => {
-      if (restrictedHrefs.some((href) => a.getAttribute("href").includes(href)))
+      if (
+        restrictedHrefs.some(
+          (href) =>
+            a.getAttribute("href") && a.getAttribute("href").includes(href),
+        )
+      ) {
         a.parentElement.style.display = "none";
+      }
     });
     document.querySelectorAll(".user-uid").forEach((el) => {
       el.textContent = `District Admin (${admin.district || "Unassigned"})`;
     });
   }
 
-  // 2. Super Admin Restrictions (Naya wala)
-  // Agar Super Admin nahi hai, toh database se uske liye ON/OFF sections check karein
+  // 5. Super Admin Access Control for Regular Admins
   if (admin.role !== "Super Admin") {
     try {
       const { data: settings } = await supabaseClient
         .from("settings")
         .select("key, value")
         .like("key", "admin_acc_%");
+
       const map = {};
       if (settings) settings.forEach((s) => (map[s.key] = s.value === "true"));
 
@@ -709,9 +744,8 @@ async function enforceAdminPermissions() {
         "admin-donations.html": "admin_acc_donations",
         "admin-sponsorships.html": "admin_acc_sponsorships",
         "admin-notifications.html": "admin_acc_notifications",
-        "admin-email.html": "admin_acc_notifications", // Email also grouped
-        "admin-reports.html": "admin_acc_notifications", // Reports grouped
-        "admin-settings.html": "admin_acc_members", // Settings is restricted from regular admins by default, keep it hidden
+        "admin-email.html": "admin_acc_notifications",
+        "admin-reports.html": "admin_acc_notifications",
       };
 
       // Hide sidebar links based on permissions
@@ -720,7 +754,6 @@ async function enforceAdminPermissions() {
         if (href && pageMap[href]) {
           const key = pageMap[href];
           if (map[key] === false) {
-            // Agar "false" set hai
             a.parentElement.style.display = "none";
           }
         }
@@ -737,21 +770,26 @@ async function enforceAdminPermissions() {
         }
       });
 
-      // Direct URL Block (Agar koi URL type karke aaye)
-      const currentPage = window.location.pathname.split("/").pop();
+      // Direct URL Block
       if (pageMap[currentPage] && map[pageMap[currentPage]] === false) {
-        window.syfError(
-          "⛔ Access Denied. Super Admin has disabled this section.",
-        );
-        setTimeout(() => window.location.replace("admin.html"), 2000);
+        document.body.innerHTML = `<div style="display:flex; height:100vh; align-items:center; justify-content:center; background:#0f2027; color:white; font-family:Poppins; text-align:center; padding:20px;">
+          <div>
+            <h1 style="font-size:60px; margin-bottom:10px;">⛔</h1>
+            <h2 style="color:#ef4444; margin-bottom:15px;">Access Denied</h2>
+            <p style="opacity:0.8;">Super Admin has disabled access to this section for you.</p>
+            <a href="admin.html" style="display:inline-block; margin-top:20px; padding:10px 20px; background:#1abc9c; color:white; text-decoration:none; border-radius:8px;">Go Back to Dashboard</a>
+          </div>
+        </div>`;
+        return;
       }
 
-      // Regular Admin should not see Settings page at all (Unless toggled, but let's just block it for safety)
+      // Block Settings page for normal admins
       if (currentPage === "admin-settings.html") {
         window.location.replace("admin.html");
+        return;
       }
     } catch (err) {
-      console.error("Error checking permissions:", err);
+      console.error("Error checking admin permissions:", err);
     }
   }
 }
@@ -805,7 +843,7 @@ async function initFloatingContactButton() {
 // ==========================================
 window.addEventListener("load", async function () {
   setTimeout(updateNavButton, 500);
-  await enforceAdminPermissions();
+  await enforceAdminPermissions(); // Security Check
   await applySectionControls();
   await initFloatingContactButton();
   const user = await protectDashboard();
@@ -858,13 +896,9 @@ if ("serviceWorker" in navigator) {
 }
 
 // ==========================================
-// 🚫 REMOVED: CSS cache killer block that disabled admin.css
-// ==========================================
-// ==========================================
 // THEME AUTO-FIXER (Cleans up inline styles)
 // ==========================================
 (function () {
-  // 1. Automatically load theme-overrides.css
   if (!document.querySelector('link[href*="theme-overrides.css"]')) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -872,31 +906,27 @@ if ("serviceWorker" in navigator) {
     document.head.appendChild(link);
   }
 
-  // 2. Remove hardcoded inline colors that break the theme
   window.addEventListener("DOMContentLoaded", () => {
-    // Find all elements with inline styles
     const allElements = document.querySelectorAll("[style]");
 
     allElements.forEach((el) => {
       const style = el.getAttribute("style");
       if (!style) return;
 
-      // Agar kisi element mein inline color white hai, toh usko remove kar do
       if (
         style.includes("color: white") ||
         style.includes("color: #fff") ||
         style.includes("color: rgba(255")
       ) {
-        el.style.color = ""; // CSS variable ko kaam karne do
+        el.style.color = "";
       }
 
-      // Agar background dark hai, toh usko remove kar do
       if (
         style.includes("background: #0f2027") ||
         style.includes("background: #203a43") ||
         style.includes("background: rgba(15, 32, 39")
       ) {
-        el.style.background = ""; // CSS variable ko kaam karne do
+        el.style.background = "";
       }
     });
   });
