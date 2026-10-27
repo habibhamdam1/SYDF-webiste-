@@ -660,6 +660,7 @@ async function enforceAdminPermissions() {
   window.currentAdminRole = admin.role;
   window.currentAdminDistrict = admin.district;
 
+  // 1. District Admin Restrictions (Purana wala)
   if (admin.role === "District Admin") {
     const restrictedHrefs = [
       "admin-settings.html",
@@ -673,18 +674,85 @@ async function enforceAdminPermissions() {
       if (restrictedHrefs.some((href) => a.getAttribute("href").includes(href)))
         a.parentElement.style.display = "none";
     });
-    document.querySelectorAll(".nav-section-title").forEach((title) => {
-      let nextEl = title.nextElementSibling;
-      if (nextEl && nextEl.tagName === "UL") {
-        let visibleLinks = Array.from(nextEl.querySelectorAll("li")).filter(
-          (li) => li.style.display !== "none",
-        );
-        if (visibleLinks.length === 0) title.style.display = "none";
-      }
-    });
     document.querySelectorAll(".user-uid").forEach((el) => {
       el.textContent = `District Admin (${admin.district || "Unassigned"})`;
     });
+  }
+
+  // 2. Super Admin Restrictions (Naya wala)
+  // Agar Super Admin nahi hai, toh database se uske liye ON/OFF sections check karein
+  if (admin.role !== "Super Admin") {
+    try {
+      const { data: settings } = await supabaseClient
+        .from("settings")
+        .select("key, value")
+        .like("key", "admin_acc_%");
+      const map = {};
+      if (settings) settings.forEach((s) => (map[s.key] = s.value === "true"));
+
+      const pageMap = {
+        "admin-members.html": "admin_acc_members",
+        "admin-applications.html": "admin_acc_applications",
+        "admin-waitlist.html": "admin_acc_waitlist",
+        "admin-issue-reports.html": "admin_acc_reports",
+        "admin-public-issues.html": "admin_acc_grievances",
+        "admin-proposals.html": "admin_acc_proposals",
+        "admin-elections.html": "admin_acc_elections",
+        "admin-cabinet.html": "admin_acc_cabinet",
+        "admin-districts.html": "admin_acc_districts",
+        "admin-activities.html": "admin_acc_activities",
+        "admin-news.html": "admin_acc_news",
+        "admin-gallery.html": "admin_acc_gallery",
+        "admin-documents.html": "admin_acc_documents",
+        "admin-finance.html": "admin_acc_finance",
+        "admin-expenses.html": "admin_acc_expenses",
+        "admin-donations.html": "admin_acc_donations",
+        "admin-sponsorships.html": "admin_acc_sponsorships",
+        "admin-notifications.html": "admin_acc_notifications",
+        "admin-email.html": "admin_acc_notifications", // Email also grouped
+        "admin-reports.html": "admin_acc_notifications", // Reports grouped
+        "admin-settings.html": "admin_acc_members", // Settings is restricted from regular admins by default, keep it hidden
+      };
+
+      // Hide sidebar links based on permissions
+      document.querySelectorAll(".sidebar-nav a").forEach((a) => {
+        const href = a.getAttribute("href");
+        if (href && pageMap[href]) {
+          const key = pageMap[href];
+          if (map[key] === false) {
+            // Agar "false" set hai
+            a.parentElement.style.display = "none";
+          }
+        }
+      });
+
+      // Hide empty section titles
+      document.querySelectorAll(".nav-section-title").forEach((title) => {
+        let nextEl = title.nextElementSibling;
+        if (nextEl && nextEl.tagName === "UL") {
+          let visibleLinks = Array.from(nextEl.querySelectorAll("li")).filter(
+            (li) => li.style.display !== "none",
+          );
+          if (visibleLinks.length === 0) title.style.display = "none";
+        }
+      });
+
+      // Direct URL Block (Agar koi URL type karke aaye)
+      const currentPage = window.location.pathname.split("/").pop();
+      if (pageMap[currentPage] && map[pageMap[currentPage]] === false) {
+        window.syfError(
+          "⛔ Access Denied. Super Admin has disabled this section.",
+        );
+        setTimeout(() => window.location.replace("admin.html"), 2000);
+      }
+
+      // Regular Admin should not see Settings page at all (Unless toggled, but let's just block it for safety)
+      if (currentPage === "admin-settings.html") {
+        window.location.replace("admin.html");
+      }
+    } catch (err) {
+      console.error("Error checking permissions:", err);
+    }
   }
 }
 
