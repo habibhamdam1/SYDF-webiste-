@@ -652,6 +652,8 @@
     <script>
       let allPayments = [];
       let allMembers = [];
+      let currentAdminRole = "";
+      let currentAdminDistrict = "";
 
       window.addEventListener("load", async function () {
         let attempts = 0;
@@ -668,17 +670,18 @@
           const {
             data: { session },
           } = await supabaseClient.auth.getSession();
-          if (!session) {
-            window.location.href = "admin-login.html";
-            return;
-          }
+          if (!session) return (window.location.href = "admin-login.html");
 
           const { data: admin } = await supabaseClient
             .from("members")
-            .select("name, role")
+            .select("name, role, district")
             .eq("email", session.user.email)
             .single();
+
           if (admin) {
+            currentAdminRole = admin.role;
+            currentAdminDistrict = admin.district;
+
             document.getElementById("topAvatar").textContent = (
               admin.name || "A"
             )
@@ -700,18 +703,38 @@
       });
 
       async function loadAll() {
-        const [membersRes, paymentsRes] = await Promise.all([
-          supabaseClient
-            .from("members")
-            .select("name, uid, email")
-            .eq("status", "Active"),
-          supabaseClient
-            .from("payments")
-            .select("*")
-            .order("payment_date", { ascending: false }),
-        ]);
-        allMembers = membersRes.data || [];
-        allPayments = paymentsRes.data || [];
+        // 1. Fetch Members
+        let memberQuery = supabaseClient
+          .from("members")
+          .select("name, uid, email, district")
+          .eq("status", "Active");
+
+        if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+          memberQuery = memberQuery.eq("district", currentAdminDistrict);
+        }
+
+        const { data: membersData } = await memberQuery;
+        allMembers = membersData || [];
+
+        // 2. Fetch Payments based on Role
+        let paymentQuery = supabaseClient
+          .from("payments")
+          .select("*")
+          .order("payment_date", { ascending: false });
+
+        if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+          const memberEmails = allMembers.map((m) => m.email);
+          if (memberEmails.length > 0) {
+            paymentQuery = paymentQuery.in("member_email", memberEmails);
+            const { data: paymentsData } = await paymentQuery;
+            allPayments = paymentsData || [];
+          } else {
+            allPayments = []; // If no members in district, no payments
+          }
+        } else {
+          const { data: paymentsData } = await paymentQuery;
+          allPayments = paymentsData || [];
+        }
 
         // Populate member dropdown
         const select = document.getElementById("pmMember");
