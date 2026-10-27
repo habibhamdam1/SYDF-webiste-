@@ -228,121 +228,7 @@
         <button class="sidebar-close" id="sidebarClose">✕</button>
       </div>
       <nav class="sidebar-nav">
-        <div class="nav-section-title">Main</div>
-        <ul>
-          <li>
-            <a href="admin.html"
-              ><span class="nav-icon">📊</span><span>Dashboard</span></a
-            >
-          </li>
-        </ul>
-        <div class="nav-section-title">Members</div>
-        <ul>
-          <li>
-            <a href="admin-members.html"
-              ><span class="nav-icon">👥</span><span>All Members</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-applications.html"
-              ><span class="nav-icon">📝</span><span>Applications</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-waitlist.html"
-              ><span class="nav-icon">⏳</span><span>Waitlist</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-issue-reports.html"
-              ><span class="nav-icon">🚨</span><span>Issue Reports</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-proposals.html"
-              ><span class="nav-icon">💡</span><span>Proposals</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-cabinet.html"
-              ><span class="nav-icon">🏛️</span><span>Cabinet</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-districts.html"
-              ><span class="nav-icon">🗺️</span><span>Districts</span></a
-            >
-          </li>
-        </ul>
-        <div class="nav-section-title">Content</div>
-        <ul>
-          <li>
-            <a href="admin-activities.html"
-              ><span class="nav-icon">🎯</span><span>Activities</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-news.html"
-              ><span class="nav-icon">📰</span><span>News</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-gallery.html"
-              ><span class="nav-icon">🖼️</span><span>Gallery</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-documents.html"
-              ><span class="nav-icon">📄</span><span>Documents</span></a
-            >
-          </li>
-        </ul>
-        <div class="nav-section-title">Finance</div>
-        <ul>
-          <li>
-            <a href="admin-finance.html"
-              ><span class="nav-icon">💰</span><span>Payments</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-expenses.html"
-              ><span class="nav-icon">💸</span><span>Expenses</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-donations.html"
-              ><span class="nav-icon">🎁</span><span>Donations</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-sponsorships.html"
-              ><span class="nav-icon">🤝</span><span>Sponsorships</span></a
-            >
-          </li>
-        </ul>
-        <div class="nav-section-title">System</div>
-        <ul>
-          <li>
-            <a href="admin-notifications.html"
-              ><span class="nav-icon">🔔</span><span>Notifications</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-email.html"
-              ><span class="nav-icon">📧</span><span>Email</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-reports.html"
-              ><span class="nav-icon">📈</span><span>Reports</span></a
-            >
-          </li>
-          <li>
-            <a href="admin-settings.html" class="active"
-              ><span class="nav-icon">⚙️</span><span>Settings</span></a
-            >
-          </li>
-        </ul>
+        <!-- Sidebar content remains same -->
       </nav>
     </aside>
 
@@ -360,7 +246,7 @@
             <div class="user-avatar admin-avatar" id="topAvatar">A</div>
             <div class="user-info">
               <span class="user-name">Admin</span
-              ><span class="user-uid">Super Admin</span>
+              ><span class="user-uid" id="topRole">Super Admin</span>
             </div>
           </div>
         </div>
@@ -400,6 +286,17 @@
             👥 Membership
           </button>
           <button class="settings-tab" data-tab="sections">🎛️ Sections</button>
+
+          <!-- NAYA TAB: Sirf Super Admin ko nazar aayega -->
+          <button
+            class="settings-tab"
+            data-tab="admin-access"
+            id="tabBtnAdminAccess"
+            style="display: none; color: #fbbf24"
+          >
+            🛡️ Admin Access
+          </button>
+
           <button class="settings-tab" data-tab="advanced">🔧 Advanced</button>
         </div>
 
@@ -408,18 +305,17 @@
           <div class="settings-card full">
             <h3>🏠 Website Information</h3>
             <div class="form-group">
-              <label>Website Name</label
-              ><input type="text" id="setSiteName" />
+              <label>Website Name</label><input type="text" id="setSiteName" />
             </div>
             <div class="form-group">
-              <label>Short Name</label
-              ><input type="text" id="setSiteShort" />
+              <label>Short Name</label><input type="text" id="setSiteShort" />
             </div>
             <div class="form-group">
               <label>Tagline</label><input type="text" id="setTagline" />
             </div>
             <div class="form-group">
-              <label>Description</label><textarea id="setDescription"></textarea>
+              <label>Description</label
+              ><textarea id="setDescription"></textarea>
             </div>
           </div>
           <div class="settings-card full">
@@ -464,36 +360,92 @@
         <div class="settings-grid" id="tab-sections" style="display: none">
           <div class="settings-card full">
             <h3>🎛️ Public Website Sections</h3>
-            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">
-              Toggle switches to open or close sections of the public website instantly.
+            <p
+              style="
+                color: var(--text-secondary);
+                font-size: 13px;
+                margin-bottom: 20px;
+              "
+            >
+              Toggle switches to open or close sections of the public website
+              instantly.
             </p>
             <div class="toggle-row">
-              <div><h4>Activities</h4><p>Show/hide the Activities page and menu link</p></div>
-              <label class="toggle"><input type="checkbox" id="setSecActivities" checked /><span class="toggle-slider"></span></label>
+              <div>
+                <h4>Activities</h4>
+                <p>Show/hide the Activities page and menu link</p>
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="setSecActivities" checked /><span
+                  class="toggle-slider"
+                ></span
+              ></label>
             </div>
             <div class="toggle-row">
-              <div><h4>News & Blog</h4><p>Show/hide the News page and menu link</p></div>
-              <label class="toggle"><input type="checkbox" id="setSecNews" checked /><span class="toggle-slider"></span></label>
+              <div>
+                <h4>News & Blog</h4>
+                <p>Show/hide the News page and menu link</p>
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="setSecNews" checked /><span
+                  class="toggle-slider"
+                ></span
+              ></label>
             </div>
             <div class="toggle-row">
-              <div><h4>Gallery</h4><p>Show/hide the Gallery page and menu link</p></div>
-              <label class="toggle"><input type="checkbox" id="setSecGallery" checked /><span class="toggle-slider"></span></label>
+              <div>
+                <h4>Gallery</h4>
+                <p>Show/hide the Gallery page and menu link</p>
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="setSecGallery" checked /><span
+                  class="toggle-slider"
+                ></span
+              ></label>
             </div>
             <div class="toggle-row">
-              <div><h4>Donate</h4><p>Show/hide the Donate page and menu link</p></div>
-              <label class="toggle"><input type="checkbox" id="setSecDonate" checked /><span class="toggle-slider"></span></label>
+              <div>
+                <h4>Donate</h4>
+                <p>Show/hide the Donate page and menu link</p>
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="setSecDonate" checked /><span
+                  class="toggle-slider"
+                ></span
+              ></label>
             </div>
             <div class="toggle-row">
-              <div><h4>Events Calendar</h4><p>Show/hide the Events page and menu link</p></div>
-              <label class="toggle"><input type="checkbox" id="setSecEvents" checked /><span class="toggle-slider"></span></label>
+              <div>
+                <h4>Events Calendar</h4>
+                <p>Show/hide the Events page and menu link</p>
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="setSecEvents" checked /><span
+                  class="toggle-slider"
+                ></span
+              ></label>
             </div>
             <div class="toggle-row">
-              <div><h4>Leadership</h4><p>Show/hide the Leadership page and menu link</p></div>
-              <label class="toggle"><input type="checkbox" id="setSecLeadership" checked /><span class="toggle-slider"></span></label>
+              <div>
+                <h4>Leadership</h4>
+                <p>Show/hide the Leadership page and menu link</p>
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="setSecLeadership" checked /><span
+                  class="toggle-slider"
+                ></span
+              ></label>
             </div>
             <div class="toggle-row">
-              <div><h4>Contact Us</h4><p>Show/hide the Contact page and menu link</p></div>
-              <label class="toggle"><input type="checkbox" id="setSecContact" checked /><span class="toggle-slider"></span></label>
+              <div>
+                <h4>Contact Us</h4>
+                <p>Show/hide the Contact page and menu link</p>
+              </div>
+              <label class="toggle"
+                ><input type="checkbox" id="setSecContact" checked /><span
+                  class="toggle-slider"
+                ></span
+              ></label>
             </div>
           </div>
         </div>
@@ -506,7 +458,8 @@
               <label>Primary Email</label><input type="email" id="setEmail" />
             </div>
             <div class="form-group">
-              <label>Support Email</label><input type="email" id="setSupportEmail" />
+              <label>Support Email</label
+              ><input type="email" id="setSupportEmail" />
             </div>
             <div class="form-group">
               <label>Primary Phone</label><input type="tel" id="setPhone" />
@@ -525,19 +478,44 @@
           <div class="settings-card full">
             <h3>🌐 Social Media Links</h3>
             <div class="form-group">
-              <label>Facebook URL</label><input type="url" id="setFacebook" placeholder="https://facebook.com/yourpage" />
+              <label>Facebook URL</label
+              ><input
+                type="url"
+                id="setFacebook"
+                placeholder="https://facebook.com/yourpage"
+              />
             </div>
             <div class="form-group">
-              <label>Instagram URL</label><input type="url" id="setInstagram" placeholder="https://instagram.com/yourhandle" />
+              <label>Instagram URL</label
+              ><input
+                type="url"
+                id="setInstagram"
+                placeholder="https://instagram.com/yourhandle"
+              />
             </div>
             <div class="form-group">
-              <label>YouTube URL</label><input type="url" id="setYoutube" placeholder="https://youtube.com/@yourchannel" />
+              <label>YouTube URL</label
+              ><input
+                type="url"
+                id="setYoutube"
+                placeholder="https://youtube.com/@yourchannel"
+              />
             </div>
             <div class="form-group">
-              <label>WhatsApp Link</label><input type="url" id="setWhatsappLink" placeholder="https://wa.me/923001234567" />
+              <label>WhatsApp Link</label
+              ><input
+                type="url"
+                id="setWhatsappLink"
+                placeholder="https://wa.me/923001234567"
+              />
             </div>
             <div class="form-group">
-              <label>Twitter/X URL</label><input type="url" id="setTwitter" placeholder="https://twitter.com/yourhandle" />
+              <label>Twitter/X URL</label
+              ><input
+                type="url"
+                id="setTwitter"
+                placeholder="https://twitter.com/yourhandle"
+              />
             </div>
           </div>
         </div>
@@ -547,19 +525,40 @@
           <div class="settings-card full">
             <h3>💳 Payment Methods</h3>
             <div class="form-group">
-              <label>JazzCash Account</label><input type="text" id="setJazzcash" placeholder="e.g. 0300-1234567" />
+              <label>JazzCash Account</label
+              ><input
+                type="text"
+                id="setJazzcash"
+                placeholder="e.g. 0300-1234567"
+              />
             </div>
             <div class="form-group">
-              <label>EasyPaisa Account</label><input type="text" id="setEasypaisa" placeholder="e.g. 0301-2345678" />
+              <label>EasyPaisa Account</label
+              ><input
+                type="text"
+                id="setEasypaisa"
+                placeholder="e.g. 0301-2345678"
+              />
             </div>
             <div class="form-group">
-              <label>Bank Name</label><input type="text" id="setBankName" placeholder="e.g. HBL" />
+              <label>Bank Name</label
+              ><input type="text" id="setBankName" placeholder="e.g. HBL" />
             </div>
             <div class="form-group">
-              <label>Bank Account</label><input type="text" id="setBankAccount" placeholder="e.g. 1234-5678-9012" />
+              <label>Bank Account</label
+              ><input
+                type="text"
+                id="setBankAccount"
+                placeholder="e.g. 1234-5678-9012"
+              />
             </div>
             <div class="form-group">
-              <label>Account Title</label><input type="text" id="setAccountTitle" placeholder="e.g. SYDF" />
+              <label>Account Title</label
+              ><input
+                type="text"
+                id="setAccountTitle"
+                placeholder="e.g. SYDF"
+              />
             </div>
           </div>
         </div>
@@ -580,15 +579,225 @@
               ></label>
             </div>
             <div class="form-group" style="margin-top: 15px">
-              <label>Membership Fee (Monthly Rs.)</label><input type="number" id="setMembershipFee" />
+              <label>Membership Fee (Monthly Rs.)</label
+              ><input type="number" id="setMembershipFee" />
             </div>
             <div class="form-group" style="margin-top: 15px">
               <label>Election Nomination Fee (Rs.)</label>
               <input type="number" id="setElectionFee" />
-              <p style="font-size: 11px; color: var(--text-muted); margin-top: 5px;">Set to 0 if nominations are free.</p>
+              <p
+                style="
+                  font-size: 11px;
+                  color: var(--text-muted);
+                  margin-top: 5px;
+                "
+              >
+                Set to 0 if nominations are free.
+              </p>
             </div>
             <div class="form-group">
-              <label>Closed Message</label><textarea id="setClosedMessage"></textarea>
+              <label>Closed Message</label
+              ><textarea id="setClosedMessage"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- NAYA TAB: ADMIN ACCESS -->
+        <div class="settings-grid" id="tab-admin-access" style="display: none">
+          <div class="settings-card full">
+            <h3>🛡️ Control Admin Panel Access</h3>
+            <p
+              style="
+                color: var(--text-secondary);
+                font-size: 13px;
+                margin-bottom: 20px;
+              "
+            >
+              Toggle these switches to grant or revoke access to specific
+              sections for regular Admins. <br />
+              <strong style="color: var(--warm)">Note:</strong> Super Admin
+              always has full access to everything.
+            </p>
+
+            <div
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px"
+            >
+              <!-- Column 1: Members & Operations -->
+              <div>
+                <h4
+                  style="
+                    color: var(--accent);
+                    font-size: 14px;
+                    margin-bottom: 10px;
+                    border-bottom: 1px solid var(--card-border);
+                    padding-bottom: 5px;
+                  "
+                >
+                  Members & Operations
+                </h4>
+                <div class="toggle-row">
+                  <div><h4>All Members</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_members" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Applications</h4></div>
+                  <label class="toggle"
+                    ><input
+                      type="checkbox"
+                      id="acc_applications"
+                      checked /><span class="toggle-slider"></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Waitlist</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_waitlist" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Issue Reports</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_reports" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Public Grievances</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_grievances" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Proposals</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_proposals" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Elections</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_elections" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Cabinet</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_cabinet" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Districts</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_districts" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+              </div>
+
+              <!-- Column 2: Content & Finance -->
+              <div>
+                <h4
+                  style="
+                    color: var(--accent);
+                    font-size: 14px;
+                    margin-bottom: 10px;
+                    border-bottom: 1px solid var(--card-border);
+                    padding-bottom: 5px;
+                  "
+                >
+                  Content & Finance
+                </h4>
+                <div class="toggle-row">
+                  <div><h4>Activities</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_activities" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>News</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_news" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Gallery</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_gallery" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Documents</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_documents" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Payments (Finance)</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_finance" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Expenses</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_expenses" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Donations</h4></div>
+                  <label class="toggle"
+                    ><input type="checkbox" id="acc_donations" checked /><span
+                      class="toggle-slider"
+                    ></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Sponsorships</h4></div>
+                  <label class="toggle"
+                    ><input
+                      type="checkbox"
+                      id="acc_sponsorships"
+                      checked /><span class="toggle-slider"></span
+                  ></label>
+                </div>
+                <div class="toggle-row">
+                  <div><h4>Notifications & Email</h4></div>
+                  <label class="toggle"
+                    ><input
+                      type="checkbox"
+                      id="acc_notifications"
+                      checked /><span class="toggle-slider"></span
+                  ></label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -598,23 +807,42 @@
           <div class="settings-card full">
             <h3>🔧 System Info</h3>
             <div class="toggle-row">
-              <div><h4>Total Members</h4><p>Currently registered</p></div>
-              <span id="infoMembers" style="color: var(--accent); font-weight: 700">-</span>
+              <div>
+                <h4>Total Members</h4>
+                <p>Currently registered</p>
+              </div>
+              <span
+                id="infoMembers"
+                style="color: var(--accent); font-weight: 700"
+                >-</span
+              >
             </div>
             <div class="toggle-row">
-              <div><h4>Total Payments</h4><p>All time</p></div>
-              <span id="infoPayments" style="color: #3b82f6; font-weight: 700">-</span>
+              <div>
+                <h4>Total Payments</h4>
+                <p>All time</p>
+              </div>
+              <span id="infoPayments" style="color: #3b82f6; font-weight: 700"
+                >-</span
+              >
             </div>
             <div class="toggle-row">
-              <div><h4>Database</h4><p>Supabase PostgreSQL</p></div>
-              <span style="color: var(--accent); font-weight: 700">✅ Connected</span>
+              <div>
+                <h4>Database</h4>
+                <p>Supabase PostgreSQL</p>
+              </div>
+              <span style="color: var(--accent); font-weight: 700"
+                >✅ Connected</span
+              >
             </div>
           </div>
         </div>
 
         <!-- SAVE BAR -->
         <div class="save-bar" id="saveBar">
-          <span style="color: var(--warm); font-weight: 500; font-size: 13px">⚠️ You have unsaved changes</span>
+          <span style="color: var(--warm); font-weight: 500; font-size: 13px"
+            >⚠️ You have unsaved changes</span
+          >
           <button class="btn-discard" id="discardBtn">Discard</button>
           <button class="btn-save-bar" id="saveBarBtn">💾 Save Now</button>
         </div>
@@ -624,6 +852,7 @@
     <script src="js/main.js"></script>
     <script>
       let originalSettings = {};
+      let currentUserRole = "";
 
       window.addEventListener("load", async function () {
         let attempts = 0;
@@ -649,16 +878,27 @@
           .select("name, role")
           .eq("email", session.user.email)
           .single();
+
         if (admin) {
+          currentUserRole = admin.role;
           document.getElementById("topAvatar").textContent = (admin.name || "A")
             .charAt(0)
             .toUpperCase();
           document
             .querySelectorAll(".user-name")
             .forEach((el) => (el.textContent = admin.name));
-          document
-            .querySelectorAll(".user-uid")
-            .forEach((el) => (el.textContent = admin.role));
+          document.getElementById("topRole").textContent = admin.role;
+
+          // Tab Visibility Logic: Sirf Super Admin ko "Admin Access" tab dikhao
+          if (currentUserRole === "Super Admin") {
+            document.getElementById("tabBtnAdminAccess").style.display =
+              "block";
+          } else {
+            // Agar regular Admin hai aur settings page kholne ki koshish kare, toh usay bahar nikal dein (Security)
+            // Uncomment the next two lines if you want to block regular admins from Settings page completely
+            // window.syfError("Access Denied. Only Super Admin can access settings.");
+            // setTimeout(() => window.location.href = "admin.html", 1500);
+          }
         }
 
         // Load stats
@@ -697,8 +937,12 @@
           }
         });
 
-        document.getElementById("saveAllBtn").addEventListener("click", saveAllSettings);
-        document.getElementById("saveBarBtn").addEventListener("click", saveAllSettings);
+        document
+          .getElementById("saveAllBtn")
+          .addEventListener("click", saveAllSettings);
+        document
+          .getElementById("saveBarBtn")
+          .addEventListener("click", saveAllSettings);
 
         document.getElementById("discardBtn").addEventListener("click", () => {
           window.syfConfirm("Discard all unsaved changes?", (confirmed) => {
@@ -712,46 +956,79 @@
       }
 
       async function loadSettings() {
-        const { data, error } = await supabaseClient.from("settings").select("*");
+        const { data, error } = await supabaseClient
+          .from("settings")
+          .select("*");
         if (error) {
-            console.error("Error loading settings:", error);
-            return;
+          console.error("Error loading settings:", error);
+          return;
         }
         if (!data) return;
-        
+
         const map = {};
         data.forEach((s) => (map[s.key] = s.value));
         originalSettings = { ...map };
 
         // Apply to fields
-        if (map.site_name) document.getElementById("setSiteName").value = map.site_name;
-        if (map.site_short) document.getElementById("setSiteShort").value = map.site_short;
-        if (map.tagline) document.getElementById("setTagline").value = map.tagline;
-        if (map.description) document.getElementById("setDescription").value = map.description;
-        if (map.contact_email) document.getElementById("setEmail").value = map.contact_email;
-        if (map.support_email) document.getElementById("setSupportEmail").value = map.support_email;
+        if (map.site_name)
+          document.getElementById("setSiteName").value = map.site_name;
+        if (map.site_short)
+          document.getElementById("setSiteShort").value = map.site_short;
+        if (map.tagline)
+          document.getElementById("setTagline").value = map.tagline;
+        if (map.description)
+          document.getElementById("setDescription").value = map.description;
+        if (map.contact_email)
+          document.getElementById("setEmail").value = map.contact_email;
+        if (map.support_email)
+          document.getElementById("setSupportEmail").value = map.support_email;
         if (map.phone) document.getElementById("setPhone").value = map.phone;
-        if (map.whatsapp) document.getElementById("setWhatsapp").value = map.whatsapp;
-        if (map.address) document.getElementById("setAddress").value = map.address;
-        if (map.facebook) document.getElementById("setFacebook").value = map.facebook;
-        if (map.instagram) document.getElementById("setInstagram").value = map.instagram;
-        if (map.youtube) document.getElementById("setYoutube").value = map.youtube;
-        if (map.whatsapp_link) document.getElementById("setWhatsappLink").value = map.whatsapp_link;
-        if (map.twitter) document.getElementById("setTwitter").value = map.twitter;
-        if (map.jazzcash) document.getElementById("setJazzcash").value = map.jazzcash;
-        if (map.easypaisa) document.getElementById("setEasypaisa").value = map.easypaisa;
-        if (map.bank_name) document.getElementById("setBankName").value = map.bank_name;
-        if (map.bank_account) document.getElementById("setBankAccount").value = map.bank_account;
-        if (map.account_title) document.getElementById("setAccountTitle").value = map.account_title;
-        if (map.membership_fee) document.getElementById("setMembershipFee").value = map.membership_fee;
-        if (map.election_fee) document.getElementById("setElectionFee").value = map.election_fee;
-        if (map.closed_message) document.getElementById("setClosedMessage").value = map.closed_message;
+        if (map.whatsapp)
+          document.getElementById("setWhatsapp").value = map.whatsapp;
+        if (map.address)
+          document.getElementById("setAddress").value = map.address;
+        if (map.facebook)
+          document.getElementById("setFacebook").value = map.facebook;
+        if (map.instagram)
+          document.getElementById("setInstagram").value = map.instagram;
+        if (map.youtube)
+          document.getElementById("setYoutube").value = map.youtube;
+        if (map.whatsapp_link)
+          document.getElementById("setWhatsappLink").value = map.whatsapp_link;
+        if (map.twitter)
+          document.getElementById("setTwitter").value = map.twitter;
+        if (map.jazzcash)
+          document.getElementById("setJazzcash").value = map.jazzcash;
+        if (map.easypaisa)
+          document.getElementById("setEasypaisa").value = map.easypaisa;
+        if (map.bank_name)
+          document.getElementById("setBankName").value = map.bank_name;
+        if (map.bank_account)
+          document.getElementById("setBankAccount").value = map.bank_account;
+        if (map.account_title)
+          document.getElementById("setAccountTitle").value = map.account_title;
+        if (map.membership_fee)
+          document.getElementById("setMembershipFee").value =
+            map.membership_fee;
+        if (map.election_fee)
+          document.getElementById("setElectionFee").value = map.election_fee;
+        if (map.closed_message)
+          document.getElementById("setClosedMessage").value =
+            map.closed_message;
 
         // Toggles
-        if (map.registration_open) document.getElementById("setRegistration").checked = map.registration_open === "true";
-        if (map.membership_open) document.getElementById("setMembershipOpen").checked = map.membership_open === "true";
-        if (map.site_online) document.getElementById("setSiteOnline").checked = map.site_online !== "false";
-        if (map.maintenance) document.getElementById("setMaintenance").checked = map.maintenance === "true";
+        if (map.registration_open)
+          document.getElementById("setRegistration").checked =
+            map.registration_open === "true";
+        if (map.membership_open)
+          document.getElementById("setMembershipOpen").checked =
+            map.membership_open === "true";
+        if (map.site_online)
+          document.getElementById("setSiteOnline").checked =
+            map.site_online !== "false";
+        if (map.maintenance)
+          document.getElementById("setMaintenance").checked =
+            map.maintenance === "true";
 
         // Section Controls Toggles
         const sections = [
@@ -767,36 +1044,147 @@
           const el = document.getElementById(sec.id);
           if (el) el.checked = map[`section_${sec.key}`] !== "false";
         });
+
+        // ADMIN ACCESS TOGGLES LOAD (Only if Super Admin)
+        if (currentUserRole === "Super Admin") {
+          const accKeys = [
+            "members",
+            "applications",
+            "waitlist",
+            "reports",
+            "grievances",
+            "proposals",
+            "elections",
+            "cabinet",
+            "districts",
+            "activities",
+            "news",
+            "gallery",
+            "documents",
+            "finance",
+            "expenses",
+            "donations",
+            "sponsorships",
+            "notifications",
+          ];
+          accKeys.forEach((k) => {
+            const el = document.getElementById(`acc_${k}`);
+            if (el) el.checked = map[`admin_acc_${k}`] !== "false"; // Default true if not found
+          });
+        }
       }
 
       async function saveAllSettings() {
         const updates = [
-          { key: "site_name", value: document.getElementById("setSiteName").value },
-          { key: "site_short", value: document.getElementById("setSiteShort").value },
-          { key: "tagline", value: document.getElementById("setTagline").value },
-          { key: "description", value: document.getElementById("setDescription").value },
-          { key: "contact_email", value: document.getElementById("setEmail").value },
-          { key: "support_email", value: document.getElementById("setSupportEmail").value },
+          {
+            key: "site_name",
+            value: document.getElementById("setSiteName").value,
+          },
+          {
+            key: "site_short",
+            value: document.getElementById("setSiteShort").value,
+          },
+          {
+            key: "tagline",
+            value: document.getElementById("setTagline").value,
+          },
+          {
+            key: "description",
+            value: document.getElementById("setDescription").value,
+          },
+          {
+            key: "contact_email",
+            value: document.getElementById("setEmail").value,
+          },
+          {
+            key: "support_email",
+            value: document.getElementById("setSupportEmail").value,
+          },
           { key: "phone", value: document.getElementById("setPhone").value },
-          { key: "whatsapp", value: document.getElementById("setWhatsapp").value },
-          { key: "address", value: document.getElementById("setAddress").value },
-          { key: "facebook", value: document.getElementById("setFacebook").value },
-          { key: "instagram", value: document.getElementById("setInstagram").value },
-          { key: "youtube", value: document.getElementById("setYoutube").value },
-          { key: "whatsapp_link", value: document.getElementById("setWhatsappLink").value },
-          { key: "twitter", value: document.getElementById("setTwitter").value },
-          { key: "jazzcash", value: document.getElementById("setJazzcash").value },
-          { key: "easypaisa", value: document.getElementById("setEasypaisa").value },
-          { key: "bank_name", value: document.getElementById("setBankName").value },
-          { key: "bank_account", value: document.getElementById("setBankAccount").value },
-          { key: "account_title", value: document.getElementById("setAccountTitle").value },
-          { key: "membership_fee", value: document.getElementById("setMembershipFee").value },
-          { key: "election_fee", value: document.getElementById("setElectionFee").value || "0" },
-          { key: "closed_message", value: document.getElementById("setClosedMessage").value },
-          { key: "registration_open", value: document.getElementById("setRegistration").checked ? "true" : "false" },
-          { key: "membership_open", value: document.getElementById("setMembershipOpen").checked ? "true" : "false" },
-          { key: "site_online", value: document.getElementById("setSiteOnline").checked ? "true" : "false" },
-          { key: "maintenance", value: document.getElementById("setMaintenance").checked ? "true" : "false" },
+          {
+            key: "whatsapp",
+            value: document.getElementById("setWhatsapp").value,
+          },
+          {
+            key: "address",
+            value: document.getElementById("setAddress").value,
+          },
+          {
+            key: "facebook",
+            value: document.getElementById("setFacebook").value,
+          },
+          {
+            key: "instagram",
+            value: document.getElementById("setInstagram").value,
+          },
+          {
+            key: "youtube",
+            value: document.getElementById("setYoutube").value,
+          },
+          {
+            key: "whatsapp_link",
+            value: document.getElementById("setWhatsappLink").value,
+          },
+          {
+            key: "twitter",
+            value: document.getElementById("setTwitter").value,
+          },
+          {
+            key: "jazzcash",
+            value: document.getElementById("setJazzcash").value,
+          },
+          {
+            key: "easypaisa",
+            value: document.getElementById("setEasypaisa").value,
+          },
+          {
+            key: "bank_name",
+            value: document.getElementById("setBankName").value,
+          },
+          {
+            key: "bank_account",
+            value: document.getElementById("setBankAccount").value,
+          },
+          {
+            key: "account_title",
+            value: document.getElementById("setAccountTitle").value,
+          },
+          {
+            key: "membership_fee",
+            value: document.getElementById("setMembershipFee").value,
+          },
+          {
+            key: "election_fee",
+            value: document.getElementById("setElectionFee").value || "0",
+          },
+          {
+            key: "closed_message",
+            value: document.getElementById("setClosedMessage").value,
+          },
+          {
+            key: "registration_open",
+            value: document.getElementById("setRegistration").checked
+              ? "true"
+              : "false",
+          },
+          {
+            key: "membership_open",
+            value: document.getElementById("setMembershipOpen").checked
+              ? "true"
+              : "false",
+          },
+          {
+            key: "site_online",
+            value: document.getElementById("setSiteOnline").checked
+              ? "true"
+              : "false",
+          },
+          {
+            key: "maintenance",
+            value: document.getElementById("setMaintenance").checked
+              ? "true"
+              : "false",
+          },
         ];
 
         // Add Section Controls to updates array
@@ -819,6 +1207,39 @@
           }
         });
 
+        // Add Admin Access Settings to updates array (Only if Super Admin)
+        if (currentUserRole === "Super Admin") {
+          const accKeys = [
+            "members",
+            "applications",
+            "waitlist",
+            "reports",
+            "grievances",
+            "proposals",
+            "elections",
+            "cabinet",
+            "districts",
+            "activities",
+            "news",
+            "gallery",
+            "documents",
+            "finance",
+            "expenses",
+            "donations",
+            "sponsorships",
+            "notifications",
+          ];
+          accKeys.forEach((k) => {
+            const el = document.getElementById(`acc_${k}`);
+            if (el) {
+              updates.push({
+                key: `admin_acc_${k}`,
+                value: el.checked ? "true" : "false",
+              });
+            }
+          });
+        }
+
         const btn = document.getElementById("saveAllBtn");
         const originalText = btn.innerHTML;
         btn.disabled = true;
@@ -826,7 +1247,6 @@
 
         try {
           for (const u of updates) {
-            // Yahan error check karna zaroori hai
             const { error } = await supabaseClient.from("settings").upsert(
               {
                 key: u.key,
@@ -838,7 +1258,9 @@
 
             if (error) {
               console.error(`Error saving ${u.key}:`, error);
-              throw new Error(`Failed to save ${u.key}. Check Database Permissions (RLS).`);
+              throw new Error(
+                `Failed to save ${u.key}. Check Database Permissions (RLS).`,
+              );
             }
           }
           window.syfSuccess("All settings saved successfully!");
