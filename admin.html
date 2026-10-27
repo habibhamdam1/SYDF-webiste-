@@ -15,7 +15,6 @@
     <script src="js/supabase-config.js"></script>
   </head>
   <body class="dashboard-body admin-body">
-    <!-- SIDEBAR -->
     <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">
@@ -24,7 +23,6 @@
         </div>
         <button class="sidebar-close" id="sidebarClose">✕</button>
       </div>
-
       <nav class="sidebar-nav">
         <div class="nav-section-title">Main</div>
         <ul>
@@ -34,7 +32,6 @@
             >
           </li>
         </ul>
-
         <div class="nav-section-title">Members</div>
         <ul>
           <li>
@@ -75,7 +72,6 @@
             >
           </li>
         </ul>
-
         <div class="nav-section-title">Content</div>
         <ul>
           <li>
@@ -99,7 +95,6 @@
             >
           </li>
         </ul>
-
         <div class="nav-section-title">Finance</div>
         <ul>
           <li>
@@ -123,7 +118,6 @@
             >
           </li>
         </ul>
-
         <div class="nav-section-title">System</div>
         <ul>
           <li>
@@ -147,8 +141,6 @@
             >
           </li>
         </ul>
-
-        <!-- BACK TO WEBSITE & LOGOUT (SCROLLABLE) -->
         <ul
           style="
             margin-top: 10px;
@@ -157,16 +149,14 @@
           "
         >
           <li>
-            <a href="index.html" style="color: var(--accent)">
-              <span class="nav-icon">🌐</span>
-              <span>Back to Website</span>
-            </a>
+            <a href="index.html" style="color: var(--accent)"
+              ><span class="nav-icon">🌐</span><span>Back to Website</span></a
+            >
           </li>
           <li>
-            <a href="#" class="logout-btn" style="color: #ef4444">
-              <span class="nav-icon">🚪</span>
-              <span>Logout</span>
-            </a>
+            <a href="#" class="logout-btn" style="color: #ef4444"
+              ><span class="nav-icon">🚪</span><span>Logout</span></a
+            >
           </li>
         </ul>
       </nav>
@@ -174,7 +164,6 @@
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- MAIN CONTENT -->
     <main class="dashboard-main">
       <div class="dashboard-topbar">
         <button class="menu-toggle" id="menuToggle">☰</button>
@@ -209,7 +198,6 @@
           </div>
         </div>
 
-        <!-- STATS -->
         <div class="stats-row">
           <div class="glass-card dash-stat-card">
             <div
@@ -263,7 +251,6 @@
 
         <div class="dashboard-grid">
           <div class="dashboard-col">
-            <!-- PENDING APPLICATIONS -->
             <div class="glass-card content-card">
               <div class="card-header">
                 <h3>📝 Pending Applications</h3>
@@ -284,8 +271,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- RECENT PAYMENTS -->
             <div class="glass-card content-card">
               <div class="card-header">
                 <h3>💰 Recent Payments</h3>
@@ -304,12 +289,8 @@
                 </div>
               </div>
             </div>
-
-            <!-- MEMBERSHIP TOGGLE -->
             <div class="glass-card content-card">
-              <div class="card-header">
-                <h3>⚙️ Membership Status</h3>
-              </div>
+              <div class="card-header"><h3>⚙️ Membership Status</h3></div>
               <div class="membership-toggle-block" id="membershipToggleBlock">
                 <div
                   style="
@@ -326,11 +307,8 @@
           </div>
 
           <div class="dashboard-col">
-            <!-- QUICK ACTIONS -->
             <div class="glass-card content-card">
-              <div class="card-header">
-                <h3>⚡ Quick Actions</h3>
-              </div>
+              <div class="card-header"><h3>⚡ Quick Actions</h3></div>
               <div class="quick-actions admin-quick">
                 <a href="admin-members.html" class="quick-action"
                   ><span>👥</span>
@@ -358,12 +336,8 @@
                 >
               </div>
             </div>
-
-            <!-- SYSTEM STATUS -->
             <div class="glass-card content-card">
-              <div class="card-header">
-                <h3>📊 System Status</h3>
-              </div>
+              <div class="card-header"><h3>📊 System Status</h3></div>
               <div class="status-list" id="systemStatus">
                 <div
                   style="
@@ -377,12 +351,8 @@
                 </div>
               </div>
             </div>
-
-            <!-- RECENT ACTIVITY -->
             <div class="glass-card content-card">
-              <div class="card-header">
-                <h3>📜 Recent Activity</h3>
-              </div>
+              <div class="card-header"><h3>📜 Recent Activity</h3></div>
               <div class="timeline-mini" id="recentActivityList">
                 <div
                   style="
@@ -403,9 +373,9 @@
 
     <script src="js/main.js"></script>
     <script>
-      // ==========================================
-      // ADMIN DASHBOARD — DYNAMIC DATA & CLEAN UI
-      // ==========================================
+      let currentAdminRole = "";
+      let currentAdminDistrict = "";
+
       window.addEventListener("load", async function () {
         let attempts = 0;
         while (
@@ -417,21 +387,21 @@
         }
         if (!supabaseClient) return;
 
-        // AUTH CHECK
         const { data: sessionData } = await supabaseClient.auth.getSession();
         const session = sessionData ? sessionData.session : null;
-        if (!session || !session.user) {
-          window.location.href = "admin-login.html";
-          return;
-        }
+        if (!session || !session.user)
+          return (window.location.href = "admin-login.html");
 
         const { data: adminMember } = await supabaseClient
           .from("members")
-          .select("name, role")
+          .select("name, role, district")
           .eq("email", session.user.email)
           .single();
 
         if (adminMember) {
+          currentAdminRole = adminMember.role;
+          currentAdminDistrict = adminMember.district;
+
           document.getElementById("topAvatar").textContent = (
             adminMember.name || "A"
           )
@@ -445,7 +415,6 @@
             adminMember.role || "Admin";
         }
 
-        // LOAD DATA
         await Promise.all([
           loadStats(),
           loadPendingApps(),
@@ -456,7 +425,6 @@
           loadSidebarBadges(),
         ]);
 
-        // Logout Logic with Toast
         document.querySelectorAll(".logout-btn").forEach((btn) => {
           btn.addEventListener("click", function (e) {
             e.preventDefault();
@@ -469,28 +437,36 @@
         });
       });
 
-      // ==========================================
-      // STATS
-      // ==========================================
       async function loadStats() {
         try {
-          const [membersRes, paymentsRes, activitiesRes] = await Promise.all([
-            // YAHAN FIX: .neq("status", "Deleted") add kiya hai
-            supabaseClient
-              .from("members")
-              .select("status, created_at")
-              .neq("status", "Deleted"),
-            supabaseClient
-              .from("payments")
-              .select("amount, payment_date, status"),
-            supabaseClient.from("activities").select("id"),
-          ]);
-
+          let membersQuery = supabaseClient
+            .from("members")
+            .select("status, created_at, email")
+            .neq("status", "Deleted");
+          if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+            membersQuery = membersQuery.eq("district", currentAdminDistrict);
+          }
+          const membersRes = await membersQuery;
           const members = membersRes.data || [];
+          const memberEmails = members.map((m) => m.email);
+
+          let paymentsQuery = supabaseClient
+            .from("payments")
+            .select("amount, payment_date, status");
+          if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+            if (memberEmails.length > 0)
+              paymentsQuery = paymentsQuery.in("member_email", memberEmails);
+            else
+              paymentsQuery = paymentsQuery.eq("member_email", "none@none.com");
+          }
+          const paymentsRes = await paymentsQuery;
           const payments = paymentsRes.data || [];
+
+          const activitiesRes = await supabaseClient
+            .from("activities")
+            .select("id");
           const activities = activitiesRes.data || [];
 
-          // Ab total members sirf wo count honge jo delete nahi hue
           const totalMembers = members.length;
           const pendingApps = members.filter(
             (m) => m.status === "Pending",
@@ -517,16 +493,17 @@
         }
       }
 
-      // ==========================================
-      // PENDING APPLICATIONS
-      // ==========================================
       async function loadPendingApps() {
         const list = document.getElementById("pendingAppsList");
         try {
-          const { data } = await supabaseClient
+          let query = supabaseClient
             .from("members")
             .select("id, name, district, created_at, gender")
-            .eq("status", "Pending")
+            .eq("status", "Pending");
+          if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+            query = query.eq("district", currentAdminDistrict);
+          }
+          const { data } = await query
             .order("created_at", { ascending: false })
             .limit(3);
 
@@ -559,15 +536,29 @@
         }
       }
 
-      // ==========================================
-      // RECENT PAYMENTS
-      // ==========================================
       async function loadRecentPayments() {
         const list = document.getElementById("recentPaymentsList");
         try {
-          const { data } = await supabaseClient
+          let memberEmails = [];
+          if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+            const { data: distMembers } = await supabaseClient
+              .from("members")
+              .select("email")
+              .eq("district", currentAdminDistrict);
+            memberEmails = (distMembers || []).map((m) => m.email);
+            if (memberEmails.length === 0) {
+              list.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-muted);font-size:13px;">No payments recorded yet</div>`;
+              return;
+            }
+          }
+
+          let query = supabaseClient
             .from("payments")
-            .select("id, member_name, uid, amount, payment_date, status")
+            .select("id, member_name, uid, amount, payment_date, status");
+          if (memberEmails.length > 0) {
+            query = query.in("member_email", memberEmails);
+          }
+          const { data } = await query
             .order("payment_date", { ascending: false })
             .limit(3);
 
@@ -595,9 +586,6 @@
         }
       }
 
-      // ==========================================
-      // MEMBERSHIP TOGGLE (With Toast)
-      // ==========================================
       async function loadMembershipStatus() {
         const block = document.getElementById("membershipToggleBlock");
         try {
@@ -616,14 +604,12 @@
                 <p>Membership applications are ${isOpen ? "being accepted" : "not being accepted"}</p>
               </div>
             </div>
-            <button class="btn-toggle-open" id="btnToggleMembership">
-              ${isOpen ? "Close Membership" : "Open Membership"}
-            </button>
+            ${currentAdminRole === "Super Admin" || currentAdminRole === "Admin" ? `<button class="btn-toggle-open" id="btnToggleMembership">${isOpen ? "Close Membership" : "Open Membership"}</button>` : ""}
           `;
 
-          document
-            .getElementById("btnToggleMembership")
-            .addEventListener("click", function () {
+          const btn = document.getElementById("btnToggleMembership");
+          if (btn) {
+            btn.addEventListener("click", function () {
               const newValue = isOpen ? "false" : "true";
               window.syfConfirm(
                 `Are you sure you want to ${isOpen ? "Close" : "Open"} membership?`,
@@ -640,7 +626,6 @@
                       { onConflict: "key" },
                     );
                   if (error) return window.syfError("Failed: " + error.message);
-
                   window.syfSuccess(
                     `Membership is now ${newValue === "true" ? "OPEN" : "CLOSED"}`,
                   );
@@ -649,14 +634,12 @@
                 },
               );
             });
+          }
         } catch (err) {
           block.innerHTML = `<div style="text-align:center;padding:20px;color:#fca5a5;font-size:13px;">Failed to load</div>`;
         }
       }
 
-      // ==========================================
-      // SYSTEM STATUS
-      // ==========================================
       async function loadSystemStatus() {
         const list = document.getElementById("systemStatus");
         try {
@@ -684,17 +667,19 @@
         }
       }
 
-      // ==========================================
-      // RECENT ACTIVITY
-      // ==========================================
       async function loadRecentActivity() {
         const list = document.getElementById("recentActivityList");
         try {
-          const { data } = await supabaseClient
+          let query = supabaseClient
             .from("members")
-            .select("id, name, status, created_at")
+            .select("id, name, status, created_at");
+          if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+            query = query.eq("district", currentAdminDistrict);
+          }
+          const { data } = await query
             .order("created_at", { ascending: false })
             .limit(3);
+
           if (!data || data.length === 0) {
             list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px;">No recent activity</div>`;
             return;
@@ -729,17 +714,17 @@
         }
       }
 
-      // ==========================================
-      // SIDEBAR BADGES
-      // ==========================================
       async function loadSidebarBadges() {
         try {
-          const { data } = await supabaseClient
-            .from("members")
-            .select("status");
+          let query = supabaseClient.from("members").select("status");
+          if (currentAdminRole === "District Admin" && currentAdminDistrict) {
+            query = query.eq("district", currentAdminDistrict);
+          }
+          const { data } = await query;
           const pendingApps = (data || []).filter(
             (m) => m.status === "Pending",
           ).length;
+
           const appBadge = document.getElementById("sidebarAppBadge");
           if (appBadge) {
             appBadge.textContent = pendingApps;
@@ -748,9 +733,6 @@
         } catch (err) {}
       }
 
-      // ==========================================
-      // QUICK APPROVE / REJECT (With Toasts)
-      // ==========================================
       window.quickApprove = async function (id) {
         window.syfConfirm("Approve this member?", async (confirmed) => {
           if (!confirmed) return;
@@ -759,7 +741,6 @@
             .update({ status: "Active" })
             .eq("id", id);
           if (error) return window.syfError("Error: " + error.message);
-
           window.syfSuccess("✅ Member Approved!");
           loadPendingApps();
           loadStats();
@@ -776,7 +757,6 @@
             .update({ status: "Rejected" })
             .eq("id", id);
           if (error) return window.syfError("Error: " + error.message);
-
           window.syfError("❌ Member Rejected");
           loadPendingApps();
           loadStats();
@@ -785,9 +765,6 @@
         });
       };
 
-      // ==========================================
-      // HELPERS
-      // ==========================================
       function escapeHtml(s) {
         return String(s || "").replace(
           /[&<>"']/g,
