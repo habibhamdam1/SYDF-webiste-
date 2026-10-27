@@ -1,75 +1,75 @@
 // ==========================================
-// SYDF EMAIL SERVICE - Resend API
+// SYDF EMAIL SERVICE - Supabase Edge Function
 // ==========================================
 
-// ⚠️ YAHAN APNI API KEY DAALEN
-const RESEND_API_KEY = "YAHAN_RESEND_API_KEY_PASTE_KAREN";
-const FROM_EMAIL = "SYDF <onboarding@resend.dev>";
-// Note: Custom domain verify karne ke baad FROM_EMAIL change karen
+// NOTE: API key ab frontend mein nahi hai, wo Supabase Edge Function ke Secrets mein hai.
 
 // ==========================================
 // SEND EMAIL FUNCTION
 // ==========================================
 async function sendEmail({ to, subject, html, text, type, recipientName }) {
-  if (
-    !RESEND_API_KEY ||
-    RESEND_API_KEY === "YAHAN_RESEND_API_KEY_PASTE_KAREN"
-  ) {
-    console.error("❌ Resend API key not configured");
-    return { success: false, error: "API key not configured" };
+  if (typeof supabaseClient === "undefined" || !supabaseClient) {
+    console.error("❌ Supabase client not initialized");
+    return { success: false, error: "Supabase client not initialized" };
   }
 
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + RESEND_API_KEY,
-      },
-      body: JSON.stringify({
-        from: FROM_EMAIL,
-        to: [to],
+    // 1. Supabase Edge Function ko call karein
+    const { data, error } = await supabaseClient.functions.invoke("send-email", {
+      body: {
+        to: to,
         subject: subject,
         html: html || text,
-        text: text,
-      }),
+      },
     });
 
-    const data = await response.json();
+    // 2. Error Handling
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error.message || "Failed to send email");
 
-    // Log to database
-    if (typeof supabaseClient !== "undefined" && supabaseClient) {
-      try {
-        const {
-          data: { session },
-        } = await supabaseClient.auth.getSession();
-        await supabaseClient.from("email_logs").insert([
-          {
-            recipient_email: to,
-            recipient_name: recipientName || null,
-            subject: subject,
-            body: text || html,
-            email_type: type || "General",
-            status: response.ok ? "Sent" : "Failed",
-            resend_id: data.id || null,
-            error_message: response.ok ? null : data.message || "Unknown error",
-            sent_by: session ? session.user.email : "System",
-          },
-        ]);
-      } catch (logErr) {
-        console.error("Email log error:", logErr);
-      }
+    // 3. Log to database (Agar table mojood hai toh)
+    try {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      await supabaseClient.from("email_logs").insert([
+        {
+          recipient_email: to,
+          recipient_name: recipientName || null,
+          subject: subject,
+          body: text || html,
+          email_type: type || "General",
+          status: "Sent", // Edge function success hone par
+          resend_id: data?.id || null,
+          error_message: null,
+          sent_by: session ? session.user.email : "System",
+        },
+      ]);
+    } catch (logErr) {
+      console.error("Email log error (ignored):", logErr);
     }
 
-    if (!response.ok) {
-      console.error("Resend error:", data);
-      return { success: false, error: data.message || "Send failed" };
-    }
+    console.log("✅ Email sent successfully to:", to);
+    return { success: true, id: data?.id };
 
-    console.log("✅ Email sent to:", to);
-    return { success: true, id: data.id };
   } catch (err) {
-    console.error("Email error:", err);
+    console.error("❌ Email send error:", err);
+    
+    // Error log to database
+    try {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      await supabaseClient.from("email_logs").insert([
+        {
+          recipient_email: to,
+          recipient_name: recipientName || null,
+          subject: subject,
+          body: text || html,
+          email_type: type || "General",
+          status: "Failed",
+          error_message: err.message || "Unknown error",
+          sent_by: session ? session.user.email : "System",
+        },
+      ]);
+    } catch (logErr) { }
+
     return { success: false, error: err.message };
   }
 }
@@ -299,4 +299,4 @@ window.sendWaitlistNotification = sendWaitlistNotification;
 window.sendProposalResponse = sendProposalResponse;
 window.sendGeneralEmail = sendGeneralEmail;
 
-console.log("✅ Email Service Loaded");
+console.log("✅ Email Service Loaded (via Supabase Edge Function)");
