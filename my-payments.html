@@ -14,26 +14,192 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      /* [Yahan aapka purana CSS rahega, maine ise chota karne ke liye hata diya hai, 
-         aap apni file se CSS copy kar sakte hain. Niche sirf naye buttons/modal ka CSS hai] */
-      .btn-submit-payment {
-        padding: 14px 28px; background: var(--accent); color: white; border: none;
-        border-radius: 10px; font-family: 'Poppins'; font-weight: 600; font-size: 14px;
-        cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px;
+      .payments-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
       }
-      .btn-submit-payment:hover { transform: translateY(-2px); box-shadow: 0 10px 20px var(--accent-glow); }
+      .summary-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 22px;
+        background: var(--card-bg);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+        min-height: 100px;
+        transition: transform 0.3s;
+      }
+      .summary-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+      }
+      .summary-card.total::before { background: #1abc9c; }
+      .summary-card.current::before { background: #3b82f6; }
+      .summary-card.due::before { background: #f59e0b; }
+      .summary-card.streak::before { background: #ec4899; }
+      .summary-card:hover { transform: translateY(-5px); }
+
+      .summary-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        flex-shrink: 0;
+      }
+      .summary-card.total .summary-icon { background: rgba(26, 188, 156, 0.15); }
+      .summary-card.current .summary-icon { background: rgba(59, 130, 246, 0.15); }
+      .summary-card.due .summary-icon { background: rgba(245, 158, 11, 0.15); }
+      .summary-card.streak .summary-icon { background: rgba(236, 72, 153, 0.15); }
+
+      .summary-info { flex: 1; min-width: 0; }
+      .summary-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        opacity: 0.7;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+      .summary-value {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 3px;
+        line-height: 1.2;
+      }
+      .summary-card.total .summary-value { color: #1abc9c; }
+      .summary-card.current .summary-value { color: #3b82f6; }
+      .summary-card.due .summary-value { color: #f59e0b; }
+      .summary-card.streak .summary-value { color: #ec4899; }
+      .summary-sub { font-size: 11px; opacity: 0.7; color: var(--text-secondary); }
+
+      .payment-table-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 0;
+        overflow: hidden;
+        margin-bottom: 25px;
+      }
+      .payment-table-card .table-wrap { overflow-x: auto; }
+      .payment-table { width: 100%; border-collapse: collapse; min-width: 750px; }
+      .payment-table thead {
+        background: var(--accent-soft);
+        border-bottom: 2px solid var(--card-border);
+      }
+      .payment-table th {
+        text-align: left;
+        padding: 18px 15px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--accent);
+        white-space: nowrap;
+      }
+      .payment-table tbody tr { border-bottom: 1px solid var(--card-border); }
+      .payment-table tbody tr:hover { background: var(--accent-soft); }
+      .payment-table td {
+        padding: 15px;
+        font-size: 13px;
+        color: var(--text-primary);
+        vertical-align: middle;
+      }
+      .receipt-badge {
+        background: rgba(59, 130, 246, 0.15);
+        color: #3b82f6;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: "Courier New", monospace;
+      }
+      .amount { color: #1abc9c; font-weight: 700; }
+      .method-badge {
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+      }
+      .method-badge.jazzcash { background: rgba(239, 68, 68, 0.12); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.25); }
+      .method-badge.easypaisa { background: rgba(34, 197, 94, 0.12); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.25); }
+      .method-badge.bank { background: rgba(59, 130, 246, 0.12); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.25); }
       
+      .status-badge-paid { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; background: rgba(26, 188, 156, 0.15); color: #1abc9c; border: 1px solid rgba(26, 188, 156, 0.3); }
+      .status-badge-pending { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+      .status-badge-rejected { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+      .btn-download {
+        padding: 8px 12px;
+        background: rgba(26, 188, 156, 0.12);
+        color: #1abc9c;
+        border: 1px solid rgba(26, 188, 156, 0.3);
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+      }
+      .btn-download:hover { background: #1abc9c; color: white; transform: translateY(-2px); }
+
+      .pay-instructions {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 28px;
+      }
+      .pay-instructions h3 { color: var(--accent); font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+      .pay-instructions .sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 22px; }
+      .pay-instructions .sub strong { color: var(--accent); }
+      .pay-methods-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 22px; }
+      .pay-method-card { padding: 20px; background: var(--card-bg-hover); border: 1px solid var(--card-border); border-radius: 14px; text-align: center; }
+      .pay-method-card .icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 12px; }
+      .pay-method-card.jazzcash .icon { background: rgba(239, 68, 68, 0.15); }
+      .pay-method-card.easypaisa .icon { background: rgba(34, 197, 94, 0.15); }
+      .pay-method-card.bank .icon { background: rgba(59, 130, 246, 0.15); }
+      .pay-method-card h4 { color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+      .pay-method-card .account { color: var(--accent); font-size: 14px; font-weight: 700; font-family: "Courier New", monospace; margin-bottom: 4px; }
+      .pay-method-card .title { color: var(--text-secondary); font-size: 11px; }
+      .pay-note { display: flex; gap: 14px; padding: 15px 18px; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-left: 4px solid #3b82f6; border-radius: 10px; }
+      .pay-note p { color: var(--text-secondary); font-size: 12px; line-height: 1.7; }
+      .pay-note strong { color: #3b82f6; }
+      .empty-msg { color: var(--text-muted); padding: 40px; text-align: center; }
+
+      /* Modal CSS */
       .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
       .modal-overlay.active { display: flex; }
-      .modal-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; max-width: 500px; width: 100%; }
+      .modal-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 30px; max-width: 500px; width: 100%; position: relative; box-shadow: 0 25px 60px rgba(0,0,0,0.6); }
+      .modal-close { position: absolute; top: 15px; right: 20px; background: transparent; border: none; color: var(--text-primary); font-size: 20px; cursor: pointer; }
       .modal-box h2 { color: var(--accent); margin-bottom: 20px; font-size: 22px; }
       .form-group { margin-bottom: 16px; }
       .form-group label { display: block; font-size: 13px; color: var(--text-primary); margin-bottom: 8px; font-weight: 500; }
       .form-group input, .form-group select { width: 100%; padding: 12px; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-primary); outline: none; }
       .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-      .btn-modal { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; }
+      .btn-modal { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 600; font-family: 'Poppins'; cursor: pointer; }
       .btn-cancel { background: var(--input-bg); color: var(--text-primary); }
       .btn-save-modal { background: var(--accent); color: white; }
+
+      @media (max-width: 1100px) { .payments-summary-grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 600px) { .payments-summary-grid { grid-template-columns: 1fr; gap: 12px; } .summary-card { padding: 18px; } .summary-icon { width: 48px; height: 48px; font-size: 22px; } .summary-value { font-size: 18px; } }
     </style>
   </head>
   <body class="dashboard-body">
@@ -58,6 +224,9 @@
           <li><a href="member-reports.html"><span class="nav-icon">🚨</span><span>Report Issue</span></a></li>
           <li><a href="notifications.html"><span class="nav-icon">🔔</span><span>Notifications</span></a></li>
           <li><a href="settings.html"><span class="nav-icon">⚙️</span><span>Settings</span></a></li>
+          <div class="sidebar-divider"></div>
+          <li><a href="index.html" class="back-to-site-btn"><span class="nav-icon">🌐</span><span>Back to Website</span></a></li>
+          <li><a href="#" class="logout-btn"><span class="nav-icon">🚪</span><span>Logout</span></a></li>
         </ul>
       </nav>
     </aside>
@@ -83,63 +252,103 @@
       <div class="dashboard-content">
         <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
           <div>
-            <h1 style="color: white; font-size: 24px; font-weight: 700; margin-bottom: 5px;">💰 My Payments</h1>
-            <p style="color: white; font-size: 14px; opacity: 0.7;">Your complete payment record</p>
+            <h1 style="color: var(--text-primary); font-size: 24px; font-weight: 700; margin-bottom: 5px;">💰 My Payments</h1>
+            <p style="color: var(--text-secondary); font-size: 14px;">Your complete payment record</p>
           </div>
-          <button class="btn-submit-payment" onclick="document.getElementById('paymentModal').classList.add('active')">
+          <button class="btn-submit-payment" onclick="document.getElementById('paymentModal').classList.add('active')" style="padding: 12px 20px; background: var(--accent); color: white; border: none; border-radius: 10px; font-family: 'Poppins'; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
             ＋ Submit Payment Proof
           </button>
         </div>
 
-        <!-- Summary Cards (Purana code, CSS se handle ho jayega) -->
-        <div class="payments-summary-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 25px;">
-          <!-- Cards same rahenge -->
-          <div class="summary-card total" style="padding: 20px; background: var(--card-bg); border-radius: 16px; border-left: 4px solid #1abc9c;">
-            <p style="font-size: 11px; color: white; opacity: 0.7;">TOTAL PAID</p>
-            <h3 id="totalPaid" style="color: #1abc9c; font-size: 22px;">Rs. 0</h3>
+        <div class="payments-summary-grid">
+          <div class="summary-card total">
+            <div class="summary-icon">💰</div>
+            <div class="summary-info">
+              <p class="summary-label">Total Paid</p>
+              <h3 class="summary-value" id="totalPaid">Rs. 0</h3>
+              <p class="summary-sub" id="totalMonths">0 months</p>
+            </div>
           </div>
-          <div class="summary-card" style="padding: 20px; background: var(--card-bg); border-radius: 16px; border-left: 4px solid #3b82f6;">
-            <p style="font-size: 11px; color: white; opacity: 0.7;">PENDING VERIFICATION</p>
-            <h3 id="pendingCount" style="color: #3b82f6; font-size: 22px;">0</h3>
+          <div class="summary-card current">
+            <div class="summary-icon">✅</div>
+            <div class="summary-info">
+              <p class="summary-label">Current Month</p>
+              <h3 class="summary-value" id="currentStatus">-</h3>
+              <p class="summary-sub" id="currentMonth">-</p>
+            </div>
+          </div>
+          <div class="summary-card due">
+            <div class="summary-icon">⏳</div>
+            <div class="summary-info">
+              <p class="summary-label">Next Due</p>
+              <h3 class="summary-value" id="nextDueAmount">Rs. 300</h3>
+              <p class="summary-sub" id="nextDue">-</p>
+            </div>
+          </div>
+          <div class="summary-card streak">
+            <div class="summary-icon">🔥</div>
+            <div class="summary-info">
+              <p class="summary-label">Payment Streak</p>
+              <h3 class="summary-value" id="streak">0 Months</h3>
+              <p class="summary-sub">On-time payer</p>
+            </div>
           </div>
         </div>
 
-        <div class="payment-table-card" style="background: var(--card-bg); border-radius: 16px; overflow: hidden;">
-          <table class="payment-table" style="width: 100%; border-collapse: collapse; min-width: 750px;">
-            <thead style="background: rgba(26, 188, 156, 0.1);">
-              <tr>
-                <th style="padding: 15px; text-align: left; color: #1abc9c;">RECEIPT #</th>
-                <th style="padding: 15px; text-align: left; color: #1abc9c;">MONTH</th>
-                <th style="padding: 15px; text-align: left; color: #1abc9c;">AMOUNT</th>
-                <th style="padding: 15px; text-align: left; color: #1abc9c;">METHOD / TRX ID</th>
-                <th style="padding: 15px; text-align: left; color: #1abc9c;">STATUS</th>
-                <th style="padding: 15px; text-align: right; color: #1abc9c;">RECEIPT</th>
-              </tr>
-            </thead>
-            <tbody id="paymentsBody">
-              <tr><td colspan="6" style="padding: 30px; text-align: center; color: white;">Loading...</td></tr>
-            </tbody>
-          </table>
+        <div class="payment-table-card">
+          <div class="table-wrap">
+            <table class="payment-table" id="paymentsTable">
+              <thead>
+                <tr>
+                  <th>Receipt #</th>
+                  <th>Month</th>
+                  <th>Amount</th>
+                  <th>Method / Trx ID</th>
+                  <th>Status</th>
+                  <th style="text-align: right">Receipt</th>
+                </tr>
+              </thead>
+              <tbody id="paymentsBody">
+                <tr>
+                  <td colspan="6" class="empty-msg">Loading...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="padding: 18px 22px; background: var(--card-bg-hover); border-top: 1px solid var(--card-border); font-size: 13px; color: var(--text-secondary);">
+            Showing <strong id="showingCount" style="color: var(--accent)">0</strong> payments
+          </div>
         </div>
 
-        <!-- Dynamic Payment Instructions -->
-        <div class="pay-instructions" style="margin-top: 25px; background: var(--card-bg); padding: 25px; border-radius: 16px;">
-          <h3 style="color: #1abc9c; margin-bottom: 15px; font-size: 18px;">💳 Payment Methods</h3>
-          <div class="pay-methods-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-            <div style="background: var(--input-bg); padding: 15px; border-radius: 10px; text-align: center;">
-              <h4 style="color: white; margin-bottom: 5px;">JazzCash</h4>
-              <p id="dynJazzcash" style="color: #1abc9c; font-weight: 700;">Loading...</p>
+        <div class="pay-instructions">
+          <h3>💳 How to Pay Membership Fee</h3>
+          <p class="sub" id="feeSub">Monthly fee: <strong>Rs. 300</strong> — Pay via any method below</p>
+
+          <div class="pay-methods-row">
+            <div class="pay-method-card jazzcash">
+              <div class="icon">📱</div>
+              <h4>JazzCash</h4>
+              <p class="account" id="jazzcashAcc">Loading...</p>
+              <p class="title" id="jazzcashTitle">Title: SYDF</p>
             </div>
-            <div style="background: var(--input-bg); padding: 15px; border-radius: 10px; text-align: center;">
-              <h4 style="color: white; margin-bottom: 5px;">EasyPaisa</h4>
-              <p id="dynEasypaisa" style="color: #1abc9c; font-weight: 700;">Loading...</p>
+            <div class="pay-method-card easypaisa">
+              <div class="icon">💚</div>
+              <h4>EasyPaisa</h4>
+              <p class="account" id="easypaisaAcc">Loading...</p>
+              <p class="title" id="easypaisaTitle">Title: SYDF</p>
             </div>
-            <div style="background: var(--input-bg); padding: 15px; border-radius: 10px; text-align: center;">
-              <h4 style="color: white; margin-bottom: 5px;">Bank Transfer</h4>
-              <p id="dynBank" style="color: #1abc9c; font-weight: 700;">Loading...</p>
+            <div class="pay-method-card bank">
+              <div class="icon">🏦</div>
+              <h4>Bank Transfer</h4>
+              <p class="account" id="bankAcc">Loading...</p>
+              <p class="title" id="bankTitle">Title: SYDF</p>
             </div>
           </div>
-          <p style="color: var(--text-secondary); font-size: 12px; margin-top: 15px; text-align: center;">Account Title: <span id="dynAccountTitle">SYDF</span></p>
+
+          <div class="pay-note">
+            <span style="font-size: 20px">ℹ️</span>
+            <p>After transferring the amount, please click on <strong>"Submit Payment Proof"</strong> above and enter your Transaction ID so Admin can verify it.</p>
+          </div>
         </div>
       </div>
     </main>
@@ -147,14 +356,12 @@
     <!-- SUBMIT PAYMENT MODAL -->
     <div class="modal-overlay" id="paymentModal">
       <div class="modal-box">
-        <button class="modal-close" onclick="document.getElementById('paymentModal').classList.remove('active')" style="position: absolute; right: 20px; top: 15px; background: transparent; border: none; color: white; font-size: 20px; cursor: pointer;">✕</button>
+        <button class="modal-close" onclick="document.getElementById('paymentModal').classList.remove('active')">✕</button>
         <h2>Submit Payment Proof</h2>
         <form id="paymentForm">
           <div class="form-group">
             <label>Select Month *</label>
-            <select id="payMonth" required>
-              <!-- Months will be populated by JS -->
-            </select>
+            <select id="payMonth" required></select>
           </div>
           <div class="form-group">
             <label>Amount (Rs.) *</label>
@@ -184,7 +391,7 @@
     <script>
       let currentMember = null;
       let allPayments = [];
-      let membershipFee = 300; // Default
+      let membershipFee = 300;
 
       window.addEventListener("load", async function () {
         let attempts = 0;
@@ -198,44 +405,54 @@
           const { data: { session } } = await supabaseClient.auth.getSession();
           if (!session) return window.location.href = "login.html";
 
+          // 1. Fetch Member
           const { data: member } = await supabaseClient.from("members").select("*").eq("email", session.user.email).single();
           currentMember = member;
-          
           if (member) {
             document.getElementById("topAvatar").textContent = (member.name || "M").charAt(0).toUpperCase();
             document.querySelectorAll(".user-name").forEach((el) => (el.textContent = member.name));
             document.querySelectorAll(".user-uid").forEach((el) => (el.textContent = member.uid));
           }
 
-          // 1. Fetch Settings (Payment Methods & Fee)
-          const { data: settings } = await supabaseClient.from("settings").select("*");
-          const map = {};
-          if(settings) settings.forEach(s => map[s.key] = s.value);
+          // 2. Fetch Settings
+          const { data: settingsData } = await supabaseClient.from("settings").select("key, value");
+          if (settingsData) {
+            const s = {};
+            settingsData.forEach((item) => (s[item.key] = item.value));
 
-          if (map.membership_fee) {
-            membershipFee = Number(map.membership_fee);
-            document.getElementById("payAmount").value = membershipFee;
+            if (s.jazzcash) document.getElementById("jazzcashAcc").textContent = s.jazzcash;
+            if (s.easypaisa) document.getElementById("easypaisaAcc").textContent = s.easypaisa;
+            if (s.bank_name && s.bank_account) document.getElementById("bankAcc").textContent = `${s.bank_name}: ${s.bank_account}`;
+            
+            if (s.account_title) {
+              document.getElementById("jazzcashTitle").textContent = "Title: " + s.account_title;
+              document.getElementById("easypaisaTitle").textContent = "Title: " + s.account_title;
+              document.getElementById("bankTitle").textContent = "Title: " + s.account_title;
+            }
+
+            if (s.membership_fee) {
+              membershipFee = Number(s.membership_fee);
+              document.getElementById("nextDueAmount").textContent = "Rs. " + membershipFee;
+              document.getElementById("feeSub").innerHTML = `Monthly fee: <strong>Rs. ${membershipFee}</strong> — Pay via any method below`;
+              document.getElementById("payAmount").value = membershipFee;
+            }
           }
-          if (map.jazzcash) document.getElementById("dynJazzcash").textContent = map.jazzcash;
-          if (map.easypaisa) document.getElementById("dynEasypaisa").textContent = map.easypaisa;
-          if (map.bank_name && map.bank_account) document.getElementById("dynBank").textContent = `${map.bank_name}: ${map.bank_account}`;
-          if (map.account_title) document.getElementById("dynAccountTitle").textContent = map.account_title;
 
           // Populate Months Dropdown
           const monthSelect = document.getElementById("payMonth");
           const now = new Date();
-          for (let i = -1; i <= 2; i++) { // Pichla, Current, aur agle 2 mahine
+          for (let i = -1; i <= 2; i++) { 
             const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
             const monthStr = d.toLocaleDateString("en-PK", { month: "long", year: "numeric" });
             monthSelect.innerHTML += `<option value="${monthStr}" ${i===0 ? 'selected' : ''}>${monthStr}</option>`;
           }
 
-          // 2. Fetch My Payments
-          const { data: payments } = await supabaseClient.from("payments").select("*").eq("member_email", session.user.email).order("payment_date", { ascending: false });
+          // 3. Fetch Payments
+          const { data: payments } = await supabaseClient.from("payments").select("*").eq("member_email", session.user.email).order("created_at", { ascending: false });
           allPayments = payments || [];
           renderPayments();
 
-          // 3. Submit Payment Logic
+          // 4. Submit Form Logic
           document.getElementById("paymentForm").addEventListener("submit", async function (e) {
             e.preventDefault();
             const btn = document.getElementById("btnSubmitPayment");
@@ -251,7 +468,7 @@
               month: document.getElementById("payMonth").value,
               transaction_id: document.getElementById("payTrxId").value.trim(),
               receipt_no: receiptNo,
-              status: "Pending", // Admin approve karega
+              status: "Pending",
               payment_date: new Date().toISOString().split("T")[0]
             };
 
@@ -264,7 +481,6 @@
             window.syfSuccess("✅ Payment submitted! Admin will verify it shortly.");
             document.getElementById("paymentModal").classList.remove("active");
             this.reset();
-            // Reload page to show new pending payment
             setTimeout(() => location.reload(), 1500);
           });
 
@@ -276,52 +492,130 @@
       function renderPayments() {
         const tbody = document.getElementById("paymentsBody");
         
-        // Stats
         const totalPaid = allPayments.filter(p => p.status === "Paid").reduce((s, p) => s + Number(p.amount), 0);
-        const pendingCount = allPayments.filter(p => p.status === "Pending").length;
+        const paidMonthsCount = allPayments.filter(p => p.status === "Paid").length;
+
         document.getElementById("totalPaid").textContent = "Rs. " + totalPaid.toLocaleString();
-        document.getElementById("pendingCount").textContent = pendingCount;
+        document.getElementById("totalMonths").textContent = paidMonthsCount + " months";
+        document.getElementById("streak").textContent = paidMonthsCount + " Months";
+        document.getElementById("showingCount").textContent = allPayments.length;
+
+        const now = new Date();
+        const currentMonthName = now.toLocaleDateString("en-PK", { month: "long", year: "numeric" });
+        document.getElementById("currentMonth").textContent = currentMonthName;
+        const current = allPayments.find((p) => p.month === currentMonthName && p.status === "Paid");
+        document.getElementById("currentStatus").textContent = current ? "Paid" : "Pending";
+
+        const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 5);
+        document.getElementById("nextDue").textContent = nextMonth.toLocaleDateString("en-PK", { day: "numeric", month: "short", year: "numeric" });
 
         if (allPayments.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" style="padding: 30px; text-align: center; color: white; opacity:0.7;">No payments recorded yet</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">No payments recorded yet</td></tr>';
           return;
         }
 
         tbody.innerHTML = allPayments.map(p => {
-          let statusColor = p.status === "Paid" ? "#1abc9c" : p.status === "Pending" ? "#f59e0b" : "#ef4444";
-          let statusIcon = p.status === "Paid" ? "✅" : p.status === "Pending" ? "⏳" : "❌";
+          const mc = (p.method || "cash").toLowerCase();
+          const methodClass = mc.includes("jazz") ? "jazzcash" : mc.includes("easy") ? "easypaisa" : mc.includes("bank") ? "bank" : "cash";
+          const methodIcon = mc.includes("jazz") ? "📱" : mc.includes("easy") ? "💚" : mc.includes("bank") ? "🏦" : "💵";
+          
+          let statusClass = "status-badge-pending";
+          let statusIcon = "⏳";
+          if (p.status === "Paid") { statusClass = "status-badge-paid"; statusIcon = "✅"; }
+          if (p.status === "Rejected") { statusClass = "status-badge-rejected"; statusIcon = "❌"; }
+
+          const date = p.payment_date ? new Date(p.payment_date).toLocaleDateString("en-PK", { day: "numeric", month: "short", year: "numeric" }) : "-";
           
           return `
-            <tr style="border-bottom: 1px solid var(--card-border);">
-              <td style="padding: 15px;"><span style="background: rgba(59, 130, 246, 0.15); color: #93c5fd; padding: 4px 10px; border-radius: 8px; font-size: 11px;">#${p.receipt_no}</span></td>
-              <td style="padding: 15px; color: white; font-weight: 600;">${p.month}</td>
-              <td style="padding: 15px; color: #1abc9c; font-weight: 700;">Rs. ${Number(p.amount).toLocaleString()}</td>
-              <td style="padding: 15px;">
-                <div style="color: white; font-size: 13px;">${p.method}</div>
-                ${p.transaction_id ? `<div style="color: var(--text-muted); font-size: 11px;">Trx: ${p.transaction_id}</div>` : ''}
+            <tr>
+              <td><span class="receipt-badge">#${p.receipt_no || "-"}</span></td>
+              <td style="font-weight:600;">${p.month || "-"}</td>
+              <td class="amount">Rs. ${p.amount}</td>
+              <td>
+                <span class="method-badge ${methodClass}">${methodIcon} ${p.method}</span>
+                ${p.transaction_id ? `<div style="font-size:11px; color:var(--text-muted); font-family:monospace; margin-top:4px;">Trx: ${p.transaction_id}</div>` : ''}
               </td>
-              <td style="padding: 15px;">
-                <span style="color: ${statusColor}; font-weight: 700; font-size: 12px;">${statusIcon} ${p.status}</span>
+              <td><span class="${statusClass}">${statusIcon} ${p.status}</span></td>
+              <td style="text-align:right;">
+                ${p.status === "Paid" ? `<button class="btn-download" onclick="downloadReceipt(${p.id})">📥 PDF</button>` : `<span style="font-size:11px; color:var(--text-muted);">Pending</span>`}
               </td>
-              <td style="padding: 15px; text-align: right;">
-                ${p.status === "Paid" ? `<button class="btn-download" onclick="downloadReceipt(${p.id})" style="padding: 6px 12px; font-size: 11px;">📥 PDF</button>` : `<span style="font-size: 11px; color: var(--text-muted);">Pending</span>`}
-              </td>
-            </tr>
-          `;
+            </tr>`;
         }).join("");
       }
 
-      // Download Receipt Function (Aapka purana code yahan aayega)
-      window.downloadReceipt = function(paymentId) {
+      window.downloadReceipt = function (paymentId) {
         const p = allPayments.find((x) => x.id === paymentId);
-        if (!p) return;
+        if (!p) return alert("❌ Payment not found");
+
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("SYDF Payment Receipt", 20, 20);
-        doc.text("Receipt No: " + p.receipt_no, 20, 30);
-        doc.text("Amount: Rs. " + p.amount, 20, 40);
-        doc.text("Status: " + p.status, 20, 50);
-        doc.save(`Receipt-${p.receipt_no}.pdf`);
+        const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        doc.setFillColor(26, 188, 156); doc.rect(0, 0, pageWidth, 35, "F");
+        doc.setFillColor(15, 32, 39); doc.rect(0, 35, pageWidth, 3, "F");
+        doc.setFillColor(255, 255, 255); doc.circle(22, 17, 9, "F");
+        doc.setTextColor(26, 188, 156); doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.text("SYDF", 22, 18.5, { align: "center" });
+        doc.setTextColor(255, 255, 255); doc.setFontSize(20); doc.text("Swat Youth Development Forum", 38, 15);
+        doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.text("Empowering Youth, Building Future", 38, 23);
+        doc.setTextColor(15, 32, 39); doc.setFontSize(22); doc.setFont("helvetica", "bold"); doc.text("PAYMENT RECEIPT", 14, 55);
+        
+        doc.setFillColor(240, 253, 249); doc.roundedRect(pageWidth - 75, 45, 61, 18, 3, 3, "F");
+        doc.setDrawColor(26, 188, 156); doc.setLineWidth(0.5); doc.roundedRect(pageWidth - 75, 45, 61, 18, 3, 3, "S");
+        doc.setTextColor(26, 188, 156); doc.setFontSize(9); doc.setFont("helvetica", "bold"); doc.text("RECEIPT NO.", pageWidth - 72, 51);
+        doc.setFontSize(13); doc.text(p.receipt_no || "N/A", pageWidth - 72, 59);
+
+        doc.setTextColor(100, 100, 100); doc.setFontSize(10); doc.setFont("helvetica", "normal");
+        const issueDate = new Date().toLocaleDateString("en-PK", { day: "numeric", month: "long", year: "numeric" });
+        doc.text("Date: " + issueDate, 14, 68);
+        doc.setDrawColor(26, 188, 156); doc.setLineWidth(0.5); doc.line(14, 73, pageWidth - 14, 73);
+
+        doc.setFillColor(248, 250, 252); doc.rect(14, 80, pageWidth - 28, 40, "F");
+        doc.setTextColor(26, 188, 156); doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.text("MEMBER INFORMATION", 20, 90);
+        doc.setTextColor(50, 50, 50); doc.setFont("helvetica", "normal"); doc.setFontSize(11);
+        doc.text("Name:", 20, 100); doc.setFont("helvetica", "bold"); doc.text(currentMember.name || "Member", 55, 100);
+        doc.setFont("helvetica", "normal"); doc.text("Member UID:", 20, 108); doc.setFont("helvetica", "bold"); doc.text(currentMember.uid || "N/A", 55, 108);
+        doc.setFont("helvetica", "normal"); doc.text("Email:", 20, 116); doc.setFont("helvetica", "bold"); doc.text(currentMember.email || "N/A", 55, 116);
+
+        doc.setFillColor(26, 188, 156); doc.rect(14, 135, pageWidth - 28, 12, "F");
+        doc.setTextColor(255, 255, 255); doc.setFontSize(11); doc.setFont("helvetica", "bold"); doc.text("PAYMENT DETAILS", 20, 143);
+
+        const startY = 155; const rowHeight = 12;
+        doc.setFillColor(245, 250, 249); doc.rect(14, startY, pageWidth - 28, rowHeight, "F");
+        doc.setTextColor(80, 80, 80); doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.text("Payment For:", 20, startY + 8);
+        doc.setTextColor(15, 32, 39); doc.setFont("helvetica", "bold"); doc.text(p.month || "N/A", pageWidth - 20, startY + 8, { align: "right" });
+
+        doc.setFillColor(255, 255, 255); doc.rect(14, startY + rowHeight, pageWidth - 28, rowHeight, "F");
+        doc.setTextColor(80, 80, 80); doc.setFont("helvetica", "normal"); doc.text("Payment Method:", 20, startY + rowHeight + 8);
+        doc.setTextColor(15, 32, 39); doc.setFont("helvetica", "bold"); doc.text(p.method || "N/A", pageWidth - 20, startY + rowHeight + 8, { align: "right" });
+
+        doc.setFillColor(245, 250, 249); doc.rect(14, startY + rowHeight * 2, pageWidth - 28, rowHeight, "F");
+        doc.setTextColor(80, 80, 80); doc.setFont("helvetica", "normal"); doc.text("Payment Date:", 20, startY + rowHeight * 2 + 8);
+        doc.setTextColor(15, 32, 39); doc.setFont("helvetica", "bold");
+        const payDate = p.payment_date ? new Date(p.payment_date).toLocaleDateString("en-PK", { day: "numeric", month: "long", year: "numeric" }) : "N/A";
+        doc.text(payDate, pageWidth - 20, startY + rowHeight * 2 + 8, { align: "right" });
+
+        doc.setFillColor(255, 255, 255); doc.rect(14, startY + rowHeight * 3, pageWidth - 28, rowHeight, "F");
+        doc.setTextColor(80, 80, 80); doc.setFont("helvetica", "normal"); doc.text("Status:", 20, startY + rowHeight * 3 + 8);
+        doc.setTextColor(p.status === "Paid" ? 26 : 245, p.status === "Paid" ? 188 : 158, p.status === "Paid" ? 156 : 11);
+        doc.setFont("helvetica", "bold"); doc.text(p.status || "N/A", pageWidth - 20, startY + rowHeight * 3 + 8, { align: "right" });
+
+        const amountY = startY + rowHeight * 4 + 15;
+        doc.setFillColor(26, 188, 156); doc.roundedRect(14, amountY, pageWidth - 28, 25, 4, 4, "F");
+        doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "normal"); doc.setFontSize(12); doc.text("TOTAL AMOUNT PAID:", 22, amountY + 10);
+        doc.setFontSize(22); doc.setFont("helvetica", "bold"); doc.text("Rs. " + Number(p.amount).toLocaleString(), pageWidth - 22, amountY + 17, { align: "right" });
+
+        const footerY = amountY + 40;
+        doc.setDrawColor(200, 200, 200); doc.setLineWidth(0.3); doc.line(14, footerY - 5, pageWidth - 14, footerY - 5);
+        doc.setTextColor(100, 100, 100); doc.setFontSize(10); doc.setFont("helvetica", "italic"); doc.text("This is a computer-generated receipt. No signature required.", 14, footerY);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.text("For any queries, contact: info@sydf.org | +92 300 1234567", 14, footerY + 6);
+
+        doc.setFillColor(15, 32, 39); doc.rect(0, pageHeight - 15, pageWidth, 15, "F");
+        doc.setTextColor(255, 255, 255); doc.setFontSize(8);
+        doc.text("SYDF © " + new Date().getFullYear() + " - All Rights Reserved", 14, pageHeight - 6);
+        doc.text("Page 1 of 1", pageWidth - 14, pageHeight - 6, { align: "right" });
+
+        doc.save("SYDF-Receipt-" + (p.receipt_no || "payment") + ".pdf");
       };
     </script>
   </body>
