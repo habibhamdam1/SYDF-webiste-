@@ -183,11 +183,31 @@
         font-size: 20px;
         margin-bottom: 20px;
       }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        color: var(--text-primary);
+        margin-bottom: 6px;
+        font-weight: 500;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 12px;
+        background: var(--input-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+        color: var(--text-primary);
+        outline: none;
+        font-family: "Poppins", sans-serif;
+      }
     </style>
   </head>
   <body class="dashboard-body">
-    <!-- SIDEBAR -->
-    <!-- SIDEBAR (MEMBER PANEL) -->
     <aside class="dashboard-sidebar" id="dashboardSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">
@@ -199,84 +219,25 @@
 
       <nav class="sidebar-nav">
         <ul>
-          <li>
-            <a href="dashboard.html"
-              ><span class="nav-icon">📊</span><span>Overview</span></a
-            >
-          </li>
-          <li>
-            <a href="profile.html"
-              ><span class="nav-icon">👤</span><span>My Profile</span></a
-            >
-          </li>
-          <li>
-            <a href="my-payments.html"
-              ><span class="nav-icon">💰</span><span>My Payments</span></a
-            >
-          </li>
-          <li>
-            <a href="my-documents.html"
-              ><span class="nav-icon">📄</span><span>Documents</span></a
-            >
-          </li>
-          <li>
-            <a href="my-activities.html"
-              ><span class="nav-icon">🎯</span><span>My Activities</span></a
-            >
-          </li>
-          <li>
-            <a href="member-proposals.html"
-              ><span class="nav-icon">💡</span><span>My Proposals</span></a
-            >
-          </li>
-          <li>
-            <a href="my-certificate.html"
-              ><span class="nav-icon">📜</span><span>Certificate</span></a
-            >
-          </li>
-          <li>
-            <a href="my-id-card.html"
-              ><span class="nav-icon">🆔</span><span>ID Card</span></a
-            >
-          </li>
-          <li>
-            <a href="member-reports.html"
-              ><span class="nav-icon">🚨</span><span>Report Issue</span></a
-            >
-          </li>
-          <li>
-            <a href="notifications.html"
-              ><span class="nav-icon">🔔</span><span>Notifications</span></a
-            >
-          </li>
-          <li>
-            <a href="settings.html"
-              ><span class="nav-icon">⚙️</span><span>Settings</span></a
-            >
-          </li>
-
-          <!-- DIVIDER -->
+          <li><a href="dashboard.html"><span class="nav-icon">📊</span><span>Overview</span></a></li>
+          <li><a href="profile.html"><span class="nav-icon">👤</span><span>My Profile</span></a></li>
+          <li><a href="my-payments.html"><span class="nav-icon">💰</span><span>My Payments</span></a></li>
+          <li><a href="my-documents.html"><span class="nav-icon">📄</span><span>Documents</span></a></li>
+          <li><a href="my-activities.html"><span class="nav-icon">🎯</span><span>My Activities</span></a></li>
+          <li><a href="member-proposals.html"><span class="nav-icon">💡</span><span>My Proposals</span></a></li>
+          <li><a href="my-certificate.html"><span class="nav-icon">📜</span><span>Certificate</span></a></li>
+          <li><a href="my-id-card.html"><span class="nav-icon">🆔</span><span>ID Card</span></a></li>
+          <li><a href="member-reports.html"><span class="nav-icon">🚨</span><span>Report Issue</span></a></li>
+          <li><a href="notifications.html"><span class="nav-icon">🔔</span><span>Notifications</span></a></li>
+          <li><a href="settings.html"><span class="nav-icon">⚙️</span><span>Settings</span></a></li>
           <div class="sidebar-divider"></div>
-
-          <!-- BACK TO WEBSITE & LOGOUT (Scrollable) -->
-          <li>
-            <a href="index.html" class="back-to-site-btn">
-              <span class="nav-icon">🌐</span>
-              <span>Back to Website</span>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="logout-btn">
-              <span class="nav-icon">🚪</span>
-              <span>Logout</span>
-            </a>
-          </li>
+          <li><a href="index.html" class="back-to-site-btn"><span class="nav-icon">🌐</span><span>Back to Website</span></a></li>
+          <li><a href="#" class="logout-btn"><span class="nav-icon">🚪</span><span>Logout</span></a></li>
         </ul>
       </nav>
     </aside>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- MAIN CONTENT -->
     <main class="dashboard-main">
       <div class="dashboard-topbar">
         <button class="menu-toggle" id="menuToggle">☰</button>
@@ -288,8 +249,7 @@
           <div class="topbar-user">
             <div class="user-avatar" id="topAvatar">M</div>
             <div class="user-info">
-              <span class="user-name">Loading...</span
-              ><span class="user-uid">-</span>
+              <span class="user-name">Loading...</span><span class="user-uid">-</span>
             </div>
           </div>
         </div>
@@ -308,72 +268,31 @@
           <span class="icon">📢</span>
           <div>
             <h4>Your Voice Matters!</h4>
-            <p>
-              Submit your activity suggestions, project proposals, sponsor
-              ideas, or feedback. Admin team will review and respond.
-            </p>
+            <p>Submit your activity suggestions, project proposals, sponsor ideas, or feedback. Admin team will review and respond.</p>
           </div>
         </div>
 
-        <!-- Stats -->
         <div class="stats-row">
           <div class="stat-box">
-            <div
-              class="icon"
-              style="background: rgba(59, 130, 246, 0.15); color: #3b82f6"
-            >
-              📋
-            </div>
-            <div>
-              <h3 id="statTotal">0</h3>
-              <p>Total</p>
-            </div>
+            <div class="icon" style="background: rgba(59, 130, 246, 0.15); color: #3b82f6">📋</div>
+            <div><h3 id="statTotal">0</h3><p>Total</p></div>
           </div>
           <div class="stat-box">
-            <div
-              class="icon"
-              style="background: rgba(245, 158, 11, 0.15); color: #f59e0b"
-            >
-              ⏳
-            </div>
-            <div>
-              <h3 id="statPending">0</h3>
-              <p>Pending</p>
-            </div>
+            <div class="icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b">⏳</div>
+            <div><h3 id="statPending">0</h3><p>Pending</p></div>
           </div>
           <div class="stat-box">
-            <div
-              class="icon"
-              style="background: rgba(26, 188, 156, 0.15); color: #1abc9c"
-            >
-              ✅
-            </div>
-            <div>
-              <h3 id="statApproved">0</h3>
-              <p>Approved</p>
-            </div>
+            <div class="icon" style="background: rgba(26, 188, 156, 0.15); color: #1abc9c">✅</div>
+            <div><h3 id="statApproved">0</h3><p>Approved</p></div>
           </div>
           <div class="stat-box">
-            <div
-              class="icon"
-              style="background: rgba(239, 68, 68, 0.15); color: #ef4444"
-            >
-              ❌
-            </div>
-            <div>
-              <h3 id="statRejected">0</h3>
-              <p>Rejected</p>
-            </div>
+            <div class="icon" style="background: rgba(239, 68, 68, 0.15); color: #ef4444">❌</div>
+            <div><h3 id="statRejected">0</h3><p>Rejected</p></div>
           </div>
         </div>
 
-        <!-- Proposals List -->
         <div class="proposals-list" id="proposalsList">
-          <div
-            style="text-align: center; padding: 40px; color: var(--text-muted)"
-          >
-            Loading proposals...
-          </div>
+          <div style="text-align: center; padding: 40px; color: var(--text-muted)">Loading proposals...</div>
         </div>
       </div>
     </main>
@@ -385,39 +304,34 @@
         <form id="proposalForm">
           <div class="form-group">
             <label>Proposal Title *</label>
-            <input
-              type="text"
-              id="propTitle"
-              placeholder="e.g., Inter-College Sports Gala"
-              required
-            />
+            <input type="text" id="propTitle" placeholder="e.g., Inter-College Sports Gala" required />
           </div>
+          
+          <!-- NAYA: Proposal Type -->
+          <div class="form-group">
+            <label>Proposal Type *</label>
+            <select id="propType" required>
+              <option value="Activity">Activity Proposal</option>
+              <option value="Project">Project Proposal</option>
+              <option value="Sponsor">Sponsorship Idea</option>
+              <option value="Feedback">General Feedback</option>
+            </select>
+          </div>
+
+          <!-- NAYA: Expected Budget -->
+          <div class="form-group">
+            <label>Expected Budget (Rs.) - Optional</label>
+            <input type="number" id="propBudget" placeholder="e.g. 5000" value="0" min="0" />
+          </div>
+
           <div class="form-group">
             <label>Details / Description *</label>
-            <textarea
-              id="propDesc"
-              rows="5"
-              placeholder="Explain your idea in detail..."
-              required
-            ></textarea>
+            <textarea id="propDesc" rows="5" placeholder="Explain your idea in detail..." required></textarea>
           </div>
+
           <div style="display: flex; gap: 10px; margin-top: 20px">
-            <button
-              type="button"
-              class="btn-secondary"
-              id="btnCloseModal"
-              style="flex: 1"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="btn-primary"
-              id="btnSubmitProposal"
-              style="flex: 1"
-            >
-              Submit
-            </button>
+            <button type="button" class="btn-secondary" id="btnCloseModal" style="flex: 1">Cancel</button>
+            <button type="submit" class="btn-primary" id="btnSubmitProposal" style="flex: 1">Submit</button>
           </div>
         </form>
       </div>
@@ -427,19 +341,16 @@
     <script>
       let currentEmail = null;
       let currentName = null;
+      let currentUid = null; // UID save karne ke liye
 
       window.addEventListener("load", async function () {
         let attempts = 0;
-        while (
-          (typeof supabaseClient === "undefined" || !supabaseClient) &&
-          attempts < 30
-        ) {
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
           await new Promise((r) => setTimeout(r, 100));
           attempts++;
         }
         if (!supabaseClient) return;
 
-        // Auth Check
         const { data: sessionData } = await supabaseClient.auth.getSession();
         const session = sessionData ? sessionData.session : null;
 
@@ -449,45 +360,29 @@
         }
 
         currentEmail = session.user.email;
-        const { data: member } = await supabaseClient
-          .from("members")
-          .select("name, uid")
-          .eq("email", currentEmail)
-          .maybeSingle();
+        const { data: member } = await supabaseClient.from("members").select("name, uid").eq("email", currentEmail).maybeSingle();
 
         if (member) {
           currentName = member.name;
-          document.getElementById("topAvatar").textContent = (
-            member.name || "M"
-          )
-            .charAt(0)
-            .toUpperCase();
-          document
-            .querySelectorAll(".user-name")
-            .forEach((el) => (el.textContent = member.name || "Member"));
-          document
-            .querySelectorAll(".user-uid")
-            .forEach((el) => (el.textContent = member.uid || "-"));
+          currentUid = member.uid;
+          document.getElementById("topAvatar").textContent = (member.name || "M").charAt(0).toUpperCase();
+          document.querySelectorAll(".user-name").forEach((el) => (el.textContent = member.name || "Member"));
+          document.querySelectorAll(".user-uid").forEach((el) => (el.textContent = member.uid || "-"));
         }
 
         loadProposals();
 
-        // Modal Logic
         const modal = document.getElementById("proposalModal");
-        document
-          .getElementById("btnOpenModal")
-          .addEventListener("click", () => (modal.style.display = "flex"));
-        document
-          .getElementById("btnCloseModal")
-          .addEventListener("click", () => (modal.style.display = "none"));
+        document.getElementById("btnOpenModal").addEventListener("click", () => (modal.style.display = "flex"));
+        document.getElementById("btnCloseModal").addEventListener("click", () => (modal.style.display = "none"));
 
-        // Form Submit
-        document
-          .getElementById("proposalForm")
-          .addEventListener("submit", async function (e) {
+        // FORM SUBMIT LOGIC WITH NEW FIELDS
+        document.getElementById("proposalForm").addEventListener("submit", async function (e) {
             e.preventDefault();
             const btn = document.getElementById("btnSubmitProposal");
             const title = document.getElementById("propTitle").value.trim();
+            const type = document.getElementById("propType").value; // Nayi field
+            const budget = document.getElementById("propBudget").value || 0; // Nayi field
             const desc = document.getElementById("propDesc").value.trim();
 
             btn.disabled = true;
@@ -498,9 +393,13 @@
                 {
                   member_email: currentEmail,
                   member_name: currentName,
+                  member_uid: currentUid, // UID add kiya taake admin ko nazar aaye
                   title: title,
                   description: desc,
                   status: "Pending",
+                  proposal_type: type, // <--- YEH ADD KIYA (Error fix)
+                  expected_budget: Number(budget), // <--- YEH ADD KIYA
+                  priority: "Normal" // <--- Default Priority
                 },
               ]);
 
@@ -516,7 +415,7 @@
               btn.disabled = false;
               btn.textContent = "Submit";
             }
-          });
+        });
       });
 
       async function loadProposals() {
@@ -530,7 +429,6 @@
 
           if (error) throw error;
 
-          // Update Stats
           const total = data.length;
           const pending = data.filter((p) => p.status === "Pending").length;
           const approved = data.filter((p) => p.status === "Approved").length;
@@ -546,13 +444,8 @@
             return;
           }
 
-          list.innerHTML = data
-            .map((p) => {
-              const date = new Date(p.created_at).toLocaleDateString("en-PK", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              });
+          list.innerHTML = data.map((p) => {
+              const date = new Date(p.created_at).toLocaleDateString("en-PK", { day: "numeric", month: "short", year: "numeric" });
               let statusClass = "status-pending";
               if (p.status === "Approved") statusClass = "status-approved";
               if (p.status === "Rejected") statusClass = "status-rejected";
@@ -566,29 +459,19 @@
                 <p class="proposal-desc">${escapeHtml(p.description)}</p>
                 <div class="proposal-footer">
                   <span>📅 ${date}</span>
-                  ${p.admin_remarks ? `<span style="color:var(--accent);">💬 Admin: ${escapeHtml(p.admin_remarks)}</span>` : ""}
+                  <span>📁 ${escapeHtml(p.proposal_type || 'General')}</span>
+                  ${p.admin_response ? `<span style="color:var(--accent);">💬 Admin: ${escapeHtml(p.admin_response)}</span>` : ""}
                 </div>
               </div>
             `;
-            })
-            .join("");
+          }).join("");
         } catch (err) {
           list.innerHTML = `<div style="text-align:center; color:#ef4444;">Failed to load proposals.</div>`;
         }
       }
 
       function escapeHtml(s) {
-        return String(s || "").replace(
-          /[&<>"']/g,
-          (c) =>
-            ({
-              "&": "&amp;",
-              "<": "&lt;",
-              ">": "&gt;",
-              '"': "&quot;",
-              "'": "&#39;",
-            })[c],
-        );
+        return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
       }
     </script>
   </body>
