@@ -6,99 +6,23 @@
     <title>Elections - SYDF Member</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages/dashboard.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      .election-block {
-        background: var(--card-bg);
-        border: 1px solid var(--card-border);
-        border-radius: var(--r-lg);
-        padding: 25px;
-        margin-bottom: 20px;
-        backdrop-filter: blur(20px);
-      }
-      .candidate-card {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        padding: 15px;
-        background: var(--input-bg);
-        border: 1px solid var(--card-border);
-        border-radius: var(--r-md);
-        margin-bottom: 10px;
-        cursor: pointer;
-        transition: 0.2s;
-      }
-      .candidate-card:hover {
-        border-color: var(--accent);
-        transform: translateY(-2px);
-      }
-      .candidate-card.selected {
-        border-color: var(--accent);
-        background: var(--accent-soft);
-        box-shadow: 0 4px 15px var(--accent-glow);
-      }
-      .candidate-radio {
-        width: 20px;
-        height: 20px;
-        accent-color: var(--accent);
-        cursor: pointer;
-      }
-      .nominate-input {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 10px;
-        background: var(--input-bg);
-        border: 1px solid var(--card-border);
-        border-radius: 8px;
-        color: var(--text-primary);
-        outline: none;
-      }
-      .status-badge {
-        display: inline-block;
-        padding: 6px 15px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-      }
-      .status-upcoming {
-        background: rgba(59, 130, 246, 0.15);
-        color: #3b82f6;
-        border: 1px solid #3b82f6;
-      }
-      .status-active {
-        background: rgba(26, 188, 156, 0.15);
-        color: #1abc9c;
-        border: 1px solid #1abc9c;
-      }
-      .status-completed {
-        background: rgba(107, 114, 128, 0.15);
-        color: #6b7280;
-        border: 1px solid #6b7280;
-      }
-
-      .result-personal-msg {
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 10px;
-        font-weight: 600;
-        text-align: center;
-      }
-      .msg-win {
-        background: rgba(26, 188, 156, 0.15);
-        color: #1abc9c;
-        border: 1px solid #1abc9c;
-      }
-      .msg-lose {
-        background: rgba(245, 158, 11, 0.15);
-        color: #f59e0b;
-        border: 1px solid #f59e0b;
-      }
+      .election-block { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--r-lg); padding: 25px; margin-bottom: 20px; backdrop-filter: blur(20px); }
+      .candidate-card { display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: var(--r-md); margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
+      .candidate-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+      .candidate-card.selected { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 4px 15px var(--accent-glow); }
+      .candidate-radio { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+      .nominate-input { width: 100%; padding: 12px; margin-bottom: 10px; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-primary); outline: none; }
+      .status-badge { display: inline-block; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+      .status-upcoming { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid #3b82f6; }
+      .status-active { background: rgba(26, 188, 156, 0.15); color: #1abc9c; border: 1px solid #1abc9c; }
+      .status-completed { background: rgba(107, 114, 128, 0.15); color: #6b7280; border: 1px solid #6b7280; }
+      .result-personal-msg { padding: 15px; border-radius: 10px; margin-top: 10px; font-weight: 600; text-align: center; }
+      .msg-win { background: rgba(26, 188, 156, 0.15); color: #1abc9c; border: 1px solid #1abc9c; }
+      .msg-lose { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid #f59e0b; }
     </style>
   </head>
   <body class="dashboard-body">
@@ -112,61 +36,17 @@
       </div>
       <nav class="sidebar-nav">
         <ul>
-          <li>
-            <a href="dashboard.html"
-              ><span class="nav-icon">📊</span><span>Overview</span></a
-            >
-          </li>
-          <li>
-            <a href="profile.html"
-              ><span class="nav-icon">👤</span><span>My Profile</span></a
-            >
-          </li>
-          <li>
-            <a href="my-payments.html"
-              ><span class="nav-icon">💰</span><span>My Payments</span></a
-            >
-          </li>
-          <li>
-            <a href="my-documents.html"
-              ><span class="nav-icon">📄</span><span>Documents</span></a
-            >
-          </li>
-          <li>
-            <a href="my-activities.html"
-              ><span class="nav-icon">🎯</span><span>My Activities</span></a
-            >
-          </li>
-          <li>
-            <a href="member-proposals.html"
-              ><span class="nav-icon">💡</span><span>My Proposals</span></a
-            >
-          </li>
-          <li>
-            <a href="my-certificate.html"
-              ><span class="nav-icon">📜</span><span>Certificate</span></a
-            >
-          </li>
-          <li>
-            <a href="my-id-card.html"
-              ><span class="nav-icon">🆔</span><span>ID Card</span></a
-            >
-          </li>
-          <li>
-            <a href="member-reports.html"
-              ><span class="nav-icon">🚨</span><span>Report Issue</span></a
-            >
-          </li>
-          <li>
-            <a href="notifications.html"
-              ><span class="nav-icon">🔔</span><span>Notifications</span></a
-            >
-          </li>
-          <li>
-            <a href="settings.html"
-              ><span class="nav-icon">⚙️</span><span>Settings</span></a
-            >
-          </li>
+          <li><a href="dashboard.html"><span class="nav-icon">📊</span><span>Overview</span></a></li>
+          <li><a href="profile.html"><span class="nav-icon">👤</span><span>My Profile</span></a></li>
+          <li><a href="my-payments.html"><span class="nav-icon">💰</span><span>My Payments</span></a></li>
+          <li><a href="my-documents.html"><span class="nav-icon">📄</span><span>Documents</span></a></li>
+          <li><a href="my-activities.html"><span class="nav-icon">🎯</span><span>My Activities</span></a></li>
+          <li><a href="member-proposals.html"><span class="nav-icon">💡</span><span>My Proposals</span></a></li>
+          <li><a href="my-certificate.html"><span class="nav-icon">📜</span><span>Certificate</span></a></li>
+          <li><a href="my-id-card.html"><span class="nav-icon">🆔</span><span>ID Card</span></a></li>
+          <li><a href="member-reports.html"><span class="nav-icon">🚨</span><span>Report Issue</span></a></li>
+          <li><a href="notifications.html"><span class="nav-icon">🔔</span><span>Notifications</span></a></li>
+          <li><a href="settings.html"><span class="nav-icon">⚙️</span><span>Settings</span></a></li>
         </ul>
       </nav>
     </aside>
@@ -184,8 +64,7 @@
           <div class="topbar-user">
             <div class="user-avatar" id="topAvatar">M</div>
             <div class="user-info">
-              <span class="user-name">Loading...</span
-              ><span class="user-uid">-</span>
+              <span class="user-name">Loading...</span><span class="user-uid">-</span>
             </div>
           </div>
         </div>
@@ -193,11 +72,7 @@
 
       <div class="dashboard-content">
         <div id="electionContainer">
-          <div
-            style="text-align: center; padding: 40px; color: var(--text-muted)"
-          >
-            Authenticating...
-          </div>
+          <div style="text-align: center; padding: 40px; color: var(--text-muted)">Authenticating...</div>
         </div>
       </div>
     </main>
@@ -205,60 +80,41 @@
     <script src="js/main.js"></script>
     <script>
       let currentMember = null;
+      let globalSettings = {}; // To store JazzCash/EasyPaisa info
 
       window.addEventListener("load", async function () {
         let attempts = 0;
-        while (
-          (typeof supabaseClient === "undefined" || !supabaseClient) &&
-          attempts < 30
-        ) {
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
           await new Promise((r) => setTimeout(r, 100));
           attempts++;
         }
         if (!supabaseClient) return;
 
-        const {
-          data: { session },
-        } = await supabaseClient.auth.getSession();
-        if (!session) {
-          window.location.href = "login.html";
-          return;
-        }
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) return window.location.href = "login.html";
 
-        const { data: member } = await supabaseClient
-          .from("members")
-          .select("name, email, status, uid")
-          .eq("email", session.user.email)
-          .single();
+        const { data: member } = await supabaseClient.from("members").select("name, email, status, uid").eq("email", session.user.email).single();
 
         if (!member || member.status !== "Active") {
-          document.getElementById("electionContainer").innerHTML =
-            `<div style="text-align: center; padding: 40px; color: var(--text-muted); background: var(--card-bg); border-radius: 12px;">⛔ Your account is not active. Elections are only for active members.</div>`;
+          document.getElementById("electionContainer").innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-muted); background: var(--card-bg); border-radius: 12px;">⛔ Your account is not active. Elections are only for active members.</div>`;
           return;
         }
         currentMember = member;
 
-        document.getElementById("topAvatar").textContent = (member.name || "M")
-          .charAt(0)
-          .toUpperCase();
-        document
-          .querySelectorAll(".user-name")
-          .forEach((el) => (el.textContent = member.name || "Member"));
-        document
-          .querySelectorAll(".user-uid")
-          .forEach((el) => (el.textContent = member.uid || "-"));
+        document.getElementById("topAvatar").textContent = (member.name || "M").charAt(0).toUpperCase();
+        document.querySelectorAll(".user-name").forEach((el) => (el.textContent = member.name || "Member"));
+        document.querySelectorAll(".user-uid").forEach((el) => (el.textContent = member.uid || "-"));
+
+        // Fetch Settings for Payment Methods
+        const { data: setts } = await supabaseClient.from("settings").select("key, value");
+        if(setts) setts.forEach(s => globalSettings[s.key] = s.value);
 
         await loadElectionsData();
       });
 
       async function loadElectionsData() {
         const container = document.getElementById("electionContainer");
-
-        // Fetch all elections ordered by date
-        const { data: elections, error } = await supabaseClient
-          .from("elections")
-          .select("*")
-          .order("created_at", { ascending: false });
+        const { data: elections, error } = await supabaseClient.from("elections").select("*").order("created_at", { ascending: false });
 
         if (error) {
           container.innerHTML = `<div style="text-align: center; padding: 40px; color: #ef4444;">❌ Error loading elections: ${error.message}</div>`;
@@ -272,33 +128,16 @@
 
         let html = "";
 
-        // 1. Check for ACTIVE Election (Voting Phase)
         const activeElection = elections.find((e) => e.status === "Active");
-        if (activeElection) {
-          html += await renderActiveElection(activeElection);
-        }
+        if (activeElection) html += await renderActiveElection(activeElection);
 
-        // 2. Check for UPCOMING Election (Nomination Phase)
         const upcomingElection = elections.find((e) => e.status === "Upcoming");
-        if (upcomingElection) {
-          html += await renderUpcomingElection(upcomingElection);
-        }
+        if (upcomingElection) html += await renderUpcomingElection(upcomingElection);
 
-        // 3. Check for COMPLETED Election (Results Phase - Only show if setting is true)
-        const { data: setting } = await supabaseClient
-          .from("settings")
-          .select("value")
-          .eq("key", "publish_results")
-          .maybeSingle();
-
+        const { data: setting } = await supabaseClient.from("settings").select("value").eq("key", "publish_results").maybeSingle();
         if (setting && setting.value === "true") {
-          const completedElections = elections.filter(
-            (e) => e.status === "Completed",
-          );
-          if (completedElections.length > 0) {
-            // Just show the most recent completed election to avoid clutter
-            html += await renderCompletedElection(completedElections[0]);
-          }
+          const completedElections = elections.filter((e) => e.status === "Completed");
+          if (completedElections.length > 0) html += await renderCompletedElection(completedElections[0]);
         }
 
         if (!html) {
@@ -306,11 +145,7 @@
         }
 
         container.innerHTML = html;
-
-        // Attach event listeners if active election is rendered
-        if (activeElection) {
-          attachVotingLogic(activeElection);
-        }
+        if (activeElection) attachVotingLogic(activeElection);
       }
 
       // ==========================================
@@ -319,44 +154,27 @@
       async function renderUpcomingElection(election) {
         let positions = election.positions || [];
         if (typeof positions === "string") {
-          try {
-            positions = JSON.parse(positions);
-          } catch (e) {
-            positions = positions.replace(/[{}"]/g, "").split(",");
-          }
+          try { positions = JSON.parse(positions); } catch (e) { positions = positions.replace(/[{}"]/g, "").split(","); }
         }
 
-        // Get Election Fee from settings
-        const { data: setting } = await supabaseClient
-          .from("settings")
-          .select("value")
-          .eq("key", "election_fee")
-          .maybeSingle();
+        // Election Fee ab specific election se aa rahi hai
+        const electionFee = Number(election.fee) || 0;
 
-        const electionFee = setting ? Number(setting.value) : 0;
-
-        // Check if user already applied
         const { data: existingCandidates } = await supabaseClient
-          .from("election_candidates")
-          .select("position, status, fee_status, transaction_id")
-          .eq("election_id", election.id)
-          .eq("member_email", currentMember.email);
+          .from("election_candidates").select("position, status, fee_status, transaction_id")
+          .eq("election_id", election.id).eq("member_email", currentMember.email);
 
         let appliedHTML = "";
         if (existingCandidates && existingCandidates.length > 0) {
           appliedHTML = `<div style="background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; color: #93c5fd; padding: 15px; border-radius: 10px; margin-top: 15px;">
             <h4 style="margin-bottom: 5px;">✅ You have applied for the following positions:</h4>
             <ul style="margin-left: 20px; font-size: 14px;">
-              ${existingCandidates
-                .map(
-                  (c) => `
+              ${existingCandidates.map((c) => `
                 <li>
                   ${c.position} - Status: <strong>${c.status || "Pending"}</strong>
                   ${electionFee > 0 ? `<br><span style="font-size: 12px; color: ${c.fee_status === "Verified" ? "#1abc9c" : "#f59e0b"};">Payment Status: ${c.fee_status || "Unpaid"} (Trx ID: ${c.transaction_id || "N/A"})</span>` : ""}
                 </li>
-              `,
-                )
-                .join("")}
+              `).join("")}
             </ul>
             <p style="font-size: 12px; margin-top: 10px; opacity: 0.8;">Admin is reviewing your application. Please wait for the election to start.</p>
           </div>`;
@@ -364,10 +182,25 @@
 
         let feeHTML = "";
         if (electionFee > 0) {
+          // Get payment details from globalSettings
+          const jc = globalSettings.jazzcash || "0300-1234567";
+          const ep = globalSettings.easypaisa || "0301-2345678";
+          const title = globalSettings.account_title || "SYDF";
+
           feeHTML = `
             <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid #f59e0b; padding: 15px; border-radius: 10px; margin: 15px 0;">
               <h4 style="color: #fbbf24; font-size: 14px; margin-bottom: 5px;">💰 Nomination Fee: Rs. ${electionFee}</h4>
-              <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 10px;">Please transfer Rs. ${electionFee} to JazzCash 0300-1234567 or EasyPaisa 0301-2345678 and enter the Transaction ID below.</p>
+              <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 10px;">
+                Please transfer Rs. ${electionFee} to any of the accounts below and enter the Transaction ID (TID).
+              </p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; font-size: 12px;">
+                  <strong>JazzCash:</strong> ${jc}<br><small style="opacity:0.7">Title: ${title}</small>
+                </div>
+                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; font-size: 12px;">
+                  <strong>EasyPaisa:</strong> ${ep}<br><small style="opacity:0.7">Title: ${title}</small>
+                </div>
+              </div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <select id="nomPaymentMethod" required style="padding: 12px; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-primary); outline: none;">
                   <option value="">Payment Method</option>
@@ -388,9 +221,7 @@
               ${positions.map((p) => `<option value="${p}">${p}</option>`).join("")}
             </select>
             <input type="text" id="nomManifesto" placeholder="Why should people vote for you? (Manifesto)" required class="nominate-input" />
-            
             ${feeHTML}
-
             <button type="submit" class="btn-primary" style="padding: 12px 25px; border-radius: 8px;">Apply for Nomination</button>
           </form>
         `;
@@ -401,9 +232,7 @@
             form.addEventListener("submit", async (e) => {
               e.preventDefault();
               const pos = document.getElementById("nomPosition").value;
-              const manifesto = document
-                .getElementById("nomManifesto")
-                .value.trim();
+              const manifesto = document.getElementById("nomManifesto").value.trim();
               const btn = e.target.querySelector('button[type="submit"]');
 
               let trxId = null;
@@ -414,41 +243,31 @@
                 trxId = document.getElementById("nomTrxId").value.trim();
                 payMethod = document.getElementById("nomPaymentMethod").value;
                 feeStatus = "Pending Verification";
-                if (!trxId)
-                  return window.syfError("Please enter the Transaction ID.");
+                if (!trxId || !payMethod) return window.syfError("Please select payment method and enter the Transaction ID.");
               }
 
               btn.disabled = true;
               btn.textContent = "Submitting...";
 
-              const { error } = await supabaseClient
-                .from("election_candidates")
-                .insert([
-                  {
-                    election_id: election.id,
-                    member_email: currentMember.email,
-                    member_name: currentMember.name,
-                    position: pos,
-                    manifesto: manifesto,
-                    status: "Pending",
-                    fee_status: feeStatus,
-                    transaction_id: trxId,
-                    payment_method: payMethod,
-                  },
-                ]);
+              const { error } = await supabaseClient.from("election_candidates").insert([{
+                election_id: election.id,
+                member_email: currentMember.email,
+                member_name: currentMember.name,
+                position: pos,
+                manifesto: manifesto,
+                status: "Pending",
+                fee_status: feeStatus,
+                transaction_id: trxId,
+                payment_method: payMethod,
+              }]);
 
               if (error) {
-                if (error.code === "23505")
-                  window.syfError(
-                    "You have already nominated yourself for this position!",
-                  );
+                if (error.code === "23505") window.syfError("You have already nominated yourself for this position!");
                 else window.syfError("Error: " + error.message);
                 btn.disabled = false;
                 btn.textContent = "Apply for Nomination";
               } else {
-                window.syfSuccess(
-                  "Nomination submitted! Admin will verify your payment and application soon.",
-                );
+                window.syfSuccess("Nomination submitted! Admin will verify your payment and application soon.");
                 loadElectionsData(); // Reload UI
               }
             });
@@ -465,7 +284,6 @@
               <h3 style="color: #93c5fd; font-size: 16px; margin-bottom: 5px;">⏳ Election Starting Soon!</h3>
               <p style="color: var(--text-secondary); font-size: 13px;">You can submit your nomination (application) now. Once the admin starts the election, you will be able to cast your votes here.</p>
             </div>
-            
             <h3 style="color: var(--warm); font-size: 16px; margin-bottom: 10px;">Nominate Yourself</h3>
             ${appliedHTML}
             ${formHTML}
@@ -479,25 +297,13 @@
       async function renderActiveElection(election) {
         let positions = election.positions || [];
         if (typeof positions === "string") {
-          try {
-            positions = JSON.parse(positions);
-          } catch (e) {
-            positions = positions.replace(/[{}"]/g, "").split(",");
-          }
+          try { positions = JSON.parse(positions); } catch (e) { positions = positions.replace(/[{}"]/g, "").split(","); }
         }
 
-        const { data: myVotes } = await supabaseClient
-          .from("election_votes")
-          .select("position")
-          .eq("election_id", election.id)
-          .eq("voter_email", currentMember.email);
+        const { data: myVotes } = await supabaseClient.from("election_votes").select("position").eq("election_id", election.id).eq("voter_email", currentMember.email);
         const votedPositions = myVotes.map((v) => v.position);
 
-        const { data: candidates } = await supabaseClient
-          .from("election_candidates")
-          .select("*")
-          .eq("election_id", election.id)
-          .eq("status", "Approved");
+        const { data: candidates } = await supabaseClient.from("election_candidates").select("*").eq("election_id", election.id).eq("status", "Approved");
 
         let html = `
           <div class="election-block" style="border: 2px solid #1abc9c; box-shadow: 0 0 20px rgba(26,188,156,0.2);">
@@ -523,9 +329,7 @@
             html += `<p style="color: var(--accent); font-size: 14px; background: var(--accent-soft); padding: 12px; border-radius: 8px;">✅ You have already cast your vote for this position. Thank you!</p>`;
           } else {
             html += `<form class="voteForm" data-position="${pos}">
-                ${posCandidates
-                  .map(
-                    (c) => `
+                ${posCandidates.map((c) => `
                   <label class="candidate-card">
                     <input type="radio" name="candidate_${pos}" value="${c.id}" class="candidate-radio" required>
                     <div style="flex: 1;">
@@ -533,9 +337,7 @@
                       <div style="color: var(--text-muted); font-size: 12px;">Manifesto: ${c.manifesto || "No manifesto provided"}</div>
                     </div>
                   </label>
-                `,
-                  )
-                  .join("")}
+                `).join("")}
                 <button type="submit" class="btn-primary" style="padding: 10px 20px; border-radius: 8px; margin-top: 10px; font-size: 13px;">Submit Vote for ${pos}</button>
               </form>`;
           }
@@ -551,28 +353,16 @@
           form.addEventListener("submit", async (e) => {
             e.preventDefault();
             const pos = form.getAttribute("data-position");
-            const candidateId = form.querySelector(
-              `input[name="candidate_${pos}"]:checked`,
-            ).value;
+            const candidateId = form.querySelector(`input[name="candidate_${pos}"]:checked`).value;
 
             const btn = form.querySelector('button[type="submit"]');
             btn.disabled = true;
             btn.textContent = "Casting Vote...";
 
-            const { error } = await supabaseClient
-              .from("election_votes")
-              .insert([
-                {
-                  election_id: election.id,
-                  voter_email: currentMember.email,
-                  candidate_id: candidateId,
-                  position: pos,
-                },
-              ]);
+            const { error } = await supabaseClient.from("election_votes").insert([{ election_id: election.id, voter_email: currentMember.email, candidate_id: candidateId, position: pos }]);
 
             if (error) {
-              if (error.code === "23505")
-                window.syfError("You have already voted for this position!");
+              if (error.code === "23505") window.syfError("You have already voted for this position!");
               else window.syfError("Error: " + error.message);
               btn.disabled = false;
               btn.textContent = `Submit Vote for ${pos}`;
@@ -588,24 +378,12 @@
       // 3. RENDER COMPLETED (Results Phase)
       // ==========================================
       async function renderCompletedElection(election) {
-        const { data: candidates } = await supabaseClient
-          .from("election_candidates")
-          .select("*")
-          .eq("election_id", election.id)
-          .eq("status", "Approved");
-
-        const { data: votes } = await supabaseClient
-          .from("election_votes")
-          .select("*")
-          .eq("election_id", election.id);
+        const { data: candidates } = await supabaseClient.from("election_candidates").select("*").eq("election_id", election.id).eq("status", "Approved");
+        const { data: votes } = await supabaseClient.from("election_votes").select("*").eq("election_id", election.id);
 
         let positions = election.positions || [];
         if (typeof positions === "string") {
-          try {
-            positions = JSON.parse(positions);
-          } catch (e) {
-            positions = positions.replace(/[{}"]/g, "").split(",");
-          }
+          try { positions = JSON.parse(positions); } catch (e) { positions = positions.replace(/[{}"]/g, "").split(","); }
         }
 
         let winnersHTML = "";
@@ -614,21 +392,14 @@
           const posCandidates = candidates.filter((c) => c.position === pos);
           if (posCandidates.length === 0) return;
 
-          let winner = null;
-          let maxVotes = -1;
-
+          let winner = null; let maxVotes = -1;
           posCandidates.forEach((c) => {
             const vCount = votes.filter((v) => v.candidate_id === c.id).length;
-            if (vCount > maxVotes) {
-              maxVotes = vCount;
-              winner = c;
-            }
+            if (vCount > maxVotes) { maxVotes = vCount; winner = c; }
           });
 
           if (winner) {
-            const iWasCandidate = posCandidates.find(
-              (c) => c.member_email === currentMember.email,
-            );
+            const iWasCandidate = posCandidates.find((c) => c.member_email === currentMember.email);
             let personalMsg = "";
 
             if (iWasCandidate) {
