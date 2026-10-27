@@ -469,11 +469,13 @@
             return;
           }
 
+          // 1. Fetch Member Profile (Taake Role pata chale)
           const { data: member } = await supabaseClient
             .from("members")
-            .select("name, uid")
+            .select("name, uid, role, status")
             .eq("email", session.user.email)
             .single();
+
           if (member) {
             document.getElementById("topAvatar").textContent = (
               member.name || "M"
@@ -488,10 +490,43 @@
               .forEach((el) => (el.textContent = member.uid));
           }
 
-          const { data } = await supabaseClient
+          // 2. Determine Access Level based on Role
+          let allowedLevels = ["All Members", "Active Members"]; // Default for normal members
+
+          const cabinetRoles = [
+            "Super Admin",
+            "Admin",
+            "President",
+            "Senior Vice President",
+            "Vice President",
+            "Secretary General",
+            "Deputy Secretary General",
+            "Information Secretary",
+            "Finance Secretary",
+            "Media Secretary",
+            "Joint Secretary",
+            "Financial Secretary",
+          ];
+
+          // Agar user Cabinet ya Admin hai, toh usay Cabinet documents bhi dikhein
+          if (
+            member &&
+            (member.role === "Super Admin" ||
+              member.role === "Admin" ||
+              cabinetRoles.includes(member.role))
+          ) {
+            allowedLevels.push("Cabinet Members");
+          }
+
+          // 3. Fetch Documents based on allowed levels
+          const { data, error } = await supabaseClient
             .from("documents")
             .select("*")
+            .in("access_level", allowedLevels) // <--- Yahan filter laga hai
             .order("created_at", { ascending: false });
+
+          if (error) throw error;
+
           allDocs = data || [];
           renderDocs();
 
@@ -520,7 +555,7 @@
 
         if (filtered.length === 0) {
           grid.innerHTML =
-            '<div class="empty-state"><span class="ico">📭</span><h3>No Documents Found</h3><p>Documents will appear here once admin uploads them.</p></div>';
+            '<div class="empty-state"><span class="ico">📭</span><h3>No Documents Found</h3><p>No documents available for your account level.</p></div>';
           return;
         }
 
@@ -562,7 +597,7 @@
                     <div class="doc-meta">
                         <span>📅 ${date}</span>
                         <span>📦 ${d.file_size || "N/A"}</span>
-                        <span>🔒 ${d.access_level || "All"}</span>
+                        <span>🔒 ${d.access_level || "All Members"}</span>
                     </div>
                     <div class="doc-actions">
                         <a href="${d.file_url}" target="_blank" class="doc-btn view">👁️ View</a>
