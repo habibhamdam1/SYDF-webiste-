@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>District Details - SYDF</title>
+    <script src="js/head-includes.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .detail-hero { padding: 140px 20px 30px; max-width: 1100px; margin: 0 auto; }
+      .breadcrumb { font-size: 13px; opacity: 0.7; color: white; margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap; }
+      .breadcrumb a { color: #1abc9c; text-decoration: none; }
+      .breadcrumb a:hover { text-decoration: underline; }
+
+      .district-header-card {
+        background: linear-gradient(135deg, rgba(26,188,156,0.15), rgba(15,32,39,0.4));
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(26,188,156,0.3);
+        border-radius: 24px;
+        padding: 45px 50px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+      }
+      .district-header-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 350px;
+        height: 350px;
+        background: radial-gradient(circle, rgba(26,188,156,0.25), transparent 70%);
+        border-radius: 50%;
+      }
+      .district-icon-big { font-size: 64px; margin-bottom: 15px; display: block; }
+      .district-header-card h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 46px;
+        color: white;
+        margin-bottom: 8px;
+        line-height: 1.15;
+        position: relative;
+      }
+      .district-division {
+        display: inline-block;
+        padding: 6px 16px;
+        background: rgba(26,188,156,0.2);
+        border: 1px solid rgba(26,188,156,0.4);
+        border-radius: 18px;
+        color: #5eead4;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        position: relative;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-top: 30px;
+        position: relative;
+        z-index: 2;
+      }
+      .stat-card {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+      }
+      .stat-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+      .stat-num { font-size: 32px; font-weight: 800; color: #1abc9c; line-height: 1; }
+      .stat-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.7); margin-top: 6px; font-weight: 600; }
+
+      .section-card {
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 20px;
+        padding: 35px 40px;
+        margin-bottom: 25px;
+      }
+      .section-title {
+        font-size: 22px;
+        color: #1abc9c;
+        margin-bottom: 22px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tehsils-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+      }
+      .tehsil-card {
+        padding: 20px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+        color: white;
+        display: block;
+      }
+      .tehsil-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(26,188,156,0.4);
+        background: rgba(26,188,156,0.08);
+        box-shadow: 0 15px 40px rgba(26,188,156,0.2);
+      }
+      .tehsil-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: white; }
+      .tehsil-card p { font-size: 12px; opacity: 0.7; color: white; }
+
+      .coordinator-box {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 24px;
+        background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.02));
+        border: 1px solid rgba(59,130,246,0.3);
+        border-radius: 16px;
+      }
+      .coord-avatar {
+        width: 64px; height: 64px; border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6, #1e40af);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 26px; font-weight: 700; color: white;
+        flex-shrink: 0; border: 3px solid rgba(255,255,255,0.15);
+      }
+      .coord-info h3 { font-size: 18px; color: white; font-weight: 700; margin-bottom: 4px; }
+      .coord-info p { font-size: 12px; color: #93c5fd; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+      .coord-empty {
+        padding: 24px; text-align: center;
+        background: rgba(245,158,11,0.08);
+        border: 1px dashed rgba(245,158,11,0.4);
+        border-radius: 16px;
+        color: #fbbf24; font-size: 13px;
+      }
+
+      .cta-card {
+        text-align: center;
+        background: linear-gradient(135deg, rgba(26,188,156,0.15), rgba(26,188,156,0.02));
+        border: 1px solid rgba(26,188,156,0.35);
+      }
+      .cta-card h2 { color: #1abc9c; font-size: 24px; margin-bottom: 12px; }
+      .cta-card p { font-size: 14px; opacity: 0.85; color: white; margin-bottom: 22px; }
+      .btn-cta {
+        display: inline-block;
+        padding: 13px 30px;
+        background: linear-gradient(135deg, #1abc9c, #16a085);
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        transition: 0.3s;
+      }
+      .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(26,188,156,0.4); }
+
+      .loading-wrap, .notfound-wrap {
+        text-align: center; padding: 100px 30px; max-width: 700px; margin: 0 auto; color: white;
+      }
+      .spinner {
+        width: 50px; height: 50px;
+        border: 4px solid rgba(255,255,255,0.15);
+        border-top-color: #1abc9c;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .notfound-wrap .ico { font-size: 70px; margin-bottom: 20px; display: block; }
+      .notfound-wrap h2 { font-size: 24px; margin-bottom: 10px; }
+      .notfound-wrap p { font-size: 14px; opacity: 0.75; margin-bottom: 25px; }
+      .back-link {
+        display: inline-flex; align-items: center; gap: 8px;
+        color: #1abc9c; text-decoration: none; font-size: 14px; font-weight: 600;
+      }
+      .back-link:hover { transform: translateX(-4px); }
+
+      @media (max-width: 768px) {
+        .detail-hero { padding: 120px 15px 20px; }
+        .district-header-card { padding: 30px 25px; }
+        .district-header-card h1 { font-size: 30px; }
+        .district-icon-big { font-size: 48px; }
+        .section-card { padding: 25px 20px; }
+        .stat-num { font-size: 26px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav></nav>
+    </header>
+
+    <section class="detail-hero">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="districts.html">Districts</a>
+        <span>/</span>
+        <span id="crumbTitle">District</span>
+      </div>
+      <div id="content">
+        <div class="loading-wrap">
+          <div class="spinner"></div>
+          <h2>Loading district...</h2>
+          <p>Please wait</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="glass-footer"></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+      const DISTRICT_EMOJI = {
+        Swat: "🏔️", Shangla: "⛰️", Buner: "🌄", Malakand: "🏞️",
+        "Upper Dir": "🗻", "Lower Dir": "🌲", "Upper Chitral": "❄️",
+        "Lower Chitral": "🏔️", Bajaur: "🕌",
+      };
+      function emojiFor(name) { return DISTRICT_EMOJI[name] || "🗺️"; }
+
+      function escapeHtml(s) {
+        return String(s || "").replace(/[&<>"']/g, (c) =>
+          ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
+        );
+      }
+      function getParam(n) { return new URLSearchParams(window.location.search).get(n); }
+
+      function renderNotFound(msg) {
+        document.getElementById("content").innerHTML = `
+          <div class="section-card notfound-wrap" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:20px;">
+            <span class="ico">🗺️</span>
+            <h2>District Not Found</h2>
+            <p>${escapeHtml(msg || "This district may have been removed or the link is invalid.")}</p>
+            <a href="districts.html" class="back-link">← Back to Districts</a>
+          </div>`;
+      }
+
+      function renderDistrict(district, tehsils, memberCount, coordinators) {
+        document.getElementById("crumbTitle").textContent = district.name;
+
+        const coordHTML = coordinators.length > 0
+          ? coordinators.map((c) => `
+            <div class="coordinator-box" style="margin-bottom:12px;">
+              <div class="coord-avatar">${escapeHtml((c.name || "C").charAt(0).toUpperCase())}</div>
+              <div class="coord-info">
+                <h3>${escapeHtml(c.name)}</h3>
+                <p>${escapeHtml(c.role || "Coordinator")}${c.tehsil ? " • " + escapeHtml(c.tehsil) : ""}</p>
+              </div>
+            </div>`).join("")
+          : `<div class="coord-empty">⚠️ Coordinator not assigned yet</div>`;
+
+        const tehsilsHTML = tehsils.length > 0
+          ? tehsils.map((t) => `
+            <a href="tehsil-detail.html?id=${t.id}" class="tehsil-card">
+              <h4>📍 ${escapeHtml(t.name)}</h4>
+              <p>View details →</p>
+            </a>`).join("")
+          : `<p style="color:white;opacity:0.7;">No tehsils added yet for this district.</p>`;
+
+        document.getElementById("content").innerHTML = `
+          <div class="district-header-card">
+            <span class="district-icon-big">${emojiFor(district.name)}</span>
+            <h1>${escapeHtml(district.name)}</h1>
+            <span class="district-division">${escapeHtml(district.division || "Malakand")} Division</span>
+
+            <div class="stat-grid">
+              <div class="stat-card">
+                <span class="stat-icon">📍</span>
+                <div class="stat-num">${tehsils.length}</div>
+                <div class="stat-lbl">Tehsils</div>
+              </div>
+              <div class="stat-card">
+                <span class="stat-icon">👥</span>
+                <div class="stat-num">${memberCount}</div>
+                <div class="stat-lbl">Active Members</div>
+              </div>
+              <div class="stat-card">
+                <span class="stat-icon">🏛️</span>
+                <div class="stat-num">${district.division || "MKD"}</div>
+                <div class="stat-lbl">Division</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-title">📍 Tehsils in ${escapeHtml(district.name)}</h2>
+            <div class="tehsils-grid">${tehsilsHTML}</div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-title">👤 District Leadership</h2>
+            ${coordHTML}
+          </div>
+
+          <div class="section-card cta-card">
+            <h2>Represent ${escapeHtml(district.name)}</h2>
+            <p>Join SYDF and help us empower the youth of ${escapeHtml(district.name)}.</p>
+            <a href="membership.html" class="btn-cta">Join Us Today</a>
+          </div>
+        `;
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) { renderNotFound("System not ready. Please refresh."); return; }
+
+        const id = getParam("id");
+        const name = getParam("name");
+        if (!id && !name) { renderNotFound("No district selected."); return; }
+
+        try {
+          let query = supabaseClient.from("districts").select("*");
+          if (id) query = query.eq("id", id);
+          else query = query.eq("name", name);
+          const { data: district, error } = await query.single();
+
+          if (error || !district) { renderNotFound(); return; }
+
+          const [tehsilsRes, membersRes, coordRes] = await Promise.all([
+            supabaseClient.from("tehsils").select("*").eq("district_id", district.id).order("name"),
+            supabaseClient.from("members").select("id").eq("district", district.name).eq("status", "Active"),
+            supabaseClient.from("members").select("name, role, tehsil, email").eq("district", district.name).in("role", ["District Coordinator", "Coordinator", "President", "Senior Vice President", "Vice President"]),
+          ]);
+
+          // If coordinator_email/name is set on district but not in members coordRes, add it
+          const coordinators = coordRes.data || [];
+          if (district.coordinator_name && !coordinators.find((c) => c.name === district.coordinator_name)) {
+            coordinators.push({ name: district.coordinator_name, role: "District Coordinator", email: district.coordinator_email, tehsil: null });
+          }
+
+          renderDistrict(district, tehsilsRes.data || [], (membersRes.data || []).length, coordinators);
+        } catch (err) {
+          console.error(err);
+          renderNotFound("Something went wrong while loading the district.");
+        }
+      });
+    </script>
+  </body>
+</html>
