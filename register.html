@@ -2,23 +2,26 @@
 <html lang="en">
   <head>
     <script>
-  // Force kill all service workers for this site
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      for(let registration of registrations) {
-        registration.unregister().then(function(success) {
-          if(success) console.log('Service Worker unregistered successfully');
+      // Force kill all service workers for this site
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (registrations) {
+            for (let registration of registrations) {
+              registration.unregister().then(function (success) {
+                if (success)
+                  console.log("Service Worker unregistered successfully");
+              });
+            }
+          });
+      }
+      // Clear all caches
+      if ("caches" in window) {
+        caches.keys().then(function (names) {
+          for (let name of names) caches.delete(name);
         });
       }
-    });
-  }
-  // Clear all caches
-  if ('caches' in window) {
-    caches.keys().then(function(names) {
-      for (let name of names) caches.delete(name);
-    });
-  }
-</script>
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - SYDF</title>
@@ -620,7 +623,7 @@
                 district: district,
                 tehsil: tehsil,
                 photo_url: photoUrl,
-                is_active: true,
+                is_active: false,
                 member_type: "Member",
               })
               .eq("user_id", authData.user.id); // Trigger ne is ID se row banai hai
