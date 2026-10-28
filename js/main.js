@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v4 - DYNAMIC & OPTIMIZED)
+// SYDF - MAIN JAVASCRIPT (v5 - COMPLETE)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -399,13 +399,9 @@ document.addEventListener("DOMContentLoaded", async function () {
           logoDiv.insertBefore(img, logoDiv.firstChild);
         }
 
-        // Footer setup (Fallback if empty)
-        const footerLinks = links
-          ? links.filter((l) => l.location === "footer")
-          : [];
+        // Footer setup
         const existingFooter = document.querySelector(".glass-footer");
         if (existingFooter) {
-          // Use original hardcoded footer to avoid breaking layout
           existingFooter.innerHTML = `
             <div class="footer-content">
                 <div class="footer-col">
@@ -469,6 +465,21 @@ document.addEventListener("DOMContentLoaded", async function () {
             const li3 = document.createElement("li");
             li3.innerHTML = `<a href="admin-menu-manager.html"><span class="nav-icon">🔗</span><span>Menu Manager</span></a>`;
             nextUl.insertBefore(li3, nextUl.children[2]);
+          }
+        }
+      }
+
+      // Inject Custom Pages Link in "Content" section
+      const contentTitle = Array.from(
+        sidebarNav.querySelectorAll(".nav-section-title"),
+      ).find((el) => el.textContent.trim() === "Content");
+      if (contentTitle) {
+        const nextUl = contentTitle.nextElementSibling;
+        if (nextUl && nextUl.tagName === "UL") {
+          if (!nextUl.querySelector('a[href="admin-custom-pages.html"]')) {
+            const liContent = document.createElement("li");
+            liContent.innerHTML = `<a href="admin-custom-pages.html"><span class="nav-icon">📄</span><span>Custom Pages</span></a>`;
+            nextUl.appendChild(liContent);
           }
         }
       }
@@ -767,6 +778,7 @@ async function enforceAdminPermissions() {
         "admin-activity-logs.html": "admin_acc_reports",
         "admin-recycle-bin.html": "admin_acc_reports",
         "admin-menu-manager.html": "admin_acc_reports",
+        "admin-custom-pages.html": "admin_acc_news", // Custom pages ko news/activities ke permission mein daala hai
       };
 
       document.querySelectorAll(".sidebar-nav a").forEach((a) => {
