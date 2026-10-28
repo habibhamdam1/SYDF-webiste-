@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v10 - COMPLETE & ERROR FREE)
+// SYDF - MAIN JAVASCRIPT (v12 - FINAL ABSOLUTE)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -284,14 +284,14 @@ if (sidebarOverlay) {
 }
 
 // ==========================================
-// DYNAMIC HEADER/FOOTER + SIDEBAR INJECTIONS
+// DYNAMIC FOOTER & SIDEBAR INJECTIONS
 // ==========================================
 document.addEventListener("DOMContentLoaded", async function () {
   const isAdminPage =
     window.location.pathname.includes("admin") &&
     !window.location.pathname.includes("admin-login");
 
-  // 1. DYNAMIC HEADER & FOOTER (For Public Pages)
+  // 1. DYNAMIC FOOTER ONLY (Header is untouched!)
   if (!isAdminPage) {
     let attempts = 0;
     while (
@@ -304,11 +304,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (typeof supabaseClient !== "undefined" && supabaseClient) {
       try {
-        const { data: links } = await supabaseClient
-          .from("menu_links")
-          .select("*")
-          .eq("is_active", true)
-          .order("sort_order", { ascending: true });
         const { data: settingsData } = await supabaseClient
           .from("settings")
           .select("key, value")
@@ -333,68 +328,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         const contactEmail = sysSettings.contact_email || "info@sydf.org";
         const contactPhone = sysSettings.phone || "+92 300 1234567";
         const contactAddress = sysSettings.address || "Swat, Malakand Division";
-
-        const existingNav = document.querySelector(".glass-header nav");
-        const currentPath =
-          window.location.pathname.split("/").pop() || "index.html";
-
-        if (links && links.length > 0 && existingNav) {
-          const headerLinks = links.filter((l) => l.location === "header");
-          let navHTML = "<ul>";
-          headerLinks.forEach((link) => {
-            const active =
-              currentPath === link.url
-                ? ' class="active"'
-                : link.is_button
-                  ? ' class="btn-login"'
-                  : "";
-            navHTML += `<li><a href="${link.url}"${active}>${link.label}</a></li>`;
-          });
-          navHTML += "</ul>";
-          existingNav.innerHTML = navHTML;
-        }
-
-        const headerDiv = document.querySelector(".glass-header");
-        if (
-          headerDiv &&
-          !document.getElementById("mobileMenuBtn") &&
-          existingNav
-        ) {
-          const btn = document.createElement("button");
-          btn.id = "mobileMenuBtn";
-          btn.className = "mobile-menu-btn";
-          btn.innerHTML = "☰";
-          headerDiv.appendChild(btn);
-          btn.addEventListener("click", function () {
-            existingNav.classList.toggle("active");
-            this.innerHTML = existingNav.classList.contains("active")
-              ? "✕"
-              : "☰";
-          });
-        }
-
-        const logoDiv = document.querySelector(".glass-header .logo");
-        if (logoDiv && !logoDiv.querySelector("img")) {
-          const img = document.createElement("img");
-          img.src = "images/logo.png";
-          img.alt = "SYDF Logo";
-          img.style.cssText =
-            "width:40px;height:40px;border-radius:50%;object-fit:contain;background:var(--card-bg);padding:2px;margin-right:8px;flex-shrink:0;box-shadow:0 3px 12px var(--accent-glow);";
-          img.onerror = function () {
-            this.remove();
-          };
-          logoDiv.style.display = "flex";
-          logoDiv.style.alignItems = "center";
-          if (!logoDiv.querySelector(".logo-text")) {
-            const wrapper = document.createElement("div");
-            wrapper.className = "logo-text";
-            while (logoDiv.firstChild && logoDiv.firstChild !== img) {
-              wrapper.appendChild(logoDiv.firstChild);
-            }
-            logoDiv.appendChild(wrapper);
-          }
-          logoDiv.insertBefore(img, logoDiv.firstChild);
-        }
 
         const existingFooter = document.querySelector(".glass-footer");
         if (existingFooter) {
@@ -423,7 +356,7 @@ document.addEventListener("DOMContentLoaded", async function () {
            `;
         }
       } catch (err) {
-        console.log("Dynamic menu/footer error:", err);
+        console.log("Dynamic footer error:", err);
       }
     }
   }
