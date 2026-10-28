@@ -10,6 +10,8 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
     <style>
       .page-hero {
         min-height: 40vh;
@@ -278,6 +280,11 @@
       .btn-submit:hover {
         transform: translateY(-3px);
         box-shadow: 0 15px 35px rgba(26, 188, 156, 0.4);
+      }
+      .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
       }
       @media (max-width: 768px) {
         .page-hero-content h1 {
@@ -567,7 +574,7 @@
             ></textarea>
           </div>
 
-          <button type="submit" class="btn-submit">
+          <button type="submit" class="btn-submit" id="sponsorSubmitBtn">
             🤝 Submit Sponsorship
           </button>
         </form>
@@ -607,9 +614,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>
-          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
-        </p>
+        <p>&copy; 2026 SWAT Youth Development Forum. All Rights Reserved.</p>
       </div>
     </footer>
 
@@ -627,12 +632,65 @@
 
       document
         .getElementById("sponsorForm")
-        .addEventListener("submit", function (e) {
+        .addEventListener("submit", async function (e) {
           e.preventDefault();
-          alert(
-            "✅ Thank you for your sponsorship!\n\nOur team will contact you within 24-48 hours to discuss the details.",
-          );
-          this.reset();
+
+          const btn = document.getElementById("sponsorSubmitBtn");
+          const originalText = btn.innerText;
+          btn.innerText = "Submitting...";
+          btn.disabled = true;
+
+          // Supabase initialization check
+          let attempts = 0;
+          while (
+            (typeof supabaseClient === "undefined" || !supabaseClient) &&
+            attempts < 30
+          ) {
+            await new Promise((r) => setTimeout(r, 100));
+            attempts++;
+          }
+
+          const payload = {
+            sponsor_type: document.getElementById("sponsorType").value,
+            sponsor_name: document.getElementById("sponsorName").value,
+            contact_person: document.getElementById("contactPerson").value,
+            contact_email: document.getElementById("contactEmail").value,
+            contact_phone: document.getElementById("contactPhone").value,
+            package_type: document.getElementById("sponsorPackage").value,
+            activity: document.getElementById("sponsorActivity").value,
+            amount: parseFloat(document.getElementById("sponsorAmount").value),
+            message: document.getElementById("sponsorMessage").value,
+          };
+
+          if (
+            !payload.sponsor_name ||
+            !payload.contact_email ||
+            !payload.amount
+          ) {
+            alert("Please fill all required fields.");
+            btn.innerText = originalText;
+            btn.disabled = false;
+            return;
+          }
+
+          try {
+            const { error } = await supabaseClient
+              .from("sponsorships")
+              .insert([payload]);
+
+            if (error) throw error;
+
+            alert(
+              "✅ Thank you for your sponsorship!\n\nOur team will contact you within 24-48 hours to discuss the details.",
+            );
+            this.reset();
+          } catch (err) {
+            console.error(err);
+            alert("❌ Error: " + err.message);
+          } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+          }
         });
     </script>
   </body>
