@@ -265,6 +265,42 @@
       </div>
     </div>
 
+    <!-- EDIT POSITION MODAL (NAYA) -->
+    <div class="modal-overlay" id="editPositionModal">
+      <div class="modal-box">
+        <button class="modal-close" onclick="document.getElementById('editPositionModal').classList.remove('active')">✕</button>
+        <h2>✏️ Edit Position</h2>
+        <form id="editPositionForm">
+          <input type="hidden" id="editPosId" />
+          <div class="form-group">
+            <label>Position Title *</label><input type="text" id="editPosTitle" required />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Level</label>
+              <select id="editPosLevel">
+                <option value="">Select</option>
+                <option>Top</option>
+                <option>Secretary</option>
+                <option>Committee</option>
+                <option>Director</option>
+                <option>Advisor</option>
+                <option>Women Wing</option>
+                <option>Tehsil Coordinator</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label><textarea id="editPosDesc" rows="2"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-modal btn-cancel" onclick="document.getElementById('editPositionModal').classList.remove('active')">Cancel</button>
+            <button type="submit" class="btn-modal btn-save-modal">💾 Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- ASSIGN MODAL -->
     <div class="modal-overlay" id="assignModal">
       <div class="modal-box">
@@ -288,8 +324,7 @@
         </form>
       </div>
     </div>
-
-    <script src="js/main.js?v=99"></script>
+        <script src="js/main.js?v=99"></script>
     <script src="js/toast.js?v=99"></script>
     <script>
       let allPositions = [];
@@ -320,7 +355,7 @@
             .from("members")
             .select("name, role")
             .eq("email", session.user.email)
-            .maybeSingle(); // Using maybeSingle to prevent crash if not found
+            .maybeSingle();
 
           if (adminError) throw adminError;
 
@@ -355,10 +390,12 @@
 
           await loadCabinet();
 
+          // OPEN ADD MODAL
           document.getElementById("addPositionBtn").addEventListener("click", () =>
               document.getElementById("positionModal").classList.add("active")
           );
 
+          // ADD POSITION SUBMIT
           document.getElementById("positionForm").addEventListener("submit", async function (e) {
               e.preventDefault();
               const email = document.getElementById("posAssign").value;
@@ -384,12 +421,36 @@
                 alert("❌ " + error.message);
                 return;
               }
-              alert("✅ Position added!");
+              window.syfSuccess("✅ Position added!");
               document.getElementById("positionModal").classList.remove("active");
               this.reset();
               await loadCabinet();
           });
 
+          // EDIT POSITION SUBMIT
+          document.getElementById("editPositionForm").addEventListener("submit", async function (e) {
+              e.preventDefault();
+              const id = document.getElementById("editPosId").value;
+              const title = document.getElementById("editPosTitle").value.trim();
+              const level = document.getElementById("editPosLevel").value || null;
+              const desc = document.getElementById("editPosDesc").value.trim() || null;
+
+              const { error } = await supabaseClient.from("cabinet_positions").update({
+                  title: title,
+                  level: level,
+                  description: desc,
+              }).eq("id", id);
+
+              if (error) {
+                alert("❌ " + error.message);
+                return;
+              }
+              window.syfSuccess("✅ Position updated!");
+              document.getElementById("editPositionModal").classList.remove("active");
+              await loadCabinet();
+          });
+
+          // ASSIGN POSITION SUBMIT
           document.getElementById("assignForm").addEventListener("submit", async function (e) {
               e.preventDefault();
               const posId = document.getElementById("assignPosId").value;
@@ -406,7 +467,7 @@
                 alert("❌ " + error.message);
                 return;
               }
-              alert("✅ Position assigned!");
+              window.syfSuccess("✅ Position assigned!");
               document.getElementById("assignModal").classList.remove("active");
               await loadCabinet();
           });
@@ -439,9 +500,24 @@
             grid.innerHTML = allPositions.map((p) => `
                     <div class="cabinet-card ${p.level === "Top" ? "top" : ""}">
                         <h4 style="color:#1abc9c;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px;">${p.title}</h4>
-                        ${p.assigned_to_name ? `<div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,0.05);border-radius:10px;margin-bottom:12px;"><div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#1abc9c,#16a085);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">${(p.assigned_to_name || "M").charAt(0).toUpperCase()}</div><div><h5 style="color:white;font-size:13px;font-weight:600;">${p.assigned_to_name}</h5><p style="color:white;font-size:10px;opacity:0.65;">${p.assigned_to_uid || "-"}</p></div></div>` : `<div style="padding:12px;text-align:center;background:rgba(245,158,11,0.08);border:1px dashed rgba(245,158,11,0.4);border-radius:10px;margin-bottom:12px;color:#fbbf24;font-size:12px;">⚠️ Not Assigned</div>`}
+                        
+                        ${p.assigned_to_name ? 
+                            `<div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,0.05);border-radius:10px;margin-bottom:12px;">
+                                <div style="width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#1abc9c,#16a085);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">${(p.assigned_to_name || "M").charAt(0).toUpperCase()}</div>
+                                <div>
+                                    <h5 style="color:white;font-size:13px;font-weight:600;">${p.assigned_to_name}</h5>
+                                    <p style="color:white;font-size:10px;opacity:0.65;">${p.assigned_to_uid || "-"}</p>
+                                </div>
+                            </div>` : 
+                            `<div style="padding:12px;text-align:center;background:rgba(245,158,11,0.08);border:1px dashed rgba(245,158,11,0.4);border-radius:10px;margin-bottom:12px;color:#fbbf24;font-size:12px;">⚠️ Not Assigned</div>`
+                        }
+                        
                         <div style="display:flex;gap:6px;">
+                            <!-- EDIT BUTTON -->
+                            <button onclick="editPosition(${p.id})" title="Edit" style="width:34px;padding:8px;background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3);border-radius:8px;cursor:pointer;">✏️</button>
+                            <!-- ASSIGN BUTTON -->
                             <button onclick="assignPosition(${p.id}, '${(p.title || "").replace(/'/g, "\\'")}')" style="flex:1;padding:8px;background:rgba(59,130,246,0.15);color:#93c5fd;border:1px solid rgba(59,130,246,0.3);border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;">👤 Assign</button>
+                            <!-- DELETE BUTTON -->
                             <button onclick="deletePosition(${p.id})" style="width:34px;padding:8px;background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.3);border-radius:8px;cursor:pointer;">🗑️</button>
                         </div>
                     </div>
@@ -453,24 +529,41 @@
         }
       }
 
+      // OPEN EDIT MODAL & FILL DATA
+      window.editPosition = function (id) {
+        const pos = allPositions.find((p) => String(p.id) === String(id));
+        if (!pos) return;
+
+        document.getElementById("editPosId").value = pos.id;
+        document.getElementById("editPosTitle").value = pos.title || "";
+        document.getElementById("editPosLevel").value = pos.level || "";
+        document.getElementById("editPosDesc").value = pos.description || "";
+
+        document.getElementById("editPositionModal").classList.add("active");
+      };
+
+      // OPEN ASSIGN MODAL
       window.assignPosition = function (id, title) {
         document.getElementById("assignPosId").value = id;
         document.getElementById("assignPosTitle").value = title;
         document.getElementById("assignModal").classList.add("active");
       };
 
+      // DELETE POSITION
       window.deletePosition = async function (id) {
-        if (!confirm("Delete this position?")) return;
-        const { error } = await supabaseClient
-          .from("cabinet_positions")
-          .delete()
-          .eq("id", id);
-        if (error) {
-          alert("❌ " + error.message);
-          return;
-        }
-        alert("🗑️ Deleted");
-        await loadCabinet();
+        window.syfConfirm("Delete this position permanently?", async (confirmed) => {
+            if (!confirmed) return;
+            const { error } = await supabaseClient
+              .from("cabinet_positions")
+              .delete()
+              .eq("id", id);
+            if (error) {
+              window.syfError("❌ " + error.message);
+              return;
+            }
+            window.syfSuccess("🗑️ Deleted");
+            await loadCabinet();
+        });
       };
     </script>
   </body>
