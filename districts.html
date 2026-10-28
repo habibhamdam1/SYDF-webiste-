@@ -11,9 +11,36 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      /* SAME AS BEFORE — existing districts.css + inline styles */
+      .districts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+      .district-card {
+        padding: 24px; background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
+        cursor: pointer; transition: 0.3s; text-decoration: none; color: inherit;
+        display: block;
+      }
+      .district-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(26,188,156,0.4);
+        box-shadow: 0 20px 50px rgba(26,188,156,0.2);
+      }
+      .district-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+      .district-icon { font-size: 36px; }
+      .district-header h3 { font-size: 20px; color: white; font-weight: 700; }
+      .district-info { font-size: 13px; color: #1abc9c; font-weight: 600; margin-bottom: 12px; }
+      .tehsil-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+      .tehsil-list span { padding: 4px 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; font-size: 11px; color: white; }
+      .district-footer { padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 12px; color: white; opacity: 0.8; }
+      .district-footer em { color: #fbbf24; font-style: normal; }
+      .loading-state, .empty-state { text-align: center; padding: 60px 20px; color: white; opacity: 0.75; grid-column: 1/-1; }
+      .spinner { width: 46px; height: 46px; border: 4px solid rgba(255,255,255,0.15); border-top-color: #1abc9c; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 18px; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
   </head>
   <body>
-    <!-- Header -->
     <header class="glass-header">
       <div class="logo">
         <h1>SYDF</h1>
@@ -34,7 +61,6 @@
       </nav>
     </header>
 
-    <!-- Page Hero -->
     <section class="page-hero">
       <div class="glass-card page-hero-content">
         <h1>Our Districts</h1>
@@ -42,190 +68,27 @@
       </div>
     </section>
 
-    <!-- Intro -->
     <section class="districts-intro">
       <div class="glass-card intro-block">
         <h2>Malakand Division</h2>
         <p>
           SWAT Youth Development Forum is currently active across
-          <strong>9 districts</strong> and <strong>40+ tehsils</strong> of
-          Malakand Division. Our mission is to reach every corner of the region
-          and empower the youth.
+          <strong id="distCount">0</strong> districts and
+          <strong id="tehCount">0</strong> tehsils of Malakand Division.
         </p>
       </div>
     </section>
 
-    <!-- Districts Grid -->
     <section class="districts-section">
       <h2 class="section-title">Districts We Cover</h2>
-
-      <div class="districts-grid">
-        <!-- Swat -->
-        <div class="glass-card district-card">
-          <div class="district-header">
-            <div class="district-icon">🏔️</div>
-            <h3>Swat</h3>
-          </div>
-          <p class="district-info">Tehsils: 8</p>
-          <div class="tehsil-list">
-            <span>Babuzai</span>
-            <span>Barikot</span>
-            <span>Khwazakhela</span>
-            <span>Kabal</span>
-            <span>Charbagh</span>
-            <span>Bahrain</span>
-            <span>Matta</span>
-            <span>Kalam</span>
-          </div>
-          <div class="district-footer">
-            <p>Coordinator: <em>TBA</em></p>
-          </div>
-        </div>
-
-        <!-- Shangla -->
-        <div class="glass-card district-card">
-          <div class="district-header">
-            <div class="district-icon">⛰️</div>
-            <h3>Shangla</h3>
-          </div>
-          <p class="district-info">Tehsils: 4</p>
-          <div class="tehsil-list">
-            <span>Alpuri</span>
-            <span>Besham</span>
-            <span>Puran</span>
-            <span>Chakesar</span>
-          </div>
-          <div class="district-footer">
-            <p>Coordinator: <em>TBA</em></p>
-          </div>
-        </div>
-
-        <!-- Buner -->
-        <div class="glass-card district-card">
-          <div class="district-header">
-            <div class="district-icon">🌄</div>
-            <h3>Buner</h3>
-          </div>
-          <p class="district-info">Tehsils: 4</p>
-          <div class="tehsil-list">
-            <span>Daggar</span>
-            <span>Totalai</span>
-            <span>Gagra</span>
-            <span>Gadezai</span>
-          </div>
-          <div class="district-footer">
-            <p>Coordinator: <em>TBA</em></p>
-          </div>
-        </div>
-
-        <!-- Malakand -->
-        <div class="glass-card district-card">
-          <div class="district-header">
-            <div class="district-icon">🏞️</div>
-            <h3>Malakand</h3>
-          </div>
-          <p class="district-info">Tehsils: 3</p>
-          <div class="tehsil-list">
-            <span>Batkhela</span>
-            <span>Dargai</span>
-            <span>Thana</span>
-          </div>
-          <div class="district-footer">
-            <p>Coordinator: <em>TBA</em></p>
-          </div>
-        </div>
-
-        <!-- Upper Dir -->
-        <div class="glass-card district-card">
-          <div class="district-header">
-            <div class="district-icon">🗻</div>
-            <h3>Upper Dir</h3>
-          </div>
-          <p class="district-info">Tehsils: 4</p>
-          <div class="tehsil-list">
-            <span>Dir</span>
-            <span>Wari</span>
-            <span>Barawal</span>
-            <span>Kalkot</span>
-          </div>
-          <div class="district-footer">
-            <p>Coordinator: <em>TBA</em></p>
-          </div>
-        </div>
-
-        <!-- Lower Dir -->
-        <div class="glass-card district-card">
-          <div class="district-header">
-            <div class="district-icon">🌲</div>
-            <h3>Lower Dir</h3>
-          </div>
-          <p class="district-info">Tehsils: 6</p>
-          <div class="tehsil-list">
-            <span>Timergara</span>
-            <span>Adenzai</span>
-            <span>Balambat</span>
-            <span>Lal Qila</span>
-            <span>Munda</span>
-            <span>Samar Bagh</span>
-          </div>
-          <div class="district-footer">
-            <p>Coordinator: <em>TBA</em></p>
-          </div>
-        </div>
-
-        <!-- Upper Chitral -->
-        <div class="glass-card district-card">
-          <div class="district-header">
-            <div class="district-icon">❄️</div>
-            <h3>Upper Chitral</h3>
-          </div>
-          <p class="district-info">Tehsils: 2</p>
-          <div class="tehsil-list">
-            <span>Mastuj</span>
-            <span>Torkhow</span>
-          </div>
-          <div class="district-footer">
-            <p>Coordinator: <em>TBA</em></p>
-          </div>
-        </div>
-
-        <!-- Lower Chitral -->
-        <div class="glass-card district-card">
-          <div class="district-header">
-            <div class="district-icon">🏔️</div>
-            <h3>Lower Chitral</h3>
-          </div>
-          <p class="district-info">Tehsils: 2</p>
-          <div class="tehsil-list">
-            <span>Chitral</span>
-            <span>Drosh</span>
-          </div>
-          <div class="district-footer">
-            <p>Coordinator: <em>TBA</em></p>
-          </div>
-        </div>
-
-        <!-- Bajaur -->
-        <div class="glass-card district-card">
-          <div class="district-header">
-            <div class="district-icon">🕌</div>
-            <h3>Bajaur</h3>
-          </div>
-          <p class="district-info">Tehsils: 4</p>
-          <div class="tehsil-list">
-            <span>Khar</span>
-            <span>Nawagai</span>
-            <span>Salarzai</span>
-            <span>Mamund</span>
-          </div>
-          <div class="district-footer">
-            <p>Coordinator: <em>TBA</em></p>
-          </div>
+      <div id="districtsGrid" class="districts-grid">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading districts...</p>
         </div>
       </div>
     </section>
 
-    <!-- Expansion Roadmap -->
     <section class="expansion-section">
       <h2 class="section-title">Our Expansion Roadmap</h2>
       <div class="roadmap-grid">
@@ -234,18 +97,14 @@
           <div class="roadmap-icon">📍</div>
           <h3>Malakand Division</h3>
           <p>9 Districts • 40+ Tehsils</p>
-          <p class="roadmap-desc">
-            Our foundation — building a strong base across the division.
-          </p>
+          <p class="roadmap-desc">Our foundation — building a strong base across the division.</p>
         </div>
         <div class="glass-card roadmap-card">
           <div class="roadmap-badge">Next</div>
           <div class="roadmap-icon">🗺️</div>
           <h3>Khyber Pakhtunkhwa</h3>
           <p>All KP Districts</p>
-          <p class="roadmap-desc">
-            Expanding to every district of the province.
-          </p>
+          <p class="roadmap-desc">Expanding to every district of the province.</p>
         </div>
         <div class="glass-card roadmap-card">
           <div class="roadmap-badge">Future</div>
@@ -254,67 +113,89 @@
           <p>Nationwide Presence</p>
           <p class="roadmap-desc">Uniting youth across the entire country.</p>
         </div>
-        <div class="glass-card roadmap-card">
-          <div class="roadmap-badge">Vision</div>
-          <div class="roadmap-icon">🌍</div>
-          <h3>International</h3>
-          <p>Global Chapters</p>
-          <p class="roadmap-desc">
-            Representing Pakistani youth on the world stage.
-          </p>
-        </div>
       </div>
     </section>
 
-    <!-- CTA -->
     <section class="cta-section">
       <div class="glass-card cta-content">
         <h2>Represent Your District</h2>
-        <p>Want to become the coordinator or chief organizer of your tehsil?</p>
+        <p>Want to become the coordinator of your district?</p>
         <a href="membership.html" class="btn-primary">Join Us</a>
       </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="glass-footer">
-      <div class="footer-content">
-        <div class="footer-col">
-          <h3>SYDF</h3>
-          <p>SWAT Youth Development Forum</p>
-          <p>Empowering Youth, Building Future</p>
-        </div>
-        <div class="footer-col">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="leadership.html">Leadership</a></li>
-            <li><a href="activities.html">Activities</a></li>
-            <li><a href="contact.html">Contact</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Get Involved</h4>
-          <ul>
-            <li><a href="membership.html">Membership</a></li>
-            <li><a href="donate.html">Donate</a></li>
-            <li><a href="sponsor.html">Sponsor</a></li>
-            <li><a href="volunteer.html">Volunteer</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <p>Swat, Malakand Division</p>
-          <p>Khyber Pakhtunkhwa, Pakistan</p>
-          <p>info@SYDF.org</p>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>
-          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
-        </p>
-      </div>
-    </footer>
+    <footer class="glass-footer"></footer>
 
     <script src="js/main.js"></script>
+    <script>
+      const DISTRICT_EMOJI = {
+        Swat: "🏔️", Shangla: "⛰️", Buner: "🌄", Malakand: "🏞️",
+        "Upper Dir": "🗻", "Lower Dir": "🌲", "Upper Chitral": "❄️",
+        "Lower Chitral": "🏔️", Bajaur: "🕌",
+      };
+      function emojiFor(name) { return DISTRICT_EMOJI[name] || "🗺️"; }
+      function escapeHtml(s) {
+        return String(s || "").replace(/[&<>"']/g, (c) =>
+          ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
+        );
+      }
+
+      window.addEventListener("load", async function () {
+        let attempts = 0;
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        if (!supabaseClient) {
+          document.getElementById("districtsGrid").innerHTML =
+            '<div class="empty-state"><h3>⚠️ System Not Ready</h3><p>Please refresh the page.</p></div>';
+          return;
+        }
+
+        try {
+          const [distRes, tehRes] = await Promise.all([
+            supabaseClient.from("districts").select("*").order("name"),
+            supabaseClient.from("tehsils").select("*").order("name"),
+          ]);
+
+          const districts = distRes.data || [];
+          const tehsils = tehRes.data || [];
+
+          document.getElementById("distCount").textContent = districts.length;
+          document.getElementById("tehCount").textContent = tehsils.length;
+
+          const grid = document.getElementById("districtsGrid");
+          if (districts.length === 0) {
+            grid.innerHTML = '<div class="empty-state"><h3>No Districts Yet</h3><p>Districts will appear here once added by admin.</p></div>';
+            return;
+          }
+
+          grid.innerHTML = districts.map((d) => {
+            const distTehsils = tehsils.filter((t) => t.district_id === d.id);
+            return `
+              <a href="district-detail.html?id=${d.id}" class="district-card">
+                <div class="district-header">
+                  <div class="district-icon">${emojiFor(d.name)}</div>
+                  <h3>${escapeHtml(d.name)}</h3>
+                </div>
+                <p class="district-info">${d.division || "Malakand"} Division • ${distTehsils.length} Tehsils</p>
+                <div class="tehsil-list">
+                  ${distTehsils.length > 0
+                    ? distTehsils.slice(0, 8).map((t) => `<span>${escapeHtml(t.name)}</span>`).join("")
+                    : '<span style="opacity:0.6;">No tehsils yet</span>'}
+                  ${distTehsils.length > 8 ? `<span>+${distTehsils.length - 8}</span>` : ""}
+                </div>
+                <div class="district-footer">
+                  <p>Coordinator: <em>${d.coordinator_name ? escapeHtml(d.coordinator_name) : "TBA"}</em></p>
+                </div>
+              </a>`;
+          }).join("");
+        } catch (err) {
+          console.error(err);
+          document.getElementById("districtsGrid").innerHTML =
+            '<div class="empty-state"><h3>❌ Error Loading Districts</h3><p>Please refresh the page.</p></div>';
+        }
+      });
+    </script>
   </body>
 </html>
