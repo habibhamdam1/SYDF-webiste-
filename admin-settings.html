@@ -520,45 +520,113 @@
           </div>
         </div>
 
-        <!-- PAYMENT TAB -->
+        <!-- ==============================================
+             PAYMENT TAB (UPDATED WITH SEPARATE TITLES)
+             ============================================== -->
         <div class="settings-grid" id="tab-payment" style="display: none">
           <div class="settings-card full">
             <h3>💳 Payment Methods</h3>
-            <div class="form-group">
-              <label>JazzCash Account</label
-              ><input
-                type="text"
-                id="setJazzcash"
-                placeholder="e.g. 0300-1234567"
-              />
+
+            <!-- JazzCash -->
+            <div
+              style="
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: 10px;
+                margin-bottom: 15px;
+                border: 1px dashed var(--card-border);
+              "
+            >
+              <h4
+                style="
+                  color: var(--accent);
+                  margin-bottom: 10px;
+                  font-size: 14px;
+                "
+              >
+                📱 JazzCash Details
+              </h4>
+              <div class="form-group">
+                <label>JazzCash Account Number</label>
+                <input
+                  type="text"
+                  id="setJazzcash"
+                  placeholder="e.g. 0300-1234567"
+                />
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
+                <label>JazzCash Account Title</label>
+                <input
+                  type="text"
+                  id="setJazzcashTitle"
+                  placeholder="e.g. SYDF JazzCash"
+                />
+              </div>
             </div>
-            <div class="form-group">
-              <label>EasyPaisa Account</label
-              ><input
-                type="text"
-                id="setEasypaisa"
-                placeholder="e.g. 0301-2345678"
-              />
+
+            <!-- EasyPaisa -->
+            <div
+              style="
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: 10px;
+                margin-bottom: 15px;
+                border: 1px dashed var(--card-border);
+              "
+            >
+              <h4 style="color: #3b82f6; margin-bottom: 10px; font-size: 14px">
+                📱 EasyPaisa Details
+              </h4>
+              <div class="form-group">
+                <label>EasyPaisa Account Number</label>
+                <input
+                  type="text"
+                  id="setEasypaisa"
+                  placeholder="e.g. 0301-2345678"
+                />
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
+                <label>EasyPaisa Account Title</label>
+                <input
+                  type="text"
+                  id="setEasypaisaTitle"
+                  placeholder="e.g. SYDF EasyPaisa"
+                />
+              </div>
             </div>
-            <div class="form-group">
-              <label>Bank Name</label
-              ><input type="text" id="setBankName" placeholder="e.g. HBL" />
-            </div>
-            <div class="form-group">
-              <label>Bank Account</label
-              ><input
-                type="text"
-                id="setBankAccount"
-                placeholder="e.g. 1234-5678-9012"
-              />
-            </div>
-            <div class="form-group">
-              <label>Account Title</label
-              ><input
-                type="text"
-                id="setAccountTitle"
-                placeholder="e.g. SYDF"
-              />
+
+            <!-- Bank -->
+            <div
+              style="
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: 10px;
+                border: 1px dashed var(--card-border);
+              "
+            >
+              <h4 style="color: #f59e0b; margin-bottom: 10px; font-size: 14px">
+                🏦 Bank Account Details
+              </h4>
+              <div class="form-group">
+                <label>Bank Name</label>
+                <input type="text" id="setBankName" placeholder="e.g. HBL" />
+              </div>
+              <div class="form-group">
+                <label>Bank Account Number / IBAN</label>
+                <input
+                  type="text"
+                  id="setBankAccount"
+                  placeholder="e.g. 1234-5678-9012"
+                />
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
+                <label>Bank Account Title</label>
+                <input
+                  type="text"
+                  id="setBankTitle"
+                  placeholder="e.g. SYDF Main Account"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -893,11 +961,6 @@
           if (currentUserRole === "Super Admin") {
             document.getElementById("tabBtnAdminAccess").style.display =
               "block";
-          } else {
-            // Agar regular Admin hai aur settings page kholne ki koshish kare, toh usay bahar nikal dein (Security)
-            // Uncomment the next two lines if you want to block regular admins from Settings page completely
-            // window.syfError("Access Denied. Only Super Admin can access settings.");
-            // setTimeout(() => window.location.href = "admin.html", 1500);
           }
         }
 
@@ -997,16 +1060,27 @@
           document.getElementById("setWhatsappLink").value = map.whatsapp_link;
         if (map.twitter)
           document.getElementById("setTwitter").value = map.twitter;
+
+        // Payment Details (Updated)
         if (map.jazzcash)
           document.getElementById("setJazzcash").value = map.jazzcash;
+        if (map.jazzcash_title)
+          document.getElementById("setJazzcashTitle").value =
+            map.jazzcash_title;
+
         if (map.easypaisa)
           document.getElementById("setEasypaisa").value = map.easypaisa;
+        if (map.easypaisa_title)
+          document.getElementById("setEasypaisaTitle").value =
+            map.easypaisa_title;
+
         if (map.bank_name)
           document.getElementById("setBankName").value = map.bank_name;
         if (map.bank_account)
           document.getElementById("setBankAccount").value = map.bank_account;
-        if (map.account_title)
-          document.getElementById("setAccountTitle").value = map.account_title;
+        if (map.bank_title)
+          document.getElementById("setBankTitle").value = map.bank_title;
+
         if (map.membership_fee)
           document.getElementById("setMembershipFee").value =
             map.membership_fee;
@@ -1129,13 +1203,23 @@
             key: "twitter",
             value: document.getElementById("setTwitter").value,
           },
+
+          // PAYMENT DETAILS (Updated)
           {
             key: "jazzcash",
             value: document.getElementById("setJazzcash").value,
           },
           {
+            key: "jazzcash_title",
+            value: document.getElementById("setJazzcashTitle").value,
+          },
+          {
             key: "easypaisa",
             value: document.getElementById("setEasypaisa").value,
+          },
+          {
+            key: "easypaisa_title",
+            value: document.getElementById("setEasypaisaTitle").value,
           },
           {
             key: "bank_name",
@@ -1146,9 +1230,10 @@
             value: document.getElementById("setBankAccount").value,
           },
           {
-            key: "account_title",
-            value: document.getElementById("setAccountTitle").value,
+            key: "bank_title",
+            value: document.getElementById("setBankTitle").value,
           },
+
           {
             key: "membership_fee",
             value: document.getElementById("setMembershipFee").value,
