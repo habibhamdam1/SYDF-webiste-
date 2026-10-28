@@ -620,10 +620,10 @@
               return;
             }
 
-            // Check user role
+            // Check user role AND active status
             const { data: member } = await supabaseClient
               .from("members")
-              .select("role, name")
+              .select("role, name, is_active")
               .eq("email", email)
               .single();
 
@@ -635,6 +635,22 @@
               "Vice President",
               "Secretary General",
             ];
+
+            // 🚫 BLOCK INACTIVE MEMBERS (Admin approval pending)
+            if (
+              member &&
+              member.is_active !== true &&
+              !adminRoles.includes(member.role)
+            ) {
+              await supabaseClient.auth.signOut();
+              showMessage(
+                "⏳ Your account is pending admin approval. Please wait for approval or contact the admin.",
+                "error",
+              );
+              loginBtn.textContent = originalText;
+              loginBtn.disabled = false;
+              return;
+            }
 
             let redirectTo = "dashboard.html";
             let welcomeMsg = "Login successful! Redirecting...";
