@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Email - SYDF</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/login.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .auth-page {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .verify-wrap {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 140px 30px 60px;
+      }
+
+      .verify-card {
+        max-width: 540px;
+        width: 100%;
+        padding: 55px 45px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .verify-card::before {
+        content: "";
+        position: absolute;
+        top: -60%;
+        right: -40%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(26, 188, 156, 0.25),
+          transparent 70%
+        );
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
+      .verify-icon {
+        font-size: 64px;
+        margin-bottom: 18px;
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+      }
+
+      .verify-icon.pulse {
+        animation: vpulse 2s ease-in-out infinite;
+      }
+
+      @keyframes vpulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      .verify-card h1 {
+        font-size: 28px;
+        color: #1abc9c;
+        margin-bottom: 14px;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+      }
+
+      .verify-card p {
+        color: white;
+        opacity: 0.88;
+        font-size: 15px;
+        line-height: 1.7;
+        margin-bottom: 26px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .verify-card p strong {
+        color: #1abc9c;
+        font-weight: 600;
+      }
+
+      .verify-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .btn-verify {
+        display: block;
+        padding: 14px 30px;
+        background: #1abc9c;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: 0.3s;
+        text-align: center;
+      }
+
+      .btn-verify:hover {
+        background: #16a085;
+        transform: translateY(-2px);
+      }
+
+      .btn-outline {
+        display: block;
+        padding: 13px 30px;
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 10px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.3s;
+        text-align: center;
+      }
+
+      .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.18);
+      }
+
+      .spinner {
+        width: 52px;
+        height: 52px;
+        border: 4px solid rgba(26, 188, 156, 0.2);
+        border-top-color: #1abc9c;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        animation: vspin 0.9s linear infinite;
+        position: relative;
+        z-index: 1;
+      }
+
+      @keyframes vspin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .mini-note {
+        margin-top: 18px;
+        font-size: 12px;
+        opacity: 0.6;
+        color: white;
+        position: relative;
+        z-index: 1;
+      }
+
+      .auth-footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 12px;
+        opacity: 0.6;
+        color: white;
+      }
+
+      @media (max-width: 500px) {
+        .verify-wrap {
+          padding: 120px 18px 40px;
+        }
+        .verify-card {
+          padding: 38px 24px;
+        }
+        .verify-card h1 {
+          font-size: 23px;
+        }
+        .verify-icon {
+          font-size: 54px;
+        }
+      }
+    </style>
+  </head>
+  <body class="auth-page">
+    <header class="glass-header">
+      <div class="logo">
+        <h1>SYDF</h1>
+        <p>Swat Youth Development Forum</p>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="membership.html">Membership</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="login.html" class="btn-login">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="verify-wrap">
+      <div class="verify-card" id="verifyCard">
+        <div class="spinner"></div>
+        <h1>Verifying Your Email…</h1>
+        <p>Please wait while we confirm your email address.</p>
+      </div>
+    </div>
+
+    <div class="auth-footer">
+      <p>&copy; 2026 Swat Youth Development Forum. All Rights Reserved.</p>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+      (function () {
+        const card = document.getElementById("verifyCard");
+        let resolved = false;
+        let autoRedirectTimer = null;
+
+        function render(state, payload = {}) {
+          if (resolved && state !== "success") return;
+          resolved = true;
+
+          if (state === "loading") {
+            card.innerHTML = `
+              <div class="spinner"></div>
+              <h1>Verifying Your Email…</h1>
+              <p>${payload.msg || "Please wait while we confirm your email address."}</p>`;
+            return;
+          }
+
+          if (state === "success") {
+            resolved = false;
+            const email = payload.email
+              ? `<strong>${payload.email}</strong>`
+              : "your account";
+            card.innerHTML = `
+              <div class="verify-icon pulse">✅</div>
+              <h1>Email Verified!</h1>
+              <p>${email} has been successfully verified.<br/>You can now log in to your account.</p>
+              <div class="verify-actions">
+                <a href="login.html" class="btn-verify">Go to Login</a>
+                <a href="dashboard.html" class="btn-outline">Open Dashboard</a>
+              </div>
+              <p class="mini-note">Redirecting to login in a few seconds…</p>`;
+
+            if (autoRedirectTimer) clearTimeout(autoRedirectTimer);
+            autoRedirectTimer = setTimeout(function () {
+              window.location.replace("login.html");
+            }, 4000);
+            return;
+          }
+
+          if (state === "error") {
+            card.innerHTML = `
+              <div class="verify-icon">⚠️</div>
+              <h1>Verification Failed</h1>
+              <p>${payload.msg || "The verification link is invalid or has expired."}</p>
+              <div class="verify-actions">
+                <a href="register.html" class="btn-verify">Register Again</a>
+                <a href="contact.html" class="btn-outline">Contact Admin</a>
+              </div>`;
+            return;
+          }
+
+          if (state === "waiting") {
+            card.innerHTML = `
+              <div class="verify-icon">📧</div>
+              <h1>Check Your Email</h1>
+              <p>We've sent a verification link to your email. Please click the link to activate your account. Don't forget to check the spam folder.</p>
+              <div class="verify-actions">
+                <a href="login.html" class="btn-verify">Go to Login</a>
+                <a href="index.html" class="btn-outline">Back to Home</a>
+              </div>
+              <p class="mini-note">Already verified? Try logging in.</p>`;
+          }
+        }
+
+        function parseHash() {
+          const raw = window.location.hash.replace(/^#/, "");
+          return new URLSearchParams(raw);
+        }
+
+        function parseQuery() {
+          return new URLSearchParams(window.location.search);
+        }
+
+        // Detect URL-based errors first (e.g. expired or invalid token)
+        const hashParams = parseHash();
+        const queryParams = parseQuery();
+        const urlError =
+          hashParams.get("error_description") ||
+          hashParams.get("error") ||
+          queryParams.get("error_description") ||
+          queryParams.get("error");
+
+        const hasUrlAuthParams =
+          hashParams.has("access_token") ||
+          hashParams.has("refresh_token") ||
+          hashParams.has("type") ||
+          queryParams.has("code");
+
+        window.addEventListener("load", async function () {
+          // Wait for supabaseClient to be ready
+          let attempts = 0;
+          while (
+            (typeof supabaseClient === "undefined" || !supabaseClient) &&
+            attempts < 50
+          ) {
+            await new Promise((r) => setTimeout(r, 100));
+            attempts++;
+          }
+
+          if (!supabaseClient) {
+            render("error", {
+              msg: "System not ready. Please refresh the page and try again.",
+            });
+            return;
+          }
+
+          if (urlError) {
+            const friendly = /expired/i.test(urlError)
+              ? "Your verification link has expired. Please register again or contact admin."
+              : urlError;
+            render("error", { msg: friendly });
+            return;
+          }
+
+          // If no tokens at all, this is a manual visit — show wait state
+          if (!hasUrlAuthParams) {
+            // But if user is already signed in (session exists), show success
+            const { data } = await supabaseClient.auth.getSession();
+            if (data && data.session && data.session.user) {
+              render("success", { email: data.session.user.email });
+              return;
+            }
+            render("waiting");
+            return;
+          }
+
+          // Tokens present — show loading briefly
+          render("loading");
+
+          // Listen for auth state change (implicit flow)
+          const {
+            data: { subscription },
+          } = supabaseClient.auth.onAuthStateChange(function (event, session) {
+            if (
+              session &&
+              (event === "SIGNED_IN" ||
+                event === "USER_UPDATED" ||
+                event === "TOKEN_REFRESHED")
+            ) {
+              render("success", { email: session.user && session.user.email });
+              // Clean tokens from URL for safety
+              if (window.history && window.history.replaceState) {
+                window.history.replaceState(
+                  {},
+                  document.title,
+                  window.location.pathname,
+                );
+              }
+            }
+          });
+
+          // Fallback: check current session after short delay
+          setTimeout(async function () {
+            try {
+              const { data } = await supabaseClient.auth.getSession();
+              if (data && data.session && data.session.user) {
+                render("success", {
+                  email: data.session.user.email,
+                });
+              } else {
+                render("error", {
+                  msg: "We could not verify your email. The link may be invalid or already used. Try logging in — if your email was already verified, login will work.",
+                });
+              }
+            } catch (err) {
+              render("error", { msg: err.message || "Verification failed." });
+            } finally {
+              // keep listener active in case of delayed event; no unsubscribe needed for short page
+            }
+          }, 2500);
+        });
+      })();
+    </script>
+  </body>
+</html>
