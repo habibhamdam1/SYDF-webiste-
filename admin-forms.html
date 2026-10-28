@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Builder - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .form-card {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid rgba(225, 29, 72, 0.15);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      html[data-theme="dark"] .form-card {
+        background: rgba(12, 24, 42, 0.55);
+        border-color: rgba(140, 200, 220, 0.15);
+      }
+      .form-info h4 {
+        color: var(--text-primary);
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+      .form-info p {
+        color: var(--text-secondary);
+        font-size: 12px;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 2fr 1fr 100px 40px;
+        gap: 10px;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.03);
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+      html[data-theme="dark"] .field-row {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal-box {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        padding: 30px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 700px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+      }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        background: var(--input-bg);
+        border: 1px solid var(--input-border);
+        color: var(--text-primary);
+      }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <h1>SYDF</h1>
+          <p>Admin Panel</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul>
+          <li>
+            <a href="admin.html"
+              ><span class="nav-icon">📊</span><span>Dashboard</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">Content</div>
+        <ul>
+          <li>
+            <a href="admin-forms.html" class="active"
+              ><span class="nav-icon">📝</span><span>Form Builder</span></a
+            >
+          </li>
+        </ul>
+        <div class="nav-section-title">System</div>
+        <ul></ul>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <div class="topbar-title">
+          <h2>Form Builder</h2>
+          <p>Create custom forms for the website</p>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+          "
+        >
+          <h3 style="color: var(--text-primary)">All Forms</h3>
+          <button
+            onclick="openFormModal()"
+            style="
+              padding: 10px 20px;
+              background: var(--accent);
+              color: #fff;
+              border: none;
+              border-radius: 10px;
+              font-weight: 600;
+              cursor: pointer;
+            "
+          >
+            + Create Form
+          </button>
+        </div>
+
+        <div id="formsList">
+          <div
+            style="
+              padding: 40px;
+              text-align: center;
+              color: var(--text-secondary);
+            "
+          >
+            Loading...
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Form Modal (Create/Edit) -->
+    <div class="modal-overlay" id="formModal">
+      <div class="modal-box">
+        <h3
+          style="color: var(--accent); margin-bottom: 20px"
+          id="formModalTitle"
+        >
+          Create New Form
+        </h3>
+        <input type="hidden" id="editFormId" />
+
+        <div class="form-group">
+          <label>Form Title</label>
+          <input
+            type="text"
+            id="formTitle"
+            placeholder="e.g., Scholarship Application 2027"
+          />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <input type="text" id="formDesc" placeholder="Short description..." />
+        </div>
+
+        <div
+          style="
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <h4 style="color: var(--text-primary)">Form Fields</h4>
+          <button
+            onclick="addFieldRow()"
+            style="
+              padding: 6px 12px;
+              background: rgba(26, 188, 156, 0.15);
+              color: #1abc9c;
+              border: 1px solid rgba(26, 188, 156, 0.3);
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 12px;
+            "
+          >
+            + Add Field
+          </button>
+        </div>
+
+        <div id="fieldsContainer">
+          <!-- Dynamic Fields will appear here -->
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 25px">
+          <button
+            onclick="
+              document.getElementById('formModal').classList.remove('active')
+            "
+            style="
+              flex: 1;
+              padding: 12px;
+              border-radius: 10px;
+              background: rgba(255, 255, 255, 0.1);
+              color: var(--text-primary);
+              border: 1px solid var(--card-border);
+              cursor: pointer;
+            "
+          >
+            Cancel
+          </button>
+          <button
+            onclick="saveForm()"
+            style="
+              flex: 1;
+              padding: 12px;
+              border-radius: 10px;
+              background: var(--accent);
+              color: #fff;
+              border: none;
+              font-weight: 600;
+              cursor: pointer;
+            "
+          >
+            Save Form
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/main.js?v=99"></script>
+    <script>
+      let currentFields = [];
+
+      async function loadForms() {
+        const list = document.getElementById("formsList");
+        const { data, error } = await supabaseClient
+          .from("dynamic_forms")
+          .select("*")
+          .is("deleted_at", null)
+          .order("created_at", { ascending: false });
+
+        if (error || !data) return (list.innerHTML = "Error loading forms.");
+        if (data.length === 0)
+          return (list.innerHTML =
+            '<div style="padding: 40px; text-align: center; color: var(--text-secondary);">No forms created yet.</div>');
+
+        list.innerHTML = data
+          .map(
+            (form) => `
+          <div class="form-card">
+            <div class="form-info">
+              <h4>${form.title}</h4>
+              <p>URL: form.html?id=${form.id}</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <a href="form.html?id=${form.id}" target="_blank" class="btn-icon" style="text-decoration:none; display:flex; align-items:center; justify-content:center;" title="View Form">👁️</a>
+              <button class="btn-icon" onclick="editForm(${form.id})" title="Edit">✏️</button>
+              <button class="btn-icon delete" onclick="deleteForm(${form.id})" title="Delete">🗑️</button>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+      }
+
+      window.openFormModal = () => {
+        document.getElementById("formModalTitle").innerText = "Create New Form";
+        document.getElementById("editFormId").value = "";
+        document.getElementById("formTitle").value = "";
+        document.getElementById("formDesc").value = "";
+        currentFields = [];
+        renderFields();
+        document.getElementById("formModal").classList.add("active");
+      };
+
+      window.addFieldRow = () => {
+        currentFields.push({
+          label: "",
+          field_type: "text",
+          is_required: false,
+          options: [],
+        });
+        renderFields();
+      };
+
+      window.removeFieldRow = (index) => {
+        currentFields.splice(index, 1);
+        renderFields();
+      };
+
+      window.updateField = (index, key, value) => {
+        currentFields[index][key] = value;
+      };
+
+      function renderFields() {
+        const container = document.getElementById("fieldsContainer");
+        if (currentFields.length === 0) {
+          container.innerHTML =
+            '<p style="font-size: 12px; color: var(--text-secondary); text-align: center;">No fields added yet.</p>';
+          return;
+        }
+        container.innerHTML = currentFields
+          .map(
+            (f, i) => `
+          <div class="field-row">
+            <input type="text" placeholder="Field Label (e.g. Full Name)" value="${f.label}" onchange="updateField(${i}, 'label', this.value)">
+            <select onchange="updateField(${i}, 'field_type', this.value)">
+              <option value="text" ${f.field_type === "text" ? "selected" : ""}>Text</option>
+              <option value="email" ${f.field_type === "email" ? "selected" : ""}>Email</option>
+              <option value="number" ${f.field_type === "number" ? "selected" : ""}>Number</option>
+              <option value="textarea" ${f.field_type === "textarea" ? "selected" : ""}>Long Text</option>
+            </select>
+            <label style="font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px;">
+              <input type="checkbox" ${f.is_required ? "checked" : ""} onchange="updateField(${i}, 'is_required', this.checked)"> Required
+            </label>
+            <button onclick="removeFieldRow(${i})" style="background: rgba(239,68,68,0.15); color: #ef4444; border: none; border-radius: 6px; height: 35px; cursor: pointer;">✕</button>
+          </div>
+        `,
+          )
+          .join("");
+      }
+
+      window.saveForm = async () => {
+        const id = document.getElementById("editFormId").value;
+        const title = document.getElementById("formTitle").value.trim();
+        const desc = document.getElementById("formDesc").value.trim();
+
+        if (!title) return alert("Form Title is required.");
+        if (currentFields.some((f) => !f.label))
+          return alert("All fields must have a label.");
+
+        const formPayload = { title, description: desc };
+
+        let formId = id;
+        if (id) {
+          await supabaseClient
+            .from("dynamic_forms")
+            .update(formPayload)
+            .eq("id", id);
+          await supabaseClient.from("form_fields").delete().eq("form_id", id); // Clear old fields
+        } else {
+          const { data } = await supabaseClient
+            .from("dynamic_forms")
+            .insert([formPayload])
+            .select()
+            .single();
+          formId = data.id;
+        }
+
+        // Insert fields
+        if (currentFields.length > 0) {
+          const fieldsPayload = currentFields.map((f, i) => ({
+            form_id: formId,
+            label: f.label,
+            field_type: f.field_type,
+            is_required: f.is_required,
+            sort_order: i,
+          }));
+          await supabaseClient.from("form_fields").insert(fieldsPayload);
+        }
+
+        document.getElementById("formModal").classList.remove("active");
+        loadForms();
+      };
+
+      window.editForm = async (id) => {
+        document.getElementById("formModalTitle").innerText = "Edit Form";
+        document.getElementById("editFormId").value = id;
+
+        const { data: form } = await supabaseClient
+          .from("dynamic_forms")
+          .select("*")
+          .eq("id", id)
+          .single();
+        document.getElementById("formTitle").value = form.title;
+        document.getElementById("formDesc").value = form.description || "";
+
+        const { data: fields } = await supabaseClient
+          .from("form_fields")
+          .select("*")
+          .eq("form_id", id)
+          .order("sort_order");
+        currentFields = fields || [];
+        renderFields();
+        document.getElementById("formModal").classList.add("active");
+      };
+
+      window.deleteForm = async (id) => {
+        if (!confirm("Delete this form? All submissions will also be lost."))
+          return;
+        await supabaseClient.from("dynamic_forms").delete().eq("id", id);
+        loadForms();
+      };
+
+      window.addEventListener("load", async () => {
+        let attempts = 0;
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
+          await new Promise((r) => setTimeout(r, 100));
+          attempts++;
+        }
+        const {
+          data: { session },
+        } = await supabaseClient.auth.getSession();
+        if (!session) window.location.href = "admin-login.html";
+        else loadForms();
+      });
+    </script>
+  </body>
+</html>
