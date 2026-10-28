@@ -14,30 +14,115 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
-      /* SAME AS BEFORE — existing districts.css + inline styles */
-      .districts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+      .districts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 22px;
+      }
       .district-card {
-        padding: 24px; background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.12); border-radius: 16px;
-        cursor: pointer; transition: 0.3s; text-decoration: none; color: inherit;
+        padding: 24px !important;
+        background: var(--glass-bg, rgba(255, 255, 255, 0.06)) !important;
+        border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12)) !important;
+        border-radius: 16px !important;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
         display: block;
       }
       .district-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(26,188,156,0.4);
-        box-shadow: 0 20px 50px rgba(26,188,156,0.2);
+        border-color: var(--accent) !important;
+        box-shadow: 0 20px 50px rgba(26, 188, 156, 0.2);
       }
-      .district-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-      .district-icon { font-size: 36px; }
-      .district-header h3 { font-size: 20px; color: white; font-weight: 700; }
-      .district-info { font-size: 13px; color: #1abc9c; font-weight: 600; margin-bottom: 12px; }
-      .tehsil-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-      .tehsil-list span { padding: 4px 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; font-size: 11px; color: white; }
-      .district-footer { padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 12px; color: white; opacity: 0.8; }
-      .district-footer em { color: #fbbf24; font-style: normal; }
-      .loading-state, .empty-state { text-align: center; padding: 60px 20px; color: white; opacity: 0.75; grid-column: 1/-1; }
-      .spinner { width: 46px; height: 46px; border: 4px solid rgba(255,255,255,0.15); border-top-color: #1abc9c; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 18px; }
-      @keyframes spin { to { transform: rotate(360deg); } }
+      .district-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .district-icon {
+        font-size: 36px;
+      }
+      .district-header h3 {
+        font-size: 20px;
+        color: var(--text-primary) !important;
+        font-weight: 700;
+        margin: 0;
+      }
+      .district-info {
+        font-size: 13px;
+        color: var(--accent) !important;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .tehsil-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+      .tehsil-list span {
+        padding: 4px 10px;
+        background: var(--input-bg, rgba(255, 255, 255, 0.06)) !important;
+        border: 1px solid var(--card-border, rgba(255, 255, 255, 0.12));
+        border-radius: 12px;
+        font-size: 11px;
+        color: var(--text-primary) !important;
+      }
+      .district-footer {
+        padding-top: 12px;
+        border-top: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+        font-size: 12px;
+        color: var(--text-secondary) !important;
+      }
+      .district-footer em {
+        color: #d97706;
+        font-style: normal;
+        font-weight: 600;
+      }
+      [data-theme="dark"] .district-footer em {
+        color: #fbbf24;
+      }
+
+      .loading-state,
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-primary);
+        grid-column: 1/-1;
+      }
+      .spinner {
+        width: 46px;
+        height: 46px;
+        border: 4px solid var(--card-border, rgba(255, 255, 255, 0.15));
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 18px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Force theme-aware intro/hero blocks */
+      .districts-intro .intro-block {
+        background: var(--glass-bg, rgba(255, 255, 255, 0.08)) !important;
+        border: 1px solid var(--card-border, rgba(255, 255, 255, 0.15)) !important;
+      }
+      .districts-intro .intro-block h2 {
+        color: var(--accent) !important;
+      }
+      .districts-intro .intro-block p {
+        color: var(--text-primary) !important;
+      }
+      .districts-intro .intro-block strong {
+        color: var(--accent) !important;
+      }
+      .section-title {
+        color: var(--text-primary) !important;
+      }
     </style>
   </head>
   <body>
@@ -97,14 +182,18 @@
           <div class="roadmap-icon">📍</div>
           <h3>Malakand Division</h3>
           <p>9 Districts • 40+ Tehsils</p>
-          <p class="roadmap-desc">Our foundation — building a strong base across the division.</p>
+          <p class="roadmap-desc">
+            Our foundation — building a strong base across the division.
+          </p>
         </div>
         <div class="glass-card roadmap-card">
           <div class="roadmap-badge">Next</div>
           <div class="roadmap-icon">🗺️</div>
           <h3>Khyber Pakhtunkhwa</h3>
           <p>All KP Districts</p>
-          <p class="roadmap-desc">Expanding to every district of the province.</p>
+          <p class="roadmap-desc">
+            Expanding to every district of the province.
+          </p>
         </div>
         <div class="glass-card roadmap-card">
           <div class="roadmap-badge">Future</div>
@@ -129,20 +218,39 @@
     <script src="js/main.js"></script>
     <script>
       const DISTRICT_EMOJI = {
-        Swat: "🏔️", Shangla: "⛰️", Buner: "🌄", Malakand: "🏞️",
-        "Upper Dir": "🗻", "Lower Dir": "🌲", "Upper Chitral": "❄️",
-        "Lower Chitral": "🏔️", Bajaur: "🕌",
+        Swat: "🏔️",
+        Shangla: "⛰️",
+        Buner: "🌄",
+        Malakand: "🏞️",
+        "Upper Dir": "🗻",
+        "Lower Dir": "🌲",
+        "Upper Chitral": "❄️",
+        "Lower Chitral": "🏔️",
+        Bajaur: "🕌",
       };
-      function emojiFor(name) { return DISTRICT_EMOJI[name] || "🗺️"; }
+      function emojiFor(name) {
+        return DISTRICT_EMOJI[name] || "🗺️";
+      }
       function escapeHtml(s) {
-        return String(s || "").replace(/[&<>"']/g, (c) =>
-          ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
         );
       }
 
       window.addEventListener("load", async function () {
         let attempts = 0;
-        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+        while (
+          (typeof supabaseClient === "undefined" || !supabaseClient) &&
+          attempts < 30
+        ) {
           await new Promise((r) => setTimeout(r, 100));
           attempts++;
         }
@@ -166,30 +274,38 @@
 
           const grid = document.getElementById("districtsGrid");
           if (districts.length === 0) {
-            grid.innerHTML = '<div class="empty-state"><h3>No Districts Yet</h3><p>Districts will appear here once added by admin.</p></div>';
+            grid.innerHTML =
+              '<div class="empty-state"><h3>No Districts Yet</h3><p>Districts will appear here once added by admin.</p></div>';
             return;
           }
 
-          grid.innerHTML = districts.map((d) => {
-            const distTehsils = tehsils.filter((t) => t.district_id === d.id);
-            return `
+          grid.innerHTML = districts
+            .map((d) => {
+              const distTehsils = tehsils.filter((t) => t.district_id === d.id);
+              return `
               <a href="district-detail.html?id=${d.id}" class="district-card">
                 <div class="district-header">
                   <div class="district-icon">${emojiFor(d.name)}</div>
                   <h3>${escapeHtml(d.name)}</h3>
                 </div>
-                <p class="district-info">${d.division || "Malakand"} Division • ${distTehsils.length} Tehsils</p>
+                <p class="district-info">${escapeHtml(d.division || "Malakand")} Division • ${distTehsils.length} Tehsils</p>
                 <div class="tehsil-list">
-                  ${distTehsils.length > 0
-                    ? distTehsils.slice(0, 8).map((t) => `<span>${escapeHtml(t.name)}</span>`).join("")
-                    : '<span style="opacity:0.6;">No tehsils yet</span>'}
+                  ${
+                    distTehsils.length > 0
+                      ? distTehsils
+                          .slice(0, 8)
+                          .map((t) => `<span>${escapeHtml(t.name)}</span>`)
+                          .join("")
+                      : '<span style="opacity:0.6;">No tehsils yet</span>'
+                  }
                   ${distTehsils.length > 8 ? `<span>+${distTehsils.length - 8}</span>` : ""}
                 </div>
                 <div class="district-footer">
                   <p>Coordinator: <em>${d.coordinator_name ? escapeHtml(d.coordinator_name) : "TBA"}</em></p>
                 </div>
               </a>`;
-          }).join("");
+            })
+            .join("");
         } catch (err) {
           console.error(err);
           document.getElementById("districtsGrid").innerHTML =
