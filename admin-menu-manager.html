@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Menu Manager - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .menu-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+      .menu-tab { padding: 10px 20px; border-radius: 10px; background: rgba(255,255,255,0.6); border: 1px solid var(--card-border); color: var(--text-primary); font-weight: 600; cursor: pointer; }
+      html[data-theme="dark"] .menu-tab { background: rgba(12,24,42,0.6); color: #fff; border-color: rgba(140,200,220,0.2); }
+      .menu-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+      
+      .menu-card { background: rgba(255,255,255,0.75); border: 1px solid rgba(225,29,72,0.15); border-radius: 16px; overflow: hidden; }
+      html[data-theme="dark"] .menu-card { background: rgba(12,24,42,0.55); border-color: rgba(140,200,220,0.15); }
+      
+      .menu-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--card-border); }
+      .menu-row:last-child { border-bottom: none; }
+      .menu-info h4 { color: var(--text-primary); font-size: 15px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+      .menu-info p { color: var(--text-secondary); font-size: 12px; }
+      
+      .badge-btn { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(26,188,156,0.15); color: #1abc9c; font-weight: 700; text-transform: uppercase; }
+      
+      .menu-actions { display: flex; gap: 5px; }
+      .btn-icon { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--card-border); background: transparent; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+      .btn-icon:hover { background: rgba(0,0,0,0.05); }
+      html[data-theme="dark"] .btn-icon:hover { background: rgba(255,255,255,0.1); }
+      .btn-icon.delete:hover { background: rgba(239,68,68,0.15); color: #ef4444; border-color: rgba(239,68,68,0.3); }
+      
+      /* Modal */
+      .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; }
+      .modal-overlay.active { display: flex; }
+      .modal-box { background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; }
+      .form-group { margin-bottom: 15px; }
+      .form-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+      .form-group input[type="text"], .form-group input[type="number"] { width: 100%; padding: 10px; border-radius: 8px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-primary); }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo"><h1>SYDF</h1><p>Admin Panel</p></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul><li><a href="admin.html"><span class="nav-icon">📊</span><span>Dashboard</span></a></li></ul>
+        <!-- Menu links auto-inject honge -->
+        <div class="nav-section-title">System</div>
+        <ul></ul>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <div class="topbar-title"><h2>Menu Manager</h2><p>Manage website header & footer links</p></div>
+      </div>
+
+      <div class="dashboard-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div class="menu-tabs">
+            <button class="menu-tab active" data-loc="header">Header Menu</button>
+            <button class="menu-tab" data-loc="footer">Footer Menu</button>
+          </div>
+          <button onclick="openModal()" style="padding: 10px 20px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">+ Add New Link</button>
+        </div>
+
+        <div class="menu-card" id="menuList">
+          <div style="padding: 40px; text-align: center; color: var(--text-secondary);">Loading...</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal-overlay" id="menuModal">
+      <div class="modal-box">
+        <h3 style="color: var(--accent); margin-bottom: 20px;" id="modalTitle">Add New Link</h3>
+        <input type="hidden" id="editId">
+        <input type="hidden" id="editLoc">
+        
+        <div class="form-group">
+          <label>Link Label (e.g. "Home")</label>
+          <input type="text" id="linkLabel" placeholder="Enter text...">
+        </div>
+        <div class="form-group">
+          <label>Link URL (e.g. "index.html")</label>
+          <input type="text" id="linkUrl" placeholder="Enter URL...">
+        </div>
+        <div class="form-group">
+          <label>Sort Order (1, 2, 3...)</label>
+          <input type="number" id="linkSort" placeholder="e.g. 1">
+        </div>
+        <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+          <input type="checkbox" id="linkIsButton">
+          <label style="margin: 0;">Show as Button (e.g. Login)</label>
+        </div>
+        
+        <div style="display: flex; gap: 10px; margin-top: 25px;">
+          <button onclick="document.getElementById('menuModal').classList.remove('active')" style="flex: 1; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.1); color: var(--text-primary); border: 1px solid var(--card-border); cursor: pointer;">Cancel</button>
+          <button onclick="saveLink()" style="flex: 1; padding: 12px; border-radius: 10px; background: var(--accent); color: #fff; border: none; font-weight: 600; cursor: pointer;">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/main.js?v=99"></script>
+    <script>
+      let currentLoc = 'header';
+
+      async function loadLinks() {
+        const list = document.getElementById('menuList');
+        list.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-secondary);">Loading...</div>';
+        
+        const { data, error } = await supabaseClient
+          .from('menu_links')
+          .select('*')
+          .eq('location', currentLoc)
+          .order('sort_order', { ascending: true });
+
+        if (error || !data) return list.innerHTML = 'Error loading links.';
+        if (data.length === 0) return list.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-secondary);">No links found.</div>';
+
+        list.innerHTML = data.map((link, index) => `
+          <div class="menu-row">
+            <div class="menu-info">
+              <h4>${link.label} ${link.is_button ? '<span class="badge-btn">Button</span>' : ''}</h4>
+              <p>URL: ${link.url} | Order: ${link.sort_order}</p>
+            </div>
+            <div class="menu-actions">
+              <button class="btn-icon" onclick="move(${link.id}, 'up')" ${index === 0 ? 'disabled' : ''}>↑</button>
+              <button class="btn-icon" onclick="move(${link.id}, 'down')" ${index === data.length - 1 ? 'disabled' : ''}>↓</button>
+              <button class="btn-icon" onclick="editLink(${JSON.stringify(link).replace(/"/g, '&quot;')})">✏️</button>
+              <button class="btn-icon delete" onclick="deleteLink(${link.id})">🗑️</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      window.openModal = () => {
+        document.getElementById('modalTitle').innerText = 'Add New Link';
+        document.getElementById('editId').value = '';
+        document.getElementById('editLoc').value = currentLoc;
+        document.getElementById('linkLabel').value = '';
+        document.getElementById('linkUrl').value = '';
+        document.getElementById('linkSort').value = '';
+        document.getElementById('linkIsButton').checked = false;
+        document.getElementById('menuModal').classList.add('active');
+      };
+
+      window.editLink = (link) => {
+        document.getElementById('modalTitle').innerText = 'Edit Link';
+        document.getElementById('editId').value = link.id;
+        document.getElementById('editLoc').value = link.location;
+        document.getElementById('linkLabel').value = link.label;
+        document.getElementById('linkUrl').value = link.url;
+        document.getElementById('linkSort').value = link.sort_order;
+        document.getElementById('linkIsButton').checked = link.is_button;
+        document.getElementById('menuModal').classList.add('active');
+      };
+
+      window.saveLink = async () => {
+        const id = document.getElementById('editId').value;
+        const payload = {
+          location: document.getElementById('editLoc').value,
+          label: document.getElementById('linkLabel').value,
+          url: document.getElementById('linkUrl').value,
+          sort_order: parseInt(document.getElementById('linkSort').value) || 1,
+          is_button: document.getElementById('linkIsButton').checked
+        };
+
+        if (!payload.label || !payload.url) return alert('Label and URL are required.');
+
+        if (id) {
+          await supabaseClient.from('menu_links').update(payload).eq('id', id);
+        } else {
+          await supabaseClient.from('menu_links').insert([payload]);
+        }
+        
+        document.getElementById('menuModal').classList.remove('active');
+        loadLinks();
+      };
+
+      window.deleteLink = async (id) => {
+        if (!confirm('Move this link to Recycle Bin?')) return;
+        await supabaseClient.from('menu_links').delete().eq('id', id);
+        loadLinks();
+      };
+
+      window.move = async (id, dir) => {
+        const { data } = await supabaseClient.from('menu_links').select('*').eq('location', currentLoc).order('sort_order');
+        const index = data.findIndex(l => l.id === id);
+        if (index === -1) return;
+
+        const targetIndex = dir === 'up' ? index - 1 : index + 1;
+        if (targetIndex < 0 || targetIndex >= data.length) return;
+
+        // Swap sort orders
+        const currentLink = data[index];
+        const targetLink = data[targetIndex];
+        const temp = currentLink.sort_order;
+        
+        await supabaseClient.from('menu_links').update({ sort_order: targetLink.sort_order }).eq('id', currentLink.id);
+        await supabaseClient.from('menu_links').update({ sort_order: temp }).eq('id', targetLink.id);
+        
+        loadLinks();
+      };
+
+      document.querySelectorAll('.menu-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          currentLoc = this.getAttribute('data-loc');
+          loadLinks();
+        });
+      });
+
+      window.addEventListener('load', async () => {
+        let attempts = 0;
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+          await new Promise(r => setTimeout(r, 100)); attempts++;
+        }
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) window.location.href = "admin-login.html";
+        else loadLinks();
+      });
+    </script>
+  </body>
+</html>
