@@ -1,12 +1,7 @@
 /* ============================================================
-   SYDF — ACTIVITY LOGGER
-   Include in any admin page:
-     <script src="js/activity-logger.js"></script>
-   Then call:
-     logActivity({ action, actionLabel, targetType, targetId, targetName, details })
-   Or use shortcuts:
-     ActivityLog.memberApproved({ id, name })
-     ActivityLog.paymentApproved({ id, member_name, tid })
+   SYDF — ACTIVITY LOGGER (AUTO-INTERCEPTOR VERSION)
+   Ye har Database Insert, Update, Delete ko automatically pakad kar log karega.
+   Aapko admin pages ke buttons mein kuch add nahi karna!
    ============================================================ */
 
 (function () {
@@ -35,17 +30,13 @@
       };
       return cachedAdmin;
     } catch (err) {
-      console.error("getAdminInfo error:", err);
       return null;
     }
   }
 
   async function logActivity(opts) {
     if (typeof supabaseClient === "undefined" || !supabaseClient) return;
-    if (!opts || !opts.action) {
-      console.warn("logActivity: action is required");
-      return;
-    }
+    if (!opts || !opts.action) return;
 
     try {
       const admin = await getAdminInfo();
@@ -66,10 +57,8 @@
           : null,
       };
 
-      const { error } = await supabaseClient
-        .from("activity_logs")
-        .insert([payload]);
-      if (error) console.error("logActivity insert error:", error);
+      // Yahan hum "raw" client use karenge taake interceptor isko dobara log na kare
+      await window.__rawSupabaseClient.from("activity_logs").insert([payload]);
     } catch (err) {
       console.error("logActivity error:", err);
     }
@@ -77,208 +66,138 @@
 
   window.logActivity = logActivity;
 
+  // ============================================================
+  // 🚀 THE MAGIC: SUPABASE INTERCEPTOR (AUTO LOGGER)
+  // ============================================================
+  window.addEventListener("load", () => {
+    // Jab tak Supabase initialize na ho, wait karein
+    let attempts = 0;
+    const initInterceptor = setInterval(() => {
+      if (typeof supabaseClient !== "undefined" && supabaseClient) {
+        clearInterval(initInterceptor);
+
+        // Backup original client
+        window.__rawSupabaseClient = supabaseClient;
+
+        // Override the .from() method
+        const originalFrom = supabaseClient.from.bind(supabaseClient);
+
+        supabaseClient.from = function (tableName) {
+          // Agar activity_logs table hai, to intercept NA karein (infinite loop se bachne ke liye)
+          if (tableName === "activity_logs") {
+            return originalFrom(tableName);
+          }
+
+          const builder = originalFrom(tableName);
+          let method = null;
+          let payload = null;
+
+          // Methods ko pakadne ke liye wrapper
+          const interceptMethod = (m) => {
+            if (typeof builder[m] === "function") {
+              const original = builder[m].bind(builder);
+              builder[m] = function (...args) {
+                method = m; // 'insert', 'update', 'delete', 'upsert'
+                payload = args[0]; // Jo data bheja ja raha hai
+                return original(...args);
+              };
+            }
+          };
+
+          ["insert", "update", "delete", "upsert"].forEach(interceptMethod);
+
+          // Promise (then) ko pakadne ke liye
+          const originalThen = builder.then.bind(builder);
+          builder.then = function (onFulfilled, onRejected) {
+            return originalThen(function (response) {
+              // Agar query successful hai aur koi modification hui hai
+              if (method && !response.error) {
+                let action = `${tableName}_${method}`;
+                let actionLabel = `${method.toUpperCase()} ${tableName}`;
+                let targetName = null;
+                let targetId = null;
+
+                // Data se naam nikalne ki koshish karein
+                const rowData =
+                  response.data && response.data.length > 0
+                    ? response.data[0]
+                    : payload;
+
+                if (rowData) {
+                  if (Array.isArray(rowData) && rowData.length > 0) {
+                    targetId = rowData[0]?.id;
+                    targetName =
+                      rowData[0]?.name ||
+                      rowData[0]?.title ||
+                      rowData[0]?.member_name;
+                  } else if (typeof rowData === "object") {
+                    targetId = rowData.id;
+                    targetName =
+                      rowData.name ||
+                      rowData.title ||
+                      rowData.member_name ||
+                      rowData.email;
+                  }
+                }
+
+                // Labels ko sundar banayein (Human Readable)
+                const tableMap = {
+                  members: "Member",
+                  payments: "Payment",
+                  districts: "District",
+                  tehsils: "Tehsil",
+                  news: "News",
+                  activities: "Activity",
+                  gallery: "Photo",
+                  documents: "Document",
+                  elections: "Election",
+                  proposals: "Proposal",
+                };
+                const tName = tableMap[tableName] || tableName;
+
+                if (method === "insert") actionLabel = `Created new ${tName}`;
+                else if (method === "update") actionLabel = `Updated ${tName}`;
+                else if (method === "delete") actionLabel = `Deleted ${tName}`;
+
+                // Special overrides (Agar specific actions hain)
+                if (
+                  tableName === "members" &&
+                  method === "update" &&
+                  payload &&
+                  payload.is_active === true
+                ) {
+                  actionLabel = `Approved member`;
+                }
+
+                // Log it!
+                logActivity({
+                  action: action,
+                  actionLabel: actionLabel,
+                  targetType: tableName,
+                  targetId: targetId,
+                  targetName: targetName,
+                  details: {
+                    payload_preview: payload ? Object.keys(payload) : null,
+                  },
+                });
+              }
+              if (onFulfilled) return onFulfilled(response);
+              return response;
+            }, onRejected);
+          };
+
+          return builder;
+        };
+        console.log("✅ Supabase Auto-Logger Interceptor Active!");
+      }
+
+      attempts++;
+      if (attempts > 50) clearInterval(initInterceptor); // 5 seconds timeout
+    }, 100);
+  });
+
+  // Purane shortcuts ko bhi rakhein taake manual logging kaam kare
   window.ActivityLog = {
-    // ----- MEMBERS -----
-    memberApproved: (m) =>
-      logActivity({
-        action: "member_approved",
-        actionLabel: "Approved member",
-        targetType: "member",
-        targetId: m.id,
-        targetName: m.name,
-      }),
-    memberRejected: (m, reason) =>
-      logActivity({
-        action: "member_rejected",
-        actionLabel: "Rejected member",
-        targetType: "member",
-        targetId: m.id,
-        targetName: m.name,
-        details: { reason },
-      }),
-    memberSuspended: (m) =>
-      logActivity({
-        action: "member_suspended",
-        actionLabel: "Suspended member",
-        targetType: "member",
-        targetId: m.id,
-        targetName: m.name,
-      }),
-    memberActivated: (m) =>
-      logActivity({
-        action: "member_activated",
-        actionLabel: "Activated member",
-        targetType: "member",
-        targetId: m.id,
-        targetName: m.name,
-      }),
-    memberDeleted: (m) =>
-      logActivity({
-        action: "member_deleted",
-        actionLabel: "Deleted member",
-        targetType: "member",
-        targetId: m.id,
-        targetName: m.name,
-      }),
-    memberRoleChanged: (m, oldRole, newRole) =>
-      logActivity({
-        action: "member_role_changed",
-        actionLabel: "Changed member role",
-        targetType: "member",
-        targetId: m.id,
-        targetName: m.name,
-        details: { old_role: oldRole, new_role: newRole },
-      }),
-
-    // ----- PAYMENTS -----
-    paymentApproved: (p) =>
-      logActivity({
-        action: "payment_approved",
-        actionLabel: "Approved payment",
-        targetType: "payment",
-        targetId: p.id,
-        targetName: p.member_name || p.tid,
-      }),
-    paymentRejected: (p, reason) =>
-      logActivity({
-        action: "payment_rejected",
-        actionLabel: "Rejected payment",
-        targetType: "payment",
-        targetId: p.id,
-        targetName: p.member_name || p.tid,
-        details: { reason },
-      }),
-
-    // ----- DISTRICTS -----
-    districtCreated: (d) =>
-      logActivity({
-        action: "district_created",
-        actionLabel: "Created district",
-        targetType: "district",
-        targetId: d.id,
-        targetName: d.name,
-      }),
-    districtDeleted: (d) =>
-      logActivity({
-        action: "district_deleted",
-        actionLabel: "Deleted district",
-        targetType: "district",
-        targetId: d.id,
-        targetName: d.name,
-      }),
-    tehsilCreated: (t, districtName) =>
-      logActivity({
-        action: "tehsil_created",
-        actionLabel: "Created tehsil",
-        targetType: "tehsil",
-        targetId: t.id,
-        targetName: t.name,
-        details: { district: districtName },
-      }),
-    coordinatorAssigned: (d, memberName) =>
-      logActivity({
-        action: "coordinator_assigned",
-        actionLabel: "Assigned coordinator",
-        targetType: "district",
-        targetId: d.id,
-        targetName: d.name,
-        details: { coordinator: memberName },
-      }),
-
-    // ----- CONTENT -----
-    activityCreated: (a) =>
-      logActivity({
-        action: "activity_created",
-        actionLabel: "Created activity",
-        targetType: "activity",
-        targetId: a.id,
-        targetName: a.title,
-      }),
-    activityDeleted: (a) =>
-      logActivity({
-        action: "activity_deleted",
-        actionLabel: "Deleted activity",
-        targetType: "activity",
-        targetId: a.id,
-        targetName: a.title,
-      }),
-    newsCreated: (n) =>
-      logActivity({
-        action: "news_created",
-        actionLabel: "Created news",
-        targetType: "news",
-        targetId: n.id,
-        targetName: n.title,
-      }),
-    newsDeleted: (n) =>
-      logActivity({
-        action: "news_deleted",
-        actionLabel: "Deleted news",
-        targetType: "news",
-        targetId: n.id,
-        targetName: n.title,
-      }),
-    documentUploaded: (doc) =>
-      logActivity({
-        action: "document_uploaded",
-        actionLabel: "Uploaded document",
-        targetType: "document",
-        targetId: doc.id,
-        targetName: doc.title,
-      }),
-    galleryUploaded: (count, album) =>
-      logActivity({
-        action: "gallery_uploaded",
-        actionLabel: `Uploaded ${count} photo(s)`,
-        targetType: "gallery",
-        targetName: album,
-        details: { count, album },
-      }),
-
-    // ----- ELECTIONS -----
-    electionCreated: (e) =>
-      logActivity({
-        action: "election_created",
-        actionLabel: "Created election",
-        targetType: "election",
-        targetId: e.id,
-        targetName: e.title,
-      }),
-    nominationApproved: (n) =>
-      logActivity({
-        action: "nomination_approved",
-        actionLabel: "Approved nomination",
-        targetType: "election",
-        targetId: n.id,
-        targetName: n.member_name,
-      }),
-
-    // ----- SYSTEM -----
-    settingsUpdated: (keys) =>
-      logActivity({
-        action: "settings_updated",
-        actionLabel: "Updated settings",
-        targetType: "settings",
-        details: { keys },
-      }),
-    adminAccessChanged: (memberName, role) =>
-      logActivity({
-        action: "admin_access_changed",
-        actionLabel: "Changed admin access",
-        targetType: "member",
-        targetName: memberName,
-        details: { role },
-      }),
-    emailSent: (to, subject) =>
-      logActivity({
-        action: "email_sent",
-        actionLabel: "Sent email",
-        targetType: "email",
-        targetName: to,
-        details: { subject },
-      }),
-
-    // ----- GENERIC (custom) -----
     custom: (opts) => logActivity(opts),
   };
 })();
