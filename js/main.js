@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v5 - COMPLETE)
+// SYDF - MAIN JAVASCRIPT (v6 - FINAL COMPLETE)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -444,7 +444,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       );
       if (wrongBtn) wrongBtn.parentElement.remove();
 
-      // Inject System Links (Activity Logs, Recycle Bin, Menu Manager)
+      // --- INJECT SYSTEM LINKS (Activity Logs, Recycle Bin, Menu Manager) ---
       const systemTitle = Array.from(
         sidebarNav.querySelectorAll(".nav-section-title"),
       ).find((el) => el.textContent.trim() === "System");
@@ -469,7 +469,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       }
 
-      // Inject Custom Pages Link in "Content" section
+      // --- INJECT CONTENT LINKS (Custom Pages, Form Builder) ---
       const contentTitle = Array.from(
         sidebarNav.querySelectorAll(".nav-section-title"),
       ).find((el) => el.textContent.trim() === "Content");
@@ -481,10 +481,15 @@ document.addEventListener("DOMContentLoaded", async function () {
             liContent.innerHTML = `<a href="admin-custom-pages.html"><span class="nav-icon">📄</span><span>Custom Pages</span></a>`;
             nextUl.appendChild(liContent);
           }
+          if (!nextUl.querySelector('a[href="admin-forms.html"]')) {
+            const liForm = document.createElement("li");
+            liForm.innerHTML = `<a href="admin-forms.html"><span class="nav-icon">📝</span><span>Form Builder</span></a>`;
+            nextUl.appendChild(liForm);
+          }
         }
       }
 
-      // Inject Other Admin Links if missing
+      // --- INJECT OTHER ADMIN LINKS IF MISSING ---
       const injectAdminLink = (href, icon, label, afterHref) => {
         if (
           !Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
@@ -527,7 +532,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         "admin-proposals.html",
       );
     } else {
-      // Member Links
+      // --- INJECT MEMBER LINKS ---
       if (
         !Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
           a.href.includes("member-reports.html"),
@@ -778,7 +783,8 @@ async function enforceAdminPermissions() {
         "admin-activity-logs.html": "admin_acc_reports",
         "admin-recycle-bin.html": "admin_acc_reports",
         "admin-menu-manager.html": "admin_acc_reports",
-        "admin-custom-pages.html": "admin_acc_news", // Custom pages ko news/activities ke permission mein daala hai
+        "admin-custom-pages.html": "admin_acc_news",
+        "admin-forms.html": "admin_acc_news", // Content Permissions
       };
 
       document.querySelectorAll(".sidebar-nav a").forEach((a) => {
