@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v8 - FINAL COMPLETE)
+// SYDF - MAIN JAVASCRIPT (v10 - COMPLETE & ERROR FREE)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -156,9 +156,7 @@ async function logoutUser() {
       if (confirmed) doLogout();
     });
   } else {
-    if (confirm("Are you sure you want to logout?")) {
-      doLogout();
-    }
+    if (confirm("Are you sure you want to logout?")) doLogout();
   }
 }
 
@@ -306,14 +304,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (typeof supabaseClient !== "undefined" && supabaseClient) {
       try {
-        // Fetch Menu Links
         const { data: links } = await supabaseClient
           .from("menu_links")
           .select("*")
           .eq("is_active", true)
           .order("sort_order", { ascending: true });
-
-        // Fetch Settings for Social Media & Contact
         const { data: settingsData } = await supabaseClient
           .from("settings")
           .select("key, value")
@@ -357,32 +352,8 @@ document.addEventListener("DOMContentLoaded", async function () {
           });
           navHTML += "</ul>";
           existingNav.innerHTML = navHTML;
-        } else if (existingNav) {
-          // Fallback if table is empty
-          let navHTML = "<ul>";
-          const navLinks = [
-            { href: "index.html", label: "Home" },
-            { href: "about.html", label: "About Us" },
-            { href: "leadership.html", label: "Leadership" },
-            { href: "districts.html", label: "Districts" },
-            { href: "activities.html", label: "Activities" },
-            { href: "gallery.html", label: "Gallery" },
-            { href: "news.html", label: "News" },
-            { href: "membership.html", label: "Membership" },
-            { href: "donate.html", label: "Donate" },
-            { href: "contact.html", label: "Contact" },
-          ];
-          navLinks.forEach((link) => {
-            const active = currentPath === link.href ? ' class="active"' : "";
-            navHTML += `<li><a href="${link.href}"${active}>${link.label}</a></li>`;
-          });
-          navHTML += `<li><a href="public-report.html" style="color: var(--warm-text); font-weight: 600;">🛡️ Grievance</a></li>`;
-          navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li>`;
-          navHTML += "</ul>";
-          existingNav.innerHTML = navHTML;
         }
 
-        // Mobile menu setup
         const headerDiv = document.querySelector(".glass-header");
         if (
           headerDiv &&
@@ -402,7 +373,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           });
         }
 
-        // Logo setup
         const logoDiv = document.querySelector(".glass-header .logo");
         if (logoDiv && !logoDiv.querySelector("img")) {
           const img = document.createElement("img");
@@ -426,7 +396,6 @@ document.addEventListener("DOMContentLoaded", async function () {
           logoDiv.insertBefore(img, logoDiv.firstChild);
         }
 
-        // Footer setup (Now Fully Dynamic)
         const existingFooter = document.querySelector(".glass-footer");
         if (existingFooter) {
           existingFooter.innerHTML = `
@@ -471,13 +440,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     if (isAdminPage) {
-      // Remove wrong button if exists
       const wrongBtn = Array.from(sidebarNav.querySelectorAll("a")).find((a) =>
         a.href.includes("member-reports.html"),
       );
       if (wrongBtn) wrongBtn.parentElement.remove();
 
-      // --- INJECT SYSTEM LINKS ---
       const systemTitle = Array.from(
         sidebarNav.querySelectorAll(".nav-section-title"),
       ).find((el) => el.textContent.trim() === "System");
@@ -502,14 +469,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       }
 
-      // --- INJECT CONTENT LINKS ---
       const contentTitle = Array.from(
         sidebarNav.querySelectorAll(".nav-section-title"),
       ).find((el) => el.textContent.trim() === "Content");
       if (contentTitle) {
         const nextUl = contentTitle.nextElementSibling;
         if (nextUl && nextUl.tagName === "UL") {
-          // Events
           if (!nextUl.querySelector('a[href="admin-events.html"]')) {
             const liEvent = document.createElement("li");
             liEvent.innerHTML = `<a href="admin-events.html"><span class="nav-icon">📅</span><span>Events</span></a>`;
@@ -520,13 +485,11 @@ document.addEventListener("DOMContentLoaded", async function () {
               actLink.parentElement.insertAdjacentElement("afterend", liEvent);
             else nextUl.appendChild(liEvent);
           }
-          // Custom Pages
           if (!nextUl.querySelector('a[href="admin-custom-pages.html"]')) {
             const liContent = document.createElement("li");
             liContent.innerHTML = `<a href="admin-custom-pages.html"><span class="nav-icon">📄</span><span>Custom Pages</span></a>`;
             nextUl.appendChild(liContent);
           }
-          // Form Builder
           if (!nextUl.querySelector('a[href="admin-forms.html"]')) {
             const liForm = document.createElement("li");
             liForm.innerHTML = `<a href="admin-forms.html"><span class="nav-icon">📝</span><span>Form Builder</span></a>`;
@@ -535,7 +498,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       }
 
-      // --- INJECT OTHER ADMIN LINKS ---
       const injectAdminLink = (href, icon, label, afterHref) => {
         if (
           !Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
@@ -584,7 +546,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         "admin-members.html",
       );
     } else {
-      // --- INJECT MEMBER LINKS ---
       if (
         !Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
           a.href.includes("member-reports.html"),
@@ -617,7 +578,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     addBottomButtons(sidebarNav);
   }
 
-  // 3. AUTO-LOAD ACTIVITY LOGGER SCRIPT
   if (
     isAdminPage &&
     !document.querySelector('script[src*="activity-logger.js"]')
@@ -656,9 +616,6 @@ function addBottomButtons(sidebarNav) {
   }
 }
 
-// ==========================================
-// SECTION CONTROLS & RBAC & INIT
-// ==========================================
 async function applySectionControls() {
   let attempts = 0;
   while (
@@ -925,7 +882,6 @@ async function initFloatingContactButton() {
   }
 }
 
-// INITIALIZE ALL
 window.addEventListener("load", async function () {
   setTimeout(updateNavButton, 500);
   await enforceAdminPermissions();
