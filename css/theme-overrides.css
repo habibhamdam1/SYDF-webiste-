@@ -2690,3 +2690,111 @@ body .dashboard-content .id-card .member-role.coordinator {
   color: #fb923c !important;
   -webkit-text-fill-color: #fb923c !important;
 }
+/* ============================================================
+   🗺️ DISTRICT / TEHSIL PAGES — THEME FIX
+   Applies to: districts.html, district-detail.html, tehsil-detail.html
+   ============================================================ */
+
+/* --- LIGHT MODE CARD BACKGROUNDS (Solid white glass) --- */
+html:not([data-theme="dark"]) .district-header-card,
+html:not([data-theme="dark"]) .tehsil-header-card,
+html:not([data-theme="dark"]) .section-card,
+html:not([data-theme="dark"]) .stat-card,
+html:not([data-theme="dark"]) .tehsil-card,
+html:not([data-theme="dark"]) .info-row,
+html:not([data-theme="dark"]) .cta-card {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(225, 29, 72, 0.15) !important;
+  box-shadow: 0 8px 32px rgba(225, 29, 72, 0.08) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* --- DARK MODE CARD BACKGROUNDS --- */
+html[data-theme="dark"] .district-header-card,
+html[data-theme="dark"] .tehsil-header-card,
+html[data-theme="dark"] .section-card,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .tehsil-card,
+html[data-theme="dark"] .info-row {
+  background: rgba(12, 24, 42, 0.55) !important;
+  border: 1px solid rgba(140, 200, 220, 0.15) !important;
+}
+
+/* --- LIGHT MODE: FORCE MAROON ON HEADINGS/BODY --- */
+html:not([data-theme="dark"]) .district-header-card h1,
+html:not([data-theme="dark"]) .tehsil-header-card h1,
+html:not([data-theme="dark"]) .tehsil-card h4,
+html:not([data-theme="dark"]) .coord-info h3,
+html:not([data-theme="dark"]) .info-txt,
+html:not([data-theme="dark"]) .info-txt strong,
+html:not([data-theme="dark"]) .notfound-wrap h2,
+html:not([data-theme="dark"]) .loading-wrap h2 {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+/* --- LIGHT MODE: MUTED MAROON ON SECONDARY TEXT --- */
+html:not([data-theme="dark"]) .stat-lbl,
+html:not([data-theme="dark"]) .tehsil-card p,
+html:not([data-theme="dark"]) .district-footer p,
+html:not([data-theme="dark"]) .notfound-wrap p,
+html:not([data-theme="dark"]) .loading-wrap p,
+html:not([data-theme="dark"]) .tehsil-list span,
+html:not([data-theme="dark"]) .breadcrumb {
+  color: var(--text-secondary) !important;
+  -webkit-text-fill-color: var(--text-secondary) !important;
+}
+
+/* --- DISTRICTS.HTML CLICKABLE CARD (LIGHT) --- */
+html:not([data-theme="dark"]) .district-card {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(225, 29, 72, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* --- DISTRICTS.HTML CLICKABLE CARD (DARK) --- */
+html[data-theme="dark"] .district-card {
+  background: rgba(12, 24, 42, 0.55) !important;
+  border: 1px solid rgba(140, 200, 220, 0.15) !important;
+}
+
+html:not([data-theme="dark"]) .district-card .district-header h3,
+html:not([data-theme="dark"]) .district-card .district-footer p {
+  color: var(--text-primary) !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+}
+
+html:not([data-theme="dark"]) .district-card .district-info,
+html:not([data-theme="dark"]) .district-card .tehsil-list span {
+  color: var(--text-secondary) !important;
+  -webkit-text-fill-color: var(--text-secondary) !important;
+}
+
+/* --- "TBA" COORDINATOR — Darker amber in light mode for readability --- */
+html:not([data-theme="dark"]) .district-card .district-footer em {
+  color: #b45309 !important;
+  -webkit-text-fill-color: #b45309 !important;
+}
+html[data-theme="dark"] .district-card .district-footer em {
+  color: #fbbf24 !important;
+}
+
+/* --- COORDINATOR ROLE PILL — Darker blue in light mode --- */
+html:not([data-theme="dark"]) .coord-info p {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+/* --- "NOT ASSIGNED" WARNING — Darker amber in light mode --- */
+html:not([data-theme="dark"]) .coord-empty {
+  color: #b45309 !important;
+  -webkit-text-fill-color: #b45309 !important;
+  background: rgba(245, 158, 11, 0.12) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+}
+html[data-theme="dark"] .coord-empty {
+  color: #fbbf24 !important;
+  -webkit-text-fill-color: #fbbf24 !important;
+}
