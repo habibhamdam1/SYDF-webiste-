@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v6 - FINAL COMPLETE)
+// SYDF - MAIN JAVASCRIPT (v7 - FINAL COMPLETE WITH EVENTS)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -444,7 +444,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       );
       if (wrongBtn) wrongBtn.parentElement.remove();
 
-      // --- INJECT SYSTEM LINKS (Activity Logs, Recycle Bin, Menu Manager) ---
+      // --- INJECT SYSTEM LINKS ---
       const systemTitle = Array.from(
         sidebarNav.querySelectorAll(".nav-section-title"),
       ).find((el) => el.textContent.trim() === "System");
@@ -469,18 +469,31 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       }
 
-      // --- INJECT CONTENT LINKS (Custom Pages, Form Builder) ---
+      // --- INJECT CONTENT LINKS ---
       const contentTitle = Array.from(
         sidebarNav.querySelectorAll(".nav-section-title"),
       ).find((el) => el.textContent.trim() === "Content");
       if (contentTitle) {
         const nextUl = contentTitle.nextElementSibling;
         if (nextUl && nextUl.tagName === "UL") {
+          // Events
+          if (!nextUl.querySelector('a[href="admin-events.html"]')) {
+            const liEvent = document.createElement("li");
+            liEvent.innerHTML = `<a href="admin-events.html"><span class="nav-icon">📅</span><span>Events</span></a>`;
+            const actLink = Array.from(nextUl.querySelectorAll("a")).find((a) =>
+              a.href.includes("admin-activities.html"),
+            );
+            if (actLink)
+              actLink.parentElement.insertAdjacentElement("afterend", liEvent);
+            else nextUl.appendChild(liEvent);
+          }
+          // Custom Pages
           if (!nextUl.querySelector('a[href="admin-custom-pages.html"]')) {
             const liContent = document.createElement("li");
             liContent.innerHTML = `<a href="admin-custom-pages.html"><span class="nav-icon">📄</span><span>Custom Pages</span></a>`;
             nextUl.appendChild(liContent);
           }
+          // Form Builder
           if (!nextUl.querySelector('a[href="admin-forms.html"]')) {
             const liForm = document.createElement("li");
             liForm.innerHTML = `<a href="admin-forms.html"><span class="nav-icon">📝</span><span>Form Builder</span></a>`;
@@ -489,7 +502,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
       }
 
-      // --- INJECT OTHER ADMIN LINKS IF MISSING ---
+      // --- INJECT OTHER ADMIN LINKS ---
       const injectAdminLink = (href, icon, label, afterHref) => {
         if (
           !Array.from(sidebarNav.querySelectorAll("a")).some((a) =>
@@ -565,7 +578,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     addBottomButtons(sidebarNav);
   }
 
-  // 3. AUTO-LOAD ACTIVITY LOGGER SCRIPT (For Admin Pages)
+  // 3. AUTO-LOAD ACTIVITY LOGGER SCRIPT
   if (
     isAdminPage &&
     !document.querySelector('script[src*="activity-logger.js"]')
@@ -784,7 +797,8 @@ async function enforceAdminPermissions() {
         "admin-recycle-bin.html": "admin_acc_reports",
         "admin-menu-manager.html": "admin_acc_reports",
         "admin-custom-pages.html": "admin_acc_news",
-        "admin-forms.html": "admin_acc_news", // Content Permissions
+        "admin-forms.html": "admin_acc_news",
+        "admin-events.html": "admin_acc_activities",
       };
 
       document.querySelectorAll(".sidebar-nav a").forEach((a) => {
