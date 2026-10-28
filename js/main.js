@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v12 - FINAL ABSOLUTE)
+// SYDF - MAIN JAVASCRIPT (v14 - HEADER RESTORED)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -284,15 +284,68 @@ if (sidebarOverlay) {
 }
 
 // ==========================================
-// DYNAMIC FOOTER & SIDEBAR INJECTIONS
+// DYNAMIC MENU, FOOTER & SIDEBAR INJECTIONS
 // ==========================================
 document.addEventListener("DOMContentLoaded", async function () {
   const isAdminPage =
     window.location.pathname.includes("admin") &&
     !window.location.pathname.includes("admin-login");
 
-  // 1. DYNAMIC FOOTER ONLY (Header is untouched!)
+  // 1. FORCE MENU ON PUBLIC PAGES (Header Fix with Grievance)
   if (!isAdminPage) {
+    const existingNav = document.querySelector(".glass-header nav");
+    if (existingNav) {
+      const navLinks = [
+        { href: "index.html", label: "Home" },
+        { href: "about.html", label: "About Us" },
+        { href: "leadership.html", label: "Leadership" },
+        { href: "districts.html", label: "Districts" },
+        { href: "activities.html", label: "Activities" },
+        { href: "gallery.html", label: "Gallery" },
+        { href: "news.html", label: "News" },
+        { href: "membership.html", label: "Membership" },
+        { href: "donate.html", label: "Donate" },
+        { href: "contact.html", label: "Contact" },
+      ];
+
+      let navHTML = "<ul>";
+      const currentPath =
+        window.location.pathname.split("/").pop() || "index.html";
+
+      navLinks.forEach((link) => {
+        const active = currentPath === link.href ? ' class="active"' : "";
+        navHTML += `<li><a href="${link.href}"${active}>${link.label}</a></li>`;
+      });
+
+      // Grievance Tab (Zaroori)
+      const isGrievance =
+        currentPath === "public-report.html" ? ' class="active"' : "";
+      navHTML += `<li><a href="public-report.html"${isGrievance} style="color: var(--warm-text); font-weight: 600;">🛡️ Grievance</a></li>`;
+
+      // Login / Dashboard Button
+      navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li>`;
+      navHTML += "</ul>";
+
+      existingNav.innerHTML = navHTML;
+
+      // Mobile menu button setup
+      const headerDiv = document.querySelector(".glass-header");
+      if (headerDiv && !document.getElementById("mobileMenuBtn")) {
+        const btn = document.createElement("button");
+        btn.id = "mobileMenuBtn";
+        btn.className = "mobile-menu-btn";
+        btn.innerHTML = "☰";
+        headerDiv.appendChild(btn);
+        btn.addEventListener("click", function () {
+          existingNav.classList.toggle("active");
+          this.innerHTML = existingNav.classList.contains("active")
+            ? "✕"
+            : "☰";
+        });
+      }
+    }
+
+    // Dynamic Footer (Social + Contact)
     let attempts = 0;
     while (
       (typeof supabaseClient === "undefined" || !supabaseClient) &&
