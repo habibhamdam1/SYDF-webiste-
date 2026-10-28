@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v7 - FINAL COMPLETE WITH EVENTS)
+// SYDF - MAIN JAVASCRIPT (v8 - FINAL COMPLETE)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -306,11 +306,38 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     if (typeof supabaseClient !== "undefined" && supabaseClient) {
       try {
+        // Fetch Menu Links
         const { data: links } = await supabaseClient
           .from("menu_links")
           .select("*")
           .eq("is_active", true)
           .order("sort_order", { ascending: true });
+
+        // Fetch Settings for Social Media & Contact
+        const { data: settingsData } = await supabaseClient
+          .from("settings")
+          .select("key, value")
+          .in("key", [
+            "facebook",
+            "instagram",
+            "youtube",
+            "whatsapp_link",
+            "contact_email",
+            "phone",
+            "address",
+          ]);
+
+        const sysSettings = {};
+        if (settingsData)
+          settingsData.forEach((s) => (sysSettings[s.key] = s.value));
+
+        const fbLink = sysSettings.facebook || "#";
+        const igLink = sysSettings.instagram || "#";
+        const ytLink = sysSettings.youtube || "#";
+        const waLink = sysSettings.whatsapp_link || "#";
+        const contactEmail = sysSettings.contact_email || "info@sydf.org";
+        const contactPhone = sysSettings.phone || "+92 300 1234567";
+        const contactAddress = sysSettings.address || "Swat, Malakand Division";
 
         const existingNav = document.querySelector(".glass-header nav");
         const currentPath =
@@ -399,7 +426,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           logoDiv.insertBefore(img, logoDiv.firstChild);
         }
 
-        // Footer setup
+        // Footer setup (Now Fully Dynamic)
         const existingFooter = document.querySelector(".glass-footer");
         if (existingFooter) {
           existingFooter.innerHTML = `
@@ -407,21 +434,27 @@ document.addEventListener("DOMContentLoaded", async function () {
                 <div class="footer-col">
                     <h3>SYDF</h3><p>Swat Youth Development Forum</p><p>Empowering Youth, Building Future</p>
                     <div style="margin-top: 15px; display: flex; gap: 10px;">
-                        <a href="#" title="Facebook" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">📘</a>
-                        <a href="#" title="Instagram" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">📷</a>
-                        <a href="#" title="YouTube" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">▶️</a>
-                        <a href="#" title="WhatsApp" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">💬</a>
+                        ${fbLink !== "#" ? `<a href="${fbLink}" target="_blank" title="Facebook" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">📘</a>` : ""}
+                        ${igLink !== "#" ? `<a href="${igLink}" target="_blank" title="Instagram" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">📷</a>` : ""}
+                        ${ytLink !== "#" ? `<a href="${ytLink}" target="_blank" title="YouTube" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">▶️</a>` : ""}
+                        ${waLink !== "#" ? `<a href="${waLink}" target="_blank" title="WhatsApp" style="display: inline-flex; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); border: 1px solid var(--card-border); align-items: center; justify-content: center; text-decoration: none; font-size: 16px;">💬</a>` : ""}
                     </div>
                 </div>
                 <div class="footer-col"><h4>Explore</h4><ul><li><a href="about.html">About Us</a></li><li><a href="leadership.html">Leadership</a></li><li><a href="districts.html">Districts</a></li><li><a href="activities.html">Activities</a></li><li><a href="events.html">Events</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="news.html">News & Blog</a></li><li><a href="members.html">Members Directory</a></li></ul></div>
                 <div class="footer-col"><h4>Get Involved</h4><ul><li><a href="membership.html">Membership</a></li><li><a href="donate.html">Donate</a></li><li><a href="sponsor.html">Sponsor an Activity</a></li><li><a href="volunteer.html">Volunteer</a></li><li><a href="partners.html">Our Partners</a></li><li><a href="stories.html">Success Stories</a></li></ul></div>
                 <div class="footer-col"><h4>Support & Legal</h4><ul><li><a href="contact.html">Contact Us</a></li><li><a href="public-report.html" style="color: var(--warm-text); font-weight: 600;">🛡️ Public Grievances</a></li><li><a href="faq.html">FAQ</a></li><li><a href="feedback.html">Send Feedback</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="terms.html">Terms & Conditions</a></li><li><a href="login.html">Member Login</a></li></ul></div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <p>${contactAddress}</p>
+                    <p>${contactEmail}</p>
+                    <p>${contactPhone}</p>
+                </div>
             </div>
             <div class="footer-bottom"><p>&copy; ${new Date().getFullYear()} Swat Youth Development Forum. All Rights Reserved.</p></div>
            `;
         }
       } catch (err) {
-        console.log("Dynamic menu error:", err);
+        console.log("Dynamic menu/footer error:", err);
       }
     }
   }
@@ -543,6 +576,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         "🗳️",
         "Elections",
         "admin-proposals.html",
+      );
+      injectAdminLink(
+        "admin-volunteers.html",
+        "🙋",
+        "Volunteers",
+        "admin-members.html",
       );
     } else {
       // --- INJECT MEMBER LINKS ---
@@ -799,6 +838,7 @@ async function enforceAdminPermissions() {
         "admin-custom-pages.html": "admin_acc_news",
         "admin-forms.html": "admin_acc_news",
         "admin-events.html": "admin_acc_activities",
+        "admin-volunteers.html": "admin_acc_members",
       };
 
       document.querySelectorAll(".sidebar-nav a").forEach((a) => {
