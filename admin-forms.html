@@ -92,6 +92,7 @@
         background: var(--input-bg);
         border: 1px solid var(--input-border);
         color: var(--text-primary);
+        font-family: "Poppins", sans-serif;
       }
     </style>
   </head>
@@ -112,6 +113,7 @@
             >
           </li>
         </ul>
+        <!-- Links Auto-inject honge main.js se -->
         <div class="nav-section-title">Content</div>
         <ul>
           <li>
@@ -289,7 +291,13 @@
               <p>URL: form.html?id=${form.id}</p>
             </div>
             <div style="display: flex; gap: 8px;">
+              <!-- Naya Button: View Submissions -->
+              <a href="admin-form-submissions.html?id=${form.id}" class="btn-icon" style="text-decoration:none; display:flex; align-items:center; justify-content:center; color: #f59e0b; border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.1);" title="View Submissions">📊</a>
+              
+              <!-- View Form -->
               <a href="form.html?id=${form.id}" target="_blank" class="btn-icon" style="text-decoration:none; display:flex; align-items:center; justify-content:center;" title="View Form">👁️</a>
+              
+              <!-- Edit & Delete -->
               <button class="btn-icon" onclick="editForm(${form.id})" title="Edit">✏️</button>
               <button class="btn-icon delete" onclick="deleteForm(${form.id})" title="Delete">🗑️</button>
             </div>
