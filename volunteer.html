@@ -10,6 +10,8 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
     <style>
       .page-hero {
         min-height: 40vh;
@@ -191,6 +193,11 @@
       .btn-submit:hover {
         transform: translateY(-3px);
         box-shadow: 0 15px 35px rgba(26, 188, 156, 0.4);
+      }
+      .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
       }
       @media (max-width: 768px) {
         .page-hero-content h1 {
@@ -432,7 +439,7 @@
             ></textarea>
           </div>
 
-          <button type="submit" class="btn-submit">
+          <button type="submit" class="btn-submit" id="volunteerSubmitBtn">
             🙋 Submit Application
           </button>
         </form>
@@ -472,9 +479,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>
-          &copy; 2026 SWAT Youth Development Forum. All Rights Reserved.
-        </p>
+        <p>&copy; 2026 SWAT Youth Development Forum. All Rights Reserved.</p>
       </div>
     </footer>
 
@@ -482,12 +487,76 @@
     <script>
       document
         .getElementById("volunteerForm")
-        .addEventListener("submit", function (e) {
+        .addEventListener("submit", async function (e) {
           e.preventDefault();
-          alert(
-            "✅ Thank you for applying as a volunteer!\n\nOur team will review your application and contact you within 3-5 days.",
-          );
-          this.reset();
+
+          const btn = document.getElementById("volunteerSubmitBtn");
+          const originalText = btn.innerText;
+          btn.innerText = "Submitting...";
+          btn.disabled = true;
+
+          // Supabase initialization check
+          let attempts = 0;
+          while (
+            (typeof supabaseClient === "undefined" || !supabaseClient) &&
+            attempts < 30
+          ) {
+            await new Promise((r) => setTimeout(r, 100));
+            attempts++;
+          }
+
+          // Get selected skills
+          const skills = [];
+          document
+            .querySelectorAll('.checkbox-grid input[type="checkbox"]:checked')
+            .forEach((cb) => {
+              skills.push(cb.value);
+            });
+
+          const payload = {
+            name: document.getElementById("volName").value,
+            email: document.getElementById("volEmail").value,
+            phone: document.getElementById("volPhone").value,
+            gender: document.getElementById("volGender").value,
+            district: document.getElementById("volDistrict").value,
+            tehsil: document.getElementById("volTehsil").value,
+            availability: document.getElementById("volAvailability").value,
+            skills: skills,
+            reason: document.getElementById("volReason").value,
+          };
+
+          if (
+            !payload.name ||
+            !payload.email ||
+            !payload.phone ||
+            !payload.district ||
+            !payload.availability ||
+            !payload.reason
+          ) {
+            alert("Please fill all required fields.");
+            btn.innerText = originalText;
+            btn.disabled = false;
+            return;
+          }
+
+          try {
+            const { error } = await supabaseClient
+              .from("volunteers")
+              .insert([payload]);
+
+            if (error) throw error;
+
+            alert(
+              "✅ Thank you for applying as a volunteer!\n\nOur team will review your application and contact you within 3-5 days.",
+            );
+            this.reset();
+          } catch (err) {
+            console.error(err);
+            alert("❌ Error: " + err.message);
+          } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+          }
         });
     </script>
   </body>
