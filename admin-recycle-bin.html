@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recycle Bin - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .bin-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+      .bin-tab { padding: 10px 20px; border-radius: 10px; background: rgba(255,255,255,0.6); border: 1px solid var(--card-border); color: var(--text-primary); font-weight: 600; cursor: pointer; font-size: 13px; }
+      html[data-theme="dark"] .bin-tab { background: rgba(12,24,42,0.6); color: #fff; border-color: rgba(140,200,220,0.2); }
+      .bin-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+      
+      .bin-card { background: rgba(255,255,255,0.75); border: 1px solid rgba(225,29,72,0.15); border-radius: 16px; overflow: hidden; }
+      html[data-theme="dark"] .bin-card { background: rgba(12,24,42,0.55); border-color: rgba(140,200,220,0.15); }
+      
+      .bin-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--card-border); }
+      .bin-row:last-child { border-bottom: none; }
+      .bin-info h4 { color: var(--text-primary); font-size: 15px; margin-bottom: 4px; }
+      .bin-info p { color: var(--text-secondary); font-size: 12px; }
+      .bin-actions { display: flex; gap: 10px; }
+      .btn-restore { background: rgba(26,188,156,0.15); color: #1abc9c; border: 1px solid rgba(26,188,156,0.3); padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+      .btn-restore:hover { background: #1abc9c; color: #fff; }
+      .btn-delete { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+      .btn-delete:hover { background: #ef4444; color: #fff; }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo"><h1>SYDF</h1><p>Admin Panel</p></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul><li><a href="admin.html"><span class="nav-icon">📊</span><span>Dashboard</span></a></li></ul>
+        <!-- Baaki menu main.js automatically add kar dega -->
+        <div class="nav-section-title">System</div>
+        <ul></ul>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <div class="topbar-title"><h2>Recycle Bin</h2><p>Restore or permanently delete items</p></div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="bin-tabs">
+          <button class="bin-tab active" data-table="members">Members</button>
+          <button class="bin-tab" data-table="news">News</button>
+          <button class="bin-tab" data-table="activities">Activities</button>
+          <button class="bin-tab" data-table="districts">Districts</button>
+          <button class="bin-tab" data-table="gallery">Gallery</button>
+          <button class="bin-tab" data-table="documents">Documents</button>
+        </div>
+
+        <div class="bin-card" id="binList">
+          <div style="padding: 40px; text-align: center; color: var(--text-secondary);">Loading...</div>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/main.js?v=99"></script>
+    <script>
+      let currentTable = 'members';
+      
+      // Recycle bin mein deleted items dikhane ke liye flag true karein
+      window.__showDeletedItems = true;
+
+      async function loadBin() {
+        const list = document.getElementById('binList');
+        list.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-secondary);">Loading...</div>';
+        
+        try {
+          const { data, error } = await supabaseClient
+            .from(currentTable)
+            .select('*')
+            .not('deleted_at', 'is', null)
+            .order('deleted_at', { ascending: false });
+
+          if (error) throw error;
+
+          if (!data || data.length === 0) {
+            list.innerHTML = `<div style="padding: 60px 20px; text-align: center; color: var(--text-secondary);"><div style="font-size:48px; opacity:0.3; margin-bottom:10px;">🗑️</div><h3>Recycle Bin is Empty</h3><p>No deleted ${currentTable} found.</p></div>`;
+            return;
+          }
+
+          list.innerHTML = data.map(item => `
+            <div class="bin-row">
+              <div class="bin-info">
+                <h4>${item.name || item.title || item.member_name || 'Item #' + item.id}</h4>
+                <p>Deleted on: ${new Date(item.deleted_at).toLocaleString()}</p>
+              </div>
+              <div class="bin-actions">
+                <button class="btn-restore" onclick="restoreItem(${item.id})">↩️ Restore</button>
+                <button class="btn-delete" onclick="hardDelete(${item.id})">🗑️ Delete Forever</button>
+              </div>
+            </div>
+          `).join('');
+        } catch (err) {
+          list.innerHTML = `<div style="padding: 40px; color: red;">Error: ${err.message}</div>`;
+        }
+      }
+
+      window.restoreItem = async (id) => {
+        if (!confirm('Restore this item?')) return;
+        const { error } = await supabaseClient.from(currentTable).update({ deleted_at: null }).eq('id', id);
+        if (error) return alert(error.message);
+        alert('✅ Restored successfully!');
+        loadBin();
+      };
+
+      window.hardDelete = async (id) => {
+        if (!confirm('⚠️ PERMANENTLY DELETE this item? This cannot be undone!')) return;
+        window.__forceDelete = true;
+        const { error } = await supabaseClient.from(currentTable).delete().eq('id', id);
+        window.__forceDelete = false;
+        
+        if (error) return alert(error.message);
+        alert('🗑️ Permanently Deleted!');
+        loadBin();
+      };
+
+      document.querySelectorAll('.bin-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.bin-tab').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+          currentTable = this.getAttribute('data-table');
+          loadBin();
+        });
+      });
+
+      window.addEventListener('load', async () => {
+        let attempts = 0;
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+          await new Promise(r => setTimeout(r, 100));
+          attempts++;
+        }
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) window.location.href = "admin-login.html";
+        else loadBin();
+      });
+    </script>
+  </body>
+</html>
