@@ -931,3 +931,84 @@ if ("serviceWorker" in navigator) {
     });
   });
 })();
+/* ============================================================
+   SYDF — AUTO INJECT ACTIVITY LOGS (Admin Panel)
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", function () {
+  // Check karein ke hum admin page par hain (login page nahi)
+  const isAdminPage =
+    window.location.pathname.includes("admin") &&
+    !window.location.pathname.includes("admin-login");
+
+  if (!isAdminPage) return;
+
+  // 1. SIDEBAR MEIN "ACTIVITY LOGS" LINK ADD KAREIN
+  const systemTitle = Array.from(
+    document.querySelectorAll(".nav-section-title"),
+  ).find((el) => el.textContent.trim() === "System");
+
+  if (systemTitle) {
+    const nextUl = systemTitle.nextElementSibling;
+    if (nextUl && nextUl.tagName === "UL") {
+      // Check karein ke link pehle se toh nahi hai
+      if (!nextUl.querySelector('a[href="admin-activity-logs.html"]')) {
+        const newLi = document.createElement("li");
+        // HTML structure bilkul aapke baaki links jaisa hai
+        newLi.innerHTML = `
+          <a href="admin-activity-logs.html">
+            <span class="nav-icon">📋</span>
+            <span>Activity Logs</span>
+          </a>
+        `;
+        // "System" section mein sabse upar insert karein
+        nextUl.insertBefore(newLi, nextUl.firstChild);
+      }
+    }
+  }
+
+  // 2. ACTIVITY-LOGGER.JS KO AUTOMATIC LOAD KAREIN
+  if (!document.querySelector('script[src*="activity-logger.js"]')) {
+    const script = document.createElement("script");
+    script.src = "js/activity-logger.js";
+    document.body.appendChild(script);
+  }
+});
+/* ============================================================
+   AUTO INJECT SIDEBAR LINKS
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", function () {
+  const isAdminPage =
+    window.location.pathname.includes("admin") &&
+    !window.location.pathname.includes("admin-login");
+  if (!isAdminPage) return;
+
+  const systemTitle = Array.from(
+    document.querySelectorAll(".nav-section-title"),
+  ).find((el) => el.textContent.trim() === "System");
+
+  if (systemTitle) {
+    const nextUl = systemTitle.nextElementSibling;
+    if (nextUl && nextUl.tagName === "UL") {
+      // Activity Logs
+      if (!nextUl.querySelector('a[href="admin-activity-logs.html"]')) {
+        const li1 = document.createElement("li");
+        li1.innerHTML = `<a href="admin-activity-logs.html"><span class="nav-icon">📋</span><span>Activity Logs</span></a>`;
+        nextUl.insertBefore(li1, nextUl.firstChild);
+      }
+
+      // Recycle Bin
+      if (!nextUl.querySelector('a[href="admin-recycle-bin.html"]')) {
+        const li2 = document.createElement("li");
+        li2.innerHTML = `<a href="admin-recycle-bin.html"><span class="nav-icon">🗑️</span><span>Recycle Bin</span></a>`;
+        nextUl.insertBefore(li2, nextUl.children[1]);
+      }
+    }
+  }
+
+  // Logger script auto-load
+  if (!document.querySelector('script[src*="activity-logger.js"]')) {
+    const script = document.createElement("script");
+    script.src = "js/activity-logger.js";
+    document.body.appendChild(script);
+  }
+});
