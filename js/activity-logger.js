@@ -1,7 +1,5 @@
 /* ============================================================
-   SYDF — ACTIVITY LOGGER (AUTO-INTERCEPTOR VERSION)
-   Ye har Database Insert, Update, Delete ko automatically pakad kar log karega.
-   Aapko admin pages ke buttons mein kuch add nahi karna!
+   SYDF — ACTIVITY LOGGER & SOFT-DELETE INTERCEPTOR
    ============================================================ */
 
 (function () {
@@ -10,19 +8,16 @@
   async function getAdminInfo() {
     if (cachedAdmin) return cachedAdmin;
     if (typeof supabaseClient === "undefined" || !supabaseClient) return null;
-
     try {
       const {
         data: { session },
       } = await supabaseClient.auth.getSession();
       if (!session || !session.user) return null;
-
       const { data: member } = await supabaseClient
         .from("members")
         .select("name, role, email")
         .eq("user_id", session.user.id)
         .single();
-
       cachedAdmin = member || {
         name: session.user.email,
         role: "User",
@@ -35,13 +30,11 @@
   }
 
   async function logActivity(opts) {
-    if (typeof supabaseClient === "undefined" || !supabaseClient) return;
+    if (typeof window.__rawSupabaseClient === "undefined") return;
     if (!opts || !opts.action) return;
-
     try {
       const admin = await getAdminInfo();
       if (!admin) return;
-
       const payload = {
         admin_email: admin.email,
         admin_name: admin.name || admin.email,
@@ -52,12 +45,7 @@
         target_id: opts.targetId != null ? String(opts.targetId) : null,
         target_name: opts.targetName || null,
         details: opts.details || null,
-        user_agent: navigator.userAgent
-          ? navigator.userAgent.slice(0, 200)
-          : null,
       };
-
-      // Yahan hum "raw" client use karenge taake interceptor isko dobara log na kare
       await window.__rawSupabaseClient.from("activity_logs").insert([payload]);
     } catch (err) {
       console.error("logActivity error:", err);
@@ -67,62 +55,71 @@
   window.logActivity = logActivity;
 
   // ============================================================
-  // 🚀 THE MAGIC: SUPABASE INTERCEPTOR (AUTO LOGGER)
+  // 🚀 THE MAGIC: SUPABASE INTERCEPTOR
   // ============================================================
   window.addEventListener("load", () => {
-    // Jab tak Supabase initialize na ho, wait karein
     let attempts = 0;
     const initInterceptor = setInterval(() => {
       if (typeof supabaseClient !== "undefined" && supabaseClient) {
         clearInterval(initInterceptor);
-
-        // Backup original client
         window.__rawSupabaseClient = supabaseClient;
-
-        // Override the .from() method
         const originalFrom = supabaseClient.from.bind(supabaseClient);
 
         supabaseClient.from = function (tableName) {
-          // Agar activity_logs table hai, to intercept NA karein (infinite loop se bachne ke liye)
-          if (tableName === "activity_logs") {
-            return originalFrom(tableName);
-          }
+          if (tableName === "activity_logs") return originalFrom(tableName);
 
           const builder = originalFrom(tableName);
           let method = null;
           let payload = null;
 
-          // Methods ko pakadne ke liye wrapper
+          // 1. SELECT INTERCEPTOR: Auto-hide deleted items
+          const originalSelect = builder.select.bind(builder);
+          builder.select = function (...args) {
+            let query = originalSelect(...args);
+            if (!window.__showDeletedItems && !window.__forceDelete) {
+              return query.is("deleted_at", null);
+            }
+            return query;
+          };
+
+          // 2. DELETE INTERCEPTOR: Convert to Soft Delete
+          const originalDelete = builder.delete.bind(builder);
+          builder.delete = function () {
+            if (window.__forceDelete) {
+              window.__actionOverride = "HARD_DELETE";
+              return originalDelete();
+            } else {
+              window.__actionOverride = "SOFT_DELETE";
+              return builder.update({ deleted_at: new Date().toISOString() });
+            }
+          };
+
+          // 3. LOGGER INTERCEPTOR (Insert, Update, Delete)
           const interceptMethod = (m) => {
             if (typeof builder[m] === "function") {
               const original = builder[m].bind(builder);
               builder[m] = function (...args) {
-                method = m; // 'insert', 'update', 'delete', 'upsert'
-                payload = args[0]; // Jo data bheja ja raha hai
+                method = m;
+                payload = args[0];
                 return original(...args);
               };
             }
           };
-
           ["insert", "update", "delete", "upsert"].forEach(interceptMethod);
 
-          // Promise (then) ko pakadne ke liye
           const originalThen = builder.then.bind(builder);
           builder.then = function (onFulfilled, onRejected) {
             return originalThen(function (response) {
-              // Agar query successful hai aur koi modification hui hai
               if (method && !response.error) {
                 let action = `${tableName}_${method}`;
                 let actionLabel = `${method.toUpperCase()} ${tableName}`;
-                let targetName = null;
-                let targetId = null;
+                let targetName = null,
+                  targetId = null;
 
-                // Data se naam nikalne ki koshish karein
                 const rowData =
                   response.data && response.data.length > 0
                     ? response.data[0]
                     : payload;
-
                 if (rowData) {
                   if (Array.isArray(rowData) && rowData.length > 0) {
                     targetId = rowData[0]?.id;
@@ -140,7 +137,6 @@
                   }
                 }
 
-                // Labels ko sundar banayein (Human Readable)
                 const tableMap = {
                   members: "Member",
                   payments: "Payment",
@@ -150,8 +146,6 @@
                   activities: "Activity",
                   gallery: "Photo",
                   documents: "Document",
-                  elections: "Election",
-                  proposals: "Proposal",
                 };
                 const tName = tableMap[tableName] || tableName;
 
@@ -159,7 +153,16 @@
                 else if (method === "update") actionLabel = `Updated ${tName}`;
                 else if (method === "delete") actionLabel = `Deleted ${tName}`;
 
-                // Special overrides (Agar specific actions hain)
+                if (window.__actionOverride === "SOFT_DELETE") {
+                  action = `${tableName}_soft_delete`;
+                  actionLabel = `Moved ${tName} to Recycle Bin`;
+                  window.__actionOverride = null;
+                } else if (window.__actionOverride === "HARD_DELETE") {
+                  action = `${tableName}_hard_delete`;
+                  actionLabel = `Permanently deleted ${tName}`;
+                  window.__actionOverride = null;
+                }
+
                 if (
                   tableName === "members" &&
                   method === "update" &&
@@ -169,16 +172,12 @@
                   actionLabel = `Approved member`;
                 }
 
-                // Log it!
                 logActivity({
-                  action: action,
-                  actionLabel: actionLabel,
+                  action,
+                  actionLabel,
                   targetType: tableName,
-                  targetId: targetId,
-                  targetName: targetName,
-                  details: {
-                    payload_preview: payload ? Object.keys(payload) : null,
-                  },
+                  targetId,
+                  targetName,
                 });
               }
               if (onFulfilled) return onFulfilled(response);
@@ -188,15 +187,13 @@
 
           return builder;
         };
-        console.log("✅ Supabase Auto-Logger Interceptor Active!");
+        console.log("✅ Auto-Logger & Soft-Delete Interceptor Active!");
       }
-
       attempts++;
-      if (attempts > 50) clearInterval(initInterceptor); // 5 seconds timeout
+      if (attempts > 50) clearInterval(initInterceptor);
     }, 100);
   });
 
-  // Purane shortcuts ko bhi rakhein taake manual logging kaam kare
   window.ActivityLog = {
     custom: (opts) => logActivity(opts),
   };
