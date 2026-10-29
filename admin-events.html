@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Events - SYDF Admin</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/pages/dashboard.css" />
+    <link rel="stylesheet" href="css/pages/admin.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+      .event-card { background: rgba(255,255,255,0.75); border: 1px solid rgba(225,29,72,0.15); border-radius: 16px; padding: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-start; }
+      html[data-theme="dark"] .event-card { background: rgba(12,24,42,0.55); border-color: rgba(140,200,220,0.15); }
+      .event-info h4 { color: var(--text-primary); font-size: 16px; margin-bottom: 6px; }
+      .event-info p { color: var(--text-secondary); font-size: 13px; margin-bottom: 4px; }
+      .badge { font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; }
+      .badge.upcoming { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+      .badge.ongoing { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
+      .badge.completed { background: rgba(26, 188, 156, 0.15); color: #1abc9c; }
+      
+      .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+      .modal-overlay.active { display: flex; }
+      .modal-box { background: var(--card-bg); border: 1px solid var(--card-border); padding: 30px; border-radius: 20px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+      .form-group { margin-bottom: 15px; }
+      .form-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 6px; }
+      .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border-radius: 8px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-primary); font-family: "Poppins", sans-serif; }
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    </style>
+  </head>
+  <body class="dashboard-body">
+    <aside class="dashboard-sidebar admin-sidebar" id="dashboardSidebar">
+      <div class="sidebar-header"><div class="sidebar-logo"><h1>SYDF</h1><p>Admin Panel</p></div></div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Main</div>
+        <ul><li><a href="admin.html"><span class="nav-icon">📊</span><span>Dashboard</span></a></li></ul>
+        <div class="nav-section-title">Content</div>
+        <ul>
+          <li><a href="admin-activities.html"><span class="nav-icon">🎯</span><span>Activities</span></a></li>
+          <li><a href="admin-events.html" class="active"><span class="nav-icon">📅</span><span>Events</span></a></li>
+          <li><a href="admin-news.html"><span class="nav-icon">📰</span><span>News</span></a></li>
+        </ul>
+        <div class="nav-section-title">System</div>
+        <ul></ul>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <div class="topbar-title"><h2>Manage Events</h2><p>Create and manage calendar events</p></div>
+      </div>
+      <div class="dashboard-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="color: var(--text-primary);">All Events</h3>
+          <button onclick="openEventModal()" style="padding: 10px 20px; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">+ Create Event</button>
+        </div>
+        <div id="eventsList"><div style="padding: 40px; text-align: center; color: var(--text-secondary);">Loading...</div></div>
+      </div>
+    </main>
+
+    <div class="modal-overlay" id="eventModal">
+      <div class="modal-box">
+        <h3 style="color: var(--accent); margin-bottom: 20px;" id="eventModalTitle">Create New Event</h3>
+        <input type="hidden" id="editEventId">
+        <div class="form-group"><label>Event Title *</label><input type="text" id="evTitle" placeholder="e.g., Annual Sports Gala"></div>
+        <div class="form-row">
+          <div class="form-group"><label>Category</label><select id="evCategory"><option value="general">General</option><option value="meeting">Meeting</option><option value="workshop">Workshop</option><option value="sports">Sports</option></select></div>
+          <div class="form-group"><label>Status</label><select id="evStatus"><option value="Upcoming">Upcoming</option><option value="Ongoing">Ongoing</option><option value="Completed">Completed</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Event Date *</label><input type="date" id="evDate"></div>
+          <div class="form-group"><label>Max Participants</label><input type="number" id="evMax" placeholder="e.g., 100"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Start Time</label><input type="time" id="evStart"></div>
+          <div class="form-group"><label>End Time</label><input type="time" id="evEnd"></div>
+        </div>
+        <div class="form-group"><label>Location *</label><input type="text" id="evLocation" placeholder="e.g., SYDF Head Office"></div>
+        <div class="form-group"><label>Image URL (Optional)</label><input type="text" id="evImage" placeholder="https://..."></div>
+        <div class="form-group"><label>Description *</label><textarea id="evDesc" rows="3"></textarea></div>
+        <div style="display: flex; gap: 10px; margin-top: 25px;">
+          <button onclick="document.getElementById('eventModal').classList.remove('active')" style="flex: 1; padding: 12px; border-radius: 10px; background: rgba(255,255,255,0.1); color: var(--text-primary); border: 1px solid var(--card-border); cursor: pointer;">Cancel</button>
+          <button onclick="saveEvent()" style="flex: 1; padding: 12px; border-radius: 10px; background: var(--accent); color: #fff; border: none; font-weight: 600; cursor: pointer;">Save Event</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/main.js?v=99"></script>
+    <script>
+      async function loadEvents() {
+        const list = document.getElementById('eventsList');
+        const { data, error } = await supabaseClient.from('events').select('*').order('event_date', { ascending: false });
+        if (error || !data) return list.innerHTML = 'Error loading events.';
+        if (data.length === 0) return list.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-secondary);">No events created yet.</div>';
+        list.innerHTML = data.map(ev => {
+          const statusClass = (ev.status || 'Upcoming').toLowerCase();
+          const dateStr = new Date(ev.event_date).toLocaleDateString('en-PK', { day: 'numeric', month: 'short', year: 'numeric' });
+          return `
+          <div class="event-card">
+            <div class="event-info">
+              <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+                <h4>${ev.title}</h4><span class="badge ${statusClass}">${ev.status}</span>
+              </div>
+              <p>📅 ${dateStr} ${ev.start_time ? '| 🕐 ' + ev.start_time : ''}</p>
+              <p>📍 ${ev.location}</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-icon delete" onclick="deleteEvent(${ev.id})" title="Delete">🗑️</button>
+            </div>
+          </div>`}).join('');
+      }
+
+      window.openEventModal = () => {
+        document.getElementById('eventModalTitle').innerText = 'Create New Event';
+        document.getElementById('editEventId').value = '';
+        document.getElementById('eventModal').classList.add('active');
+      };
+
+      window.saveEvent = async () => {
+        const payload = {
+          title: document.getElementById('evTitle').value.trim(),
+          category: document.getElementById('evCategory').value,
+          status: document.getElementById('evStatus').value,
+          event_date: document.getElementById('evDate').value,
+          start_time: document.getElementById('evStart').value,
+          end_time: document.getElementById('evEnd').value,
+          location: document.getElementById('evLocation').value.trim(),
+          max_participants: document.getElementById('evMax').value ? parseInt(document.getElementById('evMax').value) : null,
+          image_url: document.getElementById('evImage').value.trim(),
+          description: document.getElementById('evDesc').value.trim()
+        };
+        if (!payload.title || !payload.event_date || !payload.location) return alert('Title, Date, and Location are required.');
+        await supabaseClient.from('events').insert([payload]);
+        document.getElementById('eventModal').classList.remove('active');
+        loadEvents();
+      };
+
+      window.deleteEvent = async (id) => {
+        if (!confirm('Delete this event?')) return;
+        await supabaseClient.from('events').delete().eq('id', id);
+        loadEvents();
+      };
+
+      window.addEventListener('load', async () => {
+        let attempts = 0;
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+          await new Promise(r => setTimeout(r, 100)); attempts++;
+        }
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) window.location.href = "admin-login.html";
+        else loadEvents();
+      });
+    </script>
+  </body>
+</html>
