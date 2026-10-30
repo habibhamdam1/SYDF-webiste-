@@ -904,7 +904,7 @@
       
       // PAGINATION VARIABLES
       let currentPage = 1;
-      const rowsPerPage = 10; // Aap yahan change kar sakte hain (10, 15, 20)
+      const rowsPerPage = 10;
 
       window.closeModal = function (id) {
         document.getElementById(id).classList.remove("active");
@@ -953,12 +953,37 @@
               .forEach((el) => (el.textContent = admin.role));
           }
 
+          await loadCustomRoles(); // <-- NAYA FUNCTION: Dropdown mein Cabinet ke roles add karega
           await loadMembers();
           attachEvents();
         } catch (err) {
           console.error(err);
         }
       });
+
+      // NAYA CODE: Cabinet se custom roles fetch karke dropdown mein add karein
+      async function loadCustomRoles() {
+        try {
+          const { data: pos, error } = await supabaseClient.from("cabinet_positions").select("title");
+          if (error || !pos) return;
+
+          // Default roles ke sath custom roles ko merge karein
+          const defaultRoles = ["Member", "District Admin", "President", "Senior Vice President", "Vice President", "Secretary General", "Deputy Secretary General", "Information Secretary", "Finance Secretary", "Media Secretary", "Coordinator"];
+          
+          pos.forEach(p => {
+            if (p.title && !defaultRoles.includes(p.title)) {
+              defaultRoles.push(p.title);
+            }
+          });
+
+          // Dono dropdowns (Add aur Edit) ko update karein
+          const optionsHTML = defaultRoles.map(r => `<option value="${r}">${r}</option>`).join("");
+          document.getElementById("amRole").innerHTML = optionsHTML;
+          document.getElementById("emRole").innerHTML = optionsHTML;
+        } catch (err) {
+          console.log("Error loading custom roles:", err);
+        }
+      }
 
       async function loadMembers() {
         let query = supabaseClient
@@ -1007,7 +1032,6 @@
           return;
         }
 
-        // PAGINATION LOGIC
         const totalPages = Math.ceil(filtered.length / rowsPerPage);
         if (currentPage > totalPages) currentPage = totalPages;
         if (currentPage < 1) currentPage = 1;
@@ -1087,7 +1111,6 @@
           <button class="page-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
         `;
 
-        // Show max 5 page numbers
         let startPage = Math.max(1, currentPage - 2);
         let endPage = Math.min(totalPages, startPage + 4);
         if (endPage - startPage < 4) {
@@ -1112,15 +1135,15 @@
 
       function attachEvents() {
         document.getElementById("searchInput").addEventListener("input", () => {
-            currentPage = 1; // Reset to page 1 on search
+            currentPage = 1; 
             renderMembers();
         });
         document.getElementById("filterStatus").addEventListener("change", () => {
-            currentPage = 1; // Reset to page 1 on filter
+            currentPage = 1;
             renderMembers();
         });
         document.getElementById("filterSort").addEventListener("change", () => {
-            currentPage = 1; // Reset to page 1 on sort
+            currentPage = 1;
             renderMembers();
         });
         
@@ -1130,7 +1153,6 @@
             document.getElementById("addModal").classList.add("active"),
           );
 
-        // PDF DOWNLOAD LOGIC
         document
           .getElementById("pdfBtn")
           .addEventListener("click", function () {
