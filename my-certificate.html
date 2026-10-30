@@ -10,7 +10,6 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;900&family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <!-- QR Code Library hata di gayi hai, direct image API use hogi -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
@@ -21,7 +20,7 @@
         gap: 20px;
         flex-wrap: wrap;
         margin-bottom: 25px;
-        margin-top: 10px; 
+        margin-top: 10px;
       }
       .btn-download {
         display: inline-flex;
@@ -565,6 +564,16 @@
          MOBILE FIX (Max-width: 768px)
          ============================================ */
       @media (max-width: 768px) {
+        .page-header-block {
+          flex-direction: column;
+          align-items: flex-start;
+          margin-top: 15px;
+        }
+        .btn-download {
+          width: 100%;
+          justify-content: center;
+        }
+        
         .cert-container {
           padding: 5px;
           margin-top: 15px;
@@ -573,10 +582,12 @@
         .certificate {
           aspect-ratio: auto !important;
           height: auto !important;
-          min-height: 600px;
-          padding: 20px 15px !important;
+          min-height: 520px;
+          padding: 25px 15px !important;
           display: flex !important;
           flex-direction: column !important;
+          justify-content: center !important;
+          gap: 15px !important;
         }
         
         .watermark-logo { display: none !important; }
@@ -586,7 +597,7 @@
         .cert-org { font-size: 14px; letter-spacing: 1px; }
         .cert-tagline { font-size: 6px; letter-spacing: 1px; }
         
-        .cert-title { margin: 10px 0; }
+        .cert-title { margin: 5px 0; }
         .cert-title h1 { font-size: 22px; letter-spacing: 2px; }
         .cert-title-sub { font-size: 10px; letter-spacing: 2px; }
         
@@ -631,7 +642,7 @@
         }
 
         body * { visibility: hidden; }
-        .cert-container, .cert-container * { visibility: visible; }
+        .cert-container, .cert-container * { visibility: visible !important; }
 
         html, body {
           width: 210mm !important;
@@ -654,7 +665,7 @@
           box-shadow: none !important;
           border-radius: 0 !important;
           display: block !important;
-          z-index: 9999 !important;
+          z-index: 99999 !important;
         }
 
         .certificate {
@@ -709,6 +720,7 @@
           display: block !important;
           width: 400px !important; 
           height: 400px !important;
+          opacity: 0.04 !important;
         }
 
         .dashboard-sidebar, .dashboard-topbar, .sidebar-overlay,
@@ -968,7 +980,7 @@
                   <div class="sig-title">Senior Vice President</div>
                 </div>
                 
-                <!-- NAYA: QR CODE (Direct Image API) -->
+                <!-- QR CODE (Direct Image API) -->
                 <div class="cert-qr-wrap">
                   <img id="qrImage" class="qr-image" src="" alt="QR Code">
                   <div class="qr-label">Scan to Verify</div>
@@ -1078,9 +1090,9 @@
         document.getElementById("metaIssueDate").textContent = dateFormatted;
         document.getElementById("metaCertId").textContent = certID;
 
-        // NAYA: Generate QR Code using Image API (No external JS needed)
+        // QR Code using Image API
         const verifyUrl = window.location.origin + window.location.pathname.replace("my-certificate.html", "verify.html") + "?uid=" + (member.uid || "").trim();
-        const qrApiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=" + encodeURIComponent(verifyUrl);
+        const qrApiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(verifyUrl);
         document.getElementById("qrImage").src = qrApiUrl;
 
         // Update Topbar
