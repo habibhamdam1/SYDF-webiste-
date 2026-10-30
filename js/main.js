@@ -1,10 +1,10 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v18 - MOBILE MENU CSS INJECTED)
+// SYDF - MAIN JAVASCRIPT (v20 - MOBILE MENU FIXED)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
 
-// 1. AUTO-LOAD THEME OVERRIDES & MOBILE MENU CSS
+// 1. AUTO-LOAD THEME OVERRIDES
 (function () {
   if (!document.querySelector('link[href*="theme-overrides.css"]')) {
     const link = document.createElement("link");
@@ -12,86 +12,6 @@ console.log("SYDF Website Loaded Successfully!");
     link.href = "css/theme-overrides.css";
     document.head.appendChild(link);
   }
-
-  // MOBILE MENU BUTTON CSS INJECTION (Taake button lazmi nazar aaye)
-  const style = document.createElement('style');
-  style.innerHTML = `
-    /* Mobile Menu Button Style */
-    .mobile-menu-btn {
-      display: none;
-      background: transparent;
-      border: none;
-      font-size: 26px;
-      color: var(--text-primary);
-      cursor: pointer;
-      padding: 5px;
-      z-index: 1000;
-    }
-    
-    /* Screen size less than 1024px */
-    @media (max-width: 1024px) {
-      .glass-header {
-        justify-content: space-between !important;
-      }
-      .glass-header .logo {
-        flex-shrink: 1;
-        overflow: hidden;
-      }
-      .glass-header .logo p {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .mobile-menu-btn {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      /* Default state: Menu hidden */
-      .glass-header nav {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: var(--header-bg);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid var(--card-border);
-        padding: 0;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-in-out;
-        z-index: 999;
-      }
-      
-      /* Active state: Menu visible */
-      .glass-header nav.active {
-        max-height: 500px;
-        padding: 15px 0;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      }
-      
-      .glass-header nav ul {
-        flex-direction: column !important;
-        align-items: center;
-        gap: 15px;
-        width: 100%;
-      }
-      
-      .glass-header nav ul li {
-        width: 100%;
-        text-align: center;
-      }
-      
-      .glass-header nav ul li a {
-        display: block;
-        padding: 10px;
-        width: 100%;
-      }
-    }
-  `;
-  document.head.appendChild(style);
 })();
 
 // ==========================================
@@ -311,7 +231,7 @@ function updateUserInfo(user) {
 }
 
 // ==========================================
-// SIDEBAR TOGGLE (Admin Dashboard)
+// SIDEBAR TOGGLE (For Admin & Dashboard)
 // ==========================================
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("dashboardSidebar");
@@ -338,102 +258,95 @@ if (sidebarOverlay) {
 }
 
 // ==========================================
-// DYNAMIC HEADER & FOOTER & SIDEBAR INJECTIONS
+// DYNAMIC HEADER (LOADED IMMEDIATELY) & FOOTER
 // ==========================================
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", function () {
   const isAdminPage = window.location.pathname.includes("admin") && !window.location.pathname.includes("admin-login");
   
+  // 1. HEADER & MOBILE BUTTON (Synchronous - No DB needed)
   if (!isAdminPage) {
+    const existingNav = document.querySelector(".glass-header nav");
+    const headerDiv = document.querySelector(".glass-header");
+    const currentPath = window.location.pathname.split("/").pop() || "index.html";
+
+    if (existingNav) {
+      const defaultLinks = [
+        { href: "index.html", label: "Home" }, { href: "about.html", label: "About Us" },
+        { href: "leadership.html", label: "Leadership" }, { href: "districts.html", label: "Districts" },
+        { href: "activities.html", label: "Activities" }, { href: "gallery.html", label: "Gallery" },
+        { href: "news.html", label: "News" }, { href: "membership.html", label: "Membership" },
+        { href: "donate.html", label: "Donate" }, { href: "contact.html", label: "Contact" }
+      ];
+      
+      let navHTML = "<ul>";
+      defaultLinks.forEach(link => {
+        const active = currentPath === link.href ? ' class="active"' : '';
+        navHTML += `<li><a href="${link.href}"${active}>${link.label}</a></li>`;
+      });
+      const isGrievance = currentPath === "public-report.html" ? ' class="active"' : '';
+      navHTML += `<li><a href="public-report.html"${isGrievance} style="color: var(--warm-text); font-weight: 600;">🛡️ Grievance</a></li>`;
+      navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li></ul>`;
+      
+      existingNav.innerHTML = navHTML;
+    }
+
+    if (headerDiv && existingNav && !document.getElementById("mobileMenuBtn")) {
+      const btn = document.createElement("button");
+      btn.id = "mobileMenuBtn";
+      btn.className = "mobile-menu-btn";
+      btn.innerHTML = "☰";
+      headerDiv.appendChild(btn);
+      
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        existingNav.classList.toggle("active");
+        this.innerHTML = existingNav.classList.contains("active") ? "✕" : "☰";
+      });
+
+      document.addEventListener("click", function(e) {
+        if (!headerDiv.contains(e.target) && existingNav.classList.contains("active")) {
+          existingNav.classList.remove("active");
+          btn.innerHTML = "☰";
+        }
+      });
+    }
+
+    // Logo Setup
+    const logoDiv = document.querySelector(".glass-header .logo");
+    if (logoDiv && !logoDiv.querySelector("img")) {
+      const img = document.createElement("img");
+      img.src = "images/logo.png";
+      img.alt = "SYDF Logo";
+      img.style.cssText = "width:40px;height:40px;border-radius:50%;object-fit:contain;background:var(--card-bg);padding:2px;margin-right:8px;flex-shrink:0;box-shadow:0 3px 12px var(--accent-glow);";
+      img.onerror = function () { this.remove(); };
+      logoDiv.style.display = "flex";
+      logoDiv.style.alignItems = "center";
+      if (!logoDiv.querySelector(".logo-text")) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "logo-text";
+        while (logoDiv.firstChild && logoDiv.firstChild !== img) { wrapper.appendChild(logoDiv.firstChild); }
+        logoDiv.appendChild(wrapper);
+      }
+      logoDiv.insertBefore(img, logoDiv.firstChild);
+    }
+  }
+
+  // 2. ASYNC FOOTER & SIDEBAR INJECTIONS (Runs after DB ready)
+  (async function loadDynamicParts() {
     let attempts = 0;
     while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
       await new Promise(r => setTimeout(r, 100));
       attempts++;
     }
+    if (typeof supabaseClient === "undefined" || !supabaseClient) return;
 
-    if (typeof supabaseClient !== "undefined" && supabaseClient) {
+    // Dynamic Footer
+    if (!isAdminPage) {
       try {
-        const { data: links } = await supabaseClient.from("menu_links").select("*").eq("is_active", true).order("sort_order", { ascending: true });
         const { data: settingsData } = await supabaseClient.from("settings").select("key, value").in("key", ["facebook", "instagram", "youtube", "whatsapp_link", "contact_email", "phone", "address"]);
-        
         const sysSettings = {};
         if (settingsData) settingsData.forEach(s => sysSettings[s.key] = s.value);
 
-        // 1. Header Setup
-        const existingNav = document.querySelector(".glass-header nav");
-        const currentPath = window.location.pathname.split("/").pop() || "index.html";
-
-        if (existingNav) {
-          let navHTML = "<ul>";
-          if (links && links.length > 0) {
-            const headerLinks = links.filter(l => l.location === "header");
-            headerLinks.forEach(link => {
-              const active = currentPath === link.url ? ' class="active"' : (link.is_button ? ' class="btn-login"' : '');
-              navHTML += `<li><a href="${link.url}"${active}>${link.label}</a></li>`;
-            });
-          } else {
-            const defaultLinks = [
-              { href: "index.html", label: "Home" }, { href: "about.html", label: "About Us" },
-              { href: "leadership.html", label: "Leadership" }, { href: "districts.html", label: "Districts" },
-              { href: "activities.html", label: "Activities" }, { href: "gallery.html", label: "Gallery" },
-              { href: "news.html", label: "News" }, { href: "membership.html", label: "Membership" },
-              { href: "donate.html", label: "Donate" }, { href: "contact.html", label: "Contact" }
-            ];
-            defaultLinks.forEach(link => {
-              const active = currentPath === link.href ? ' class="active"' : '';
-              navHTML += `<li><a href="${link.href}"${active}>${link.label}</a></li>`;
-            });
-          }
-          
-          const isGrievance = currentPath === "public-report.html" ? ' class="active"' : '';
-          navHTML += `<li><a href="public-report.html"${isGrievance} style="color: var(--warm-text); font-weight: 600;">🛡️ Grievance</a></li>`;
-          navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li></ul>`;
-          existingNav.innerHTML = navHTML;
-        }
-
-        // 2. MOBILE MENU BUTTON SETUP
-        const headerDiv = document.querySelector(".glass-header");
-        if (headerDiv && !document.getElementById("mobileMenuBtn") && existingNav) {
-          const btn = document.createElement("button");
-          btn.id = "mobileMenuBtn";
-          btn.className = "mobile-menu-btn";
-          btn.innerHTML = "☰";
-          headerDiv.appendChild(btn);
-          
-          btn.addEventListener("click", function (e) {
-            e.stopPropagation(); // Prevent bubbling to document
-            existingNav.classList.toggle("active");
-            this.innerHTML = existingNav.classList.contains("active") ? "✕" : "☰";
-          });
-
-          // Close menu when clicking outside
-          document.addEventListener("click", function(e) {
-            if (!headerDiv.contains(e.target) && existingNav.classList.contains("active")) {
-              existingNav.classList.remove("active");
-              btn.innerHTML = "☰";
-            }
-          });
-        }
-
-        // 3. Logo Setup
-        const logoDiv = document.querySelector(".glass-header .logo");
-        if (logoDiv && !logoDiv.querySelector("img")) {
-          const img = document.createElement("img");
-          img.src = "images/logo.png";
-          img.alt = "SYDF Logo";
-          img.style.cssText = "width:40px;height:40px;border-radius:50%;object-fit:contain;background:var(--card-bg);padding:2px;margin-right:8px;flex-shrink:0;box-shadow:0 3px 12px var(--accent-glow);";
-          img.onerror = function () { this.remove(); };
-          logoDiv.style.display = "flex";
-          logoDiv.style.alignItems = "center";
-          if (!logoDiv.querySelector(".logo-text")) {
-            const wrapper = document.createElement("div");
-            wrapper.className = "logo-text";
-            while (logoDiv.firstChild && logoDiv.firstChild !== img) { wrapper.appendChild(logoDiv.firstChild); }
-            logoDiv.appendChild(wrapper);
-          }
-          logoDiv.insertBefore(img, logoDiv.firstChild);
-        }
-
-        // 4. Footer Setup
         const fbLink = sysSettings.facebook || '#';
         const igLink = sysSettings.instagram || '#';
         const ytLink = sysSettings.youtube || '#';
@@ -468,110 +381,110 @@ document.addEventListener("DOMContentLoaded", async function () {
             <div class="footer-bottom"><p>&copy; ${new Date().getFullYear()} Swat Youth Development Forum. All Rights Reserved.</p></div>
            `;
         }
-      } catch (err) { console.log("Dynamic load error:", err); }
+      } catch (err) { console.log("Footer error:", err); }
     }
-  }
 
-  // SIDEBAR INJECTIONS (For Dashboard & Admin Pages)
-  const sidebarNav = document.querySelector(".dashboard-sidebar .sidebar-nav");
-  if (sidebarNav) {
-    const currentPage = window.location.pathname.split("/").pop() || "dashboard.html";
-    sidebarNav.querySelectorAll("a").forEach((link) => {
-      link.classList.remove("active");
-      const href = link.getAttribute("href");
-      if (href && href === currentPage) link.classList.add("active");
-    });
+    // Sidebar Injections
+    const sidebarNav = document.querySelector(".dashboard-sidebar .sidebar-nav");
+    if (sidebarNav) {
+      const currentPage = window.location.pathname.split("/").pop() || "dashboard.html";
+      sidebarNav.querySelectorAll("a").forEach((link) => {
+        link.classList.remove("active");
+        const href = link.getAttribute("href");
+        if (href && href === currentPage) link.classList.add("active");
+      });
 
-    if (isAdminPage) {
-      const wrongBtn = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes("member-reports.html"));
-      if (wrongBtn) wrongBtn.parentElement.remove();
+      if (isAdminPage) {
+        const wrongBtn = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes("member-reports.html"));
+        if (wrongBtn) wrongBtn.parentElement.remove();
 
-      const systemTitle = Array.from(sidebarNav.querySelectorAll(".nav-section-title")).find((el) => el.textContent.trim() === "System");
-      if (systemTitle) {
-        const nextUl = systemTitle.nextElementSibling;
-        if (nextUl && nextUl.tagName === "UL") {
-          if (!nextUl.querySelector('a[href="admin-activity-logs.html"]')) {
-            const li1 = document.createElement("li");
-            li1.innerHTML = `<a href="admin-activity-logs.html"><span class="nav-icon">📋</span><span>Activity Logs</span></a>`;
-            nextUl.insertBefore(li1, nextUl.firstChild);
-          }
-          if (!nextUl.querySelector('a[href="admin-recycle-bin.html"]')) {
-            const li2 = document.createElement("li");
-            li2.innerHTML = `<a href="admin-recycle-bin.html"><span class="nav-icon">🗑️</span><span>Recycle Bin</span></a>`;
-            nextUl.insertBefore(li2, nextUl.children[1]);
-          }
-          if (!nextUl.querySelector('a[href="admin-menu-manager.html"]')) {
-            const li3 = document.createElement("li");
-            li3.innerHTML = `<a href="admin-menu-manager.html"><span class="nav-icon">🔗</span><span>Menu Manager</span></a>`;
-            nextUl.insertBefore(li3, nextUl.children[2]);
+        const systemTitle = Array.from(sidebarNav.querySelectorAll(".nav-section-title")).find((el) => el.textContent.trim() === "System");
+        if (systemTitle) {
+          const nextUl = systemTitle.nextElementSibling;
+          if (nextUl && nextUl.tagName === "UL") {
+            if (!nextUl.querySelector('a[href="admin-activity-logs.html"]')) {
+              const li1 = document.createElement("li");
+              li1.innerHTML = `<a href="admin-activity-logs.html"><span class="nav-icon">📋</span><span>Activity Logs</span></a>`;
+              nextUl.insertBefore(li1, nextUl.firstChild);
+            }
+            if (!nextUl.querySelector('a[href="admin-recycle-bin.html"]')) {
+              const li2 = document.createElement("li");
+              li2.innerHTML = `<a href="admin-recycle-bin.html"><span class="nav-icon">🗑️</span><span>Recycle Bin</span></a>`;
+              nextUl.insertBefore(li2, nextUl.children[1]);
+            }
+            if (!nextUl.querySelector('a[href="admin-menu-manager.html"]')) {
+              const li3 = document.createElement("li");
+              li3.innerHTML = `<a href="admin-menu-manager.html"><span class="nav-icon">🔗</span><span>Menu Manager</span></a>`;
+              nextUl.insertBefore(li3, nextUl.children[2]);
+            }
           }
         }
-      }
 
-      const contentTitle = Array.from(sidebarNav.querySelectorAll(".nav-section-title")).find((el) => el.textContent.trim() === "Content");
-      if (contentTitle) {
-         const nextUl = contentTitle.nextElementSibling;
-         if (nextUl && nextUl.tagName === "UL") {
-            if (!nextUl.querySelector('a[href="admin-events.html"]')) {
-               const liEvent = document.createElement("li");
-               liEvent.innerHTML = `<a href="admin-events.html"><span class="nav-icon">📅</span><span>Events</span></a>`;
-               const actLink = Array.from(nextUl.querySelectorAll("a")).find(a => a.href.includes("admin-activities.html"));
-               if(actLink) actLink.parentElement.insertAdjacentElement("afterend", liEvent);
-               else nextUl.appendChild(liEvent);
-            }
-            if (!nextUl.querySelector('a[href="admin-custom-pages.html"]')) {
-               const liContent = document.createElement("li");
-               liContent.innerHTML = `<a href="admin-custom-pages.html"><span class="nav-icon">📄</span><span>Custom Pages</span></a>`;
-               nextUl.appendChild(liContent); 
-            }
-            if (!nextUl.querySelector('a[href="admin-forms.html"]')) {
-               const liForm = document.createElement("li");
-               liForm.innerHTML = `<a href="admin-forms.html"><span class="nav-icon">📝</span><span>Form Builder</span></a>`;
-               nextUl.appendChild(liForm); 
-            }
-         }
-      }
+        const contentTitle = Array.from(sidebarNav.querySelectorAll(".nav-section-title")).find((el) => el.textContent.trim() === "Content");
+        if (contentTitle) {
+           const nextUl = contentTitle.nextElementSibling;
+           if (nextUl && nextUl.tagName === "UL") {
+              if (!nextUl.querySelector('a[href="admin-events.html"]')) {
+                 const liEvent = document.createElement("li");
+                 liEvent.innerHTML = `<a href="admin-events.html"><span class="nav-icon">📅</span><span>Events</span></a>`;
+                 const actLink = Array.from(nextUl.querySelectorAll("a")).find(a => a.href.includes("admin-activities.html"));
+                 if(actLink) actLink.parentElement.insertAdjacentElement("afterend", liEvent);
+                 else nextUl.appendChild(liEvent);
+              }
+              if (!nextUl.querySelector('a[href="admin-custom-pages.html"]')) {
+                 const liContent = document.createElement("li");
+                 liContent.innerHTML = `<a href="admin-custom-pages.html"><span class="nav-icon">📄</span><span>Custom Pages</span></a>`;
+                 nextUl.appendChild(liContent); 
+              }
+              if (!nextUl.querySelector('a[href="admin-forms.html"]')) {
+                 const liForm = document.createElement("li");
+                 liForm.innerHTML = `<a href="admin-forms.html"><span class="nav-icon">📝</span><span>Form Builder</span></a>`;
+                 nextUl.appendChild(liForm); 
+              }
+           }
+        }
 
-      const injectAdminLink = (href, icon, label, afterHref) => {
-        if (!Array.from(sidebarNav.querySelectorAll("a")).some((a) => a.href.includes(href))) {
+        const injectAdminLink = (href, icon, label, afterHref) => {
+          if (!Array.from(sidebarNav.querySelectorAll("a")).some((a) => a.href.includes(href))) {
+            const newLi = document.createElement("li");
+            newLi.innerHTML = `<a href="${href}"><span class="nav-icon">${icon}</span><span>${label}</span></a>`;
+            const afterLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes(afterHref));
+            if (afterLink) afterLink.parentElement.insertAdjacentElement("afterend", newLi);
+            else sidebarNav.appendChild(newLi);
+          }
+        };
+
+        injectAdminLink("admin-issue-reports.html", "🚨", "Member Reports", "admin-waitlist.html");
+        injectAdminLink("admin-public-issues.html", "🛡️", "Public Grievances", "admin-issue-reports.html");
+        injectAdminLink("admin-messages.html", "📩", "Messages", "admin-notifications.html");
+        injectAdminLink("admin-elections.html", "🗳️", "Elections", "admin-proposals.html");
+        injectAdminLink("admin-volunteers.html", "🙋", "Volunteers", "admin-members.html");
+        
+      } else {
+        if (!Array.from(sidebarNav.querySelectorAll("a")).some((a) => a.href.includes("member-reports.html"))) {
           const newLi = document.createElement("li");
-          newLi.innerHTML = `<a href="${href}"><span class="nav-icon">${icon}</span><span>${label}</span></a>`;
-          const afterLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes(afterHref));
-          if (afterLink) afterLink.parentElement.insertAdjacentElement("afterend", newLi);
+          newLi.innerHTML = `<a href="member-reports.html"><span class="nav-icon">🚨</span><span>Report Issue</span></a>`;
+          const idCardLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes("my-id-card.html"));
+          if (idCardLink) idCardLink.parentElement.insertAdjacentElement("afterend", newLi);
           else sidebarNav.appendChild(newLi);
         }
-      };
-
-      injectAdminLink("admin-issue-reports.html", "🚨", "Member Reports", "admin-waitlist.html");
-      injectAdminLink("admin-public-issues.html", "🛡️", "Public Grievances", "admin-issue-reports.html");
-      injectAdminLink("admin-messages.html", "📩", "Messages", "admin-notifications.html");
-      injectAdminLink("admin-elections.html", "🗳️", "Elections", "admin-proposals.html");
-      injectAdminLink("admin-volunteers.html", "🙋", "Volunteers", "admin-members.html");
-      
-    } else {
-      if (!Array.from(sidebarNav.querySelectorAll("a")).some((a) => a.href.includes("member-reports.html"))) {
-        const newLi = document.createElement("li");
-        newLi.innerHTML = `<a href="member-reports.html"><span class="nav-icon">🚨</span><span>Report Issue</span></a>`;
-        const idCardLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes("my-id-card.html"));
-        if (idCardLink) idCardLink.parentElement.insertAdjacentElement("afterend", newLi);
-        else sidebarNav.appendChild(newLi);
+        if (!Array.from(sidebarNav.querySelectorAll("a")).some((a) => a.href.includes("member-elections.html"))) {
+          const newElLi = document.createElement("li");
+          newElLi.innerHTML = `<a href="member-elections.html"><span class="nav-icon">🗳️</span><span>Elections</span></a>`;
+          const propLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes("member-proposals.html"));
+          if (propLink) propLink.parentElement.insertAdjacentElement("afterend", newElLi);
+          else sidebarNav.appendChild(newElLi);
+        }
       }
-      if (!Array.from(sidebarNav.querySelectorAll("a")).some((a) => a.href.includes("member-elections.html"))) {
-        const newElLi = document.createElement("li");
-        newElLi.innerHTML = `<a href="member-elections.html"><span class="nav-icon">🗳️</span><span>Elections</span></a>`;
-        const propLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes("member-proposals.html"));
-        if (propLink) propLink.parentElement.insertAdjacentElement("afterend", newElLi);
-        else sidebarNav.appendChild(newElLi);
-      }
+      addBottomButtons(sidebarNav);
     }
-    addBottomButtons(sidebarNav);
-  }
 
-  if (isAdminPage && !document.querySelector('script[src*="activity-logger.js"]')) {
-    const script = document.createElement("script");
-    script.src = "js/activity-logger.js";
-    document.body.appendChild(script);
-  }
+    if (isAdminPage && !document.querySelector('script[src*="activity-logger.js"]')) {
+      const script = document.createElement("script");
+      script.src = "js/activity-logger.js";
+      document.body.appendChild(script);
+    }
+  })();
 });
 
 function addBottomButtons(sidebarNav) {
