@@ -10,6 +10,8 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;900&family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
@@ -20,6 +22,7 @@
         gap: 20px;
         flex-wrap: wrap;
         margin-bottom: 25px;
+        margin-top: 10px; /* Mobile topbar fix */
       }
       .btn-download {
         display: inline-flex;
@@ -73,6 +76,9 @@
         );
         overflow: hidden;
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
       }
 
       .certificate::before {
@@ -155,7 +161,7 @@
         transform: translate(-50%, -50%);
         width: 65%;
         height: 65%;
-        opacity: 0.035;
+        opacity: 0.04;
         pointer-events: none;
         z-index: 0;
       }
@@ -166,23 +172,8 @@
         mix-blend-mode: multiply;
       }
 
-      /* ============================================
-         LAYOUT — CSS GRID (print safe)
-         ============================================ */
-      .certificate {
-        display: grid;
-        grid-template-rows: auto auto 1fr auto;
-        grid-template-areas:
-          "header"
-          "title"
-          "body"
-          "footer";
-        gap: 2%;
-      }
-
       /* HEADER */
       .cert-header {
-        grid-area: header;
         text-align: center;
         position: relative;
         z-index: 2;
@@ -236,10 +227,10 @@
 
       /* TITLE */
       .cert-title {
-        grid-area: title;
         text-align: center;
         position: relative;
         z-index: 2;
+        margin: 15px 0;
       }
       .cert-title h1 {
         font-family: "Playfair Display", serif;
@@ -278,9 +269,8 @@
         color: #b8944a;
       }
 
-      /* BODY — flexible, centered */
+      /* BODY */
       .cert-body {
-        grid-area: body;
         text-align: center;
         position: relative;
         z-index: 2;
@@ -288,9 +278,8 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        min-height: 0;
-        overflow: hidden;
-        padding: 2% 0;
+        flex-grow: 1;
+        padding: 10px 0;
       }
       .cert-presented {
         font-size: 10px;
@@ -379,18 +368,34 @@
         box-shadow: 0 4px 15px rgba(184, 148, 74, 0.15);
       }
 
-      /* FOOTER — CSS GRID (no wrapping issues) */
+      /* DATE AND ID INSIDE CERTIFICATE */
+      .cert-meta-inside {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 15px;
+        font-family: "Courier New", monospace;
+        font-size: 10px;
+        font-weight: 700;
+        color: #8b7e6a;
+        letter-spacing: 1px;
+      }
+      .cert-meta-inside span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* FOOTER */
       .cert-footer {
-        grid-area: footer;
         display: grid;
-        grid-template-columns: 1fr auto 1fr;
+        grid-template-columns: 1fr auto 1fr auto;
         align-items: end;
-        gap: 20px;
-        padding-top: 3%;
+        gap: 15px;
+        padding-top: 15px;
         border-top: 1px dashed rgba(184, 148, 74, 0.4);
         position: relative;
         z-index: 2;
-        margin-top: 2%;
       }
       .cert-sig {
         text-align: center;
@@ -401,11 +406,11 @@
       }
       .sig-line {
         width: 100%;
-        max-width: 160px;
+        max-width: 120px;
         height: 1px;
         background: #1a2b4a;
         opacity: 0.4;
-        margin: 40px auto 8px;
+        margin: 30px auto 8px;
       }
       .sig-name {
         font-family: "Playfair Display", serif;
@@ -423,8 +428,8 @@
       }
 
       .cert-seal {
-        width: 72px;
-        height: 72px;
+        width: 65px;
+        height: 65px;
         border-radius: 50%;
         background: linear-gradient(
           135deg,
@@ -446,27 +451,47 @@
       .cert-seal::before {
         content: "";
         position: absolute;
-        inset: 6px;
+        inset: 5px;
         border: 1px dashed rgba(255, 255, 255, 0.6);
         border-radius: 50%;
       }
       .cert-seal span:first-child {
-        font-size: 22px;
+        font-size: 20px;
         line-height: 1;
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
       }
       .cert-seal span:last-child {
-        font-size: 7px;
+        font-size: 6px;
         font-weight: 900;
         color: #4a3010;
-        letter-spacing: 1.5px;
+        letter-spacing: 1px;
         margin-top: 2px;
         font-family: "Playfair Display", serif;
       }
 
-      /* ============================================
-         INFO BAR (screen only)
-         ============================================ */
+      /* QR CODE WRAPPER */
+      .cert-qr-wrap {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #qrcode {
+        background: #fff;
+        padding: 4px;
+        border-radius: 4px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      }
+      .qr-label {
+        font-size: 7px;
+        color: #8b7e6a;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-top: 4px;
+        letter-spacing: 1px;
+      }
+
+      /* INFO BAR (Screen Only) */
       .cert-info-bar {
         display: flex;
         justify-content: space-between;
@@ -513,6 +538,7 @@
         color: white;
       }
 
+      /* Loading Box */
       .loading-box {
         text-align: center;
         padding: 80px 30px;
@@ -533,119 +559,63 @@
         font-size: 14px;
         opacity: 0.75;
       }
-      .loading-box.warn {
-        background: rgba(245, 158, 11, 0.08);
-        border: 1px solid rgba(245, 158, 11, 0.25);
-      }
-      .loading-box.warn .ico {
-        color: #fbbf24;
-      }
-      .loading-box.err {
-        background: rgba(239, 68, 68, 0.08);
-        border: 1px solid rgba(239, 68, 68, 0.25);
-      }
-      .loading-box.err .ico {
-        color: #fca5a5;
-      }
 
-      /* ============================================
-         RESPONSIVE
-         ============================================ */
-      @media (max-width: 900px) {
-        .cert-title h1 {
-          font-size: 30px;
-          letter-spacing: 4px;
-        }
-        .cert-name {
-          font-size: 36px;
-          padding: 0 25px;
-        }
-        .cert-org {
-          font-size: 16px;
-          letter-spacing: 2px;
-        }
-        .cert-logo-wrap {
-          width: 64px;
-          height: 64px;
-        }
-      }
-      
       /* ============================================
          MOBILE FIX (Max-width: 768px)
          ============================================ */
       @media (max-width: 768px) {
-        .page-header-block {
-          flex-direction: column;
-          align-items: flex-start;
-          margin-top: 15px;
-        }
-        .btn-download {
-          width: 100%;
-          justify-content: center;
-        }
-        
         .cert-container {
           padding: 5px;
+          margin-top: 15px;
         }
         
-        /* Make it a flex column instead of grid to prevent overlap */
         .certificate {
           aspect-ratio: auto !important;
           height: auto !important;
-          min-height: 500px;
-          padding: 30px 15px !important;
+          min-height: 600px;
+          padding: 20px 15px !important;
           display: flex !important;
           flex-direction: column !important;
-          gap: 15px !important;
         }
         
-        /* Hide messy watermark and corners on small screens */
         .watermark-logo { display: none !important; }
         .corner-orn { width: 20px !important; height: 20px !important; }
         
-        .cert-header { margin-bottom: 5px; }
         .cert-logo-wrap { width: 55px; height: 55px; }
         .cert-org { font-size: 14px; letter-spacing: 1px; }
-        .cert-tagline { font-size: 6px; letter-spacing: 2px; }
+        .cert-tagline { font-size: 6px; letter-spacing: 1px; }
         
+        .cert-title { margin: 10px 0; }
         .cert-title h1 { font-size: 22px; letter-spacing: 2px; }
         .cert-title-sub { font-size: 10px; letter-spacing: 2px; }
-        .deco { margin-top: 5px; }
         
         .cert-presented { font-size: 9px; margin-bottom: 8px; }
-        .cert-name { 
-          font-size: 24px; 
-          padding: 0; 
-          margin: 10px 0;
-        }
-        .cert-name::before,
-        .cert-name::after { display: none; } /* Hide decorative leaves on mobile to save space */
+        .cert-name { font-size: 24px; padding: 0; margin: 10px 0; }
+        .cert-name::before, .cert-name::after { display: none; }
         
         .cert-uid { font-size: 9px; padding: 4px 12px; margin-bottom: 12px; }
         .cert-description { font-size: 13px; line-height: 1.6; padding: 0 10px; }
-        .cert-role { font-size: 10px; padding: 5px 15px; letter-spacing: 1px; }
+        .cert-role { font-size: 10px; padding: 5px 15px; }
+        
+        .cert-meta-inside { flex-direction: column; gap: 5px; margin-top: 10px; }
         
         .cert-footer {
           display: flex !important;
           flex-direction: column !important;
           align-items: center !important;
-          gap: 20px !important;
+          gap: 15px !important;
           margin-top: 15px !important;
           padding-top: 15px !important;
         }
-        .sig-line { margin: 10px auto 5px !important; width: 120px !important; }
-        .sig-name { font-size: 14px; }
-        .sig-title { font-size: 8px; }
-        
-        .cert-seal { width: 55px; height: 55px; margin: 5px auto; }
-        .cert-seal span:first-child { font-size: 18px; }
-        .cert-seal span:last-child { font-size: 6px; }
+        .cert-seal { width: 50px; height: 50px; margin: 0 auto; }
+        .cert-seal span:first-child { font-size: 16px; }
+        .cert-seal span:last-child { font-size: 5px; }
         
         .cert-info-bar { flex-direction: column; padding: 15px; }
       }
 
       /* ============================================
-         PRINT FIX — BULLETPROOF A4 (No Blank Pages)
+         PRINT FIX — BULLETPROOF A4 (1 Page Only)
          ============================================ */
       @media print {
         @page {
@@ -659,14 +629,8 @@
           color-adjust: exact !important;
         }
 
-        body * {
-          visibility: hidden;
-        }
-
-        .cert-container,
-        .cert-container * {
-          visibility: visible;
-        }
+        body * { visibility: hidden; }
+        .cert-container, .cert-container * { visibility: visible; }
 
         html, body {
           width: 210mm !important;
@@ -701,9 +665,9 @@
           border: none !important; 
           border-radius: 0 !important;
           background: linear-gradient(180deg, #fefbf3 0%, #fdf6e3 50%, #fef9e9 100%) !important;
-          display: grid !important;
-          grid-template-rows: auto auto 1fr auto !important;
-          gap: 5mm !important;
+          display: flex !important;
+          flex-direction: column !important;
+          justify-content: space-between !important;
           page-break-inside: avoid !important;
           page-break-after: avoid !important;
           opacity: 1 !important;
@@ -742,6 +706,8 @@
         .watermark-logo {
           visibility: visible !important;
           display: block !important;
+          width: 400px !important; /* Fixed size for print */
+          height: 400px !important;
         }
 
         .dashboard-sidebar, .dashboard-topbar, .sidebar-overlay,
@@ -758,21 +724,23 @@
           transform: none !important;
         }
 
+        /* Typography Sizes for Print */
+        .cert-header { margin-top: 10mm !important; }
         .cert-logo-wrap { width: 70px !important; height: 70px !important; }
         .cert-org { font-size: 18px !important; }
         .cert-title h1 { font-size: 40px !important; }
         .cert-name { font-size: 50px !important; padding: 0 35px !important; }
         .cert-name::before, .cert-name::after { display: block !important; }
         .cert-description { font-size: 14px !important; max-width: 130mm !important; }
-        .cert-seal { width: 80px !important; height: 80px !important; }
-        .sig-line { margin-top: 30px !important; }
         
-        /* Print signatures in a row again */
         .cert-footer {
           display: grid !important;
-          grid-template-columns: 1fr auto 1fr !important;
+          grid-template-columns: 1fr auto 1fr auto !important;
           flex-direction: row !important;
+          padding-bottom: 10mm !important;
         }
+        .cert-seal { width: 80px !important; height: 80px !important; }
+        .sig-line { margin-top: 30px !important; }
       }
     </style>
   </head>
@@ -845,10 +813,8 @@
             >
           </li>
 
-          <!-- DIVIDER -->
           <div class="sidebar-divider"></div>
 
-          <!-- BACK TO WEBSITE & LOGOUT (Scrollable) -->
           <li>
             <a href="index.html" class="back-to-site-btn">
               <span class="nav-icon">🌐</span>
@@ -976,13 +942,18 @@
                   development.
                 </p>
                 <div class="cert-role" id="certRole">Member</div>
+                
+                <!-- DATE AND ID INSIDE CERTIFICATE -->
+                <div class="cert-meta-inside">
+                  <span><i class="fa-solid fa-calendar"></i> DATE: <span id="metaIssueDate">-</span></span>
+                  <span><i class="fa-solid fa-hashtag"></i> ID: <span id="metaCertId">-</span></span>
+                </div>
               </div>
 
-              <!-- FOOTER -->
+              <!-- FOOTER WITH QR CODE -->
               <div class="cert-footer">
                 <div class="cert-sig">
                   <div class="sig-line"></div>
-                  <!-- Yahan IDs add ki hain taake JS se naam change ho sakein -->
                   <div class="sig-name" id="sigSgName">M. Danish Gul</div>
                   <div class="sig-title">Secretary General</div>
                 </div>
@@ -994,6 +965,12 @@
                   <div class="sig-line"></div>
                   <div class="sig-name" id="sigSvpName">Habib Ur Rahman</div>
                   <div class="sig-title">Senior Vice President</div>
+                </div>
+                
+                <!-- NAYA: QR CODE -->
+                <div class="cert-qr-wrap">
+                  <div id="qrcode"></div>
+                  <div class="qr-label">Scan to Verify</div>
                 </div>
               </div>
             </div>
@@ -1063,19 +1040,17 @@
         else if (mtype === "coordinator") displayRole = "Coordinator";
         document.getElementById("certRole").textContent = displayRole;
 
-        // NAYA CODE: Dynamic Signatures fetch karein
+        // Signatures Fetch
         try {
           const { data: posData } = await supabaseClient
             .from("cabinet_positions")
             .select("title, assigned_to_name");
           
           if (posData) {
-            // Secretary General
             const sg = posData.find(p => p.title.toLowerCase().includes("secretary general") && !p.title.toLowerCase().includes("deputy"));
             if (sg && sg.assigned_to_name) {
               document.getElementById("sigSgName").textContent = sg.assigned_to_name;
             }
-            // Senior Vice President
             const svp = posData.find(p => p.title.toLowerCase().includes("senior vice president"));
             if (svp && svp.assigned_to_name) {
               document.getElementById("sigSvpName").textContent = svp.assigned_to_name;
@@ -1083,46 +1058,51 @@
           }
         } catch(e) { console.log("Error loading signatures:", e); }
 
+        // Date and ID
         const issueDate = new Date();
-        document.getElementById("issueDate").textContent =
-          issueDate.toLocaleDateString("en-PK", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          });
+        const dateFormatted = issueDate.toLocaleDateString("en-PK", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        });
 
-        const uidPart =
-          (member.uid || "").replace(/[^0-9]/g, "").slice(-4) || "0000";
-        document.getElementById("certId").textContent =
-          "CERT-" + issueDate.getFullYear() + "-" + uidPart;
+        const uidPart = (member.uid || "").replace(/[^0-9]/g, "").slice(-4) || "0000";
+        const certID = "CERT-" + issueDate.getFullYear() + "-" + uidPart;
 
-        document.getElementById("topAvatar").textContent = (member.name || "M")
-          .charAt(0)
-          .toUpperCase();
-        document
-          .querySelectorAll(".user-name")
-          .forEach((el) => (el.textContent = member.name || "Member"));
-        document
-          .querySelectorAll(".user-uid")
-          .forEach((el) => (el.textContent = member.uid || "-"));
+        // Info Bar
+        document.getElementById("issueDate").textContent = dateFormatted;
+        document.getElementById("certId").textContent = certID;
+
+        // Inside Certificate
+        document.getElementById("metaIssueDate").textContent = dateFormatted;
+        document.getElementById("metaCertId").textContent = certID;
+
+        // Generate QR Code
+        document.getElementById("qrcode").innerHTML = "";
+        const verifyUrl = window.location.origin + window.location.pathname.replace("my-certificate.html", "verify.html") + "?uid=" + (member.uid || "").trim();
+        new QRCode(document.getElementById("qrcode"), {
+          text: verifyUrl,
+          width: 55, // Mobile friendly, but fits desktop
+          height: 55,
+          colorDark : "#0f2027",
+          colorLight : "#ffffff",
+          correctLevel : QRCode.CorrectLevel.H
+        });
+
+        // Update Topbar
+        document.getElementById("topAvatar").textContent = (member.name || "M").charAt(0).toUpperCase();
+        document.querySelectorAll(".user-name").forEach((el) => (el.textContent = member.name || "Member"));
+        document.querySelectorAll(".user-uid").forEach((el) => (el.textContent = member.uid || "-"));
       }
 
       window.addEventListener("load", async function () {
         let attempts = 0;
-        while (
-          (typeof supabaseClient === "undefined" || !supabaseClient) &&
-          attempts < 30
-        ) {
+        while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
           await new Promise((r) => setTimeout(r, 100));
           attempts++;
         }
         if (!supabaseClient) {
-          showStatus(
-            "⚠️",
-            "System Not Ready",
-            "Please refresh the page",
-            "warn",
-          );
+          showStatus("⚠️", "System Not Ready", "Please refresh the page", "warn");
           return;
         }
 
@@ -1136,67 +1116,34 @@
           }
 
           const { data: member, error } = await supabaseClient
-            .from("members")
-            .select("*")
-            .eq("email", session.user.email)
-            .single();
+            .from("members").select("*").eq("email", session.user.email).single();
 
           if (error || !member) {
-            showStatus(
-              "❌",
-              "Member Not Found",
-              "Your member profile could not be found. Please contact admin.",
-              "err",
-            );
+            showStatus("❌", "Member Not Found", "Your member profile could not be found. Please contact admin.", "err");
             return;
           }
 
           if (member.status === "Suspended") {
-            showStatus(
-              "⏸️",
-              "Account Suspended",
-              "Certificate is not available because your account is suspended. Please contact admin.",
-              "warn",
-            );
+            showStatus("⏸️", "Account Suspended", "Certificate is not available because your account is suspended. Please contact admin.", "warn");
             return;
           }
           if (member.status === "Pending") {
-            showStatus(
-              "⏳",
-              "Account Pending",
-              "Your certificate will be available once your account is approved by admin.",
-              "warn",
-            );
+            showStatus("⏳", "Account Pending", "Your certificate will be available once your account is approved by admin.", "warn");
             return;
           }
           if (member.status === "Rejected") {
-            showStatus(
-              "❌",
-              "Account Rejected",
-              "Certificate is not available.",
-              "err",
-            );
+            showStatus("❌", "Account Rejected", "Certificate is not available.", "err");
             return;
           }
           if (member.status === "Inactive") {
-            showStatus(
-              "💤",
-              "Account Inactive",
-              "Please contact admin to reactivate your account.",
-              "warn",
-            );
+            showStatus("💤", "Account Inactive", "Please contact admin to reactivate your account.", "warn");
             return;
           }
 
           showCertificate(member);
         } catch (err) {
           console.error("Certificate error:", err);
-          showStatus(
-            "❌",
-            "Error Loading",
-            "There was an error loading your certificate. Please refresh.",
-            "err",
-          );
+          showStatus("❌", "Error Loading", "There was an error loading your certificate. Please refresh.", "err");
         }
       });
     </script>
