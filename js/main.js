@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (PERFECT VERSION)
+// SYDF - MAIN JAVASCRIPT (v15 - ALL BUGS FIXED)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -258,31 +258,47 @@ if (sidebarOverlay) {
 }
 
 // ==========================================
-// DYNAMIC HEADER & FOOTER & SIDEBAR
+// DYNAMIC HEADER, FOOTER & SIDEBAR INJECTIONS
 // ==========================================
 document.addEventListener("DOMContentLoaded", async function () {
+  let attempts = 0;
+  while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+    await new Promise(r => setTimeout(r, 100));
+    attempts++;
+  }
+
   const isAdminPage = window.location.pathname.includes("admin") && !window.location.pathname.includes("admin-login");
-  
-  if (!isAdminPage) {
-    let attempts = 0;
-    while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
-      await new Promise(r => setTimeout(r, 100));
-      attempts++;
-    }
 
-    if (typeof supabaseClient !== "undefined" && supabaseClient) {
-      try {
+  if (typeof supabaseClient !== "undefined" && supabaseClient) {
+    try {
+      // 1. HEADER & LOGO INJECTION (Runs if the page has a header)
+      const existingNav = document.querySelector(".glass-header nav");
+      const logoDiv = document.querySelector(".glass-header .logo");
+      
+      if (existingNav || logoDiv) {
         const { data: links } = await supabaseClient.from("menu_links").select("*").eq("is_active", true).order("sort_order", { ascending: true });
-        const { data: settingsData } = await supabaseClient.from("settings").select("key, value").in("key", ["facebook", "instagram", "youtube", "whatsapp_link", "contact_email", "phone", "address"]);
         
-        const sysSettings = {};
-        if (settingsData) settingsData.forEach(s => sysSettings[s.key] = s.value);
+        // --- LOGO INJECTION ---
+        if (logoDiv && !logoDiv.querySelector("img")) {
+          const img = document.createElement("img");
+          img.src = "images/logo.png";
+          img.alt = "SYDF Logo";
+          img.style.cssText = "width:40px;height:40px;border-radius:50%;object-fit:contain;background:var(--card-bg);padding:2px;margin-right:8px;flex-shrink:0;box-shadow:0 3px 12px var(--accent-glow);";
+          img.onerror = function () { this.remove(); };
+          logoDiv.style.display = "flex";
+          logoDiv.style.alignItems = "center";
+          if (!logoDiv.querySelector(".logo-text")) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "logo-text";
+            while (logoDiv.firstChild && logoDiv.firstChild !== img) { wrapper.appendChild(logoDiv.firstChild); }
+            logoDiv.appendChild(wrapper);
+          }
+          logoDiv.insertBefore(img, logoDiv.firstChild);
+        }
 
-        // Header Setup
-        const existingNav = document.querySelector(".glass-header nav");
-        const currentPath = window.location.pathname.split("/").pop() || "index.html";
-
+        // --- NAV INJECTION ---
         if (existingNav) {
+          const currentPath = window.location.pathname.split("/").pop() || "index.html";
           let navHTML = "<ul>";
           if (links && links.length > 0) {
             const headerLinks = links.filter(l => l.location === "header");
@@ -291,7 +307,6 @@ document.addEventListener("DOMContentLoaded", async function () {
               navHTML += `<li><a href="${link.url}"${active}>${link.label}</a></li>`;
             });
           } else {
-            // Fallback if Menu Manager is empty
             const defaultLinks = [
               { href: "index.html", label: "Home" }, { href: "about.html", label: "About Us" },
               { href: "leadership.html", label: "Leadership" }, { href: "districts.html", label: "Districts" },
@@ -304,16 +319,19 @@ document.addEventListener("DOMContentLoaded", async function () {
               navHTML += `<li><a href="${link.href}"${active}>${link.label}</a></li>`;
             });
           }
-          
-          // Always Add Grievance & Login
           const isGrievance = currentPath === "public-report.html" ? ' class="active"' : '';
           navHTML += `<li><a href="public-report.html"${isGrievance} style="color: var(--warm-text); font-weight: 600;">🛡️ Grievance</a></li>`;
           navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li></ul>`;
-          
           existingNav.innerHTML = navHTML;
         }
+      }
 
-        // Footer Setup
+      // 2. DYNAMIC FOOTER (Runs only if footer exists and NOT admin page)
+      if (!isAdminPage) {
+        const { data: settingsData } = await supabaseClient.from("settings").select("key, value").in("key", ["facebook", "instagram", "youtube", "whatsapp_link", "contact_email", "phone", "address"]);
+        const sysSettings = {};
+        if (settingsData) settingsData.forEach(s => sysSettings[s.key] = s.value);
+
         const fbLink = sysSettings.facebook || '#';
         const igLink = sysSettings.instagram || '#';
         const ytLink = sysSettings.youtube || '#';
@@ -348,11 +366,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             <div class="footer-bottom"><p>&copy; ${new Date().getFullYear()} Swat Youth Development Forum. All Rights Reserved.</p></div>
            `;
         }
-      } catch (err) { console.log("Dynamic load error:", err); }
-    }
+      }
+    } catch (err) { console.log("Header/Footer error:", err); }
   }
 
-  // Sidebar Injections
+  // 3. SIDEBAR INJECTIONS (For Dashboard & Admin Pages)
   const sidebarNav = document.querySelector(".dashboard-sidebar .sidebar-nav");
   if (sidebarNav) {
     const currentPage = window.location.pathname.split("/").pop() || "dashboard.html";
@@ -704,7 +722,7 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-// THEME AUTO-FIXER
+// THEME AUTO-FIXER (Cleans up inline styles)
 window.addEventListener("DOMContentLoaded", () => {
   const allElements = document.querySelectorAll("[style]");
   allElements.forEach((el) => {
