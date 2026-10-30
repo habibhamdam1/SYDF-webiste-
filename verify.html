@@ -632,8 +632,8 @@
           ? `<img src="${escapeHtml(m.photo_url)}" alt="${escapeHtml(m.name)}" onerror="this.parentElement.textContent='${initial}'">`
           : initial;
 
-        const joinedDate = m.joined_at
-          ? new Date(m.joined_at).toLocaleDateString("en-PK", {
+        const joinedDate = m.created_at
+          ? new Date(m.created_at).toLocaleDateString("en-PK", {
               day: "numeric",
               month: "short",
               year: "numeric",
@@ -724,30 +724,24 @@
         }
 
         try {
-          const { data, error } = await supabaseClient.rpc("verify_member", {
-            member_uid: uid.trim(),
-          });
+          // FIXED: Direct database fetch instead of RPC
+          const { data: member, error } = await supabaseClient
+            .from("members")
+            .select("*")
+            .eq("uid", uid.trim())
+            .maybeSingle();
 
-          if (error) {
-            console.error("RPC error:", error);
-            renderInvalid("Verification failed. Please try again later.");
-            return;
-          }
-
-          if (!data || data.length === 0) {
+          if (error || !member) {
             renderInvalid(
-              "This member ID is not recognized. The card may be fake or the membership may be inactive.",
+              "This member ID is not recognized. The card may be fake or the membership may be inactive."
             );
             return;
           }
 
-          const member = data[0];
-
-          if (member.status !== "Active") {
+          // Check both status and is_active for robust verification
+          if (member.status !== "Active" && member.is_active !== true) {
             renderInvalid(
-              "This membership is currently <strong>" +
-                member.status +
-                "</strong>. Please contact SYDF administration.",
+              "This membership is currently <strong>" + (member.status || "Inactive") + "</strong>. Please contact SYDF administration."
             );
             return;
           }
