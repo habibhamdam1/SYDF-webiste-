@@ -587,95 +587,61 @@
         .cert-container {
           padding: 5px;
         }
+        
+        /* Make it a flex column instead of grid to prevent overlap */
         .certificate {
           aspect-ratio: auto !important;
           height: auto !important;
-          min-height: 520px;
-          padding: 25px 15px;
-          gap: 15px;
+          min-height: 500px;
+          padding: 30px 15px !important;
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 15px !important;
         }
         
-        .cert-logo-wrap {
-          width: 55px;
-          height: 55px;
-        }
-        .cert-org {
-          font-size: 14px;
-          letter-spacing: 1px;
-        }
-        .cert-tagline {
-          font-size: 6px;
-          letter-spacing: 2px;
-        }
+        /* Hide messy watermark and corners on small screens */
+        .watermark-logo { display: none !important; }
+        .corner-orn { width: 20px !important; height: 20px !important; }
         
-        .cert-title h1 {
-          font-size: 24px;
-          letter-spacing: 3px;
-        }
-        .cert-title-sub {
-          font-size: 10px;
-          letter-spacing: 3px;
-        }
+        .cert-header { margin-bottom: 5px; }
+        .cert-logo-wrap { width: 55px; height: 55px; }
+        .cert-org { font-size: 14px; letter-spacing: 1px; }
+        .cert-tagline { font-size: 6px; letter-spacing: 2px; }
+        
+        .cert-title h1 { font-size: 22px; letter-spacing: 2px; }
+        .cert-title-sub { font-size: 10px; letter-spacing: 2px; }
         .deco { margin-top: 5px; }
         
-        .cert-presented {
-          font-size: 8px;
-          margin-bottom: 5px;
-        }
-        .cert-name {
-          font-size: 26px;
-          padding: 0 15px;
+        .cert-presented { font-size: 9px; margin-bottom: 8px; }
+        .cert-name { 
+          font-size: 24px; 
+          padding: 0; 
+          margin: 10px 0;
         }
         .cert-name::before,
-        .cert-name::after {
-          font-size: 12px;
-        }
-        .cert-uid {
-          font-size: 9px;
-          padding: 4px 12px;
-          margin-bottom: 10px;
-        }
-        .cert-description {
-          font-size: 12px;
-          line-height: 1.6;
-        }
-        .cert-role {
-          font-size: 10px;
-          padding: 5px 15px;
-          letter-spacing: 2px;
-        }
+        .cert-name::after { display: none; } /* Hide decorative leaves on mobile to save space */
+        
+        .cert-uid { font-size: 9px; padding: 4px 12px; margin-bottom: 12px; }
+        .cert-description { font-size: 13px; line-height: 1.6; padding: 0 10px; }
+        .cert-role { font-size: 10px; padding: 5px 15px; letter-spacing: 1px; }
         
         .cert-footer {
-          gap: 10px;
-          padding-top: 15px;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          gap: 20px !important;
+          margin-top: 15px !important;
+          padding-top: 15px !important;
         }
-        .sig-line {
-          margin: 15px auto 5px;
-        }
-        .sig-name {
-          font-size: 11px;
-        }
-        .sig-title {
-          font-size: 7px;
-          letter-spacing: 1px;
-        }
+        .sig-line { margin: 10px auto 5px !important; width: 120px !important; }
+        .sig-name { font-size: 14px; }
+        .sig-title { font-size: 8px; }
         
-        .cert-seal {
-          width: 50px;
-          height: 50px;
-        }
-        .cert-seal span:first-child {
-          font-size: 16px;
-        }
-        .cert-seal span:last-child {
-          font-size: 5px;
-          letter-spacing: 1px;
-        }
+        .cert-seal { width: 55px; height: 55px; margin: 5px auto; }
+        .cert-seal span:first-child { font-size: 18px; }
+        .cert-seal span:last-child { font-size: 6px; }
         
-        .cert-info-bar {
-          flex-direction: column;
-          padding: 15px;
-        }
+        .cert-info-bar { flex-direction: column; padding: 15px; }
       }
 
       /* ============================================
@@ -687,25 +653,21 @@
           margin: 0;
         }
 
-        /* Force exact colors */
         * {
           -webkit-print-color-adjust: exact !important;
           print-color-adjust: exact !important;
           color-adjust: exact !important;
         }
 
-        /* Hide everything by default */
         body * {
           visibility: hidden;
         }
 
-        /* Show only the certificate */
         .cert-container,
         .cert-container * {
           visibility: visible;
         }
 
-        /* Reset HTML and Body for clean print */
         html, body {
           width: 210mm !important;
           height: 297mm !important;
@@ -715,7 +677,6 @@
           overflow: hidden !important;
         }
 
-        /* Position the certificate at the top left exactly on page 1 */
         .cert-container {
           position: absolute !important;
           top: 0 !important;
@@ -737,7 +698,7 @@
           aspect-ratio: auto !important;
           padding: 15mm 20mm !important;
           margin: 0 !important;
-          border: none !important; /* Using ::before / ::after for borders */
+          border: none !important; 
           border-radius: 0 !important;
           background: linear-gradient(180deg, #fefbf3 0%, #fdf6e3 50%, #fef9e9 100%) !important;
           display: grid !important;
@@ -750,7 +711,6 @@
           box-sizing: border-box !important;
         }
 
-        /* Inner Borders */
         .certificate::before {
           top: 8mm !important;
           left: 8mm !important;
@@ -781,15 +741,14 @@
 
         .watermark-logo {
           visibility: visible !important;
+          display: block !important;
         }
 
-        /* Hide UI elements */
         .dashboard-sidebar, .dashboard-topbar, .sidebar-overlay,
         .page-header-block, .cert-info-bar, #statusBox, #printBtn {
           display: none !important;
         }
 
-        /* Ensure main content doesn't push it */
         .dashboard-main, .dashboard-content, #certContent {
           margin: 0 !important;
           padding: 0 !important;
@@ -799,14 +758,21 @@
           transform: none !important;
         }
 
-        /* Typography Sizes for Print */
         .cert-logo-wrap { width: 70px !important; height: 70px !important; }
         .cert-org { font-size: 18px !important; }
         .cert-title h1 { font-size: 40px !important; }
-        .cert-name { font-size: 50px !important; }
+        .cert-name { font-size: 50px !important; padding: 0 35px !important; }
+        .cert-name::before, .cert-name::after { display: block !important; }
         .cert-description { font-size: 14px !important; max-width: 130mm !important; }
         .cert-seal { width: 80px !important; height: 80px !important; }
         .sig-line { margin-top: 30px !important; }
+        
+        /* Print signatures in a row again */
+        .cert-footer {
+          display: grid !important;
+          grid-template-columns: 1fr auto 1fr !important;
+          flex-direction: row !important;
+        }
       }
     </style>
   </head>
@@ -1016,7 +982,8 @@
               <div class="cert-footer">
                 <div class="cert-sig">
                   <div class="sig-line"></div>
-                  <div class="sig-name">M. Danish Gul</div>
+                  <!-- Yahan IDs add ki hain taake JS se naam change ho sakein -->
+                  <div class="sig-name" id="sigSgName">M. Danish Gul</div>
                   <div class="sig-title">Secretary General</div>
                 </div>
                 <div class="cert-seal">
@@ -1025,7 +992,7 @@
                 </div>
                 <div class="cert-sig">
                   <div class="sig-line"></div>
-                  <div class="sig-name">Habib Ur Rahman</div>
+                  <div class="sig-name" id="sigSvpName">Habib Ur Rahman</div>
                   <div class="sig-title">Senior Vice President</div>
                 </div>
               </div>
@@ -1077,7 +1044,7 @@
         document.getElementById("printBtn").style.display = "none";
       }
 
-      function showCertificate(member) {
+      async function showCertificate(member) {
         document.getElementById("statusBox").style.display = "none";
         document.getElementById("certContent").style.display = "block";
         document.getElementById("printBtn").style.display = "inline-flex";
@@ -1095,6 +1062,26 @@
         else if (mtype === "intern") displayRole = "Intern";
         else if (mtype === "coordinator") displayRole = "Coordinator";
         document.getElementById("certRole").textContent = displayRole;
+
+        // NAYA CODE: Dynamic Signatures fetch karein
+        try {
+          const { data: posData } = await supabaseClient
+            .from("cabinet_positions")
+            .select("title, assigned_to_name");
+          
+          if (posData) {
+            // Secretary General
+            const sg = posData.find(p => p.title.toLowerCase().includes("secretary general") && !p.title.toLowerCase().includes("deputy"));
+            if (sg && sg.assigned_to_name) {
+              document.getElementById("sigSgName").textContent = sg.assigned_to_name;
+            }
+            // Senior Vice President
+            const svp = posData.find(p => p.title.toLowerCase().includes("senior vice president"));
+            if (svp && svp.assigned_to_name) {
+              document.getElementById("sigSvpName").textContent = svp.assigned_to_name;
+            }
+          }
+        } catch(e) { console.log("Error loading signatures:", e); }
 
         const issueDate = new Date();
         document.getElementById("issueDate").textContent =
