@@ -199,6 +199,43 @@
         color: #f9a8d4;
         border: 1px solid rgba(236, 72, 153, 0.3);
       }
+      
+      /* Pagination Styles */
+      .pagination-container {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .page-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        border: 1px solid var(--card-border);
+        background: var(--input-bg);
+        color: var(--text-primary);
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+      }
+      .page-btn:hover:not(:disabled) {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .page-btn.active {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+      .page-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
     </style>
   </head>
   <body class="dashboard-body admin-body">
@@ -636,6 +673,8 @@
               align-items: center;
               padding: 18px 22px;
               border-top: 1px solid var(--card-border);
+              flex-wrap: wrap;
+              gap: 15px;
             "
           >
             <div style="font-size: 13px; color: var(--text-secondary)">
@@ -643,6 +682,8 @@
               <strong id="showingCount" style="color: var(--accent)">0</strong>
               members
             </div>
+            <!-- PAGINATION CONTROLS -->
+            <div class="pagination-container" id="paginationControls"></div>
           </div>
         </div>
       </div>
@@ -854,11 +895,16 @@
     </div>
 
     <script src="js/main.js?v=99"></script>
-<script src="js/toast.js?v=99"></script>    <script>
+    <script src="js/toast.js?v=99"></script>
+    <script>
       let allMembers = [];
       let currentUser = null;
       let currentAdminRole = "";
       let currentAdminDistrict = "";
+      
+      // PAGINATION VARIABLES
+      let currentPage = 1;
+      const rowsPerPage = 10; // Aap yahan change kar sakte hain (10, 15, 20)
 
       window.closeModal = function (id) {
         document.getElementById(id).classList.remove("active");
@@ -915,14 +961,12 @@
       });
 
       async function loadMembers() {
-        // Yahan .neq("status", "Deleted") lagaya hai taaki soft-deleted members table mein na aayein
         let query = supabaseClient
           .from("members")
           .select("*")
           .neq("status", "Deleted")
           .order("created_at", { ascending: false });
 
-        // DISTRICT ADMIN FILTER
         if (currentAdminRole === "District Admin" && currentAdminDistrict) {
           query = query.eq("district", currentAdminDistrict);
         }
@@ -937,21 +981,13 @@
 
       function renderMembers() {
         const tbody = document.getElementById("membersBody");
-        const search = document
-          .getElementById("searchInput")
-          .value.toLowerCase();
+        const search = document.getElementById("searchInput").value.toLowerCase();
         const statusFilter = document.getElementById("filterStatus").value;
         const sortBy = document.getElementById("filterSort").value;
 
         let filtered = allMembers.filter((m) => {
           const text = (
-            (m.name || "") +
-            " " +
-            (m.email || "") +
-            " " +
-            (m.uid || "") +
-            " " +
-            (m.district || "")
+            (m.name || "") + " " + (m.email || "") + " " + (m.uid || "") + " " + (m.district || "")
           ).toLowerCase();
           const matchSearch = !search || text.includes(search);
           const matchStatus = !statusFilter || m.status === statusFilter;
@@ -959,9 +995,7 @@
         });
 
         if (sortBy === "score")
-          filtered.sort(
-            (a, b) => (b.engagement_score || 0) - (a.engagement_score || 0),
-          );
+          filtered.sort((a, b) => (b.engagement_score || 0) - (a.engagement_score || 0));
         else if (sortBy === "name")
           filtered.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
 
@@ -969,10 +1003,19 @@
           tbody.innerHTML =
             '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted);">No members found</td></tr>';
           document.getElementById("showingCount").textContent = "0";
+          document.getElementById("paginationControls").innerHTML = "";
           return;
         }
 
-        tbody.innerHTML = filtered
+        // PAGINATION LOGIC
+        const totalPages = Math.ceil(filtered.length / rowsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * rowsPerPage;
+        const paginatedItems = filtered.slice(startIndex, startIndex + rowsPerPage);
+
+        tbody.innerHTML = paginatedItems
           .map((m) => {
             const initial = (m.name || "M").charAt(0).toUpperCase();
             const isFemale = (m.gender || "").toLowerCase() === "female";
@@ -985,8 +1028,7 @@
                     ? "status-badge-inactive"
                     : "status-badge-pending";
             const score = m.engagement_score || 0;
-            const scoreClass =
-              score >= 60 ? "high" : score >= 30 ? "medium" : "low";
+            const scoreClass = score >= 60 ? "high" : score >= 30 ? "medium" : "low";
             const badgeMap = {
               "New Member": { icon: "🌟", class: "new" },
               Active: { icon: "🔥", class: "active" },
@@ -1031,18 +1073,57 @@
           .join("");
 
         document.getElementById("showingCount").textContent = filtered.length;
+        updatePaginationUI(totalPages);
       }
 
+      function updatePaginationUI(totalPages) {
+        const container = document.getElementById("paginationControls");
+        if (totalPages <= 1) {
+          container.innerHTML = "";
+          return;
+        }
+
+        let html = `
+          <button class="page-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
+        `;
+
+        // Show max 5 page numbers
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + 4);
+        if (endPage - startPage < 4) {
+          startPage = Math.max(1, endPage - 4);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+          html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+        }
+
+        html += `
+          <button class="page-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
+        `;
+
+        container.innerHTML = html;
+      }
+
+      window.changePage = function(page) {
+        currentPage = page;
+        renderMembers();
+      };
+
       function attachEvents() {
-        document
-          .getElementById("searchInput")
-          .addEventListener("input", renderMembers);
-        document
-          .getElementById("filterStatus")
-          .addEventListener("change", renderMembers);
-        document
-          .getElementById("filterSort")
-          .addEventListener("change", renderMembers);
+        document.getElementById("searchInput").addEventListener("input", () => {
+            currentPage = 1; // Reset to page 1 on search
+            renderMembers();
+        });
+        document.getElementById("filterStatus").addEventListener("change", () => {
+            currentPage = 1; // Reset to page 1 on filter
+            renderMembers();
+        });
+        document.getElementById("filterSort").addEventListener("change", () => {
+            currentPage = 1; // Reset to page 1 on sort
+            renderMembers();
+        });
+        
         document
           .getElementById("addMemberBtn")
           .addEventListener("click", () =>
@@ -1298,7 +1379,6 @@
         });
       };
 
-      // SOFT DELETE FIXED
       window.deleteMember = function (id) {
         const m = allMembers.find((x) => String(x.id) === String(id));
         window.syfConfirm(
