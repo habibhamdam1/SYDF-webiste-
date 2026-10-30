@@ -10,8 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;900&family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <!-- QR Code Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- QR Code Library hata di gayi hai, direct image API use hogi -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <style>
@@ -22,7 +21,7 @@
         gap: 20px;
         flex-wrap: wrap;
         margin-bottom: 25px;
-        margin-top: 10px; /* Mobile topbar fix */
+        margin-top: 10px; 
       }
       .btn-download {
         display: inline-flex;
@@ -476,7 +475,9 @@
         flex-direction: column;
         align-items: center;
       }
-      #qrcode {
+      .qr-image {
+        width: 55px;
+        height: 55px;
         background: #fff;
         padding: 4px;
         border-radius: 4px;
@@ -706,7 +707,7 @@
         .watermark-logo {
           visibility: visible !important;
           display: block !important;
-          width: 400px !important; /* Fixed size for print */
+          width: 400px !important; 
           height: 400px !important;
         }
 
@@ -945,8 +946,8 @@
                 
                 <!-- DATE AND ID INSIDE CERTIFICATE -->
                 <div class="cert-meta-inside">
-                  <span><i class="fa-solid fa-calendar"></i> DATE: <span id="metaIssueDate">-</span></span>
-                  <span><i class="fa-solid fa-hashtag"></i> ID: <span id="metaCertId">-</span></span>
+                  <span>📅 DATE: <span id="metaIssueDate">-</span></span>
+                  <span>🏆 ID: <span id="metaCertId">-</span></span>
                 </div>
               </div>
 
@@ -967,9 +968,9 @@
                   <div class="sig-title">Senior Vice President</div>
                 </div>
                 
-                <!-- NAYA: QR CODE -->
+                <!-- NAYA: QR CODE (Direct Image API) -->
                 <div class="cert-qr-wrap">
-                  <div id="qrcode"></div>
+                  <img id="qrImage" class="qr-image" src="" alt="QR Code">
                   <div class="qr-label">Scan to Verify</div>
                 </div>
               </div>
@@ -1077,17 +1078,10 @@
         document.getElementById("metaIssueDate").textContent = dateFormatted;
         document.getElementById("metaCertId").textContent = certID;
 
-        // Generate QR Code
-        document.getElementById("qrcode").innerHTML = "";
+        // NAYA: Generate QR Code using Image API (No external JS needed)
         const verifyUrl = window.location.origin + window.location.pathname.replace("my-certificate.html", "verify.html") + "?uid=" + (member.uid || "").trim();
-        new QRCode(document.getElementById("qrcode"), {
-          text: verifyUrl,
-          width: 55, // Mobile friendly, but fits desktop
-          height: 55,
-          colorDark : "#0f2027",
-          colorLight : "#ffffff",
-          correctLevel : QRCode.CorrectLevel.H
-        });
+        const qrApiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=" + encodeURIComponent(verifyUrl);
+        document.getElementById("qrImage").src = qrApiUrl;
 
         // Update Topbar
         document.getElementById("topAvatar").textContent = (member.name || "M").charAt(0).toUpperCase();
