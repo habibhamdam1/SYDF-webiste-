@@ -1,10 +1,10 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v17 - MOBILE MENU FIXED)
+// SYDF - MAIN JAVASCRIPT (v18 - MOBILE MENU CSS INJECTED)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
 
-// 1. AUTO-LOAD THEME OVERRIDES
+// 1. AUTO-LOAD THEME OVERRIDES & MOBILE MENU CSS
 (function () {
   if (!document.querySelector('link[href*="theme-overrides.css"]')) {
     const link = document.createElement("link");
@@ -12,6 +12,86 @@ console.log("SYDF Website Loaded Successfully!");
     link.href = "css/theme-overrides.css";
     document.head.appendChild(link);
   }
+
+  // MOBILE MENU BUTTON CSS INJECTION (Taake button lazmi nazar aaye)
+  const style = document.createElement('style');
+  style.innerHTML = `
+    /* Mobile Menu Button Style */
+    .mobile-menu-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      font-size: 26px;
+      color: var(--text-primary);
+      cursor: pointer;
+      padding: 5px;
+      z-index: 1000;
+    }
+    
+    /* Screen size less than 1024px */
+    @media (max-width: 1024px) {
+      .glass-header {
+        justify-content: space-between !important;
+      }
+      .glass-header .logo {
+        flex-shrink: 1;
+        overflow: hidden;
+      }
+      .glass-header .logo p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .mobile-menu-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      /* Default state: Menu hidden */
+      .glass-header nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--header-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--card-border);
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+        z-index: 999;
+      }
+      
+      /* Active state: Menu visible */
+      .glass-header nav.active {
+        max-height: 500px;
+        padding: 15px 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      }
+      
+      .glass-header nav ul {
+        flex-direction: column !important;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+      }
+      
+      .glass-header nav ul li {
+        width: 100%;
+        text-align: center;
+      }
+      
+      .glass-header nav ul li a {
+        display: block;
+        padding: 10px;
+        width: 100%;
+      }
+    }
+  `;
+  document.head.appendChild(style);
 })();
 
 // ==========================================
@@ -231,7 +311,7 @@ function updateUserInfo(user) {
 }
 
 // ==========================================
-// SIDEBAR TOGGLE (For Admin & Dashboard)
+// SIDEBAR TOGGLE (Admin Dashboard)
 // ==========================================
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("dashboardSidebar");
@@ -263,7 +343,6 @@ if (sidebarOverlay) {
 document.addEventListener("DOMContentLoaded", async function () {
   const isAdminPage = window.location.pathname.includes("admin") && !window.location.pathname.includes("admin-login");
   
-  // ======= 1. HEADER & FOOTER FOR PUBLIC PAGES =======
   if (!isAdminPage) {
     let attempts = 0;
     while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
@@ -279,10 +358,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         const sysSettings = {};
         if (settingsData) settingsData.forEach(s => sysSettings[s.key] = s.value);
 
+        // 1. Header Setup
         const existingNav = document.querySelector(".glass-header nav");
         const currentPath = window.location.pathname.split("/").pop() || "index.html";
 
-        // Build Header Menu
         if (existingNav) {
           let navHTML = "<ul>";
           if (links && links.length > 0) {
@@ -292,7 +371,6 @@ document.addEventListener("DOMContentLoaded", async function () {
               navHTML += `<li><a href="${link.url}"${active}>${link.label}</a></li>`;
             });
           } else {
-            // Fallback if Menu Manager is empty
             const defaultLinks = [
               { href: "index.html", label: "Home" }, { href: "about.html", label: "About Us" },
               { href: "leadership.html", label: "Leadership" }, { href: "districts.html", label: "Districts" },
@@ -306,15 +384,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             });
           }
           
-          // Always Add Grievance & Login
           const isGrievance = currentPath === "public-report.html" ? ' class="active"' : '';
           navHTML += `<li><a href="public-report.html"${isGrievance} style="color: var(--warm-text); font-weight: 600;">🛡️ Grievance</a></li>`;
           navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li></ul>`;
-          
           existingNav.innerHTML = navHTML;
         }
 
-        // ======= YEH HAI MOBILE MENU BUTTON KA CODE =======
+        // 2. MOBILE MENU BUTTON SETUP
         const headerDiv = document.querySelector(".glass-header");
         if (headerDiv && !document.getElementById("mobileMenuBtn") && existingNav) {
           const btn = document.createElement("button");
@@ -323,14 +399,22 @@ document.addEventListener("DOMContentLoaded", async function () {
           btn.innerHTML = "☰";
           headerDiv.appendChild(btn);
           
-          btn.addEventListener("click", function () {
+          btn.addEventListener("click", function (e) {
+            e.stopPropagation(); // Prevent bubbling to document
             existingNav.classList.toggle("active");
             this.innerHTML = existingNav.classList.contains("active") ? "✕" : "☰";
           });
-        }
-        // =================================================
 
-        // Logo Setup
+          // Close menu when clicking outside
+          document.addEventListener("click", function(e) {
+            if (!headerDiv.contains(e.target) && existingNav.classList.contains("active")) {
+              existingNav.classList.remove("active");
+              btn.innerHTML = "☰";
+            }
+          });
+        }
+
+        // 3. Logo Setup
         const logoDiv = document.querySelector(".glass-header .logo");
         if (logoDiv && !logoDiv.querySelector("img")) {
           const img = document.createElement("img");
@@ -349,7 +433,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           logoDiv.insertBefore(img, logoDiv.firstChild);
         }
 
-        // Footer Setup
+        // 4. Footer Setup
         const fbLink = sysSettings.facebook || '#';
         const igLink = sysSettings.instagram || '#';
         const ytLink = sysSettings.youtube || '#';
@@ -388,7 +472,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // ======= 2. SIDEBAR INJECTIONS FOR ADMIN PANEL =======
+  // SIDEBAR INJECTIONS (For Dashboard & Admin Pages)
   const sidebarNav = document.querySelector(".dashboard-sidebar .sidebar-nav");
   if (sidebarNav) {
     const currentPage = window.location.pathname.split("/").pop() || "dashboard.html";
