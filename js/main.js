@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v15 - ALL BUGS FIXED)
+// SYDF - MAIN JAVASCRIPT (v17 - MOBILE MENU FIXED)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -231,7 +231,7 @@ function updateUserInfo(user) {
 }
 
 // ==========================================
-// SIDEBAR TOGGLE
+// SIDEBAR TOGGLE (For Admin & Dashboard)
 // ==========================================
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("dashboardSidebar");
@@ -258,27 +258,80 @@ if (sidebarOverlay) {
 }
 
 // ==========================================
-// DYNAMIC HEADER, FOOTER & SIDEBAR INJECTIONS
+// DYNAMIC HEADER & FOOTER & SIDEBAR INJECTIONS
 // ==========================================
 document.addEventListener("DOMContentLoaded", async function () {
-  let attempts = 0;
-  while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
-    await new Promise(r => setTimeout(r, 100));
-    attempts++;
-  }
-
   const isAdminPage = window.location.pathname.includes("admin") && !window.location.pathname.includes("admin-login");
+  
+  // ======= 1. HEADER & FOOTER FOR PUBLIC PAGES =======
+  if (!isAdminPage) {
+    let attempts = 0;
+    while ((typeof supabaseClient === "undefined" || !supabaseClient) && attempts < 30) {
+      await new Promise(r => setTimeout(r, 100));
+      attempts++;
+    }
 
-  if (typeof supabaseClient !== "undefined" && supabaseClient) {
-    try {
-      // 1. HEADER & LOGO INJECTION (Runs if the page has a header)
-      const existingNav = document.querySelector(".glass-header nav");
-      const logoDiv = document.querySelector(".glass-header .logo");
-      
-      if (existingNav || logoDiv) {
+    if (typeof supabaseClient !== "undefined" && supabaseClient) {
+      try {
         const { data: links } = await supabaseClient.from("menu_links").select("*").eq("is_active", true).order("sort_order", { ascending: true });
+        const { data: settingsData } = await supabaseClient.from("settings").select("key, value").in("key", ["facebook", "instagram", "youtube", "whatsapp_link", "contact_email", "phone", "address"]);
         
-        // --- LOGO INJECTION ---
+        const sysSettings = {};
+        if (settingsData) settingsData.forEach(s => sysSettings[s.key] = s.value);
+
+        const existingNav = document.querySelector(".glass-header nav");
+        const currentPath = window.location.pathname.split("/").pop() || "index.html";
+
+        // Build Header Menu
+        if (existingNav) {
+          let navHTML = "<ul>";
+          if (links && links.length > 0) {
+            const headerLinks = links.filter(l => l.location === "header");
+            headerLinks.forEach(link => {
+              const active = currentPath === link.url ? ' class="active"' : (link.is_button ? ' class="btn-login"' : '');
+              navHTML += `<li><a href="${link.url}"${active}>${link.label}</a></li>`;
+            });
+          } else {
+            // Fallback if Menu Manager is empty
+            const defaultLinks = [
+              { href: "index.html", label: "Home" }, { href: "about.html", label: "About Us" },
+              { href: "leadership.html", label: "Leadership" }, { href: "districts.html", label: "Districts" },
+              { href: "activities.html", label: "Activities" }, { href: "gallery.html", label: "Gallery" },
+              { href: "news.html", label: "News" }, { href: "membership.html", label: "Membership" },
+              { href: "donate.html", label: "Donate" }, { href: "contact.html", label: "Contact" }
+            ];
+            defaultLinks.forEach(link => {
+              const active = currentPath === link.href ? ' class="active"' : '';
+              navHTML += `<li><a href="${link.href}"${active}>${link.label}</a></li>`;
+            });
+          }
+          
+          // Always Add Grievance & Login
+          const isGrievance = currentPath === "public-report.html" ? ' class="active"' : '';
+          navHTML += `<li><a href="public-report.html"${isGrievance} style="color: var(--warm-text); font-weight: 600;">🛡️ Grievance</a></li>`;
+          navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li></ul>`;
+          
+          existingNav.innerHTML = navHTML;
+        }
+
+        // ======= YEH HAI MOBILE MENU BUTTON KA CODE =======
+        const headerDiv = document.querySelector(".glass-header");
+        if (headerDiv && !document.getElementById("mobileMenuBtn") && existingNav) {
+          const btn = document.createElement("button");
+          btn.id = "mobileMenuBtn";
+          btn.className = "mobile-menu-btn";
+          btn.innerHTML = "☰";
+          headerDiv.appendChild(btn);
+          
+          btn.addEventListener("click", function () {
+            existingNav.classList.toggle("active");
+            this.innerHTML = existingNav.classList.contains("active") ? "✕" : "☰";
+          });
+        }
+        // =================================================
+
+        // Logo Setup
+        const logoDiv = document.querySelector(".glass-header .logo");
         if (logoDiv && !logoDiv.querySelector("img")) {
           const img = document.createElement("img");
           img.src = "images/logo.png";
@@ -296,42 +349,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           logoDiv.insertBefore(img, logoDiv.firstChild);
         }
 
-        // --- NAV INJECTION ---
-        if (existingNav) {
-          const currentPath = window.location.pathname.split("/").pop() || "index.html";
-          let navHTML = "<ul>";
-          if (links && links.length > 0) {
-            const headerLinks = links.filter(l => l.location === "header");
-            headerLinks.forEach(link => {
-              const active = currentPath === link.url ? ' class="active"' : (link.is_button ? ' class="btn-login"' : '');
-              navHTML += `<li><a href="${link.url}"${active}>${link.label}</a></li>`;
-            });
-          } else {
-            const defaultLinks = [
-              { href: "index.html", label: "Home" }, { href: "about.html", label: "About Us" },
-              { href: "leadership.html", label: "Leadership" }, { href: "districts.html", label: "Districts" },
-              { href: "activities.html", label: "Activities" }, { href: "gallery.html", label: "Gallery" },
-              { href: "news.html", label: "News" }, { href: "membership.html", label: "Membership" },
-              { href: "donate.html", label: "Donate" }, { href: "contact.html", label: "Contact" }
-            ];
-            defaultLinks.forEach(link => {
-              const active = currentPath === link.href ? ' class="active"' : '';
-              navHTML += `<li><a href="${link.href}"${active}>${link.label}</a></li>`;
-            });
-          }
-          const isGrievance = currentPath === "public-report.html" ? ' class="active"' : '';
-          navHTML += `<li><a href="public-report.html"${isGrievance} style="color: var(--warm-text); font-weight: 600;">🛡️ Grievance</a></li>`;
-          navHTML += `<li><a href="login.html" class="btn-login" id="navAuthBtn">Login</a></li></ul>`;
-          existingNav.innerHTML = navHTML;
-        }
-      }
-
-      // 2. DYNAMIC FOOTER (Runs only if footer exists and NOT admin page)
-      if (!isAdminPage) {
-        const { data: settingsData } = await supabaseClient.from("settings").select("key, value").in("key", ["facebook", "instagram", "youtube", "whatsapp_link", "contact_email", "phone", "address"]);
-        const sysSettings = {};
-        if (settingsData) settingsData.forEach(s => sysSettings[s.key] = s.value);
-
+        // Footer Setup
         const fbLink = sysSettings.facebook || '#';
         const igLink = sysSettings.instagram || '#';
         const ytLink = sysSettings.youtube || '#';
@@ -366,11 +384,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             <div class="footer-bottom"><p>&copy; ${new Date().getFullYear()} Swat Youth Development Forum. All Rights Reserved.</p></div>
            `;
         }
-      }
-    } catch (err) { console.log("Header/Footer error:", err); }
+      } catch (err) { console.log("Dynamic load error:", err); }
+    }
   }
 
-  // 3. SIDEBAR INJECTIONS (For Dashboard & Admin Pages)
+  // ======= 2. SIDEBAR INJECTIONS FOR ADMIN PANEL =======
   const sidebarNav = document.querySelector(".dashboard-sidebar .sidebar-nav");
   if (sidebarNav) {
     const currentPage = window.location.pathname.split("/").pop() || "dashboard.html";
