@@ -640,11 +640,13 @@
                   uid = member.uid;
                 }
               }
+              const posTitle = document.getElementById("posTitle").value.trim();
+
               const { error } = await supabaseClient
                 .from("cabinet_positions")
                 .insert([
                   {
-                    title: document.getElementById("posTitle").value.trim(),
+                    title: posTitle,
                     level: document.getElementById("posLevel").value || null,
                     description:
                       document.getElementById("posDesc").value.trim() || null,
@@ -659,6 +661,15 @@
                 alert("❌ " + error.message);
                 return;
               }
+
+              // NAYA CODE: Add karte waqt bhi member ka role update karein
+              if (email) {
+                await supabaseClient
+                  .from("members")
+                  .update({ role: posTitle })
+                  .eq("email", email);
+              }
+
               window.syfSuccess("✅ Position added!");
               document
                 .getElementById("positionModal")
@@ -696,6 +707,16 @@
                 alert("❌ " + error.message);
                 return;
               }
+
+              // NAYA CODE: Edit karte waqt bhi member ka role update karein
+              const pos = allPositions.find((p) => String(p.id) === String(id));
+              if (pos && pos.assigned_to_email) {
+                await supabaseClient
+                  .from("members")
+                  .update({ role: title })
+                  .eq("email", pos.assigned_to_email);
+              }
+
               window.syfSuccess("✅ Position updated!");
               document
                 .getElementById("editPositionModal")
@@ -710,6 +731,7 @@
               const posId = document.getElementById("assignPosId").value;
               const email = document.getElementById("assignMember").value;
               const member = allMembers.find((x) => x.email === email);
+              const posTitle = document.getElementById("assignPosTitle").value; // NAYA: Title lein
 
               const { error } = await supabaseClient
                 .from("cabinet_positions")
@@ -724,6 +746,15 @@
                 alert("❌ " + error.message);
                 return;
               }
+
+              // NAYA CODE: Assign karte waqt member ka role update karein
+              if (email && posTitle) {
+                await supabaseClient
+                  .from("members")
+                  .update({ role: posTitle })
+                  .eq("email", email);
+              }
+
               window.syfSuccess("✅ Position assigned!");
               document.getElementById("assignModal").classList.remove("active");
               await loadCabinet();
@@ -776,8 +807,8 @@
                         }
                         
                         <div style="display:flex; gap:6px; margin-bottom: 8px;">
-                            <button onclick="movePosition(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed; flex:1; padding:6px; background:rgba(255,255,255,0.05); color:white; border:1px solid rgba(255,255,255,0.1); border-radius:8px;"' : 'style="flex:1; padding:6px; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px; cursor:pointer;"'} title="Move Up">⬆️ Upar</button>
-                            <button onclick="movePosition(${index}, 1)" ${index === allPositions.length - 1 ? 'disabled style="opacity:0.3; cursor:not-allowed; flex:1; padding:6px; background:rgba(255,255,255,0.05); color:white; border:1px solid rgba(255,255,255,0.1); border-radius:8px;"' : 'style="flex:1; padding:6px; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px; cursor:pointer;"'} title="Move Down">⬇️ Neeche</button>
+                            <button onclick="movePosition(${index}, -1)" ${index === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed; flex:1; padding:6px; background:rgba(255,255,255,0.05); color:white; border:1px solid rgba(255,255,255,0.1); border-radius:8px;"' : 'style="flex:1; padding:6px; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px; cursor:pointer;"'} title="Move Up">⬆️ Up</button>
+                            <button onclick="movePosition(${index}, 1)" ${index === allPositions.length - 1 ? 'disabled style="opacity:0.3; cursor:not-allowed; flex:1; padding:6px; background:rgba(255,255,255,0.05); color:white; border:1px solid rgba(255,255,255,0.1); border-radius:8px;"' : 'style="flex:1; padding:6px; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2); border-radius:8px; cursor:pointer;"'} title="Move Down">⬇️ Down</button>
                         </div>
 
                         <div style="display:flex;gap:6px;">
@@ -819,14 +850,27 @@
           "Delete this position permanently?",
           async (confirmed) => {
             if (!confirmed) return;
+            
+            const pos = allPositions.find((p) => String(p.id) === String(id));
+
             const { error } = await supabaseClient
               .from("cabinet_positions")
               .delete()
               .eq("id", id);
+              
             if (error) {
               window.syfError("❌ " + error.message);
               return;
             }
+
+            // NAYA CODE: Delete karne par us member ka role wapas Member kar dein
+            if (pos && pos.assigned_to_email) {
+              await supabaseClient
+                .from("members")
+                .update({ role: "Member" })
+                .eq("email", pos.assigned_to_email);
+            }
+
             window.syfSuccess("🗑️ Deleted");
             await loadCabinet();
           },
