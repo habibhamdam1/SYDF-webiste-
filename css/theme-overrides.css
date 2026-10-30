@@ -2799,41 +2799,37 @@ html[data-theme="dark"] .coord-empty {
   -webkit-text-fill-color: #fbbf24 !important;
 }
 /* ============================================================
-   🪪 CERTIFICATE PRINT & WATERMARK FIX
+   🪪 CERTIFICATE PRINT & WATERMARK FIX (UPDATED)
    ============================================================ */
-   
-/* 1. Print Fix: Print ke waqt certificate ko hide hone se bachayein */
+
+/* 1. Print Fix */
 @media print {
-  @page {
-    size: A4 portrait !important;
-    margin: 0 !important;
-  }
-  .cert-container,
-  .cert-container * {
-    visibility: visible !important;
-  }
+  @page { size: A4 portrait !important; margin: 0 !important; }
+  .cert-container, .cert-container * { visibility: visible !important; }
   .cert-container {
     position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 210mm !important;
-    height: 297mm !important;
+    top: 0 !important; left: 0 !important;
+    width: 210mm !important; height: 297mm !important;
     z-index: 99999 !important;
     page-break-after: avoid !important;
     page-break-inside: avoid !important;
   }
-  /* ID card print logic ko certificate par apply hone se rokein */
-  .certificate {
-    page-break-after: avoid !important;
-  }
+  .certificate { page-break-after: avoid !important; }
 }
 
-/* 2. Watermark Fix: Logo ko wapas halka karein aur mobile par hide karein */
+/* 2. Watermark Fix: Logo ko halka rakhein par mobile par bhi dikhayein */
 .dashboard-content .watermark-logo {
   opacity: 0.04 !important; 
 }
 @media (max-width: 768px) {
   .dashboard-content .watermark-logo {
-    display: none !important;
+    display: flex !important;
+    opacity: 0.04 !important;
+    width: 250px !important;
+    height: 250px !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 0 !important;
   }
 }
