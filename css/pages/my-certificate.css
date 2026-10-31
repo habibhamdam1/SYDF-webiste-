@@ -432,3 +432,73 @@
   .sig-name { font-size: 14px !important; }
   .sig-title { font-size: 9px !important; }
 }
+/* ==========================================
+   ANTI-OVERRIDE FIX (Bypass theme-overrides.css)
+   ========================================== */
+
+/* 1. WATERMARK FIX: Zabardasti halka aur peechay karo */
+html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo,
+html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo img {
+  opacity: 0.03 !important;
+  z-index: 0 !important;
+  mix-blend-mode: multiply !important;
+}
+
+/* 2. TEXT COLORS RESTORE: Asli colors wapas lao */
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-org {
+  color: #0f2027 !important;
+  -webkit-text-fill-color: #0f2027 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-title h1 {
+  color: #1abc9c !important;
+  -webkit-text-fill-color: #1abc9c !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-name {
+  color: #0f2027 !important;
+  -webkit-text-fill-color: #0f2027 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-description {
+  color: #4a4a52 !important;
+  -webkit-text-fill-color: #4a4a52 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-description strong {
+  color: #1abc9c !important;
+  -webkit-text-fill-color: #1abc9c !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-uid {
+  color: #16a085 !important;
+  -webkit-text-fill-color: #16a085 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-role {
+  color: #8b6a2b !important;
+  -webkit-text-fill-color: #8b6a2b !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .sig-name {
+  color: #0f2027 !important;
+  -webkit-text-fill-color: #0f2027 !important;
+}
+
+/* 3. SOLID BACKGROUNDS: Koi transparency na rahe */
+html:not([data-theme="dark"]) .dashboard-content .cert-container {
+  background: #fefbf3 !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate {
+  background: #fdf6e3 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .cert-meta-inside,
+html:not([data-theme="dark"]) .dashboard-content .cert-qr-wrap,
+html:not([data-theme="dark"]) .dashboard-content .cert-uid,
+html:not([data-theme="dark"]) .dashboard-content .cert-role {
+  background: #ffffff !important;
+}
+
+/* 4. TOP HEADER TEXT FIX */
+html:not([data-theme="dark"]) .dashboard-content .page-header-block h1 {
+  color: #4c0519 !important;
+  -webkit-text-fill-color: #4c0519 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .page-header-block p {
+  color: #666 !important;
+  -webkit-text-fill-color: #666 !important;
+}
