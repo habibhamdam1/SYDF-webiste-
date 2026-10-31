@@ -66,7 +66,7 @@
         border-radius: 6px;
         padding: 5% 6%;
         position: relative;
-        z-index: 1; /* Watermark stack context */
+        /* Z-INDEX FIX: Removed z-index from here to let children stack naturally */
         background: linear-gradient(
           180deg,
           #fefbf3 0%,
@@ -158,11 +158,11 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 65%;
-        height: 65%;
-        opacity: 0.04;
+        width: 60%;
+        height: 60%;
+        opacity: 0.05; /* Slightly adjusted opacity */
         pointer-events: none;
-        z-index: -1; /* FIX: Behind text */
+        z-index: 0; /* FIX: Set to 0 so it stays behind text but above background */
       }
       .watermark-logo img {
         width: 100%;
@@ -172,11 +172,15 @@
         mix-blend-mode: multiply;
       }
 
+      /* HEADER & ALL CONTENT Z-INDEX FIX */
+      .cert-header, .cert-title, .cert-top-meta, .cert-body, .cert-footer {
+        position: relative;
+        z-index: 2; /* FIX: Ensures all text is ABOVE the watermark */
+      }
+
       /* HEADER */
       .cert-header {
         text-align: center;
-        position: relative;
-        z-index: 2;
       }
       .cert-logo-wrap {
         display: inline-flex;
@@ -228,8 +232,6 @@
       /* TITLE */
       .cert-title {
         text-align: center;
-        position: relative;
-        z-index: 2;
         margin: 15px 0;
       }
       .cert-title h1 {
@@ -269,15 +271,13 @@
         color: #b8944a;
       }
 
-      /* NEW TOP META & QR SECTION */
+      /* TOP META & QR SECTION */
       .cert-top-meta {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         margin-top: 10px;
         padding: 0 15px;
-        z-index: 2;
-        position: relative;
       }
       .cert-meta-inside {
         display: flex;
@@ -288,7 +288,7 @@
         font-weight: 700;
         color: #8b7e6a;
         letter-spacing: 1px;
-        background: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.6); /* Slight white background to hide watermark behind text */
         padding: 8px 12px;
         border-radius: 8px;
         border: 1px solid rgba(184, 148, 74, 0.2);
@@ -302,7 +302,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.6);
         padding: 8px;
         border-radius: 8px;
         border: 1px solid rgba(184, 148, 74, 0.2);
@@ -326,8 +326,6 @@
       /* BODY */
       .cert-body {
         text-align: center;
-        position: relative;
-        z-index: 2;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -375,8 +373,8 @@
         padding: 5px 18px;
         background: linear-gradient(
           135deg,
-          rgba(26, 188, 156, 0.08),
-          rgba(26, 188, 156, 0.03)
+          rgba(26, 188, 156, 0.1),
+          rgba(26, 188, 156, 0.05)
         );
         border: 1px solid rgba(26, 188, 156, 0.35);
         border-radius: 20px;
@@ -391,12 +389,14 @@
 
       .cert-description {
         font-family: "Cormorant Garamond", serif;
-        font-size: 14px;
+        font-size: 15px;
         line-height: 1.8;
         color: #4a4a52;
         max-width: 500px;
         margin: 0 auto 14px;
-        font-weight: 500;
+        font-weight: 600;
+        /* Slight text shadow to make text pop above watermark */
+        text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
       }
       .cert-description strong {
         color: #1abc9c;
@@ -409,8 +409,8 @@
         padding: 6px 24px;
         background: linear-gradient(
           135deg,
-          rgba(184, 148, 74, 0.15),
-          rgba(184, 148, 74, 0.08)
+          rgba(184, 148, 74, 0.2),
+          rgba(184, 148, 74, 0.1)
         );
         border: 2px solid #b8944a;
         border-radius: 25px;
@@ -430,8 +430,6 @@
         gap: 15px;
         padding-top: 15px;
         border-top: 1px dashed rgba(184, 148, 74, 0.4);
-        position: relative;
-        z-index: 2;
       }
       .cert-sig {
         text-align: center;
@@ -607,8 +605,6 @@
         .watermark-logo { 
           width: 200px; 
           height: 200px; 
-          opacity: 0.04 !important; 
-          z-index: -1 !important;
         }
         
         .corner-orn { width: 20px !important; height: 20px !important; }
@@ -764,8 +760,7 @@
           display: block !important;
           width: 400px !important; 
           height: 400px !important;
-          opacity: 0.04 !important;
-          z-index: -1 !important;
+          opacity: 0.05 !important;
         }
 
         .dashboard-sidebar, .dashboard-topbar, .sidebar-overlay,
@@ -783,7 +778,7 @@
         }
 
         /* Typography Sizes for Print */
-        .cert-header { margin-top: 5mm !important; }
+        .cert-header { margin-top: 0mm !important; }
         .cert-logo-wrap { width: 70px !important; height: 70px !important; }
         .cert-org { font-size: 18px !important; }
         .cert-title h1 { font-size: 40px !important; }
@@ -794,7 +789,7 @@
           flex-direction: row !important;
           justify-content: space-between !important;
           align-items: center !important;
-          margin-top: 8mm !important;
+          margin-top: 5mm !important;
           margin-bottom: 5mm !important;
           padding: 0 10mm !important;
         }
