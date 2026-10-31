@@ -1,4 +1,4 @@
-/* ============================================================
+use/* ============================================================
    SYDF — THEME OVERRIDES (COMPLETE & FINAL VERSION)
    ============================================================ */
 
@@ -2888,24 +2888,24 @@ html:not([data-theme="dark"]) .dashboard-content .cert-role {
   border: 1px solid rgba(184, 148, 74, 0.3) !important;
 }
 /* ============================================================
-   🪟 GLOBAL GLASSMORPHISM (LAG-FREE & OPTIMIZED)
+   🪟 GLOBAL GLASSMORPHISM (LAG-FREE & SIDEBAR FIX)
    ============================================================ */
 
 /* 1. Variable Setup for Glass */
 :root {
-  --glass-bg: rgba(255, 255, 255, 0.65); /* 65% White */
+  --glass-bg: rgba(255, 255, 255, 0.65);
   --glass-border: 1px solid rgba(255, 255, 255, 0.9);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
   --glass-blur: blur(16px) saturate(150%);
 }
 
 html[data-theme="dark"] {
-  --glass-bg: rgba(15, 32, 39, 0.65); /* Dark transparent */
+  --glass-bg: rgba(15, 32, 39, 0.65);
   --glass-border: 1px solid rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
-/* 2. Apply to all major containers */
+/* 2. Apply Glass ONLY to Cards and Boxes (Not Sidebar) */
 .glass-card,
 .content-card,
 .dash-stat-card,
@@ -2916,8 +2916,6 @@ html[data-theme="dark"] {
 .cert-info-bar,
 .data-table,
 .table-card,
-.dashboard-sidebar,
-.dashboard-topbar,
 .glass-header,
 .filters-bar {
   background: var(--glass-bg) !important;
@@ -2932,7 +2930,30 @@ html[data-theme="dark"] {
   will-change: backdrop-filter;
 }
 
-/* 3. Mobile Optimization (Reduce blur to prevent lag) */
+/* 3. Apply Glass to Sidebar & Topbar (Bina transform lagaye taake hide ho sake) */
+.dashboard-sidebar,
+.dashboard-topbar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+
+/* 4. ZABARDASTI SIDEBAR HIDE ON MOBILE (Fixing the stuck sidebar) */
+@media (max-width: 1024px) {
+  .dashboard-sidebar {
+    transform: translateX(-100%) !important; /* Default: Chupa hua */
+    -webkit-transform: translateX(-100%) !important;
+    transition: transform 0.3s ease !important;
+  }
+  .dashboard-sidebar.active {
+    transform: translateX(0) !important; /* Open: Khula hua */
+    -webkit-transform: translateX(0) !important;
+  }
+}
+
+/* 5. Mobile Optimization (Reduce blur to prevent lag) */
 @media (max-width: 768px) {
   .glass-card,
   .content-card,
@@ -2944,23 +2965,21 @@ html[data-theme="dark"] {
   .cert-info-bar,
   .data-table,
   .table-card,
-  .dashboard-sidebar,
   .dashboard-topbar,
   .glass-header {
-    backdrop-filter: blur(8px) saturate(120%) !important; /* Lighter blur for mobile */
+    backdrop-filter: blur(8px) saturate(120%) !important;
     -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
-    background: rgba(255, 255, 255, 0.75) !important; /* Thoda zyada solid taake text parhne mein asani ho */
+    background: rgba(255, 255, 255, 0.75) !important;
   }
   html[data-theme="dark"] .glass-card,
   html[data-theme="dark"] .content-card,
   html[data-theme="dark"] .dash-stat-card,
-  html[data-theme="dark"] .dashboard-sidebar,
   html[data-theme="dark"] .dashboard-topbar {
     background: rgba(15, 32, 39, 0.8) !important;
   }
 }
 
-/* 4. Fix inner elements that should NOT be glass (to keep text readable) */
+/* 6. Fix inner elements that should NOT be glass */
 .table-card .data-table tbody tr,
 .admin-list-item .admin-item-avatar,
 .cert-container,
@@ -2969,7 +2988,7 @@ html[data-theme="dark"] {
   -webkit-backdrop-filter: none !important;
 }
 
-/* 5. Make inner table headers and rows solid so text is super clear */
+/* 7. Make inner table headers solid */
 .data-table thead {
   background: rgba(255, 255, 255, 0.9) !important;
 }
