@@ -1,5 +1,5 @@
 // ==========================================
-// SYDF - MAIN JAVASCRIPT (v20 - MOBILE MENU FIXED)
+// SYDF - MAIN JAVASCRIPT (v21 - ADMIN SIDEBAR FIXED)
 // ==========================================
 
 console.log("SYDF Website Loaded Successfully!");
@@ -384,83 +384,75 @@ document.addEventListener("DOMContentLoaded", function () {
       } catch (err) { console.log("Footer error:", err); }
     }
 
-    // Sidebar Injections
+    // ==========================================
+    // SIDEBAR INJECTIONS (FIXED & UNIFORM)
+    // ==========================================
     const sidebarNav = document.querySelector(".dashboard-sidebar .sidebar-nav");
     if (sidebarNav) {
       const currentPage = window.location.pathname.split("/").pop() || "dashboard.html";
-      sidebarNav.querySelectorAll("a").forEach((link) => {
-        link.classList.remove("active");
-        const href = link.getAttribute("href");
-        if (href && href === currentPage) link.classList.add("active");
-      });
-
+      
       if (isAdminPage) {
-        const wrongBtn = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes("member-reports.html"));
-        if (wrongBtn) wrongBtn.parentElement.remove();
-
-        const systemTitle = Array.from(sidebarNav.querySelectorAll(".nav-section-title")).find((el) => el.textContent.trim() === "System");
-        if (systemTitle) {
-          const nextUl = systemTitle.nextElementSibling;
-          if (nextUl && nextUl.tagName === "UL") {
-            if (!nextUl.querySelector('a[href="admin-activity-logs.html"]')) {
-              const li1 = document.createElement("li");
-              li1.innerHTML = `<a href="admin-activity-logs.html"><span class="nav-icon">📋</span><span>Activity Logs</span></a>`;
-              nextUl.insertBefore(li1, nextUl.firstChild);
-            }
-            if (!nextUl.querySelector('a[href="admin-recycle-bin.html"]')) {
-              const li2 = document.createElement("li");
-              li2.innerHTML = `<a href="admin-recycle-bin.html"><span class="nav-icon">🗑️</span><span>Recycle Bin</span></a>`;
-              nextUl.insertBefore(li2, nextUl.children[1]);
-            }
-            if (!nextUl.querySelector('a[href="admin-menu-manager.html"]')) {
-              const li3 = document.createElement("li");
-              li3.innerHTML = `<a href="admin-menu-manager.html"><span class="nav-icon">🔗</span><span>Menu Manager</span></a>`;
-              nextUl.insertBefore(li3, nextUl.children[2]);
-            }
-          }
-        }
-
-        const contentTitle = Array.from(sidebarNav.querySelectorAll(".nav-section-title")).find((el) => el.textContent.trim() === "Content");
-        if (contentTitle) {
-           const nextUl = contentTitle.nextElementSibling;
-           if (nextUl && nextUl.tagName === "UL") {
-              if (!nextUl.querySelector('a[href="admin-events.html"]')) {
-                 const liEvent = document.createElement("li");
-                 liEvent.innerHTML = `<a href="admin-events.html"><span class="nav-icon">📅</span><span>Events</span></a>`;
-                 const actLink = Array.from(nextUl.querySelectorAll("a")).find(a => a.href.includes("admin-activities.html"));
-                 if(actLink) actLink.parentElement.insertAdjacentElement("afterend", liEvent);
-                 else nextUl.appendChild(liEvent);
-              }
-              if (!nextUl.querySelector('a[href="admin-custom-pages.html"]')) {
-                 const liContent = document.createElement("li");
-                 liContent.innerHTML = `<a href="admin-custom-pages.html"><span class="nav-icon">📄</span><span>Custom Pages</span></a>`;
-                 nextUl.appendChild(liContent); 
-              }
-              if (!nextUl.querySelector('a[href="admin-forms.html"]')) {
-                 const liForm = document.createElement("li");
-                 liForm.innerHTML = `<a href="admin-forms.html"><span class="nav-icon">📝</span><span>Form Builder</span></a>`;
-                 nextUl.appendChild(liForm); 
-              }
-           }
-        }
-
-        const injectAdminLink = (href, icon, label, afterHref) => {
-          if (!Array.from(sidebarNav.querySelectorAll("a")).some((a) => a.href.includes(href))) {
-            const newLi = document.createElement("li");
-            newLi.innerHTML = `<a href="${href}"><span class="nav-icon">${icon}</span><span>${label}</span></a>`;
-            const afterLink = Array.from(sidebarNav.querySelectorAll("a")).find((a) => a.href.includes(afterHref));
-            if (afterLink) afterLink.parentElement.insertAdjacentElement("afterend", newLi);
-            else sidebarNav.appendChild(newLi);
-          }
-        };
-
-        injectAdminLink("admin-issue-reports.html", "🚨", "Member Reports", "admin-waitlist.html");
-        injectAdminLink("admin-public-issues.html", "🛡️", "Public Grievances", "admin-issue-reports.html");
-        injectAdminLink("admin-messages.html", "📩", "Messages", "admin-notifications.html");
-        injectAdminLink("admin-elections.html", "🗳️", "Elections", "admin-proposals.html");
-        injectAdminLink("admin-volunteers.html", "🙋", "Volunteers", "admin-members.html");
-        
+        // FORCE REBUILD ADMIN SIDEBAR
+        sidebarNav.innerHTML = `
+          <div class="nav-section-title">Main</div>
+          <ul>
+            <li><a href="admin.html" class="${currentPage === 'admin.html' ? 'active' : ''}"><span class="nav-icon">📊</span><span>Dashboard</span></a></li>
+          </ul>
+          <div class="nav-section-title">Members</div>
+          <ul>
+            <li><a href="admin-members.html" class="${currentPage === 'admin-members.html' ? 'active' : ''}"><span class="nav-icon">👥</span><span>All Members</span></a></li>
+            <li><a href="admin-applications.html" class="${currentPage === 'admin-applications.html' ? 'active' : ''}"><span class="nav-icon">📝</span><span>Applications</span><span class="badge" id="sidebarAppBadge" style="display: none">0</span></a></li>
+            <li><a href="admin-waitlist.html" class="${currentPage === 'admin-waitlist.html' ? 'active' : ''}"><span class="nav-icon">⏳</span><span>Waitlist</span></a></li>
+            <li><a href="admin-issue-reports.html" class="${currentPage === 'admin-issue-reports.html' ? 'active' : ''}"><span class="nav-icon">🚨</span><span>Member Reports</span></a></li>
+            <li><a href="admin-public-issues.html" class="${currentPage === 'admin-public-issues.html' ? 'active' : ''}"><span class="nav-icon">🛡️</span><span>Public Grievances</span></a></li>
+            <li><a href="admin-proposals.html" class="${currentPage === 'admin-proposals.html' ? 'active' : ''}"><span class="nav-icon">💡</span><span>Proposals</span><span class="badge" id="sidebarPropBadge" style="display: none">0</span></a></li>
+            <li><a href="admin-elections.html" class="${currentPage === 'admin-elections.html' ? 'active' : ''}"><span class="nav-icon">🗳️</span><span>Elections</span></a></li>
+            <li><a href="admin-cabinet.html" class="${currentPage === 'admin-cabinet.html' ? 'active' : ''}"><span class="nav-icon">🏛️</span><span>Cabinet</span></a></li>
+            <li><a href="admin-districts.html" class="${currentPage === 'admin-districts.html' ? 'active' : ''}"><span class="nav-icon">🗺️</span><span>Districts & Tehsils</span></a></li>
+            <li><a href="admin-volunteers.html" class="${currentPage === 'admin-volunteers.html' ? 'active' : ''}"><span class="nav-icon">🙋</span><span>Volunteers</span></a></li>
+          </ul>
+          <div class="nav-section-title">Content</div>
+          <ul>
+            <li><a href="admin-activities.html" class="${currentPage === 'admin-activities.html' ? 'active' : ''}"><span class="nav-icon">🎯</span><span>Activities</span></a></li>
+            <li><a href="admin-events.html" class="${currentPage === 'admin-events.html' ? 'active' : ''}"><span class="nav-icon">📅</span><span>Events</span></a></li>
+            <li><a href="admin-news.html" class="${currentPage === 'admin-news.html' ? 'active' : ''}"><span class="nav-icon">📰</span><span>News & Blog</span></a></li>
+            <li><a href="admin-gallery.html" class="${currentPage === 'admin-gallery.html' ? 'active' : ''}"><span class="nav-icon">🖼️</span><span>Gallery</span></a></li>
+            <li><a href="admin-documents.html" class="${currentPage === 'admin-documents.html' ? 'active' : ''}"><span class="nav-icon">📄</span><span>Documents</span></a></li>
+            <li><a href="admin-custom-pages.html" class="${currentPage === 'admin-custom-pages.html' ? 'active' : ''}"><span class="nav-icon">📄</span><span>Custom Pages</span></a></li>
+            <li><a href="admin-forms.html" class="${currentPage === 'admin-forms.html' ? 'active' : ''}"><span class="nav-icon">📝</span><span>Form Builder</span></a></li>
+          </ul>
+          <div class="nav-section-title">Finance</div>
+          <ul>
+            <li><a href="admin-finance.html" class="${currentPage === 'admin-finance.html' ? 'active' : ''}"><span class="nav-icon">💰</span><span>Payments</span></a></li>
+            <li><a href="admin-expenses.html" class="${currentPage === 'admin-expenses.html' ? 'active' : ''}"><span class="nav-icon">💸</span><span>Expenses</span></a></li>
+            <li><a href="admin-donations.html" class="${currentPage === 'admin-donations.html' ? 'active' : ''}"><span class="nav-icon">🎁</span><span>Donations</span></a></li>
+            <li><a href="admin-sponsorships.html" class="${currentPage === 'admin-sponsorships.html' ? 'active' : ''}"><span class="nav-icon">🤝</span><span>Sponsorships</span></a></li>
+          </ul>
+          <div class="nav-section-title">System</div>
+          <ul>
+            <li><a href="admin-activity-logs.html" class="${currentPage === 'admin-activity-logs.html' ? 'active' : ''}"><span class="nav-icon">📋</span><span>Activity Logs</span></a></li>
+            <li><a href="admin-recycle-bin.html" class="${currentPage === 'admin-recycle-bin.html' ? 'active' : ''}"><span class="nav-icon">🗑️</span><span>Recycle Bin</span></a></li>
+            <li><a href="admin-menu-manager.html" class="${currentPage === 'admin-menu-manager.html' ? 'active' : ''}"><span class="nav-icon">🔗</span><span>Menu Manager</span></a></li>
+            <li><a href="admin-messages.html" class="${currentPage === 'admin-messages.html' ? 'active' : ''}"><span class="nav-icon">📩</span><span>Messages</span></a></li>
+            <li><a href="admin-notifications.html" class="${currentPage === 'admin-notifications.html' ? 'active' : ''}"><span class="nav-icon">🔔</span><span>Notifications</span></a></li>
+            <li><a href="admin-email.html" class="${currentPage === 'admin-email.html' ? 'active' : ''}"><span class="nav-icon">📧</span><span>Email System</span></a></li>
+            <li><a href="admin-reports.html" class="${currentPage === 'admin-reports.html' ? 'active' : ''}"><span class="nav-icon">📈</span><span>Reports</span></a></li>
+            <li><a href="admin-settings.html" class="${currentPage === 'admin-settings.html' ? 'active' : ''}"><span class="nav-icon">⚙️</span><span>Settings</span></a></li>
+          </ul>
+          <div style="height: 1px; background: var(--card-border); margin: 15px 10px;"></div>
+          <ul>
+            <li><a href="index.html" class="back-to-site-btn" style="color: var(--accent);"><span class="nav-icon">🌐</span><span>Back to Website</span></a></li>
+            <li><a href="#" class="logout-btn" style="color: #ef4444;"><span class="nav-icon">🚪</span><span>Logout</span></a></li>
+          </ul>
+        `;
       } else {
+        // MEMBER PANEL SIDEBAR LOGIC
+        sidebarNav.querySelectorAll("a").forEach((link) => {
+          link.classList.remove("active");
+          const href = link.getAttribute("href");
+          if (href && href === currentPage) link.classList.add("active");
+        });
+
         if (!Array.from(sidebarNav.querySelectorAll("a")).some((a) => a.href.includes("member-reports.html"))) {
           const newLi = document.createElement("li");
           newLi.innerHTML = `<a href="member-reports.html"><span class="nav-icon">🚨</span><span>Report Issue</span></a>`;
@@ -475,8 +467,8 @@ document.addEventListener("DOMContentLoaded", function () {
           if (propLink) propLink.parentElement.insertAdjacentElement("afterend", newElLi);
           else sidebarNav.appendChild(newElLi);
         }
+        addBottomButtons(sidebarNav);
       }
-      addBottomButtons(sidebarNav);
     }
 
     if (isAdminPage && !document.querySelector('script[src*="activity-logger.js"]')) {
@@ -613,7 +605,7 @@ async function enforceAdminPermissions() {
         "admin-email.html": "admin_acc_notifications", "admin-reports.html": "admin_acc_notifications",
         "admin-activity-logs.html": "admin_acc_reports", "admin-recycle-bin.html": "admin_acc_reports", "admin-menu-manager.html": "admin_acc_reports",
         "admin-custom-pages.html": "admin_acc_news", "admin-forms.html": "admin_acc_news", "admin-events.html": "admin_acc_activities",
-        "admin-volunteers.html": "admin_acc_members"
+        "admin-volunteers.html": "admin_acc_members", "admin-messages.html": "admin_acc_reports"
       };
 
       document.querySelectorAll(".sidebar-nav a").forEach((a) => {
