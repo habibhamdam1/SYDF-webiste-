@@ -2810,22 +2810,10 @@ html[data-theme="dark"] .coord-empty {
   -webkit-text-fill-color: #fbbf24 !important;
 }
 /* ============================================================
-   ✅ CERTIFICATE PAGE FIX (Bypass NUCLEAR FIX TRANSPARENCY)
+   ✅ CERTIFICATE PAGE - 100% PERFECT FIX (No Transparency + Watermark)
    ============================================================ */
 
-/* 1. Text Opacity Reset: NUCLEAR FIX ko certificate ke andar band karo */
-html:not([data-theme="dark"]) .dashboard-content .certificate * {
-  opacity: unset !important; 
-}
-
-/* 2. Watermark Fix: Wapas halka aur peechay bhejo */
-html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo,
-html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo img {
-  opacity: 0.04 !important;
-  z-index: -1 !important;
-}
-
-/* 3. Background Solid Fix: Transparency khatam karo */
+/* 1. BACKGROUND SOLID KARO (Pink stars ko andar aane se roko) */
 html:not([data-theme="dark"]) .dashboard-content .cert-container {
   background: #fefbf3 !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
@@ -2834,11 +2822,30 @@ html:not([data-theme="dark"]) .dashboard-content .certificate {
   background: #fdf6e3 !important;
 }
 
-/* 4. Text Colors Fix: Jo colors bigad gaye thay unko theek karo */
+/* 2. WATERMARK VISIBLE KARO (Na ghayab ho, na dark ho) */
+html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo,
+html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo img {
+  opacity: 0.08 !important; /* 8% opacity - perfect watermark look */
+  z-index: 0 !important; /* Peeche rahe */
+  mix-blend-mode: multiply !important;
+}
+
+/* 3. TEXT KO WATERMARK KE UPAR LAO */
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-header,
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-title,
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-top-meta,
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-body,
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-footer {
+  z-index: 10 !important;
+  position: relative !important;
+}
+
+/* 4. TEXT COLORS FIX (Theme ki wajah se bigde hue colors) */
 html:not([data-theme="dark"]) .dashboard-content .certificate .cert-title h1 {
   color: #1abc9c !important;
   -webkit-text-fill-color: #1abc9c !important;
 }
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-org,
 html:not([data-theme="dark"]) .dashboard-content .certificate .cert-name {
   color: #0f2027 !important;
   -webkit-text-fill-color: #0f2027 !important;
@@ -2847,7 +2854,26 @@ html:not([data-theme="dark"]) .dashboard-content .certificate .cert-description 
   color: #4a4a52 !important;
   -webkit-text-fill-color: #4a4a52 !important;
 }
-html:not([data-theme="dark"]) .dashboard-content .certificate .cert-org {
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-description strong {
+  color: #1abc9c !important;
+  -webkit-text-fill-color: #1abc9c !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-uid {
+  color: #16a085 !important;
+  -webkit-text-fill-color: #16a085 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-role {
+  color: #8b6a2b !important;
+  -webkit-text-fill-color: #8b6a2b !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .sig-name {
   color: #0f2027 !important;
   -webkit-text-fill-color: #0f2027 !important;
+}
+
+/* 5. BOXES SOLID WHITE KARO (Date/ID/QR Box) */
+html:not([data-theme="dark"]) .dashboard-content .cert-meta-inside,
+html:not([data-theme="dark"]) .dashboard-content .cert-qr-wrap {
+  background: #ffffff !important;
+  border: 1px solid rgba(184, 148, 74, 0.3) !important;
 }
