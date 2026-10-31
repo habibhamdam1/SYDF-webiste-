@@ -66,6 +66,7 @@
         border-radius: 6px;
         padding: 5% 6%;
         position: relative;
+        z-index: 1; /* Watermark stack context */
         background: linear-gradient(
           180deg,
           #fefbf3 0%,
@@ -161,12 +162,13 @@
         height: 65%;
         opacity: 0.04;
         pointer-events: none;
-        z-index: 0;
+        z-index: -1; /* FIX: Behind text */
       }
       .watermark-logo img {
         width: 100%;
         height: 100%;
         object-fit: contain;
+        -webkit-mix-blend-mode: multiply;
         mix-blend-mode: multiply;
       }
 
@@ -265,6 +267,60 @@
       .deco-icon {
         font-size: 12px;
         color: #b8944a;
+      }
+
+      /* NEW TOP META & QR SECTION */
+      .cert-top-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 10px;
+        padding: 0 15px;
+        z-index: 2;
+        position: relative;
+      }
+      .cert-meta-inside {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-family: "Courier New", monospace;
+        font-size: 11px;
+        font-weight: 700;
+        color: #8b7e6a;
+        letter-spacing: 1px;
+        background: rgba(255, 255, 255, 0.4);
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(184, 148, 74, 0.2);
+      }
+      .cert-meta-inside span {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .cert-qr-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.4);
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(184, 148, 74, 0.2);
+      }
+      .qr-image {
+        width: 60px;
+        height: 60px;
+        background: #fff;
+        padding: 3px;
+        border-radius: 4px;
+      }
+      .qr-label {
+        font-size: 8px;
+        color: #8b7e6a;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-top: 4px;
+        letter-spacing: 1px;
       }
 
       /* BODY */
@@ -366,28 +422,10 @@
         box-shadow: 0 4px 15px rgba(184, 148, 74, 0.15);
       }
 
-      /* DATE AND ID INSIDE CERTIFICATE */
-      .cert-meta-inside {
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        margin-top: 15px;
-        font-family: "Courier New", monospace;
-        font-size: 10px;
-        font-weight: 700;
-        color: #8b7e6a;
-        letter-spacing: 1px;
-      }
-      .cert-meta-inside span {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
       /* FOOTER */
       .cert-footer {
         display: grid;
-        grid-template-columns: 1fr auto 1fr auto;
+        grid-template-columns: 1fr auto 1fr;
         align-items: end;
         gap: 15px;
         padding-top: 15px;
@@ -465,30 +503,6 @@
         letter-spacing: 1px;
         margin-top: 2px;
         font-family: "Playfair Display", serif;
-      }
-
-      /* QR CODE WRAPPER */
-      .cert-qr-wrap {
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      .qr-image {
-        width: 55px;
-        height: 55px;
-        background: #fff;
-        padding: 4px;
-        border-radius: 4px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      }
-      .qr-label {
-        font-size: 7px;
-        color: #8b7e6a;
-        text-transform: uppercase;
-        font-weight: 700;
-        margin-top: 4px;
-        letter-spacing: 1px;
       }
 
       /* INFO BAR (Screen Only) */
@@ -586,17 +600,15 @@
           padding: 25px 15px !important;
           display: flex !important;
           flex-direction: column !important;
-          justify-content: center !important;
-          gap: 15px !important;
+          justify-content: space-between !important;
+          gap: 10px !important;
         }
         
-        /* WATERMARK WAPAS ADD KAR DIYA HAI */
         .watermark-logo { 
-          display: flex !important; 
           width: 200px; 
           height: 200px; 
           opacity: 0.04 !important; 
-          z-index: 0 !important;
+          z-index: -1 !important;
         }
         
         .corner-orn { width: 20px !important; height: 20px !important; }
@@ -608,28 +620,52 @@
         .cert-title { margin: 5px 0; }
         .cert-title h1 { font-size: 22px; letter-spacing: 2px; }
         .cert-title-sub { font-size: 10px; letter-spacing: 2px; }
+
+        .cert-top-meta {
+          flex-direction: row;
+          justify-content: space-between;
+          margin-top: 5px;
+          padding: 0 5px;
+        }
+        .cert-meta-inside {
+          font-size: 9px;
+          padding: 6px 8px;
+          gap: 4px;
+        }
+        .qr-image {
+          width: 45px;
+          height: 45px;
+        }
+        .qr-label {
+          font-size: 6px;
+        }
+        .cert-qr-wrap {
+          padding: 5px;
+        }
         
         .cert-presented { font-size: 9px; margin-bottom: 8px; }
         .cert-name { font-size: 24px; padding: 0; margin: 10px 0; }
         .cert-name::before, .cert-name::after { display: none; }
         
         .cert-uid { font-size: 9px; padding: 4px 12px; margin-bottom: 12px; }
-        .cert-description { font-size: 13px; line-height: 1.6; padding: 0 10px; }
+        .cert-description { font-size: 13px; line-height: 1.6; padding: 0 10px; margin-bottom: 10px; }
         .cert-role { font-size: 10px; padding: 5px 15px; }
         
-        .cert-meta-inside { flex-direction: column; gap: 5px; margin-top: 10px; }
-        
         .cert-footer {
-          display: flex !important;
-          flex-direction: column !important;
-          align-items: center !important;
-          gap: 15px !important;
+          display: grid !important;
+          grid-template-columns: 1fr auto 1fr !important;
+          gap: 10px !important;
           margin-top: 15px !important;
           padding-top: 15px !important;
+          align-items: end !important;
         }
-        .cert-seal { width: 50px; height: 50px; margin: 0 auto; }
-        .cert-seal span:first-child { font-size: 16px; }
-        .cert-seal span:last-child { font-size: 5px; }
+        .cert-sig { width: 100%; }
+        .sig-name { font-size: 11px; }
+        .sig-title { font-size: 7px; }
+        
+        .cert-seal { width: 45px; height: 45px; margin: 0 auto; }
+        .cert-seal span:first-child { font-size: 14px; }
+        .cert-seal span:last-child { font-size: 4px; }
         
         .cert-info-bar { flex-direction: column; padding: 15px; }
       }
@@ -729,6 +765,7 @@
           width: 400px !important; 
           height: 400px !important;
           opacity: 0.04 !important;
+          z-index: -1 !important;
         }
 
         .dashboard-sidebar, .dashboard-topbar, .sidebar-overlay,
@@ -746,22 +783,56 @@
         }
 
         /* Typography Sizes for Print */
-        .cert-header { margin-top: 10mm !important; }
+        .cert-header { margin-top: 5mm !important; }
         .cert-logo-wrap { width: 70px !important; height: 70px !important; }
         .cert-org { font-size: 18px !important; }
         .cert-title h1 { font-size: 40px !important; }
+        
+        /* Top Meta Print Styling */
+        .cert-top-meta {
+          display: flex !important;
+          flex-direction: row !important;
+          justify-content: space-between !important;
+          align-items: center !important;
+          margin-top: 8mm !important;
+          margin-bottom: 5mm !important;
+          padding: 0 10mm !important;
+        }
+        .cert-meta-inside {
+          flex-direction: column !important;
+          background: transparent !important;
+          border: none !important;
+          padding: 0 !important;
+          font-size: 12px !important;
+        }
+        .cert-qr-wrap {
+          background: transparent !important;
+          border: none !important;
+          padding: 0 !important;
+        }
+        .qr-image {
+          width: 80px !important;
+          height: 80px !important;
+        }
+        .qr-label {
+          font-size: 8px !important;
+        }
+
         .cert-name { font-size: 50px !important; padding: 0 35px !important; }
         .cert-name::before, .cert-name::after { display: block !important; }
-        .cert-description { font-size: 14px !important; max-width: 130mm !important; }
+        .cert-description { font-size: 15px !important; max-width: 130mm !important; }
         
         .cert-footer {
           display: grid !important;
-          grid-template-columns: 1fr auto 1fr auto !important;
+          grid-template-columns: 1fr auto 1fr !important;
           flex-direction: row !important;
-          padding-bottom: 10mm !important;
+          padding-bottom: 5mm !important;
+          margin-top: 5mm !important;
         }
         .cert-seal { width: 80px !important; height: 80px !important; }
         .sig-line { margin-top: 30px !important; }
+        .sig-name { font-size: 14px !important; }
+        .sig-title { font-size: 9px !important; }
       }
     </style>
   </head>
@@ -947,6 +1018,18 @@
                 </div>
               </div>
 
+              <!-- NEW TOP META & QR SECTION -->
+              <div class="cert-top-meta">
+                <div class="cert-meta-inside">
+                  <span>📅 DATE: <span id="metaIssueDate">-</span></span>
+                  <span>🏆 ID: <span id="metaCertId">-</span></span>
+                </div>
+                <div class="cert-qr-wrap">
+                  <img id="qrImage" class="qr-image" src="" alt="QR Code">
+                  <div class="qr-label">Scan to Verify</div>
+                </div>
+              </div>
+
               <!-- BODY -->
               <div class="cert-body">
                 <div class="cert-presented">
@@ -963,15 +1046,9 @@
                   development.
                 </p>
                 <div class="cert-role" id="certRole">Member</div>
-                
-                <!-- DATE AND ID INSIDE CERTIFICATE -->
-                <div class="cert-meta-inside">
-                  <span>📅 DATE: <span id="metaIssueDate">-</span></span>
-                  <span>🏆 ID: <span id="metaCertId">-</span></span>
-                </div>
               </div>
 
-              <!-- FOOTER WITH QR CODE -->
+              <!-- FOOTER -->
               <div class="cert-footer">
                 <div class="cert-sig">
                   <div class="sig-line"></div>
@@ -986,12 +1063,6 @@
                   <div class="sig-line"></div>
                   <div class="sig-name" id="sigSvpName">Habib Ur Rahman</div>
                   <div class="sig-title">Senior Vice President</div>
-                </div>
-                
-                <!-- QR CODE (Direct Image API) -->
-                <div class="cert-qr-wrap">
-                  <img id="qrImage" class="qr-image" src="" alt="QR Code">
-                  <div class="qr-label">Scan to Verify</div>
                 </div>
               </div>
             </div>
@@ -1094,7 +1165,7 @@
         document.getElementById("issueDate").textContent = dateFormatted;
         document.getElementById("certId").textContent = certID;
 
-        // Inside Certificate
+        // Inside Certificate (Top Meta Section)
         document.getElementById("metaIssueDate").textContent = dateFormatted;
         document.getElementById("metaCertId").textContent = certID;
 
