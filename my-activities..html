@@ -3,292 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Activities - SYDF</title>
+    <title>My Activities - SYDF</title>
+    
+    <!-- Global Styles -->
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/pages/dashboard.css" />
+    
+    <!-- Page Specific Style -->
+    <link rel="stylesheet" href="css/pages/my-activities.css" />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
-    <style>
-      .page-intro {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 20px;
-        flex-wrap: wrap;
-        margin-bottom: 22px;
-      }
-      .page-intro h1 {
-        color: white;
-        font-size: 24px;
-        font-weight: 700;
-        margin-bottom: 5px;
-      }
-      .page-intro p {
-        color: white;
-        font-size: 14px;
-        opacity: 0.7;
-      }
-
-      .filter-bar {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        padding: 8px;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        margin-bottom: 22px;
-      }
-      .filter-btn {
-        padding: 11px 22px;
-        background: transparent;
-        border: none;
-        color: rgba(255, 255, 255, 0.7);
-        font-family: "Poppins", sans-serif;
-        font-size: 13px;
-        font-weight: 500;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.3s;
-        white-space: nowrap;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .filter-btn:hover {
-        color: white;
-        background: rgba(255, 255, 255, 0.05);
-      }
-      .filter-btn.active {
-        background: linear-gradient(135deg, #1abc9c, #16a085);
-        color: white;
-        font-weight: 600;
-        box-shadow: 0 6px 20px rgba(26, 188, 156, 0.35);
-      }
-
-      .activities-list {
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-      }
-      .activity-card {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 18px;
-        padding: 22px;
-        display: flex;
-        gap: 20px;
-        align-items: flex-start;
-        transition: 0.3s;
-        position: relative;
-        overflow: hidden;
-      }
-      .activity-card::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-      }
-      .activity-card.upcoming::before {
-        background: #3b82f6;
-      }
-      .activity-card.ongoing::before {
-        background: #f59e0b;
-      }
-      .activity-card.completed::before {
-        background: #1abc9c;
-      }
-      .activity-card:hover {
-        transform: translateX(5px);
-        border-color: rgba(26, 188, 156, 0.3);
-      }
-
-      .activity-thumb {
-        width: 90px;
-        height: 90px;
-        border-radius: 14px;
-        background: linear-gradient(135deg, #1abc9c, #16a085);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 42px;
-        flex-shrink: 0;
-      }
-      .activity-info {
-        flex: 1;
-        min-width: 0;
-      }
-      .activity-top {
-        display: flex;
-        justify-content: space-between;
-        gap: 15px;
-        margin-bottom: 8px;
-        flex-wrap: wrap;
-        align-items: flex-start;
-      }
-      .activity-title {
-        color: white;
-        font-size: 17px;
-        font-weight: 600;
-        line-height: 1.4;
-      }
-      .activity-status {
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .activity-status.upcoming {
-        background: rgba(59, 130, 246, 0.2);
-        color: #93c5fd;
-        border: 1px solid rgba(59, 130, 246, 0.4);
-      }
-      .activity-status.ongoing {
-        background: rgba(245, 158, 11, 0.2);
-        color: #fbbf24;
-        border: 1px solid rgba(245, 158, 11, 0.4);
-      }
-      .activity-status.completed {
-        background: rgba(26, 188, 156, 0.2);
-        color: #1abc9c;
-        border: 1px solid rgba(26, 188, 156, 0.4);
-      }
-
-      .activity-meta {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        font-size: 12px;
-        color: white;
-        opacity: 0.75;
-        margin-bottom: 10px;
-      }
-      .activity-desc {
-        color: white;
-        font-size: 13px;
-        line-height: 1.7;
-        opacity: 0.85;
-        margin-bottom: 14px;
-      }
-      .activity-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 15px;
-        flex-wrap: wrap;
-        padding-top: 14px;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .activity-stats {
-        display: flex;
-        gap: 18px;
-        flex-wrap: wrap;
-      }
-      .activity-stat {
-        font-size: 12px;
-        color: #1abc9c;
-        font-weight: 600;
-      }
-
-      .btn-join {
-        padding: 10px 22px;
-        background: linear-gradient(135deg, #1abc9c, #16a085);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-family: "Poppins", sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.3s;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .btn-join:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(26, 188, 156, 0.4);
-      }
-      .btn-join:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-      }
-      .btn-joined {
-        padding: 10px 22px;
-        background: rgba(26, 188, 156, 0.15);
-        color: #1abc9c;
-        border: 1.5px solid rgba(26, 188, 156, 0.4);
-        border-radius: 10px;
-        font-family: "Poppins", sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: default;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .btn-login {
-        padding: 10px 22px;
-        background: rgba(245, 158, 11, 0.15);
-        color: #fbbf24;
-        border: 1.5px solid rgba(245, 158, 11, 0.4);
-        border-radius: 10px;
-        font-family: "Poppins", sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .empty-box {
-        text-align: center;
-        padding: 80px 30px;
-        background: rgba(255, 255, 255, 0.04);
-        border-radius: 18px;
-        border: 1px dashed rgba(255, 255, 255, 0.12);
-      }
-      .empty-box .ico {
-        font-size: 64px;
-        opacity: 0.5;
-        margin-bottom: 18px;
-        display: block;
-      }
-      .empty-box h3 {
-        color: white;
-        font-size: 18px;
-        margin-bottom: 8px;
-      }
-      .empty-box p {
-        color: white;
-        font-size: 13px;
-        opacity: 0.65;
-      }
-
-      @media (max-width: 600px) {
-        .activity-card {
-          flex-direction: column;
-          padding: 18px;
-        }
-        .activity-thumb {
-          width: 70px;
-          height: 70px;
-          font-size: 32px;
-        }
-      }
-    </style>
   </head>
   <body class="dashboard-body">
+    
+    <!-- SIDEBAR (MEMBER PANEL) -->
     <aside class="dashboard-sidebar" id="dashboardSidebar">
       <div class="sidebar-header">
         <div class="sidebar-logo">
@@ -297,58 +32,57 @@
         </div>
         <button class="sidebar-close" id="sidebarClose">✕</button>
       </div>
+
       <nav class="sidebar-nav">
         <ul>
           <li>
-            <a href="dashboard.html"
-              ><span class="nav-icon">📊</span><span>Overview</span></a
-            >
+            <a href="dashboard.html"><span class="nav-icon">📊</span><span>Overview</span></a>
           </li>
           <li>
-            <a href="profile.html"
-              ><span class="nav-icon">👤</span><span>My Profile</span></a
-            >
+            <a href="profile.html"><span class="nav-icon">👤</span><span>My Profile</span></a>
           </li>
           <li>
-            <a href="my-payments.html"
-              ><span class="nav-icon">💰</span><span>My Payments</span></a
-            >
+            <a href="my-payments.html"><span class="nav-icon">💰</span><span>My Payments</span></a>
           </li>
           <li>
-            <a href="my-documents.html"
-              ><span class="nav-icon">📄</span><span>Documents</span></a
-            >
+            <a href="my-documents.html"><span class="nav-icon">📄</span><span>Documents</span></a>
           </li>
           <li>
-            <a href="my-activities.html"
-              ><span class="nav-icon">🎯</span><span>My Activities</span></a
-            >
+            <a href="my-activities.html" class="active"><span class="nav-icon">🎯</span><span>My Activities</span></a>
           </li>
           <li>
-            <a href="my-certificate.html"
-              ><span class="nav-icon">📜</span><span>Certificate</span></a
-            >
+            <a href="member-proposals.html"><span class="nav-icon">💡</span><span>My Proposals</span></a>
           </li>
           <li>
-            <a href="my-id-card.html"
-              ><span class="nav-icon">🆔</span><span>ID Card</span></a
-            >
+            <a href="my-certificate.html"><span class="nav-icon">📜</span><span>Certificate</span></a>
           </li>
           <li>
-            <a href="notifications.html"
-              ><span class="nav-icon">🔔</span><span>Notifications</span></a
-            >
+            <a href="my-id-card.html"><span class="nav-icon">🆔</span><span>ID Card</span></a>
           </li>
           <li>
-            <a href="settings.html"
-              ><span class="nav-icon">⚙️</span><span>Settings</span></a
-            >
+            <a href="member-reports.html"><span class="nav-icon">🚨</span><span>Report Issue</span></a>
+          </li>
+          <li>
+            <a href="notifications.html"><span class="nav-icon">🔔</span><span>Notifications</span></a>
+          </li>
+          <li>
+            <a href="settings.html"><span class="nav-icon">⚙️</span><span>Settings</span></a>
+          </li>
+
+          <div class="sidebar-divider"></div>
+
+          <li>
+            <a href="index.html" class="back-to-site-btn">
+              <span class="nav-icon">🌐</span><span>Back to Website</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="logout-btn">
+              <span class="nav-icon">🚪</span><span>Logout</span>
+            </a>
           </li>
         </ul>
       </nav>
-      <div class="sidebar-footer">
-        <a href="#" class="logout-btn"><span>🚪</span><span>Logout</span></a>
-      </div>
     </aside>
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -357,15 +91,14 @@
       <div class="dashboard-topbar">
         <button class="menu-toggle" id="menuToggle">☰</button>
         <div class="topbar-title">
-          <h2>Activities</h2>
-          <p>Browse and join activities</p>
+          <h2>My Activities</h2>
+          <p>Activities you have joined</p>
         </div>
         <div class="topbar-actions">
           <div class="topbar-user">
             <div class="user-avatar" id="topAvatar">M</div>
             <div class="user-info">
-              <span class="user-name">Loading...</span
-              ><span class="user-uid">-</span>
+              <span class="user-name">Loading...</span><span class="user-uid">-</span>
             </div>
           </div>
         </div>
@@ -374,14 +107,14 @@
       <div class="dashboard-content">
         <div class="page-intro">
           <div>
-            <h1>🎯 Activities</h1>
-            <p>Browse and join SYDF activities</p>
+            <h1>🎯 My Activities</h1>
+            <p>View the activities you are participating in</p>
           </div>
         </div>
 
         <div class="filter-bar">
           <button class="filter-btn active" data-filter="all">
-            <span>📋</span> All Activities
+            <span>📋</span> All Joined
           </button>
           <button class="filter-btn" data-filter="upcoming">
             <span>📅</span> Upcoming
@@ -403,219 +136,11 @@
       </div>
     </main>
 
+    <!-- Global JS -->
     <script src="js/main.js"></script>
-    <script>
-      let allActivities = [];
-      let myJoinedIds = [];
-      let currentEmail = null;
-      let isLoggedIn = false;
-
-      window.addEventListener("load", async function () {
-        let attempts = 0;
-        while (
-          (typeof supabaseClient === "undefined" || !supabaseClient) &&
-          attempts < 30
-        ) {
-          await new Promise((r) => setTimeout(r, 100));
-          attempts++;
-        }
-        if (!supabaseClient) return;
-
-        try {
-          // Check if user is logged in
-          const {
-            data: { session },
-          } = await supabaseClient.auth.getSession();
-          if (session && session.user) {
-            isLoggedIn = true;
-            currentEmail = session.user.email;
-
-            const { data: member } = await supabaseClient
-              .from("members")
-              .select("name, uid")
-              .eq("email", currentEmail)
-              .single();
-            if (member) {
-              document.getElementById("topAvatar").textContent = (
-                member.name || "M"
-              )
-                .charAt(0)
-                .toUpperCase();
-              document
-                .querySelectorAll(".user-name")
-                .forEach((el) => (el.textContent = member.name));
-              document
-                .querySelectorAll(".user-uid")
-                .forEach((el) => (el.textContent = member.uid));
-            }
-
-            // Get activities user has joined
-            const { data: joined } = await supabaseClient
-              .from("activity_participants")
-              .select("activity_id")
-              .eq("member_email", currentEmail);
-            myJoinedIds = (joined || []).map((j) => j.activity_id);
-          } else {
-            document
-              .querySelectorAll(".user-name")
-              .forEach((el) => (el.textContent = "Guest"));
-            document
-              .querySelectorAll(".user-uid")
-              .forEach((el) => (el.textContent = "Not logged in"));
-          }
-
-          // Load activities
-          const { data } = await supabaseClient
-            .from("activities")
-            .select("*")
-            .order("activity_date", { ascending: false });
-          allActivities = data || [];
-          renderActivities();
-
-          // Filters
-          document.querySelectorAll(".filter-btn").forEach((btn) => {
-            btn.addEventListener("click", function () {
-              document
-                .querySelectorAll(".filter-btn")
-                .forEach((b) => b.classList.remove("active"));
-              this.classList.add("active");
-              renderActivities(this.getAttribute("data-filter"));
-            });
-          });
-        } catch (err) {
-          console.error(err);
-        }
-      });
-
-      function renderActivities(filter) {
-        filter = filter || "all";
-        const container = document.getElementById("activitiesList");
-
-        const filtered =
-          filter === "all"
-            ? allActivities
-            : allActivities.filter(
-                (a) => (a.status || "").toLowerCase() === filter,
-              );
-
-        if (filtered.length === 0) {
-          container.innerHTML =
-            '<div class="empty-box"><span class="ico">🎯</span><h3>No Activities</h3><p>Activities will appear here once admin adds them.</p></div>';
-          return;
-        }
-
-        container.innerHTML = filtered
-          .map((a) => {
-            const status = (a.status || "Upcoming").toLowerCase();
-            const isJoined = myJoinedIds.includes(a.id);
-            const date = a.activity_date
-              ? new Date(a.activity_date).toLocaleDateString("en-PK", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })
-              : "-";
-
-            let actionHTML = "";
-            if (isJoined) {
-              actionHTML = '<span class="btn-joined">✅ Joined</span>';
-            } else if (!isLoggedIn) {
-              actionHTML =
-                '<a href="login.html" class="btn-login">🔒 Login to Join</a>';
-            } else if (status === "completed") {
-              actionHTML =
-                '<button class="btn-join" disabled style="opacity:0.5;cursor:not-allowed;">✅ Completed</button>';
-            } else {
-              actionHTML =
-                '<button class="btn-join" onclick="joinActivity(' +
-                a.id +
-                ')">🎯 Join Activity</button>';
-            }
-
-            return `
-                <div class="activity-card ${status}">
-                    <div class="activity-thumb">🎯</div>
-                    <div class="activity-info">
-                        <div class="activity-top">
-                            <div class="activity-title">${a.title || "Untitled"}</div>
-                            <span class="activity-status ${status}">${a.status || "Upcoming"}</span>
-                        </div>
-                        <div class="activity-meta">
-                            <span>📅 ${date}</span>
-                            <span>📍 ${a.location || "-"}</span>
-                            <span>👤 ${a.organizer || "-"}</span>
-                        </div>
-                        <p class="activity-desc">${a.description || ""}</p>
-                        <div class="activity-footer">
-                            <div class="activity-stats">
-                                <span class="activity-stat">💰 Rs. ${Number(a.budget || 0).toLocaleString()}</span>
-                                <span class="activity-stat">👥 ${a.participants || 0} participants</span>
-                            </div>
-                            ${actionHTML}
-                        </div>
-                    </div>
-                </div>`;
-          })
-          .join("");
-      }
-
-      window.joinActivity = async function (id) {
-        if (!currentEmail) {
-          window.location.href = "login.html";
-          return;
-        }
-        const act = allActivities.find((a) => a.id === id);
-        if (!act) return;
-        if (!confirm("Join this activity?\n\n" + act.title)) return;
-
-        // Get member info
-        const { data: member } = await supabaseClient
-          .from("members")
-          .select("name, uid")
-          .eq("email", currentEmail)
-          .single();
-        if (!member) {
-          alert("❌ Member info not found");
-          return;
-        }
-
-        const { error } = await supabaseClient
-          .from("activity_participants")
-          .insert([
-            {
-              activity_id: id,
-              member_email: currentEmail,
-              member_uid: member.uid,
-              member_name: member.name,
-            },
-          ]);
-
-        if (error) {
-          if (error.code === "23505") {
-            alert("⚠️ You have already joined this activity!");
-          } else {
-            alert("❌ " + error.message);
-          }
-          return;
-        }
-
-        // Update participant count
-        await supabaseClient
-          .from("activities")
-          .update({ participants: (act.participants || 0) + 1 })
-          .eq("id", id);
-
-        alert("✅ Successfully joined!");
-        myJoinedIds.push(id);
-
-        // Reload
-        const { data } = await supabaseClient
-          .from("activities")
-          .select("*")
-          .order("activity_date", { ascending: false });
-        allActivities = data || [];
-        renderActivities();
-      };
-    </script>
+    
+    <!-- Page Specific JS -->
+    <script src="js/pages/my-activities.js"></script>
+    
   </body>
 </html>
