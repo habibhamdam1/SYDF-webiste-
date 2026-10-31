@@ -2810,27 +2810,47 @@ html[data-theme="dark"] .coord-empty {
   -webkit-text-fill-color: #fbbf24 !important;
 }
 /* ============================================================
-   ✅ CERTIFICATE PAGE - 100% PERFECT FIX (No Transparency + Watermark)
+/* ============================================================
+   ✅ ULTIMATE WATERMARK & SOLID FIX
    ============================================================ */
 
-/* 1. BACKGROUND SOLID KARO (Pink stars ko andar aane se roko) */
+/* 1. SOLID BACKGROUNDS (Pink background ko block karo) */
 html:not([data-theme="dark"]) .dashboard-content .cert-container {
   background: #fefbf3 !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+  background-image: none !important;
 }
 html:not([data-theme="dark"]) .dashboard-content .certificate {
   background: #fdf6e3 !important;
+  background-image: none !important;
 }
 
-/* 2. WATERMARK VISIBLE KARO (Na ghayab ho, na dark ho) */
-html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo,
+/* 2. WATERMARK KO ZABARDASTI VISIBLE KARO */
+html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 0.15 !important; /* 15% opacity - saaf nazar aayega */
+  z-index: 0 !important; /* Background aur text ke darmiyan */
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 60% !important;
+  height: 60% !important;
+  pointer-events: none !important;
+  mix-blend-mode: normal !important; /* Multiply hata diya taake ghayab na ho */
+}
+
 html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo img {
-  opacity: 0.08 !important; /* 8% opacity - perfect watermark look */
-  z-index: 0 !important; /* Peeche rahe */
-  mix-blend-mode: multiply !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important; /* Parent (watermark-logo) opacity control kar raha hai */
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  mix-blend-mode: normal !important;
 }
 
-/* 3. TEXT KO WATERMARK KE UPAR LAO */
+/* 3. TEXT KO WATERMARK KE UPAR RAKHO */
 html:not([data-theme="dark"]) .dashboard-content .certificate .cert-header,
 html:not([data-theme="dark"]) .dashboard-content .certificate .cert-title,
 html:not([data-theme="dark"]) .dashboard-content .certificate .cert-top-meta,
@@ -2840,7 +2860,7 @@ html:not([data-theme="dark"]) .dashboard-content .certificate .cert-footer {
   position: relative !important;
 }
 
-/* 4. TEXT COLORS FIX (Theme ki wajah se bigde hue colors) */
+/* 4. TEXT COLORS FIX */
 html:not([data-theme="dark"]) .dashboard-content .certificate .cert-title h1 {
   color: #1abc9c !important;
   -webkit-text-fill-color: #1abc9c !important;
@@ -2858,22 +2878,12 @@ html:not([data-theme="dark"]) .dashboard-content .certificate .cert-description 
   color: #1abc9c !important;
   -webkit-text-fill-color: #1abc9c !important;
 }
-html:not([data-theme="dark"]) .dashboard-content .certificate .cert-uid {
-  color: #16a085 !important;
-  -webkit-text-fill-color: #16a085 !important;
-}
-html:not([data-theme="dark"]) .dashboard-content .certificate .cert-role {
-  color: #8b6a2b !important;
-  -webkit-text-fill-color: #8b6a2b !important;
-}
-html:not([data-theme="dark"]) .dashboard-content .certificate .sig-name {
-  color: #0f2027 !important;
-  -webkit-text-fill-color: #0f2027 !important;
-}
 
-/* 5. BOXES SOLID WHITE KARO (Date/ID/QR Box) */
+/* 5. BOXES FIX (Date/ID/QR) */
 html:not([data-theme="dark"]) .dashboard-content .cert-meta-inside,
-html:not([data-theme="dark"]) .dashboard-content .cert-qr-wrap {
+html:not([data-theme="dark"]) .dashboard-content .cert-qr-wrap,
+html:not([data-theme="dark"]) .dashboard-content .cert-uid,
+html:not([data-theme="dark"]) .dashboard-content .cert-role {
   background: #ffffff !important;
   border: 1px solid rgba(184, 148, 74, 0.3) !important;
 }
