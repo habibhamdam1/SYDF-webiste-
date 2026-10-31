@@ -2809,3 +2809,45 @@ html[data-theme="dark"] .coord-empty {
   color: #fbbf24 !important;
   -webkit-text-fill-color: #fbbf24 !important;
 }
+/* ============================================================
+   ✅ CERTIFICATE PAGE FIX (Bypass NUCLEAR FIX TRANSPARENCY)
+   ============================================================ */
+
+/* 1. Text Opacity Reset: NUCLEAR FIX ko certificate ke andar band karo */
+html:not([data-theme="dark"]) .dashboard-content .certificate * {
+  opacity: unset !important; 
+}
+
+/* 2. Watermark Fix: Wapas halka aur peechay bhejo */
+html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo,
+html:not([data-theme="dark"]) .dashboard-content .certificate .watermark-logo img {
+  opacity: 0.04 !important;
+  z-index: -1 !important;
+}
+
+/* 3. Background Solid Fix: Transparency khatam karo */
+html:not([data-theme="dark"]) .dashboard-content .cert-container {
+  background: #fefbf3 !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate {
+  background: #fdf6e3 !important;
+}
+
+/* 4. Text Colors Fix: Jo colors bigad gaye thay unko theek karo */
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-title h1 {
+  color: #1abc9c !important;
+  -webkit-text-fill-color: #1abc9c !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-name {
+  color: #0f2027 !important;
+  -webkit-text-fill-color: #0f2027 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-description {
+  color: #4a4a52 !important;
+  -webkit-text-fill-color: #4a4a52 !important;
+}
+html:not([data-theme="dark"]) .dashboard-content .certificate .cert-org {
+  color: #0f2027 !important;
+  -webkit-text-fill-color: #0f2027 !important;
+}
