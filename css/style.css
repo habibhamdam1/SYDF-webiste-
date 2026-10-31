@@ -2702,31 +2702,23 @@ html:not([data-theme="dark"]) select option {
   }
 }
 /* ============================================================
-   🪪 FINAL WATERMARK & MOBILE FIX (By AI)
+   🪪 FINAL PERMANENT FIX (Watermark & Mobile Stacking)
    ============================================================ */
 
-/* 1. Force Watermark to be faint and stay behind text */
-html body .dashboard-content .certificate .watermark-logo,
-html body .dashboard-content .certificate .watermark-logo img {
-    opacity: 0.04 !important; /* Zabardasti halka karo */
-    z-index: 0 !important; /* Peeche bhejo */
-    mix-blend-mode: multiply !important;
+.dashboard-content .certificate .watermark-logo,
+.dashboard-content .certificate .watermark-logo img {
+    opacity: 0.08 !important; 
+    z-index: 0 !important; 
+    mix-blend-mode: normal !important; 
+    display: block !important; 
+    pointer-events: none !important;
 }
 
-/* 2. Force All Text to stay on top */
-html body .dashboard-content .certificate .cert-header,
-html body .dashboard-content .certificate .cert-title,
-html body .dashboard-content .certificate .cert-top-meta,
-html body .dashboard-content .certificate .cert-body,
-html body .dashboard-content .certificate .cert-footer {
-    z-index: 10 !important; 
+.dashboard-content .certificate .cert-header,
+.dashboard-content .certificate .cert-title,
+.dashboard-content .certificate .cert-top-meta,
+.dashboard-content .certificate .cert-body,
+.dashboard-content .certificate .cert-footer {
+    z-index: 10 !important;
     position: relative !important;
-}
-
-/* 3. Mobile par watermark ko chota karo taake text saaf nazar aaye */
-@media (max-width: 768px) {
-    html body .dashboard-content .certificate .watermark-logo {
-        width: 180px !important;
-        height: 180px !important;
-    }
 }
