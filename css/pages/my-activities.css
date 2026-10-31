@@ -1,0 +1,231 @@
+/* ==========================================
+   MY ACTIVITIES PAGE STYLES
+   ========================================== */
+
+.page-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.page-intro h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px;
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  margin-bottom: 22px;
+}
+.filter-btn {
+  padding: 11px 22px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.filter-btn:hover {
+  color: var(--text-primary);
+  background: var(--accent-soft);
+}
+.filter-btn.active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  border-color: var(--accent);
+  box-shadow: 0 6px 20px var(--accent-glow);
+}
+
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.activity-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  padding: 22px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(20px);
+}
+.activity-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+.activity-card.upcoming::before {
+  background: #3b82f6;
+}
+.activity-card.ongoing::before {
+  background: var(--warm);
+}
+.activity-card.completed::before {
+  background: var(--accent);
+}
+.activity-card:hover {
+  transform: translateX(5px);
+  border-color: var(--card-border-hover);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.activity-thumb {
+  width: 90px;
+  height: 90px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  flex-shrink: 0;
+}
+.activity-info {
+  flex: 1;
+  min-width: 0;
+}
+.activity-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.activity-title {
+  color: var(--text-primary);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.activity-status {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.activity-status.upcoming {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+.activity-status.ongoing {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+.activity-status.completed {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.activity-meta {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.activity-desc {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.activity-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px solid var(--card-border);
+}
+.activity-stats {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.activity-stat {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.btn-joined {
+  padding: 10px 22px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: default;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.empty-box {
+  text-align: center;
+  padding: 80px 30px;
+  background: var(--card-bg);
+  border-radius: 18px;
+  border: 1px dashed var(--card-border);
+}
+.empty-box .ico {
+  font-size: 64px;
+  opacity: 0.5;
+  margin-bottom: 18px;
+  display: block;
+}
+.empty-box h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.empty-box p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 600px) {
+  .activity-card {
+    flex-direction: column;
+    padding: 18px;
+  }
+  .activity-thumb {
+    width: 70px;
+    height: 70px;
+    font-size: 32px;
+  }
+}
