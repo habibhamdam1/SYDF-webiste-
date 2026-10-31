@@ -2887,3 +2887,92 @@ html:not([data-theme="dark"]) .dashboard-content .cert-role {
   background: #ffffff !important;
   border: 1px solid rgba(184, 148, 74, 0.3) !important;
 }
+/* ============================================================
+   🪟 GLOBAL GLASSMORPHISM (LAG-FREE & OPTIMIZED)
+   ============================================================ */
+
+/* 1. Variable Setup for Glass */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.65); /* 65% White */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.9);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+  --glass-blur: blur(16px) saturate(150%);
+}
+
+html[data-theme="dark"] {
+  --glass-bg: rgba(15, 32, 39, 0.65); /* Dark transparent */
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* 2. Apply to all major containers */
+.glass-card,
+.content-card,
+.dash-stat-card,
+.admin-list-item,
+.filter-bar,
+.modal-box,
+.profile-form-card,
+.cert-info-bar,
+.data-table,
+.table-card,
+.dashboard-sidebar,
+.dashboard-topbar,
+.glass-header,
+.filters-bar {
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border: var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  
+  /* GPU Acceleration for Mobile (No Lag) */
+  transform: translateZ(0) !important;
+  -webkit-transform: translateZ(0) !important;
+  will-change: backdrop-filter;
+}
+
+/* 3. Mobile Optimization (Reduce blur to prevent lag) */
+@media (max-width: 768px) {
+  .glass-card,
+  .content-card,
+  .dash-stat-card,
+  .admin-list-item,
+  .filter-bar,
+  .modal-box,
+  .profile-form-card,
+  .cert-info-bar,
+  .data-table,
+  .table-card,
+  .dashboard-sidebar,
+  .dashboard-topbar,
+  .glass-header {
+    backdrop-filter: blur(8px) saturate(120%) !important; /* Lighter blur for mobile */
+    -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+    background: rgba(255, 255, 255, 0.75) !important; /* Thoda zyada solid taake text parhne mein asani ho */
+  }
+  html[data-theme="dark"] .glass-card,
+  html[data-theme="dark"] .content-card,
+  html[data-theme="dark"] .dash-stat-card,
+  html[data-theme="dark"] .dashboard-sidebar,
+  html[data-theme="dark"] .dashboard-topbar {
+    background: rgba(15, 32, 39, 0.8) !important;
+  }
+}
+
+/* 4. Fix inner elements that should NOT be glass (to keep text readable) */
+.table-card .data-table tbody tr,
+.admin-list-item .admin-item-avatar,
+.cert-container,
+.certificate {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* 5. Make inner table headers and rows solid so text is super clear */
+.data-table thead {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+html[data-theme="dark"] .data-table thead {
+  background: rgba(15, 32, 39, 0.9) !important;
+}
