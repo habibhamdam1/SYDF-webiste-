@@ -2707,9 +2707,9 @@ html:not([data-theme="dark"]) select option {
 
 .dashboard-content .certificate .watermark-logo,
 .dashboard-content .certificate .watermark-logo img {
-    opacity: 0.08 !important; 
-    z-index: 0 !important; 
-    mix-blend-mode: normal !important; 
+    opacity: 0.09 !important; 
+    z-index: -1 !important; /* Bilkul peechay bhej diya */
+    mix-blend-mode: multiply !important; /* White background ko transparent karega */
     display: block !important; 
     pointer-events: none !important;
 }
